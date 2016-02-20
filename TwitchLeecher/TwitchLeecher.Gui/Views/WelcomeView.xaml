@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/Constants.xaml" />
+                <ResourceDictionary Source="../Theme/Templates.xaml" />
+                <ResourceDictionary Source="../Theme/Styles.xaml" />
+                <ResourceDictionary Source="../Theme/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold">
+            <Run Text="Welcome to " /><Run Text="{Binding ProductName, Mode=OneTime}" />
+        </TextBlock>
+        <TextBlock Text="Hit the 'Search' button in order to find your broadcasts..." HorizontalAlignment="Center" FontWeight="Bold" Margin="0,20,0,0" />
+    </StackPanel>
+</UserControl>

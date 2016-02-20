@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.TitleBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             Foreground="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/Constants.xaml" />
+                <ResourceDictionary Source="../Theme/Templates.xaml" />
+                <ResourceDictionary Source="../Theme/Styles.xaml" />
+                <ResourceDictionary Source="../Theme/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Grid.Column="0" Height="40" Margin="10" RenderOptions.BitmapScalingMode="Fant" />
+
+        <StackPanel Grid.Column="1" Margin="0,6,0,0">
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding Title, FallbackValue='Twitch Leecher'}" />
+            <TextBlock Style="{StaticResource SubTitleTextBlock}" Text="The Broadcast Downloader" Margin="10,0,0,0" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" VerticalAlignment="Center">
+            <Button FontWeight="Bold" Command="{Binding SearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120" Margin="0,0,5,0">
+                <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Icon="Search" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    <TextBlock Text="Search" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                </StackPanel>
+            </Button>
+            <Button FontWeight="Bold" Command="{Binding ShowVideosCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120" Margin="0,0,5,0">
+                <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Icon="VideoCamera" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    <TextBlock Text="Videos" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                </StackPanel>
+            </Button>
+            <Button FontWeight="Bold" Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120">
+                <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Icon="Download" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    <TextBlock Text="Downloads" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Style="{StaticResource MiniButton}" Command="{Binding MinimizeCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                <Image Style="{StaticResource Img_Minimize}" />
+            </Button>
+            <Button Style="{StaticResource MiniButton}" Command="{Binding MaximizeRestoreCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                <Image Style="{StaticResource Img_MaximizeRestore}" />
+            </Button>
+            <Button Style="{StaticResource MiniButton}" Command="{Binding CloseCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                <Image Style="{StaticResource Img_Close}" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

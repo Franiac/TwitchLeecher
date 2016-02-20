@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.fontawesome.io/icons/">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Constants.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="NonStretchingImage" TargetType="{x:Type Image}">
+        <Setter Property="Stretch" Value="None" />
+    </Style>
+
+    <Style x:Key="Img_Minimize" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Minimize.png" />
+        <Setter Property="Margin" Value="0,7,0,0" />
+    </Style>
+
+    <Style x:Key="Img_MaximizeRestore" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Maximize.png" />
+        <Setter Property="Margin" Value="0,1,0,0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMaximized}" Value="True">
+                <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Restore.png" />
+                <Setter Property="Margin" Value="0,0,0,0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Img_Close" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Close.png" />
+        <Setter Property="Margin" Value="0,2,0,0" />
+    </Style>
+
+    <Style x:Key="Img_Spinner" TargetType="{x:Type fa:ImageAwesome}">
+        <Setter Property="Icon" Value="Spinner" />
+        <Setter Property="Spin" Value="True" />
+        <Setter Property="SpinDuration" Value="3" />
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{StaticResource MainColor}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

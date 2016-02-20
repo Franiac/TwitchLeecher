@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Sizes -->
+    <sys:Double x:Key="MainFontSize">14.667</sys:Double>
+
+    <!-- Colors -->
+    <Color x:Key="MainColor">#FFFFC864</Color>
+    <Color x:Key="MainFontColor">#FFFFFFFF</Color>
+
+    <Color x:Key="MainWindowBackgroundColor">#FF4B4B4B</Color>
+
+    <Color x:Key="WindowTopColor">#FF2E2E2E</Color>
+    <Color x:Key="WindowBottomColor">#FF5B5B5B</Color>
+
+    <Color x:Key="OutlineColor">#FF787878</Color>
+
+    <Color x:Key="ControlForegroundColor">#FF000000</Color>
+    <Color x:Key="ControlForegroundDisabledColor">#FF8C8C8C</Color>
+    <Color x:Key="ControlBackgroundColor">#FFFFC864</Color>
+    <Color x:Key="ControlBackgroundHoverColor">#FFFFE1AA</Color>
+    <Color x:Key="ControlBackgroundPressedColor">#FFFFFFFF</Color>
+    <Color x:Key="ControlBackgroundDisabledColor">#FFFFE1AA</Color>
+</ResourceDictionary>

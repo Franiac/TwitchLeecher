@@ -1,0 +1,62 @@
+﻿<Window x:Class="TwitchLeecher.Gui.Views.LogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
+        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
+        Name="thisWindow"
+        Style="{DynamicResource PopupWindow}"
+        Title="Download Log"
+        Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
+        ResizeMode="CanResizeWithGrip"
+        MinWidth="300"
+        MinHeight="300"
+        Width="680"
+        Height="680"
+        SizeToContent="Manual">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/Constants.xaml" />
+                <ResourceDictionary Source="../Theme/Templates.xaml" />
+                <ResourceDictionary Source="../Theme/Styles.xaml" />
+                <ResourceDictionary Source="../Theme/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <i:Interaction.Behaviors>
+        <b:CenterMainWindowBehavior />
+    </i:Interaction.Behaviors>
+
+    <Border Padding="20" BorderThickness="1">
+        <Border.BorderBrush>
+            <SolidColorBrush Color="{StaticResource MainColor}" />
+        </Border.BorderBrush>
+        <Border.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF2E2E2E" Offset="0" />
+                <GradientStop Color="#FF5B5B5B" Offset="1" />
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Download Log" FontWeight="Bold" Margin="0,0,0,10" />
+
+            <Border Grid.Row="1" Name="txtLogBorder" BorderThickness="1">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                </Border.BorderBrush>
+                <ctrl:ScrollingTextBox x:Name="txtLog" Padding="5" Height="{Binding ElementName=txtLogBorder, Path=ActualHeight}" Style="{StaticResource ScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontFamily="Courier New" />
+            </Border>
+
+
+            <Button Grid.Row="2" Margin="0,10,0,0" Content="Close" FontWeight="Bold" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" IsCancel="True" HorizontalAlignment="Right" />
+        </Grid>
+    </Border>
+</Window>

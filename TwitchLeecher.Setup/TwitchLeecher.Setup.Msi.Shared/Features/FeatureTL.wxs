@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include $(var.SolutionDir)TwitchLeecher.Setup.Msi.Shared\Variables.wxi?>
+
+  <Fragment>
+    <ComponentGroup Id="FeatureTLStartMenuComponents">
+      <Component Directory="ProgramMenuInstallFolder">
+        <RemoveFolder Id="ProgramMenuInstallFolder" On="uninstall" />
+        <RegistryKey Root="HKMU" Key="[TL_REGISTRY_PATH]">
+          <RegistryValue Name="StartMenuFolder" Type="integer" Value="1" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="FeatureTLRegistryComponents">
+      <Component Directory="INSTALLDIR">
+        <RegistryKey Root="HKLM" Key="[TL_REGISTRY_PATH]">
+          <RegistryValue Id="TL_INSTALLDIR_REGVALUE" Name="[TL_INSTALLDIR_REGVALUENAME]" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="FeatureTLComponents">
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_ffmpeg_x64.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x64.exe" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_ffmpeg_x86.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x86.exe" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.Expression.Interactions.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Expression.Interactions.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.Practices.ServiceLocation.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.ServiceLocation.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.Practices.Unity.Configuration.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.Configuration.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.Practices.Unity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.Practices.Unity.RegistrationByConvention.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.RegistrationByConvention.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Prism.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Prism.Unity.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.Unity.Wpf.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Prism.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.Wpf.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_System.Windows.Interactivity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Windows.Interactivity.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Twitch_Leecher_Manual.pdf" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Twitch Leecher Manual.pdf" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe">
+          <Shortcut Id="TL_Shortcut"
+                    Name="Twitch Leecher $(var.TL_PRODUCT_VERSION_TRIMMED)"
+                    Directory="ProgramMenuInstallFolder"
+                    Advertise="yes"
+                    Icon="TL_Icon.exe">
+          </Shortcut>
+        </File>
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.exe.config" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe.config" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.Gui.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Gui.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.Services.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Services.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_TwitchLeecher.Shared.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Shared.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

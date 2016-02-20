@@ -1,0 +1,71 @@
+﻿<Window x:Class="TwitchLeecher.Gui.Views.MessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
+        Style="{DynamicResource PopupWindow}"
+        Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/Constants.xaml" />
+                <ResourceDictionary Source="../Theme/Templates.xaml" />
+                <ResourceDictionary Source="../Theme/Styles.xaml" />
+                <ResourceDictionary Source="../Theme/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <i:Interaction.Behaviors>
+        <b:CenterMainWindowBehavior />
+    </i:Interaction.Behaviors>
+    <Border Padding="20" BorderThickness="1">
+        <Border.BorderBrush>
+            <SolidColorBrush Color="{StaticResource MainColor}" />
+        </Border.BorderBrush>
+        <Border.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF2E2E2E" Offset="0" />
+                <GradientStop Color="#FF5B5B5B" Offset="1" />
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Name="rowCaption" Padding="0,0,0,10" Margin="0,0,0,10" BorderThickness="0,0,0,1">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                </Border.BorderBrush>
+                <TextBlock Name="txtCaption" Text="Caption" FontWeight="Bold" />
+            </Border>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Image Name="imgIcon" Style="{StaticResource NonStretchingImage}" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" />
+                <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <Border Grid.Row="3" Padding="0,10,0,0" Margin="0,10,0,0" BorderThickness="0,1,0,0">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                </Border.BorderBrush>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="btnYes" Margin="0,0,3,0" Click="btnYes_Click">
+                        <TextBlock Name="btnYesContent" Text="Yes" />
+                    </Button>
+                    <Button Name="btnNo" Margin="3,0,3,0" Click="btnNo_Click">
+                        <TextBlock Name="btnNoContent" Text="No" />
+                    </Button>
+                    <Button Name="btnOk" Margin="3,0,3,0" Click="btnOk_Click">
+                        <TextBlock Name="btnOkContent" Text="Ok" />
+                    </Button>
+                    <Button Name="btnCancel" Margin="3,0,0,0" Click="btnCancel_Click">
+                        <TextBlock Name="btnCancelContent" Text="Cancel" />
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
