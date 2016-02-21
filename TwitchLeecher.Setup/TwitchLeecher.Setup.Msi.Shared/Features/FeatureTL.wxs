@@ -21,12 +21,15 @@
     </ComponentGroup>
 
     <ComponentGroup Id="FeatureTLComponents">
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_ffmpeg_x64.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x64.exe" />
-      </Component>
+      <?if $(sys.BUILDARCH)="x86"?>
       <Component Directory="INSTALLDIR">
         <File Id="TL_ffmpeg_x86.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x86.exe" />
       </Component>
+      <?else?>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_ffmpeg_x64.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x64.exe" />
+      </Component>
+      <?endif?>
       <Component Directory="INSTALLDIR">
         <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
       </Component>
@@ -59,9 +62,6 @@
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_System.Windows.Interactivity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Windows.Interactivity.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Twitch_Leecher_Manual.pdf" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Twitch Leecher Manual.pdf" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll" />

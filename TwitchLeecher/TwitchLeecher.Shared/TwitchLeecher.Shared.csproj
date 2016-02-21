@@ -78,11 +78,10 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Display.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Win32.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -49,13 +49,12 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>REM $(TargetPath) $(SolutionDir)</PostBuildEvent>

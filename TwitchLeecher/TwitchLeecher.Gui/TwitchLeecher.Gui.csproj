@@ -100,6 +100,7 @@
     <Compile Include="Converters\DownloadStatusToVisConverter.cs" />
     <Compile Include="Converters\DownloadStatusToColorConverter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Converters\VideoTypeToBooleanConverter.cs" />
@@ -213,9 +214,7 @@
       <Name>TwitchLeecher.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="..\Resources\Images\TL_Icon.png">
       <Link>Resources\TL_Icon.png</Link>

@@ -81,12 +81,11 @@
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\ITwitchService.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\TwitchService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
