@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -123,71 +124,106 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void RetryDownload(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    this.twitchService.Retry(id);
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        this.twitchService.Retry(id);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void CancelDownload(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    this.twitchService.Cancel(id);
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        this.twitchService.Cancel(id);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void RemoveDownload(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    this.twitchService.Remove(id);
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        this.twitchService.Remove(id);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void ViewVideo(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
-
-                    if (download != null)
+                    if (!string.IsNullOrWhiteSpace(id))
                     {
-                        string folder = Path.GetDirectoryName(download.DownloadParams.Filename);
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
 
-                        if (Directory.Exists(folder))
+                        if (download != null)
                         {
-                            Process.Start(folder);
+                            string folder = Path.GetDirectoryName(download.DownloadParams.Filename);
+
+                            if (Directory.Exists(folder))
+                            {
+                                Process.Start(folder);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void ShowLog(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
-
-                    if (download != null)
+                    if (!string.IsNullOrWhiteSpace(id))
                     {
-                        this.guiService.ShowLog(download);
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
+
+                        if (download != null)
+                        {
+                            this.guiService.ShowLog(download);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 

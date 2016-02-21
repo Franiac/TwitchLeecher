@@ -18,6 +18,8 @@ namespace TwitchLeecher.Gui.Services
 
         MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon);
 
+        void ShowAndLogException(Exception ex);
+
         void ShowSearchDialog(SearchParameters lastSearchParams, Action<bool, SearchParameters> dialogCompleteCallback);
 
         void ShowDownloadDialog(TwitchVideo video, Action<bool, DownloadParameters> dialogCompleteCallback);

@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
@@ -62,8 +63,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void Close(Window window)
         {
-            window.DialogResult = false;
-            window.Close();
+            try
+            {
+                window.DialogResult = false;
+                window.Close();
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         #endregion Methods

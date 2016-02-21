@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -119,34 +120,62 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void Choose()
         {
-            this.guiService.ShowSaveFileDialog(this.filename, this.ChooseCallback);
+            try
+            {
+                this.guiService.ShowSaveFileDialog(this.filename, this.ChooseCallback);
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         private void ChooseCallback(bool cancelled, string filename)
         {
-            if (!cancelled)
+            try
             {
-                this.Filename = filename;
+                if (!cancelled)
+                {
+                    this.Filename = filename;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void Download(Window window)
         {
-            this.Validate();
-
-            if (!this.HasErrors)
+            try
             {
-                this.ResultObject = new DownloadParameters(this.video, this.resolution, this.filename);
-                window.DialogResult = true;
-                window.Close();
+                this.Validate();
+
+                if (!this.HasErrors)
+                {
+                    this.ResultObject = new DownloadParameters(this.video, this.resolution, this.filename);
+                    window.DialogResult = true;
+                    window.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void Cancel(Window window)
         {
-            this.ResultObject = null;
-            window.DialogResult = false;
-            window.Close();
+            try
+            {
+                this.ResultObject = null;
+                window.DialogResult = false;
+                window.Close();
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         protected override void Validate(string propertyName = null)

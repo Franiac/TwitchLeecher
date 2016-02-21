@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TwitchLeecher.Common;
@@ -95,7 +96,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.showVideosCommand = new DelegateCommand(() =>
                     {
-                        this.eventAggregator.GetEvent<ShowVideosEvent>().Publish();
+                        try
+                        {
+                            this.eventAggregator.GetEvent<ShowVideosEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
                     });
                 }
 
@@ -111,7 +119,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.showDownloadsCommand = new DelegateCommand(() =>
                     {
-                        this.eventAggregator.GetEvent<ShowDownloadsEvent>().Publish();
+                        try
+                        {
+                            this.eventAggregator.GetEvent<ShowDownloadsEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
                     });
                 }
 
@@ -127,7 +142,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.minimizeCommand = new DelegateCommand(() =>
                     {
-                        this.eventAggregator.GetEvent<AppMinimizeEvent>().Publish();
+                        try
+                        {
+                            this.eventAggregator.GetEvent<AppMinimizeEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
                     });
                 }
 
@@ -143,7 +165,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.maximizeRestoreCommand = new DelegateCommand(() =>
                     {
-                        this.eventAggregator.GetEvent<AppMaximizeRestoreEvent>().Publish();
+                        try
+                        {
+                            this.eventAggregator.GetEvent<AppMaximizeRestoreEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
                     });
                 }
 
@@ -159,7 +188,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.closeCommand = new DelegateCommand(() =>
                     {
-                        this.eventAggregator.GetEvent<AppExitEvent>().Publish();
+                        try
+                        {
+                            this.eventAggregator.GetEvent<AppExitEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
                     });
                 }
 
@@ -173,27 +209,41 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void Search()
         {
-            if (this.lastSearchParams == null)
+            try
             {
-                this.lastSearchParams = new SearchParameters("FakeSmileRevolution", VideoType.Broadcast, 10);
-            }
+                if (this.lastSearchParams == null)
+                {
+                    this.lastSearchParams = new SearchParameters("FakeSmileRevolution", VideoType.Broadcast, 10);
+                }
 
-            this.guiService.ShowSearchDialog(lastSearchParams, this.SearchCallback);
+                this.guiService.ShowSearchDialog(lastSearchParams, this.SearchCallback);
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         public void SearchCallback(bool cancelled, SearchParameters searchParams)
         {
-            if (!cancelled)
+            try
             {
-                this.lastSearchParams = searchParams;
+                if (!cancelled)
+                {
+                    this.lastSearchParams = searchParams;
 
-                this.eventAggregator.GetEvent<SearchBeginEvent>().Publish();
+                    this.eventAggregator.GetEvent<SearchBeginEvent>().Publish();
 
-                Task searchTask = new Task(() => this.twitchService.Search(searchParams));
+                    Task searchTask = new Task(() => this.twitchService.Search(searchParams));
 
-                searchTask.ContinueWith(task => this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish(), TaskScheduler.FromCurrentSynchronizationContext());
+                    searchTask.ContinueWith(task => this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish(), TaskScheduler.FromCurrentSynchronizationContext());
 
-                searchTask.Start();
+                    searchTask.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 

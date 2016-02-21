@@ -55,7 +55,6 @@
                 <ctrl:ScrollingTextBox x:Name="txtLog" Padding="5" Height="{Binding ElementName=txtLogBorder, Path=ActualHeight}" Style="{StaticResource ScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontFamily="Courier New" />
             </Border>
 
-
             <Button Grid.Row="2" Margin="0,10,0,0" Content="Close" FontWeight="Bold" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" IsCancel="True" HorizontalAlignment="Right" />
         </Grid>
     </Border>

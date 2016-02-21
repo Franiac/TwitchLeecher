@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
+using TwitchLeecher.Gui.Services;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -17,8 +18,12 @@ namespace TwitchLeecher.Gui.Views
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x10000;
 
-        public LogWindow()
+        private IGuiService guiService;
+
+        public LogWindow(IGuiService guiService)
         {
+            this.guiService = guiService;
+
             InitializeComponent();
 
             WindowChrome windowChrome = new WindowChrome()
@@ -40,15 +45,29 @@ namespace TwitchLeecher.Gui.Views
 
         private void LogWindow_SourceInitialized(object sender, System.EventArgs e)
         {
-            var hwnd = new WindowInteropHelper((Window)sender).Handle;
-            var value = GetWindowLong(hwnd, GWL_STYLE);
-            SetWindowLong(hwnd, GWL_STYLE, (int)(value & ~WS_MAXIMIZEBOX));
+            try
+            {
+                var hwnd = new WindowInteropHelper((Window)sender).Handle;
+                var value = GetWindowLong(hwnd, GWL_STYLE);
+                SetWindowLong(hwnd, GWL_STYLE, (int)(value & ~WS_MAXIMIZEBOX));
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         private void LogWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.txtLog.CaretIndex = this.txtLog.Text.Length;
-            this.txtLog.ScrollToEnd();
+            try
+            {
+                this.txtLog.CaretIndex = this.txtLog.Text.Length;
+                this.txtLog.ScrollToEnd();
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
     }
 }

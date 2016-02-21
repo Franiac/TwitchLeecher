@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Shell;
+using TwitchLeecher.Common;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -30,6 +32,11 @@ namespace TwitchLeecher.Gui.Views
             this.rowCaption.Visibility = Visibility.Collapsed;
             this.imgIcon.Visibility = Visibility.Collapsed;
             this.SetButtons(MessageBoxButton.OK);
+
+            Display display = Display.GetDisplayFromWindow(new WindowInteropHelper(this).Handle);
+
+            this.MaxWidth = display.WorkingArea.Width * 0.9;
+            this.MaxHeight = display.WorkingArea.Height * 0.9;
         }
 
         public MessageBoxWindow(string message, string caption) : this(message)

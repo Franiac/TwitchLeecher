@@ -147,7 +147,7 @@ namespace TwitchLeecher.Services.Services
                         if (videoJson._id.ToString().StartsWith("v"))
                         {
                             videos.Add(this.ParseVideo(videoJson));
-                        }                        
+                        }
                     }
                 }
 

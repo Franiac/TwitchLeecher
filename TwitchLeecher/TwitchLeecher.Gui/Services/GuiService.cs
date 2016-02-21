@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
+using TwitchLeecher.Services.Interfaces;
 
 namespace TwitchLeecher.Gui.Services
 {
@@ -81,6 +82,24 @@ namespace TwitchLeecher.Gui.Services
             return msg.Result;
         }
 
+        public void ShowAndLogException(Exception ex)
+        {
+            if (ex == null)
+            {
+                return;
+            }
+
+            ILogService logService = this.container.Resolve<ILogService>();
+            string logFile = logService.LogException(ex);
+
+            MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
+                + Environment.NewLine + Environment.NewLine + ex.Message
+                + Environment.NewLine + Environment.NewLine + "All details were written to log file"
+                + Environment.NewLine + Environment.NewLine + logFile,
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            msg.ShowDialog();
+        }
+
         public void ShowSearchDialog(SearchParameters lastSearchParams, Action<bool, SearchParameters> dialogCompleteCallback)
         {
             if (lastSearchParams == null)
@@ -98,7 +117,8 @@ namespace TwitchLeecher.Gui.Services
             vm.VideoType = lastSearchParams.VideoType;
             vm.LoadLimit = lastSearchParams.LoadLimit;
 
-            SearchWindow window = new SearchWindow() { DataContext = vm };
+            SearchWindow window = this.container.Resolve<SearchWindow>();
+            window.DataContext = vm;
 
             bool? result = window.ShowDialog();
 
@@ -122,7 +142,8 @@ namespace TwitchLeecher.Gui.Services
             DownloadVM vm = this.container.Resolve<DownloadVM>();
             vm.Video = video;
 
-            DownloadWindow window = new DownloadWindow() { DataContext = vm };
+            DownloadWindow window = this.container.Resolve<DownloadWindow>();
+            window.DataContext = vm;
 
             bool? result = window.ShowDialog();
 
@@ -156,7 +177,8 @@ namespace TwitchLeecher.Gui.Services
             LogVM vm = this.container.Resolve<LogVM>();
             vm.Download = download;
 
-            LogWindow window = new LogWindow() { DataContext = vm };
+            LogWindow window = this.container.Resolve<LogWindow>();
+            window.DataContext = vm;
 
             window.ShowDialog();
         }

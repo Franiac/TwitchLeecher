@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Shell;
 using System.Windows.Threading;
+using TwitchLeecher.Gui.Services;
 
 namespace TwitchLeecher.Gui.Views
 {
     public partial class SearchWindow : Window
     {
-        public SearchWindow()
+        private IGuiService guiService;
+
+        public SearchWindow(IGuiService guiService)
         {
+            this.guiService = guiService;
+
             InitializeComponent();
 
             WindowChrome windowChrome = new WindowChrome()
@@ -29,21 +33,18 @@ namespace TwitchLeecher.Gui.Views
 
         private void SearchRequestView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.txtUsername.Focus();
-
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(() =>
+            try
             {
-                this.txtUsername.SelectAll();
-            }));
-        }
+                this.txtUsername.Focus();
 
-        private void txtLoadLimit_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            int limit;
-
-            if (!int.TryParse(e.Text, out limit))
+                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(() =>
+                {
+                    this.txtUsername.SelectAll();
+                }));
+            }
+            catch (Exception ex)
             {
-                e.Handled = true;
+                this.guiService.ShowAndLogException(ex);
             }
         }
     }

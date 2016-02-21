@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -85,48 +86,69 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void ViewVideo(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
-
-                    if (video != null && video.Url != null && video.Url.IsAbsoluteUri)
+                    if (!string.IsNullOrWhiteSpace(id))
                     {
-                        Process.Start(video.Url.ToString());
+                        TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
+
+                        if (video != null && video.Url != null && video.Url.IsAbsoluteUri)
+                        {
+                            Process.Start(video.Url.ToString());
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void DownloadVideo(string id)
         {
-            lock (this.commandLockObject)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
+                lock (this.commandLockObject)
                 {
-                    if (this.twitchService.Downloads.Where(d => d.Video.Id == id).Any())
+                    if (!string.IsNullOrWhiteSpace(id))
                     {
-                        this.guiService.ShowMessageBox("This video is already beeing downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
-                        return;
-                    }
+                        if (this.twitchService.Downloads.Where(d => d.Video.Id == id).Any())
+                        {
+                            this.guiService.ShowMessageBox("This video is already beeing downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
+                        }
 
-                    TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
+                        TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
 
-                    if (video != null)
-                    {
-                        this.guiService.ShowDownloadDialog(video, this.DownloadCallback);
+                        if (video != null)
+                        {
+                            this.guiService.ShowDownloadDialog(video, this.DownloadCallback);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         public void DownloadCallback(bool cancelled, DownloadParameters downloadParams)
         {
-            if (!cancelled)
+            try
             {
-                this.twitchService.Enqueue(downloadParams);
-                this.eventAggregator.GetEvent<ShowDownloadsEvent>().Publish();
+                if (!cancelled)
+                {
+                    this.twitchService.Enqueue(downloadParams);
+                    this.eventAggregator.GetEvent<ShowDownloadsEvent>().Publish();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 

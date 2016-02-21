@@ -26,6 +26,7 @@ namespace TwitchLeecher.Services.Modules
 
         public void Initialize()
         {
+            this.container.RegisterType<ILogService, LogService>(new ContainerControlledLifetimeManager());
             this.container.RegisterType<ITwitchService, TwitchService>(new ContainerControlledLifetimeManager());
         }
 

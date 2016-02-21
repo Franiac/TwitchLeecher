@@ -77,7 +77,7 @@
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />                                    
+                                    <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Button Style="{StaticResource MiniButton}" Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" Padding="5" ToolTip="Watch in browser" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <fa:ImageAwesome Icon="Eye" Width="16" Height="16" />

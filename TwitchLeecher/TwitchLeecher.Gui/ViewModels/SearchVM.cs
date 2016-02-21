@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
@@ -106,22 +107,36 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void Search(Window window)
         {
-            this.guiService.SetBusy();
-            this.Validate();
-
-            if (!this.HasErrors)
+            try
             {
-                this.ResultObject = new SearchParameters(this.username, this.videoType, this.loadLimit);
-                window.DialogResult = true;
-                window.Close();
+                this.guiService.SetBusy();
+                this.Validate();
+
+                if (!this.HasErrors)
+                {
+                    this.ResultObject = new SearchParameters(this.username, this.videoType, this.loadLimit);
+                    window.DialogResult = true;
+                    window.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
             }
         }
 
         private void Cancel(Window window)
         {
-            this.ResultObject = null;
-            window.DialogResult = false;
-            window.Close();
+            try
+            {
+                this.ResultObject = null;
+                window.DialogResult = false;
+                window.Close();
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         protected override void Validate(string propertyName = null)

@@ -115,10 +115,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Documents\Twitch Leecher Manual.pdf">
-      <Link>Twitch Leecher Manual.pdf</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

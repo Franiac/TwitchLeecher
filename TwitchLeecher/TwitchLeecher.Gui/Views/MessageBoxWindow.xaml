@@ -4,7 +4,8 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         Style="{DynamicResource PopupWindow}"
-        Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico">
+        Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
+        MinWidth="300">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -42,10 +43,18 @@
                 <TextBlock Name="txtCaption" Text="Caption" FontWeight="Bold" />
             </Border>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Image Name="imgIcon" Style="{StaticResource NonStretchingImage}" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" />
-                <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
-            </StackPanel>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Name="imgIcon" Style="{StaticResource NonStretchingImage}" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" />
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+                    <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
+                </ScrollViewer>
+            </Grid>
 
             <Border Grid.Row="3" Padding="0,10,0,0" Margin="0,10,0,0" BorderThickness="0,1,0,0">
                 <Border.BorderBrush>

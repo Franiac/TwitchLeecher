@@ -1,12 +1,18 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Shell;
+using TwitchLeecher.Gui.Services;
 
 namespace TwitchLeecher.Gui.Views
 {
     public partial class DownloadWindow : Window
     {
-        public DownloadWindow()
+        private IGuiService guiService;
+
+        public DownloadWindow(IGuiService guiService)
         {
+            this.guiService = guiService;
+
             InitializeComponent();
 
             WindowChrome windowChrome = new WindowChrome()
@@ -26,7 +32,14 @@ namespace TwitchLeecher.Gui.Views
 
         private void SearchRequestView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.cmbQuality.Focus();
+            try
+            {
+                this.cmbQuality.Focus();
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
     }
 }
