@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace TwitchLeecher.Setup.Publish
@@ -24,22 +25,27 @@ namespace TwitchLeecher.Setup.Publish
                     throw new ApplicationException("SolutionDir '" + solutionDir + "' does not exist!");
                 }
 
-                string src32bit = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x86", "bin", "TwitchLeecher_x86.exe");
-                string src64bit = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x64", "bin", "TwitchLeecher_x64.exe");
+                Version version = Assembly.LoadFile(Path.Combine(solutionDir, "..", "TwitchLeecher", "TwitchLeecher", "bin", "TwitchLeecher.exe")).GetName().Version.Trim();
+
+                string srcX86 = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x86", "bin", "TwitchLeecher_x86.exe");
+                string srcX64 = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x64", "bin", "TwitchLeecher_x64.exe");
+
+                string tgtFilenameX86 = "TwitchLeecher_" + version.ToString() + "_x86.exe";
+                string tgtFilenameX64 = "TwitchLeecher_" + version.ToString() + "_x64.exe";
 
                 string resHacker = Path.Combine(solutionDir, "Libraries", "ResourceHacker.exe");
                 string publishDir = Path.Combine(solutionDir, "..", "TwitchLeecher.Setup.Publish");
 
-                string tgt32bit = Path.Combine(publishDir, "TwitchLeecher_x86.exe");
-                string tgt64bit = Path.Combine(publishDir, "TwitchLeecher_x64.exe");
+                string tgt32bit = Path.Combine(publishDir, tgtFilenameX86);
+                string tgt64bit = Path.Combine(publishDir, tgtFilenameX64);
 
-                string manifest32bit = Path.Combine(publishDir, "TwitchLeecher_x86.exe.manifest");
-                string manifest64bit = Path.Combine(publishDir, "TwitchLeecher_x64.exe.manifest");
+                string manifest32bit = Path.Combine(publishDir, tgtFilenameX86 + ".manifest");
+                string manifest64bit = Path.Combine(publishDir, tgtFilenameX64 + ".manifest");
 
                 CleanDirectory(publishDir);
 
-                CopyFile(src32bit, publishDir);
-                CopyFile(src64bit, publishDir);
+                CopyFile(srcX86, publishDir, tgtFilenameX86);
+                CopyFile(srcX64, publishDir, tgtFilenameX64);
 
                 ExtractManifest(resHacker, tgt32bit, manifest32bit);
                 ExtractManifest(resHacker, tgt64bit, manifest64bit);
@@ -191,6 +197,25 @@ namespace TwitchLeecher.Setup.Publish
             ResetFileAttributes(targetFile);
 
             File.Copy(fileInfo.FullName, targetFile, true);
+        }
+    }
+
+    public static class Extensions
+    {
+        public static Version Trim(this Version version)
+        {
+            if (version.Build > 0 && version.Revision > 0)
+            {
+                return version;
+            }
+            else if (version.Build > 0)
+            {
+                return Version.Parse(version.ToString(3));
+            }
+            else
+            {
+                return Version.Parse(version.ToString(2));
+            }
         }
     }
 }
