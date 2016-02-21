@@ -24,7 +24,6 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Core" />
     <Reference Include="Microsoft.Deployment.WindowsInstaller">
       <Private>True</Private>
     </Reference>
