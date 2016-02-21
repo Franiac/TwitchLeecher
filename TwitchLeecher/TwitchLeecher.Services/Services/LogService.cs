@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared;
 
 namespace TwitchLeecher.Services.Services
 {
@@ -34,10 +35,7 @@ namespace TwitchLeecher.Services.Services
         {
             try
             {
-                if (!Directory.Exists(this.logDir))
-                {
-                    Directory.CreateDirectory(this.logDir);
-                }
+                FileSystem.CreateDirectory(this.logDir);
 
                 string logFile = Path.Combine(this.logDir, DateTime.UtcNow.ToString("MMddyyyy_hhmmss_fff_tt") + "_error.log");
 

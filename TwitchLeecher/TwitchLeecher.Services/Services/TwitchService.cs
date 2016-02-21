@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared;
 
 namespace TwitchLeecher.Services.Services
 {
@@ -214,7 +215,7 @@ namespace TwitchLeecher.Services.Services
                                 if (!Directory.Exists(outputDir))
                                 {
                                     download.AppendLog(Environment.NewLine + Environment.NewLine + "Creating directory '" + outputDir + "'...");
-                                    Directory.CreateDirectory(outputDir);
+                                    FileSystem.CreateDirectory(outputDir);
                                     download.AppendLog(" done!");
                                 }
 
@@ -306,10 +307,7 @@ namespace TwitchLeecher.Services.Services
 
                                             Interlocked.Increment(ref completedChunkDownloads);
 
-                                            if (File.Exists(webChunk.Filename))
-                                            {
-                                                File.Delete(webChunk.Filename);
-                                            }
+                                            FileSystem.DeleteFile(webChunk.Filename);
 
                                             File.WriteAllBytes(webChunk.Filename, bytes);
 
@@ -350,10 +348,7 @@ namespace TwitchLeecher.Services.Services
 
                                     string newPlaylistStr = string.Join("\n", playlistLines);
 
-                                    if (File.Exists(playlistFile))
-                                    {
-                                        File.Delete(playlistFile);
-                                    }
+                                    FileSystem.DeleteFile(playlistFile);
 
                                     download.AppendLog(Environment.NewLine + "Writing playlist to '" + playlistFile + "'");
                                     File.WriteAllText(playlistFile, newPlaylistStr);
@@ -479,18 +474,8 @@ namespace TwitchLeecher.Services.Services
         {
             try
             {
-                if (!Directory.Exists(directory))
-                {
-                    return;
-                }
-
-                foreach (var dir in Directory.EnumerateDirectories(directory))
-                {
-                    this.CleanUp(dir, download);
-                }
-
                 download.AppendLog(Environment.NewLine + "Deleting directory '" + directory + "'...");
-                Directory.Delete(directory, true);
+                FileSystem.DeleteDirectory(directory);
                 download.AppendLog(" done!");
             }
             catch

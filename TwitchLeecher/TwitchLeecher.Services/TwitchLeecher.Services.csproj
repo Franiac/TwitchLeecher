@@ -95,6 +95,10 @@
       <Project>{ee50464e-7667-4223-9fde-05b0ae0d90cd}</Project>
       <Name>TwitchLeecher.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj">
+      <Project>{37aac23f-da34-4158-b32f-ca4a59ad71a9}</Project>
+      <Name>TwitchLeecher.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Libraries\ffmpeg_x64.exe">
