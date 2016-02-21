@@ -15,9 +15,7 @@
 
   <?if $(sys.BUILDARCH)="x86"?>
   <?define TL_PROGRAMS_FOLDER="ProgramFilesFolder"?>
-  <?define TL_CUSTOM_ACTION_DLL="$(var.TwitchLeecher.Setup.Custom.x86.TargetDir)TwitchLeecher.Setup.Custom.x86.CA.dll"?>
   <?else?>
   <?define TL_PROGRAMS_FOLDER="ProgramFiles64Folder"?>
-  <?define TL_CUSTOM_ACTION_DLL="$(var.TwitchLeecher.Setup.Custom.x64.TargetDir)TwitchLeecher.Setup.Custom.x64.CA.dll"?>
   <?endif?>
 </Include>

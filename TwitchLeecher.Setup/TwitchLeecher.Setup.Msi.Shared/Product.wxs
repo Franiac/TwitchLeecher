@@ -86,14 +86,5 @@
         <Directory Id="ProgramMenuInstallFolder" Name="$(var.TL_PRODUCT_NAME)" />
       </Directory>
     </Directory>
-
-    <InstallExecuteSequence>
-      <Custom Action="DeleteProgramMenuFolderDeferredData" Before="DeleteProgramMenuFolderDeferred">
-        <![CDATA[REMOVE]]>
-      </Custom>
-      <Custom Action="DeleteProgramMenuFolderDeferred" Before="InstallFinalize">
-        <![CDATA[REMOVE]]>
-      </Custom>
-    </InstallExecuteSequence>
   </Product>
 </Wix>
