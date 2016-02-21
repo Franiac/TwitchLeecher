@@ -23,8 +23,8 @@
                 </Border.BorderBrush>
                 <Border.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFF9FDFF" Offset="0" />
-                        <GradientStop Color="#FF5B5B5B" Offset="1" />
+                        <GradientStop Color="{StaticResource BannerLight}" Offset="0" />
+                        <GradientStop Color="{StaticResource BannerDark}" Offset="1" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
@@ -37,7 +37,7 @@
                            Style="{StaticResource HeadlineTextCenter}"
                            Text="{Binding ProductNameVersionDisplay,
                                   StringFormat='Ready to install \{0\}',
-                                  FallbackValue='Ready to install Framework Studio X.Y'}" />
+                                  FallbackValue='Ready to install Twitch Leecher X.Y'}" />
                 <Image Grid.Column="1" Style="{StaticResource tl_logo_small}" RenderOptions.BitmapScalingMode="Fant" />
             </Grid>
         </Grid>

@@ -55,7 +55,7 @@ namespace TwitchLeecher.Setup.Gui
         private string architecture;
         private string manufacturer;
         private string productName;
-        private string featureFSSize;
+        private string featureTLSize;
 
         private bool filesInUseActive;
         private bool cancelledByUser;
@@ -150,11 +150,11 @@ namespace TwitchLeecher.Setup.Gui
             }
         }
 
-        public string FeatureFSSize
+        public string FeatureTLSize
         {
             get
             {
-                return this.featureFSSize;
+                return this.featureTLSize;
             }
         }
 
@@ -431,8 +431,8 @@ namespace TwitchLeecher.Setup.Gui
             this.Log(logName + "Size for package '" + TL_PACKAGE_ID + "' is " + fsSizeStr + " bytes");
 
             this.Log(logName + "Converting size to MB value");
-            this.featureFSSize = Math.Round(double.Parse(fsSizeStr) / 1000 / 1000, 2).ToString(CultureInfo.GetCultureInfo("en-US"));
-            this.Log(logName + "Size of package '" + TL_PACKAGE_ID + "' in MB is '" + this.featureFSSize + "'");
+            this.featureTLSize = Math.Round(double.Parse(fsSizeStr) / 1000 / 1000, 2).ToString(CultureInfo.GetCultureInfo("en-US"));
+            this.Log(logName + "Size of package '" + TL_PACKAGE_ID + "' in MB is '" + this.featureTLSize + "'");
         }
 
         private string GetRegistryValue(RegistryKey key, string regValueName)
@@ -625,9 +625,9 @@ namespace TwitchLeecher.Setup.Gui
         /// MSI returns a list by alternating process id and program name whilst padding empty entries to 2^x.
         ///
         /// [0] - 9876
-        /// [1] - Framework Studio
+        /// [1] - Twitch Leecher
         /// [2] - 6789
-        /// [3] - FSSessionAnalyzer
+        /// [3] - dotPeek
         /// [4] -
         /// [5] -
         /// [6] -
@@ -637,19 +637,19 @@ namespace TwitchLeecher.Setup.Gui
         ///
         /// MSI returns a list by alternating program name and process id without padding the list.
         ///
-        /// [0] - Framework Studio
+        /// [0] - Twitch Leecher
         /// [1] - 9876
-        /// [2] - FSSessionAnalyzer
+        /// [2] - dotPeek
         /// [3] - 6789
         ///
         /// Format 3:
         ///
         /// MSI returns a list by alternating program name and program name with process id without padding the list.
         ///
-        /// [0] - Framework Studio
-        /// [1] - Framework Studio (Process Id: 9876)
-        /// [2] - FSSessionAnalyzer
-        /// [3] - FSSessionAnalyzer (Process Id: 6789)
+        /// [0] - Twitch Leecher
+        /// [1] - Twitch Leecher (Process Id: 9876)
+        /// [2] - dotPeek
+        /// [3] - dotPeek (Process Id: 6789)
         /// </summary>
         private IList<string> FormatFileInUseList(IList<string> files)
         {
@@ -824,9 +824,9 @@ namespace TwitchLeecher.Setup.Gui
 
         private void SetupApplication_PlanBegin(object sender, PlanBeginEventArgs e)
         {
-            this.Engine.StringVariables["FS_INSTALLDIR_REGVALUENAME"] = installDirRegValueName;
-            this.Engine.StringVariables["FS_INSTALLDIR"] = this.InstallDir;
-            this.Engine.StringVariables["FS_INSTALLDIR_PERSISTED"] = this.InstallDirPersisted;
+            this.Engine.StringVariables["TL_INSTALLDIR_REGVALUENAME"] = installDirRegValueName;
+            this.Engine.StringVariables["TL_INSTALLDIR"] = this.InstallDir;
+            this.Engine.StringVariables["TL_INSTALLDIR_PERSISTED"] = this.InstallDirPersisted;
         }
 
         private void SetupApplication_PlanComplete(object sender, PlanCompleteEventArgs e)

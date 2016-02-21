@@ -52,6 +52,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\GuiService.cs" />
     <Compile Include="Services\IGuiService.cs" />
     <Compile Include="SetupApplication.cs" />
@@ -110,6 +115,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Resource Include="..\..\LICENSE">
+      <Link>Resources\LICENSE</Link>
+    </Resource>
     <None Include="BootstrapperCore.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -164,6 +172,13 @@
     <Resource Include="..\Resources\Images\warning.png">
       <Link>Resources\warning.png</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

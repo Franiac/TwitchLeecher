@@ -28,11 +28,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public string FeatureFSSize
+        public string FeatureTLSize
         {
             get
             {
-                return this.bootstrapper.FeatureFSSize;
+                return this.bootstrapper.FeatureTLSize;
             }
         }
 

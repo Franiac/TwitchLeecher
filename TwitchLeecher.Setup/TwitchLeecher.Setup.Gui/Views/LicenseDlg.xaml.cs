@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace TwitchLeecher.Setup.Gui.Views
@@ -10,6 +8,13 @@ namespace TwitchLeecher.Setup.Gui.Views
         public LicenseDlg()
         {
             InitializeComponent();
+
+            this.Loaded += LicenseDlg_Loaded;
+        }
+
+        private void LicenseDlg_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.txtLicense.Text = Properties.Resources.LICENSE;
         }
     }
 }

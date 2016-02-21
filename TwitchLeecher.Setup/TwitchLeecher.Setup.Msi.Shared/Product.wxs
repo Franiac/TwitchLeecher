@@ -29,7 +29,7 @@
     <Icon Id="TL_Icon.exe" SourceFile="$(var.SolutionDir)Resources\Images\TL_Icon.ico" />
 
     <!-- ICON FOR "PROGRAMS AND FEATURES" -->
-    <Property Id="ARPPRODUCTICON" Value="FSIcon" />
+    <Property Id="ARPPRODUCTICON" Value="TL_Icon.exe" />
 
     <!-- DISABLE REPAIR MODE -->
     <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />

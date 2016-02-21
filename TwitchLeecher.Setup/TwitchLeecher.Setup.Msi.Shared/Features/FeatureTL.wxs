@@ -21,6 +21,9 @@
     </ComponentGroup>
 
     <ComponentGroup Id="FeatureTLComponents">
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_LICENSE" KeyPath="yes" Source="$(var.SolutionDir)..\LICENSE" />
+      </Component>
       <?if $(sys.BUILDARCH)="x86"?>
       <Component Directory="INSTALLDIR">
         <File Id="TL_ffmpeg_x86.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg_x86.exe" />

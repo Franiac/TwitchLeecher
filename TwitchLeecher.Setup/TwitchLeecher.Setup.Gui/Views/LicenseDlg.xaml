@@ -25,8 +25,8 @@
                 </Border.BorderBrush>
                 <Border.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFF9FDFF" Offset="0" />
-                        <GradientStop Color="#FF5B5B5B" Offset="1" />
+                        <GradientStop Color="{StaticResource BannerLight}" Offset="0" />
+                        <GradientStop Color="{StaticResource BannerDark}" Offset="1" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
@@ -52,7 +52,8 @@
                 <RowDefinition Height="15px" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <RichTextBox Grid.Row="0" Padding="5,10,5,5" Name="rtbLicense" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+            <TextBox Grid.Row="0" Name="txtLicense" IsReadOnly="True" Height="Auto" Padding="5" FontFamily="Consolas" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" />
+            <!--<RichTextBox Grid.Row="0" Padding="5,10,5,5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" FontFamily="Consolas" />-->
             <CheckBox Grid.Row="2" Content="I accept the terms of the above License Agreement" IsChecked="{Binding LicenseAccepted, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
         </Grid>
     </Grid>

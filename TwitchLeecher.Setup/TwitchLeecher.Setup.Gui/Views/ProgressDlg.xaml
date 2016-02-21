@@ -23,8 +23,8 @@
                 </Border.BorderBrush>
                 <Border.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFF9FDFF" Offset="0" />
-                        <GradientStop Color="#FF5B5B5B" Offset="1" />
+                        <GradientStop Color="{StaticResource BannerLight}" Offset="0" />
+                        <GradientStop Color="{StaticResource BannerDark}" Offset="1" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
@@ -33,7 +33,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Style="{StaticResource HeadlineTextCenter}" Text="{Binding HeaderText, FallbackValue='Installing Framework Studio X.Y'}" />
+                <TextBlock Grid.Column="0" Style="{StaticResource HeadlineTextCenter}" Text="{Binding HeaderText, FallbackValue='Installing Twitch Leecher X.Y'}" />
                 <Image Grid.Column="1" Style="{StaticResource tl_logo_small}" RenderOptions.BitmapScalingMode="Fant" />
             </Grid>
         </Grid>
@@ -44,7 +44,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding DescText, FallbackValue='Please wait while the Setup Wizard installs Framework Studio X.Y.'}" />
+            <TextBlock Text="{Binding DescText, FallbackValue='Please wait while the Setup Wizard installs Twitch Leecher X.Y.'}" />
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition />

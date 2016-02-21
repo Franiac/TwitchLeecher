@@ -32,11 +32,11 @@
                            Style="{StaticResource MainHeadlineText}"
                            Text="{Binding ProductNameVersionDisplay,
                                   StringFormat='Uninstall \{0\}',
-                                  FallbackValue='Uninstall Framework Studio X.Y'}" />
+                                  FallbackValue='Uninstall Twitch Leecher X.Y'}" />
                 <TextBlock Grid.Row="2"
                            Text="{Binding ProductNameVersionDisplay,
                                   StringFormat='The Setup Wizard will uninstall \{0\} from your computer. Click &quot;Uninstall&quot; to continue or &quot;Cancel&quot; to exit the Setup Wizard.',
-                                  FallbackValue='The Setup Wizard will uninstall Framework Studio X.Y from your computer. Click &quot;Uninstall&quot; to continue or &quot;Cancel&quot; to exit the Setup Wizard.'}" />
+                                  FallbackValue='The Setup Wizard will uninstall Twitch Leecher X.Y from your computer. Click &quot;Uninstall&quot; to continue or &quot;Cancel&quot; to exit the Setup Wizard.'}" />
             </Grid>
         </Grid>
     </Grid>

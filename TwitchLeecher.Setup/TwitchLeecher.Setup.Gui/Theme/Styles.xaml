@@ -6,6 +6,9 @@
     <c:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <c:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
 
+    <Color x:Key="BannerDark">#FF5B5B5B</Color>
+    <Color x:Key="BannerLight">#66FFC864</Color>
+
     <Style TargetType="{x:Type ContentPresenter}">
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
     </Style>
@@ -129,11 +132,11 @@
     </Style>
 
     <ControlTemplate x:Key="Dialog_Banner">
-        <Border BorderThickness="1" Margin="0">
+        <Border>
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF5B5B5B" Offset="0" />
-                    <GradientStop Color="#FFF9FDFF" Offset="1" />
+                    <GradientStop Color="{StaticResource BannerDark}" Offset="0" />
+                    <GradientStop Color="{StaticResource BannerLight}" Offset="1" />
                 </LinearGradientBrush>
             </Border.Background>
             <StackPanel>
