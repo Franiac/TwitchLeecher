@@ -40,28 +40,10 @@
         <File Id="TL_Microsoft.Expression.Interactions.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Expression.Interactions.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
-        <File Id="TL_Microsoft.Practices.ServiceLocation.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.ServiceLocation.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Microsoft.Practices.Unity.Configuration.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.Configuration.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Microsoft.Practices.Unity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Microsoft.Practices.Unity.RegistrationByConvention.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Practices.Unity.RegistrationByConvention.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
         <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
-        <File Id="TL_Prism.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Prism.Unity.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.Unity.Wpf.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_Prism.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Prism.Wpf.dll" />
+        <File Id="TL_Ninject.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Ninject.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_System.Windows.Interactivity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Windows.Interactivity.dll" />
