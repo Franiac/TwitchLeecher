@@ -1,9 +1,9 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Gui.ViewModels
 {

@@ -2,11 +2,11 @@
 using System.IO;
 using System.Reflection;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Shared;
+using TwitchLeecher.Shared.IO;
 
 namespace TwitchLeecher.Services.Services
 {
-    public class LogService : ILogService
+    internal class LogService : ILogService
     {
         #region Constants
 

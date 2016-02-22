@@ -4,7 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Shell;
-using TwitchLeecher.Common;
+using TwitchLeecher.Gui.Extensions;
+using TwitchLeecher.Shared.Native;
 
 namespace TwitchLeecher.Gui.Views
 {

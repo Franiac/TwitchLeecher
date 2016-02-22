@@ -1,11 +1,11 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.Text;
 using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class TwitchVideoDownload : BindableBase
+    public class TwitchVideoDownload : INotifyPropertyChanged
     {
         #region Fields
 
@@ -13,12 +13,12 @@ namespace TwitchLeecher.Core.Models
 
         private DownloadStatus downloadStatus;
 
-        private string status;
-        private int progress;
-
         private StringBuilder log;
-
         private object logLockObject;
+        private int progress;
+        private string status;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion Fields
 
@@ -42,14 +42,6 @@ namespace TwitchLeecher.Core.Models
 
         #region Properties
 
-        public TwitchVideo Video
-        {
-            get
-            {
-                return this.downloadParams.Video;
-            }
-        }
-
         public DownloadParameters DownloadParams
         {
             get
@@ -66,8 +58,30 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                this.SetProperty(ref this.downloadStatus, value, nameof(this.DownloadStatus));
-                this.OnPropertyChanged(nameof(this.Status));
+                this.downloadStatus = value;
+                this.FirePropertyChanged(nameof(this.DownloadStatus));
+                this.FirePropertyChanged(nameof(this.Status));
+            }
+        }
+
+        public string Log
+        {
+            get
+            {
+                return this.log.ToString();
+            }
+        }
+
+        public int Progress
+        {
+            get
+            {
+                return this.progress;
+            }
+            set
+            {
+                this.progress = value;
+                this.FirePropertyChanged(nameof(this.Progress));
             }
         }
 
@@ -84,27 +98,16 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                this.SetProperty(ref this.status, value, nameof(this.Status));
+                this.status = value;
+                this.FirePropertyChanged(nameof(this.Status));
             }
         }
 
-        public int Progress
+        public TwitchVideo Video
         {
             get
             {
-                return this.progress;
-            }
-            set
-            {
-                this.SetProperty(ref this.progress, value, nameof(this.Progress));
-            }
-        }
-
-        public string Log
-        {
-            get
-            {
-                return this.log.ToString();
+                return this.downloadParams.Video;
             }
         }
 
@@ -117,7 +120,15 @@ namespace TwitchLeecher.Core.Models
             lock (logLockObject)
             {
                 this.log.Append(text);
-                this.OnPropertyChanged(nameof(this.Log));
+                this.FirePropertyChanged(nameof(this.Log));
+            }
+        }
+
+        public void FirePropertyChanged(string propertyName = null)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -126,7 +137,7 @@ namespace TwitchLeecher.Core.Models
             lock (logLockObject)
             {
                 this.log.Clear();
-                this.OnPropertyChanged(nameof(this.Log));
+                this.FirePropertyChanged(nameof(this.Log));
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Prism.Mvvm;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,12 +14,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
+using TwitchLeecher.Services.Extensions;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Shared;
+using TwitchLeecher.Shared.IO;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Services.Services
 {
-    public class TwitchService : BindableBase, ITwitchService
+    internal class TwitchService : BindableBase, ITwitchService
     {
         #region Constants
 

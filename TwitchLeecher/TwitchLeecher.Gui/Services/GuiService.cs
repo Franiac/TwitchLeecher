@@ -1,5 +1,5 @@
-﻿using Microsoft.Practices.Unity;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using Ninject;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -11,11 +11,12 @@ using TwitchLeecher.Services.Interfaces;
 
 namespace TwitchLeecher.Gui.Services
 {
-    public class GuiService : IGuiService
+    internal class GuiService : IGuiService
     {
         #region Fields
 
-        private IUnityContainer container;
+        private IKernel kernel;
+        private ILogService logService;
 
         private bool busy;
 
@@ -23,9 +24,10 @@ namespace TwitchLeecher.Gui.Services
 
         #region Constructor
 
-        public GuiService(IUnityContainer container)
+        public GuiService(IKernel kernel, ILogService logService)
         {
-            this.container = container;
+            this.kernel = kernel;
+            this.logService = logService;
         }
 
         #endregion Constructor
@@ -89,7 +91,7 @@ namespace TwitchLeecher.Gui.Services
                 return;
             }
 
-            ILogService logService = this.container.Resolve<ILogService>();
+            ILogService logService = this.kernel.Get<ILogService>();
             string logFile = logService.LogException(ex);
 
             MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
@@ -112,12 +114,12 @@ namespace TwitchLeecher.Gui.Services
                 throw new ArgumentNullException(nameof(dialogCompleteCallback));
             }
 
-            SearchVM vm = this.container.Resolve<SearchVM>();
+            SearchWindowVM vm = this.kernel.Get<SearchWindowVM>();
             vm.Username = lastSearchParams.Username;
             vm.VideoType = lastSearchParams.VideoType;
             vm.LoadLimit = lastSearchParams.LoadLimit;
 
-            SearchWindow window = this.container.Resolve<SearchWindow>();
+            SearchWindow window = this.kernel.Get<SearchWindow>();
             window.DataContext = vm;
 
             bool? result = window.ShowDialog();
@@ -139,10 +141,10 @@ namespace TwitchLeecher.Gui.Services
                 throw new ArgumentNullException(nameof(dialogCompleteCallback));
             }
 
-            DownloadVM vm = this.container.Resolve<DownloadVM>();
+            DownloadWindowVM vm = this.kernel.Get<DownloadWindowVM>();
             vm.Video = video;
 
-            DownloadWindow window = this.container.Resolve<DownloadWindow>();
+            DownloadWindow window = this.kernel.Get<DownloadWindow>();
             window.DataContext = vm;
 
             bool? result = window.ShowDialog();
@@ -174,10 +176,10 @@ namespace TwitchLeecher.Gui.Services
                 throw new ArgumentNullException(nameof(download));
             }
 
-            LogVM vm = this.container.Resolve<LogVM>();
+            LogWindowVM vm = this.kernel.Get<LogWindowVM>();
             vm.Download = download;
 
-            LogWindow window = this.container.Resolve<LogWindow>();
+            LogWindow window = this.kernel.Get<LogWindow>();
             window.DataContext = vm;
 
             window.ShowDialog();
