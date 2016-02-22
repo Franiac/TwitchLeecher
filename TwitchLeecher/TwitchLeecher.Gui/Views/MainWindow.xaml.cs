@@ -44,8 +44,6 @@ namespace TwitchLeecher.Gui.Views
             // Hold reference to FontAwesome library
             ImageAwesome.CreateImageSource(FontAwesomeIcon.Times, Brushes.Black);
 
-            ActionCommand a = new ActionCommand(() => { });
-
             this.Loaded += (s, e) =>
             {
                 HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(WindowProc));
