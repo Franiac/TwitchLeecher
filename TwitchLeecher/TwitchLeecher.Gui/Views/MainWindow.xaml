@@ -1,15 +1,18 @@
 ﻿<Window x:Class="TwitchLeecher.Gui.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
         xmlns:vm="clr-namespace:TwitchLeecher.Gui.ViewModels"
         xmlns:view="clr-namespace:TwitchLeecher.Gui.Views"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         Style="{DynamicResource MainWindow}"
         WindowStartupLocation="CenterScreen"        
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         Name="thisWindow"
         Title="{Binding Title}"
-        WindowState="{Binding WindowState}">
+        WindowState="{Binding WindowState}"
+        b:RequestClosingBehavior.RequestClosing="{Binding RequestCloseCommand}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -96,6 +99,15 @@
             </Grid>
         </Border>
 
-        <ContentControl Grid.Row="2" Content="{Binding MainView}" />
+        <ctrl:AnimatedContentControl Grid.Row="2" Content="{Binding MainView}">
+            <ctrl:AnimatedContentControl.Template>
+                <ControlTemplate TargetType="{x:Type ctrl:AnimatedContentControl}">
+                    <Grid>
+                        <Rectangle x:Name="Tpl_Part_PaintArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        <ContentPresenter Content="{TemplateBinding Content}" x:Name="Tpl_Part_MainContent" />
+                    </Grid>
+                </ControlTemplate>
+            </ctrl:AnimatedContentControl.Template>
+        </ctrl:AnimatedContentControl>
     </Grid>
 </Window>

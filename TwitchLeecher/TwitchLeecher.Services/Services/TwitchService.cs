@@ -536,14 +536,6 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        public void WaitForShutdown()
-        {
-            if (this.downloadTasks.Any())
-            {
-                Task.WaitAll(this.downloadTasks.Values.Select(dlt => dlt.Task).ToArray());
-            }
-        }
-
         public TwitchVideo ParseVideo(dynamic videoJson)
         {
             string title = videoJson.title;

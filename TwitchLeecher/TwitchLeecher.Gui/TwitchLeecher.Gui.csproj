@@ -63,6 +63,8 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\CenterMainWindowBehavior.cs" />
+    <Compile Include="Behaviors\RequestClosingBehavior.cs" />
+    <Compile Include="Controls\AnimatedContentControl.cs" />
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Controls\SpacedUniformGrid.cs" />
     <Compile Include="Controls\ThemedMessageBox.cs" />

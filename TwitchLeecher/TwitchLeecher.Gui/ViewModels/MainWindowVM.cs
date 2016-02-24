@@ -36,6 +36,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand minimizeCommand;
         private ICommand maximizeRestoreCommand;
         private ICommand closeCommand;
+        private ICommand requestCloseCommand;
 
         private WindowState windowState;
 
@@ -61,6 +62,8 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator = eventAggregator;
             this.twitchService = twitchService;
             this.guiService = guiService;
+
+            this.ShowMainView<WelcomeViewVM>();
 
             this.eventAggregator.GetEvent<SearchBeginEvent>().Subscribe(() => this.ShowMainView<VideosLoadingViewVM>());
             this.eventAggregator.GetEvent<SearchCompleteEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
@@ -241,6 +244,19 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public ICommand RequestCloseCommand
+        {
+            get
+            {
+                if (this.requestCloseCommand == null)
+                {
+                    this.requestCloseCommand = new DelegateCommand(() => { }, this.CanClose);
+                }
+
+                return this.requestCloseCommand;
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -296,6 +312,11 @@ namespace TwitchLeecher.Gui.ViewModels
             }
 
             this.MainView = vm;
+        }
+
+        private bool CanClose()
+        {
+            return true;
         }
 
         #endregion Methods
