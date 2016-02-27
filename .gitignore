@@ -212,6 +212,5 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 # Custom ignored files
-/TwitchLeecher/TwitchLeecher.GUI/Converters/DownloadStatusToVisibilityConverter.cs
-/TwitchLeecher.Setup/Libraries
 /TwitchLeecher.Setup.Publish
+/TwitchLeecher.Setup/Libraries/ResourceHacker.ini
