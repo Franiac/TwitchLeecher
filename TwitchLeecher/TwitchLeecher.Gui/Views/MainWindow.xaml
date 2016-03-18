@@ -33,6 +33,9 @@
                     <DataTemplate DataType="{x:Type vm:DownloadsViewVM}">
                         <view:DownloadsView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:InfoViewVM}">
+                        <view:InfoView />
+                    </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -82,10 +85,13 @@
                             <fa:ImageAwesome Icon="Download" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Downloads" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
-                    </Button>
+                    </Button>                    
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding InfoCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                        <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
                     <Button Style="{StaticResource MiniButton}" Command="{Binding MinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Minimize}" />
                     </Button>

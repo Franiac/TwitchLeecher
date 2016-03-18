@@ -85,6 +85,7 @@
     <Compile Include="ViewModels\DownloadsViewVM.cs" />
     <Compile Include="ViewModels\VideosLoadingViewVM.cs" />
     <Compile Include="ViewModels\VideosViewVM.cs" />
+    <Compile Include="ViewModels\InfoViewVM.cs" />
     <Compile Include="ViewModels\WelcomeViewVM.cs" />
     <Compile Include="Views\DownloadsView.xaml.cs">
       <DependentUpon>DownloadsView.xaml</DependentUpon>
@@ -100,6 +101,9 @@
     </Compile>
     <Compile Include="Views\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InfoView.xaml.cs">
+      <DependentUpon>InfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
@@ -150,6 +154,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InfoView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

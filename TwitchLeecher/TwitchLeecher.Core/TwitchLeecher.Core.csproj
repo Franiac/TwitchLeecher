@@ -44,6 +44,7 @@
     <Compile Include="Enums\VideoQuality.cs" />
     <Compile Include="Enums\VideoType.cs" />
     <Compile Include="Events\ShowDownloadsEvent.cs" />
+    <Compile Include="Events\ShowInfoEvent.cs" />
     <Compile Include="Events\ShowVideosEvent.cs" />
     <Compile Include="Events\SearchBeginEvent.cs" />
     <Compile Include="Events\SearchCompleteEvent.cs" />

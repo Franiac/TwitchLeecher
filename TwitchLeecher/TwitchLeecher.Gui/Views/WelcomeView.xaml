@@ -15,6 +15,7 @@
         <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold">
             <Run Text="Welcome to " /><Run Text="{Binding ProductName, Mode=OneTime}" />
         </TextBlock>
-        <TextBlock Text="Hit the 'Search' button in order to find your broadcasts..." HorizontalAlignment="Center" FontWeight="Bold" Margin="0,20,0,0" />
+        <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" RenderOptions.BitmapScalingMode="Fant" Width="150"  Margin="0,20,0,20" />
+        <TextBlock Text="Hit the 'Search' button in order to find your broadcasts..." HorizontalAlignment="Center" FontWeight="Bold" />
     </StackPanel>
 </UserControl>

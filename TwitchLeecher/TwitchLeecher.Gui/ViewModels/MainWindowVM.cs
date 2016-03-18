@@ -33,6 +33,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand searchCommand;
         private ICommand showVideosCommand;
         private ICommand showDownloadsCommand;
+        private ICommand infoCommand;
         private ICommand minimizeCommand;
         private ICommand maximizeRestoreCommand;
         private ICommand closeCommand;
@@ -69,6 +70,7 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator.GetEvent<SearchCompleteEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
             this.eventAggregator.GetEvent<ShowVideosEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
             this.eventAggregator.GetEvent<ShowDownloadsEvent>().Subscribe(() => this.ShowMainView<DownloadsViewVM>());
+            this.eventAggregator.GetEvent<ShowInfoEvent>().Subscribe(() => this.ShowMainView<InfoViewVM>());
         }
 
         #endregion Constructors
@@ -172,6 +174,29 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.showDownloadsCommand;
+            }
+        }
+
+        public ICommand InfoCommand
+        {
+            get
+            {
+                if (this.infoCommand == null)
+                {
+                    this.infoCommand = new DelegateCommand(() =>
+                    {
+                        try
+                        {
+                            this.eventAggregator.GetEvent<ShowInfoEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
+                    });
+                }
+
+                return this.infoCommand;
             }
         }
 

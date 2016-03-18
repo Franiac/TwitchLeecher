@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.InfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/Constants.xaml" />
+                <ResourceDictionary Source="../Theme/Templates.xaml" />
+                <ResourceDictionary Source="../Theme/Styles.xaml" />
+                <ResourceDictionary Source="../Theme/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Width="27" Margin="0,1,5,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant" />
+            <TextBlock  Text="{Binding ProductName, Mode=OneTime, FallbackValue='Twitch Leecher X.Y'}" FontWeight="Bold" FontSize="20" VerticalAlignment="Top" />
+        </StackPanel>
+        
+        <TextBlock Grid.Row="1" Text="Developer" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="2" Text="Dominik &quot;Fake Smile Revolution&quot; Rebitzer" Margin="15,5,0,0" />
+
+        <TextBlock Grid.Row="3" Text="Contact" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="4" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="mailto:contact@fakesmilerevolution.com">
+                contact@fakesmilerevolution.com
+            </Hyperlink>
+        </TextBlock>
+
+        <TextBlock Grid.Row="5" Text="Source Code" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="6" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
+                http://github.com/Franiac/TwitchLeecher
+            </Hyperlink>
+        </TextBlock>
+        
+        <TextBlock Grid.Row="7" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="8" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
+                http://www.fakesmilerevolution.com
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Grid.Row="9" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.twitch.tv/fakesmilerevolution">
+                http://www.twitch.tv/fakesmilerevolution
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Grid.Row="10" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://plus.google.com/+fakesmilerevolution">
+                http://plus.google.com/+fakesmilerevolution
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Grid.Row="11" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
+                http://www.youtube.com/fakesmilerevolution
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Grid.Row="12" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
+                http://www.facebook.com/fakesmilerevolution
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Grid.Row="13" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
+                http://www.soundcloud.com/fakesmilerevolution
+            </Hyperlink>
+        </TextBlock>
+    </Grid>
+</UserControl>

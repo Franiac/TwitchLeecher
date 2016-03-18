@@ -41,6 +41,10 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type Hyperlink}">
+        <Setter Property="Foreground" Value="#FF2994FF" />
+    </Style>
+
     <Style x:Key="TitleTextBlock" BasedOn="{StaticResource TextDropShadow}" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Bold" />
