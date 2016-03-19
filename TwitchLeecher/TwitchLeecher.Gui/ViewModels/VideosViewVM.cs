@@ -9,8 +9,8 @@ using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {

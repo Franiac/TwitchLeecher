@@ -11,7 +11,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -37,7 +37,7 @@
             <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Width="27" Margin="0,1,5,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant" />
             <TextBlock  Text="{Binding ProductName, Mode=OneTime, FallbackValue='Twitch Leecher X.Y'}" FontWeight="Bold" FontSize="20" VerticalAlignment="Top" />
         </StackPanel>
-        
+
         <TextBlock Grid.Row="1" Text="Developer" FontWeight="Bold"  Margin="0,15,0,0" />
         <TextBlock Grid.Row="2" Text="Dominik &quot;Fake Smile Revolution&quot; Rebitzer" Margin="15,5,0,0" />
 
@@ -49,7 +49,7 @@
         </TextBlock>
 
         <TextBlock Grid.Row="5" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
-        <TextBlock Grid.Row="6" Text="If you like the program, please consider making a donation!" Margin="15,5,0,0"  />
+        <TextBlock Grid.Row="6" Text="If you like the program, please consider making a donation!" Margin="15,5,0,0" />
         <Button Grid.Row="7" Command="{Binding DonateCommand}" Width="120" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
@@ -74,15 +74,15 @@
                 </Style>
             </Button.Style>
             <Image Source="/TwitchLeecher.Gui;component/Resources/Donate.png" />
-        </Button>                   
+        </Button>
 
-        <TextBlock Grid.Row="8" Text="Source Code" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="8" Text="Source Code &amp; Documentation" FontWeight="Bold"  Margin="0,15,0,0" />
         <TextBlock Grid.Row="9" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
                 http://github.com/Franiac/TwitchLeecher
             </Hyperlink>
         </TextBlock>
-        
+
         <TextBlock Grid.Row="10" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
         <TextBlock Grid.Row="11" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">

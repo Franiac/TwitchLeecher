@@ -1,5 +1,4 @@
 ﻿using FontAwesome.WPF;
-using Microsoft.Expression.Interactivity.Core;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;

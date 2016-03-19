@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
@@ -292,7 +291,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.lastSearchParams == null)
                 {
-                    this.lastSearchParams = new SearchParameters("FakeSmileRevolution", VideoType.Broadcast, 10);
+                    this.lastSearchParams = new SearchParameters();
                 }
 
                 this.guiService.ShowSearchDialog(lastSearchParams, this.SearchCallback);
@@ -344,7 +343,7 @@ namespace TwitchLeecher.Gui.ViewModels
             try
             {
                 this.twitchService.Pause();
-                
+
                 if (!this.twitchService.CanShutdown())
                 {
                     MessageBoxResult result = this.guiService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -356,7 +355,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     }
                 }
 
-                this.twitchService.Shutdown();                
+                this.twitchService.Shutdown();
             }
             catch (Exception ex)
             {

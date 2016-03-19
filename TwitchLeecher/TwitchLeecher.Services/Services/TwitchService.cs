@@ -661,7 +661,7 @@ namespace TwitchLeecher.Services.Services
         {
             this.Pause();
 
-            foreach(DownloadTask downloadTask in this.downloadTasks.Values)
+            foreach (DownloadTask downloadTask in this.downloadTasks.Values)
             {
                 downloadTask.CancellationTokenSource.Cancel();
             }

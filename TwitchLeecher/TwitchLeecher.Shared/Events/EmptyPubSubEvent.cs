@@ -1,5 +1,4 @@
-﻿using TwitchLeecher.Shared.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace TwitchLeecher.Shared.Events

@@ -7,7 +7,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         Style="{DynamicResource MainWindow}"
-        WindowStartupLocation="CenterScreen"        
+        WindowStartupLocation="CenterScreen"
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         Name="thisWindow"
         Title="{Binding Title}"
@@ -85,7 +85,7 @@
                             <fa:ImageAwesome Icon="Download" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Downloads" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
-                    </Button>                    
+                    </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
