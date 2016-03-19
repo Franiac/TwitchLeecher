@@ -34,6 +34,8 @@ namespace TwitchLeecher.Services.Services
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
+        private const int TIMER_INTERVALL = 2;
+
         #endregion Constants
 
         #region Fields
@@ -49,6 +51,8 @@ namespace TwitchLeecher.Services.Services
         private string downloadsDir;
 
         private object changeDownloadLockObject;
+
+        private volatile bool paused;
 
         #endregion Fields
 
@@ -69,7 +73,7 @@ namespace TwitchLeecher.Services.Services
 
             this.changeDownloadLockObject = new object();
 
-            this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, 2);
+            this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
         }
 
         #endregion Constructors
@@ -159,6 +163,11 @@ namespace TwitchLeecher.Services.Services
 
         public void Enqueue(DownloadParameters downloadParams)
         {
+            if (this.paused)
+            {
+                return;
+            }
+
             lock (this.changeDownloadLockObject)
             {
                 this.Downloads.Add(new TwitchVideoDownload(downloadParams));
@@ -167,11 +176,21 @@ namespace TwitchLeecher.Services.Services
 
         private void DownloadTimerCallback(object state)
         {
+            if (this.paused)
+            {
+                return;
+            }
+
             this.StartQueuedDownloadIfExists();
         }
 
         private void StartQueuedDownloadIfExists()
         {
+            if (this.paused)
+            {
+                return;
+            }
+
             if (Monitor.TryEnter(this.changeDownloadLockObject))
             {
                 try
@@ -420,7 +439,7 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }, cancellationTokenSource.Token);
 
-                            downloadVideoTask.ContinueWith(task =>
+                            Task continueTask = downloadVideoTask.ContinueWith(task =>
                             {
                                 download.AppendLog(Environment.NewLine + Environment.NewLine + "Starting temporary download folder cleanup!");
                                 this.CleanUp(outputDir, download);
@@ -452,11 +471,11 @@ namespace TwitchLeecher.Services.Services
 
                                 if (!this.downloadTasks.TryRemove(video.Id, out downloadTask))
                                 {
-                                    throw new ApplicationException("Could not remove download taks with ID '" + video.Id + "' from download task collection!");
+                                    throw new ApplicationException("Could not remove download task with ID '" + video.Id + "' from download task collection!");
                                 }
                             });
 
-                            if (this.downloadTasks.TryAdd(video.Id, new DownloadTask(downloadVideoTask, cancellationTokenSource)))
+                            if (this.downloadTasks.TryAdd(video.Id, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
                             {
                                 downloadVideoTask.Start();
                                 download.DownloadStatus = DownloadStatus.Active;
@@ -499,6 +518,11 @@ namespace TwitchLeecher.Services.Services
 
         public void Retry(string id)
         {
+            if (this.paused)
+            {
+                return;
+            }
+
             lock (this.changeDownloadLockObject)
             {
                 DownloadTask downloadTask;
@@ -607,6 +631,61 @@ namespace TwitchLeecher.Services.Services
             return resolutions;
         }
 
+        public void Pause()
+        {
+            this.paused = true;
+            this.downloadTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        public void Resume()
+        {
+            this.paused = false;
+            this.downloadTimer.Change(0, TIMER_INTERVALL);
+        }
+
+        public bool CanShutdown()
+        {
+            Monitor.Enter(this.changeDownloadLockObject);
+
+            try
+            {
+                return !this.Downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
+            }
+            finally
+            {
+                Monitor.Exit(this.changeDownloadLockObject);
+            }
+        }
+
+        public void Shutdown()
+        {
+            this.Pause();
+
+            foreach(DownloadTask downloadTask in this.downloadTasks.Values)
+            {
+                downloadTask.CancellationTokenSource.Cancel();
+            }
+
+            List<Task> tasks = this.downloadTasks.Values.Select(v => v.Task).ToList();
+            tasks.AddRange(this.downloadTasks.Values.Select(v => v.ContinueTask).ToList());
+
+            try
+            {
+                Task.WaitAll(tasks.ToArray());
+            }
+            catch (Exception)
+            {
+                // Don't care about aborted tasks
+            }
+
+            List<string> toRemove = this.downloads.Select(d => d.Video.Id).ToList();
+
+            foreach (string id in toRemove)
+            {
+                this.Remove(id);
+            }
+        }
+
         #endregion Methods
 
         #region Nested Classes
@@ -626,13 +705,16 @@ namespace TwitchLeecher.Services.Services
 
         private class DownloadTask
         {
-            public DownloadTask(Task task, CancellationTokenSource cancellationTokenSource)
+            public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
             {
                 this.Task = task;
+                this.ContinueTask = continueTask;
                 this.CancellationTokenSource = cancellationTokenSource;
             }
 
             public Task Task { get; private set; }
+
+            public Task ContinueTask { get; private set; }
 
             public CancellationTokenSource CancellationTokenSource { get; private set; }
         }

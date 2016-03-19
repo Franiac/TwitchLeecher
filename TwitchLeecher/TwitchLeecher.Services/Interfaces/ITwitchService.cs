@@ -28,6 +28,14 @@ namespace TwitchLeecher.Services.Interfaces
 
         void Remove(string id);
 
+        void Pause();
+
+        void Resume();
+
+        bool CanShutdown();
+
+        void Shutdown();
+
         #endregion Methods
     }
 }

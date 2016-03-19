@@ -275,7 +275,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.requestCloseCommand == null)
                 {
-                    this.requestCloseCommand = new DelegateCommand(() => { }, this.CanClose);
+                    this.requestCloseCommand = new DelegateCommand(() => { }, this.CloseApplication);
                 }
 
                 return this.requestCloseCommand;
@@ -339,8 +339,30 @@ namespace TwitchLeecher.Gui.ViewModels
             this.MainView = vm;
         }
 
-        private bool CanClose()
+        private bool CloseApplication()
         {
+            try
+            {
+                this.twitchService.Pause();
+                
+                if (!this.twitchService.CanShutdown())
+                {
+                    MessageBoxResult result = this.guiService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                    if (result == MessageBoxResult.No)
+                    {
+                        this.twitchService.Resume();
+                        return false;
+                    }
+                }
+
+                this.twitchService.Shutdown();                
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
+
             return true;
         }
 
