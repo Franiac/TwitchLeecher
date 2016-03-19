@@ -192,7 +192,6 @@
       <Name>TwitchLeecher.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="..\Resources\Images\TL_Icon.png">
       <Link>Resources\TL_Icon.png</Link>
@@ -215,6 +214,11 @@
   <ItemGroup>
     <Resource Include="..\Resources\Images\TL_Icon.ico">
       <Link>Resources\TL_Icon.ico</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\Resources\Images\Donate.png">
+      <Link>Resources\Donate.png</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

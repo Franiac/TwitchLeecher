@@ -16,6 +16,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private string productName;
 
         private ICommand linkCommand;
+        private ICommand donateCommand;
 
         private IGuiService guiService;
 
@@ -64,6 +65,29 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.linkCommand;
+            }
+        }
+
+        public ICommand DonateCommand
+        {
+            get
+            {
+                if (this.donateCommand == null)
+                {
+                    this.donateCommand = new DelegateCommand(() =>
+                    {
+                        try
+                        {
+                            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE");
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
+                    });
+                }
+
+                return this.donateCommand;
             }
         }
 

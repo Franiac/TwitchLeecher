@@ -28,6 +28,9 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -45,40 +48,68 @@
             </Hyperlink>
         </TextBlock>
 
-        <TextBlock Grid.Row="5" Text="Source Code" FontWeight="Bold"  Margin="0,15,0,0" />
-        <TextBlock Grid.Row="6" Margin="15,5,0,0">
+        <TextBlock Grid.Row="5" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="6" Text="If you like the program, please consider making a donation!" Margin="15,5,0,0"  />
+        <Button Grid.Row="7" Command="{Binding DonateCommand}" Width="120" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    <Setter Property="Background" Value="#00000000" />
+                    <Setter Property="BorderBrush" Value="#00000000" />
+                    <Setter Property="Foreground" Value="#00000000" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                    <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            <Image Source="/TwitchLeecher.Gui;component/Resources/Donate.png" />
+        </Button>                   
+
+        <TextBlock Grid.Row="8" Text="Source Code" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="9" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
                 http://github.com/Franiac/TwitchLeecher
             </Hyperlink>
         </TextBlock>
         
-        <TextBlock Grid.Row="7" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
-        <TextBlock Grid.Row="8" Margin="15,5,0,0">
+        <TextBlock Grid.Row="10" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
+        <TextBlock Grid.Row="11" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
                 http://www.fakesmilerevolution.com
             </Hyperlink>
         </TextBlock>
-        <TextBlock Grid.Row="9" Margin="15,5,0,0">
+        <TextBlock Grid.Row="12" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.twitch.tv/fakesmilerevolution">
                 http://www.twitch.tv/fakesmilerevolution
             </Hyperlink>
         </TextBlock>
-        <TextBlock Grid.Row="10" Margin="15,5,0,0">
+        <TextBlock Grid.Row="13" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://plus.google.com/+fakesmilerevolution">
                 http://plus.google.com/+fakesmilerevolution
             </Hyperlink>
         </TextBlock>
-        <TextBlock Grid.Row="11" Margin="15,5,0,0">
+        <TextBlock Grid.Row="14" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
                 http://www.youtube.com/fakesmilerevolution
             </Hyperlink>
         </TextBlock>
-        <TextBlock Grid.Row="12" Margin="15,5,0,0">
+        <TextBlock Grid.Row="15" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
                 http://www.facebook.com/fakesmilerevolution
             </Hyperlink>
         </TextBlock>
-        <TextBlock Grid.Row="13" Margin="15,5,0,0">
+        <TextBlock Grid.Row="16" Margin="15,5,0,0">
             <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
                 http://www.soundcloud.com/fakesmilerevolution
             </Hyperlink>
