@@ -26,7 +26,6 @@ namespace TwitchLeecher.Core.Models
         private List<TwitchVideoResolution> resolutions;
 
         private DateTime recordedDate;
-        private DateTime deleteDate;
 
         private Uri thumbnail;
         private Uri url;
@@ -36,7 +35,7 @@ namespace TwitchLeecher.Core.Models
         #region Constructors
 
         public TwitchVideo(string title, string id, string game, bool isMuted, int views, TimeSpan length,
-            List<TwitchVideoResolution> resolutions, DateTime recordedDate, DateTime deleteDate, Uri thumbnail, Uri url)
+            List<TwitchVideoResolution> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -80,7 +79,6 @@ namespace TwitchLeecher.Core.Models
             this.length = length;
             this.resolutions = resolutions;
             this.recordedDate = recordedDate;
-            this.deleteDate = deleteDate;
             this.thumbnail = thumbnail;
             this.url = url;
         }
@@ -150,14 +148,6 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return this.recordedDate;
-            }
-        }
-
-        public DateTime DeleteDate
-        {
-            get
-            {
-                return this.deleteDate;
             }
         }
 
