@@ -129,7 +129,8 @@
                                     <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="6" Text="Deletion:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding DeleteDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="6" Text="N/A" />
+                                    <!--<TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding DeleteDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />-->
                                 </Grid>
                             </Grid>
                         </Grid>

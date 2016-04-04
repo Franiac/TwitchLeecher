@@ -198,7 +198,8 @@
                                     <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding Video.RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="8" Text="Deletion:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding Video.DeleteDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="8" Text="N/A" />
+                                    <!--<TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding Video.DeleteDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />-->
                                 </Grid>
                             </Grid>
                             <Border Grid.Row="2" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,10,0,0">
