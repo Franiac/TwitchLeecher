@@ -117,7 +117,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     {
                         if (this.twitchService.Downloads.Where(d => d.Video.Id == id).Any())
                         {
-                            this.guiService.ShowMessageBox("This video is already beeing downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
+                            this.guiService.ShowMessageBox("This video is already being downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
                             return;
                         }
 
