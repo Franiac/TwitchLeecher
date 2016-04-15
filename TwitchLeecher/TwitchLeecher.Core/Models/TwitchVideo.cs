@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TwitchLeecher.Core.Models
 {
@@ -140,6 +141,19 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return this.resolutions;
+            }
+        }
+
+        public string BestResolutionFps
+        {
+            get
+            {
+                if (this.resolutions == null || this.resolutions.Count == 0)
+                {
+                    return "N/A";
+                }
+
+                return this.resolutions.First().ResolutionFps;
             }
         }
 
