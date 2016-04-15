@@ -26,7 +26,7 @@
     <Variable Name="BUNDLE_PRODUCT_VERSION_TRIMMED" Type="string" Value="$(var.BUNDLE_PRODUCT_VERSION_TRIMMED)" />
 
     <Chain>
-      <PackageGroupRef Id="NetFx452Web" />
+      <PackageGroupRef Id="NetFx45Web" />
       <MsiPackage Id="TL" SourceFile="$(var.BUNDLE_TL_PROJECT_TARGET)" Cache="yes" Visible="no">
         <MsiProperty Name="INSTALLDIR" Value="[TL_INSTALLDIR]" />
         <MsiProperty Name="TL_INSTALLDIR_REGVALUENAME" Value="[TL_INSTALLDIR_REGVALUENAME]" />
