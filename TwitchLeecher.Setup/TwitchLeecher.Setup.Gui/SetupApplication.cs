@@ -39,6 +39,7 @@ namespace TwitchLeecher.Setup.Gui
         private WizardWindowVM wizardWindowVM;
         private Dispatcher uiThreadDispatcher;
         private IGuiService guiService;
+        private IUacService uacService;
 
         private AutoResetEvent detectCompleteHandle;
         private AutoResetEvent applyCompleteHandle;
@@ -313,9 +314,10 @@ namespace TwitchLeecher.Setup.Gui
                     SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(this.uiThreadDispatcher));
 
                     this.guiService = new GuiService(this, this.uiThreadDispatcher);
+                    this.uacService = new UacService();
 
                     this.Log("Initializing view model for main application window");
-                    this.wizardWindowVM = new WizardWindowVM(this, this.guiService);
+                    this.wizardWindowVM = new WizardWindowVM(this, this.guiService, this.uacService);
 
                     this.Log("Initializing main application window");
                     this.wizardWindow = new WizardWindow() { DataContext = this.wizardWindowVM };
@@ -378,7 +380,7 @@ namespace TwitchLeecher.Setup.Gui
 
             this.Log(logName + "Retrieving registry values of previous installation");
 
-            using (RegistryKey localMachineKey = this.GetRegistryHiveOnBit(RegistryHive.LocalMachine))
+            using (RegistryKey localMachineKey = RegistryUtil.GetRegistryHiveOnBit(RegistryHive.LocalMachine))
             {
                 string baseKeyStr = @"SOFTWARE\" + this.ProductName;
 
@@ -691,18 +693,6 @@ namespace TwitchLeecher.Setup.Gui
             }
 
             return newList;
-        }
-
-        public RegistryKey GetRegistryHiveOnBit(RegistryHive registryHive)
-        {
-            if (Environment.Is64BitOperatingSystem)
-            {
-                return RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry64);
-            }
-            else
-            {
-                return RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry32);
-            }
         }
 
         public MessageBoxResult ShowCloseMessageMox()

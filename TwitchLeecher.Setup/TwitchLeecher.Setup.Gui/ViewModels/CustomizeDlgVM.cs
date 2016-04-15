@@ -1,6 +1,6 @@
-﻿using TwitchLeecher.Setup.Gui.Services;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using TwitchLeecher.Setup.Gui.Services;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels
 {
@@ -9,7 +9,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         #region Constructors
 
         public CustomizeDlgVM(SetupApplication bootstrapper, IGuiService guiService)
-            : base(bootstrapper, guiService) { }
+            : base(bootstrapper, guiService)
+        { }
 
         #endregion Constructors
 

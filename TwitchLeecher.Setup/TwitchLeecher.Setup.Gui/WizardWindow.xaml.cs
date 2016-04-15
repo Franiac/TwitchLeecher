@@ -1,6 +1,6 @@
-﻿using TwitchLeecher.Setup.Gui.ViewModels;
-using System;
+﻿using System;
 using System.Windows;
+using TwitchLeecher.Setup.Gui.ViewModels;
 
 namespace TwitchLeecher.Setup.Gui
 {

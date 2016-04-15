@@ -86,6 +86,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
+        public virtual bool IsUacShieldVisible
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public virtual ICommand AdditionalCommand
         {
             get

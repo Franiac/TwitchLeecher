@@ -1,11 +1,12 @@
-﻿using TwitchLeecher.Setup.Gui.Command;
-using TwitchLeecher.Setup.Gui.Services;
-using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
+﻿using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using TwitchLeecher.Setup.Gui.Command;
+using TwitchLeecher.Setup.Gui.Services;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels
 {
@@ -16,6 +17,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         private SetupApplication bootstrapper;
 
         private IGuiService guiService;
+        private IUacService uacService;
 
         private Dictionary<Type, DlgBaseVM> viewModels;
 
@@ -35,7 +37,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         #endregion Fields
 
-        public WizardWindowVM(SetupApplication bootstrapper, IGuiService guiService)
+        public WizardWindowVM(SetupApplication bootstrapper, IGuiService guiService, IUacService uacService)
         {
             if (bootstrapper == null)
             {
@@ -49,6 +51,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
             this.bootstrapper = bootstrapper;
             this.guiService = guiService;
+            this.uacService = uacService;
 
             this.bootstrapper.CancelProgressRequestedChanged += bootstrapper_CancelProgressRequestedChanged;
 
@@ -129,6 +132,22 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             get
             {
                 return this.CurrentViewModel.IsCancelButtonEnabled && !this.bootstrapper.CancelProgressRequested;
+            }
+        }
+
+        public bool IsUacShieldVisible
+        {
+            get
+            {
+                return this.CurrentViewModel.IsUacShieldVisible;
+            }
+        }
+
+        public BitmapImage UacShieldImage
+        {
+            get
+            {
+                return this.uacService.UacShieldImage;
             }
         }
 
@@ -221,7 +240,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
             else if (this.bootstrapper.IsUpgrade)
             {
-                UpgradeDlgVM upgradeDlgVM = new UpgradeDlgVM(this.bootstrapper, this.guiService);
+                UpgradeDlgVM upgradeDlgVM = new UpgradeDlgVM(this.bootstrapper, this.guiService, this.uacService);
                 this.viewModels.Add(typeof(UpgradeDlgVM), upgradeDlgVM);
                 this.CurrentViewModel = upgradeDlgVM;
             }
@@ -241,12 +260,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                         this.viewModels.Add(typeof(WelcomeDlgVM), new WelcomeDlgVM(this.bootstrapper, this.guiService));
                         this.viewModels.Add(typeof(LicenseDlgVM), new LicenseDlgVM(this.bootstrapper, this.guiService));
                         this.viewModels.Add(typeof(CustomizeDlgVM), new CustomizeDlgVM(this.bootstrapper, this.guiService));
-                        this.viewModels.Add(typeof(ReadyDlgVM), new ReadyDlgVM(this.bootstrapper, this.guiService));
+                        this.viewModels.Add(typeof(ReadyDlgVM), new ReadyDlgVM(this.bootstrapper, this.guiService, this.uacService));
                         this.CurrentViewModel = this.viewModels[typeof(WelcomeDlgVM)];
                         break;
 
                     case LaunchAction.Uninstall:
-                        UninstallDlgVM uninstallDlgVM = new UninstallDlgVM(this.bootstrapper, this.guiService);
+                        UninstallDlgVM uninstallDlgVM = new UninstallDlgVM(this.bootstrapper, this.guiService, this.uacService);
                         this.viewModels.Add(typeof(UninstallDlgVM), uninstallDlgVM);
                         this.CurrentViewModel = uninstallDlgVM;
                         break;

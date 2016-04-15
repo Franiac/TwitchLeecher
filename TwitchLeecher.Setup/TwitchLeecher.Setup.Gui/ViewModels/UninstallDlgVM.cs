@@ -4,11 +4,19 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 {
     internal class UninstallDlgVM : DlgBaseVM
     {
+        #region Fields
+
+        protected IUacService uacService;
+
+        #endregion Fields
+
         #region Constructors
 
-        public UninstallDlgVM(SetupApplication bootstrapper, IGuiService guiService)
+        public UninstallDlgVM(SetupApplication bootstrapper, IGuiService guiService, IUacService uacService)
             : base(bootstrapper, guiService)
-        { }
+        {
+            this.uacService = uacService;
+        }
 
         #endregion Constructors
 
@@ -27,6 +35,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             get
             {
                 return "Uninstall";
+            }
+        }
+
+        public override bool IsUacShieldVisible
+        {
+            get
+            {
+                return this.uacService.IsUacEnabled && !this.uacService.IsUserAdmin;
             }
         }
 

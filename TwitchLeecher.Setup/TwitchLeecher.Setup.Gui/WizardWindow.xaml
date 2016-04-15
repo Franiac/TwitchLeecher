@@ -78,7 +78,12 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1" FlowDirection="RightToLeft" Orientation="Horizontal">
                     <Button Content="Cancel" IsEnabled="{Binding IsCancelButtonEnabled}" Command="{Binding CancelCommand}" IsCancel="True" />
-                    <Button Content="{Binding NextButtonText, FallbackValue='Next'}" IsEnabled="{Binding IsNextButtonEnabled}" Margin="15,0,0,0" Command="{Binding NextCommand}" IsDefault="True" />
+                    <Button IsEnabled="{Binding IsNextButtonEnabled}" Margin="15,0,0,0" Command="{Binding NextCommand}" IsDefault="True">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding NextButtonText, FallbackValue='Next'}" />
+                            <Image Source="{Binding UacShieldImage}" Visibility="{Binding IsUacShieldVisible, Converter={StaticResource BooleanToVisibilityConverter}}" RenderOptions.BitmapScalingMode="Fant" Margin="3,0,0,0" Height="14" />
+                        </StackPanel>
+                    </Button>
                     <Button Content="Back" IsEnabled="{Binding IsBackButtonEnabled}" Margin="5,0,0,0" Command="{Binding BackCommand}" />
                 </StackPanel>
             </Grid>

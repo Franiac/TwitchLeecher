@@ -1,8 +1,8 @@
-﻿using TwitchLeecher.Setup.Gui.ViewModels;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using TwitchLeecher.Setup.Gui.ViewModels;
 using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 

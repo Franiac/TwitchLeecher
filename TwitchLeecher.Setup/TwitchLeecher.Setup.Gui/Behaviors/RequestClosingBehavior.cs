@@ -52,7 +52,7 @@ namespace TwitchLeecher.Setup.Gui.Behaviors
                 if (!request.CanExecute(null))
                 {
                     e.Cancel = true;
-                }                
+                }
             }
         }
 

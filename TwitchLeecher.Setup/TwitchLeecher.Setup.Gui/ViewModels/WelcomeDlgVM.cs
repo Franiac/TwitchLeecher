@@ -7,7 +7,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         #region Constructors
 
         public WelcomeDlgVM(SetupApplication bootstrapper, IGuiService guiService)
-            : base(bootstrapper, guiService) { }
+            : base(bootstrapper, guiService)
+        { }
 
         #endregion Constructors
 
