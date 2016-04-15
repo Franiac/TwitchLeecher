@@ -18,8 +18,6 @@ namespace TwitchLeecher.Core.Models
         private string id;
         private string game;
 
-        private bool isMuted;
-
         private int views;
 
         private TimeSpan length;
@@ -35,7 +33,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public TwitchVideo(string title, string id, string game, bool isMuted, int views, TimeSpan length,
+        public TwitchVideo(string title, string id, string game, int views, TimeSpan length,
             List<TwitchVideoResolution> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
         {
             if (string.IsNullOrWhiteSpace(title))
@@ -74,8 +72,7 @@ namespace TwitchLeecher.Core.Models
             {
                 this.game = game;
             }
-
-            this.isMuted = isMuted;
+            
             this.views = views;
             this.length = length;
             this.resolutions = resolutions;
@@ -109,14 +106,6 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return this.game;
-            }
-        }
-
-        public bool IsMuted
-        {
-            get
-            {
-                return this.isMuted;
             }
         }
 

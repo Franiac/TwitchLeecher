@@ -565,7 +565,6 @@ namespace TwitchLeecher.Services.Services
             string title = videoJson.title;
             string id = videoJson._id;
             string game = videoJson.game;
-            bool isMuted = videoJson.is_muted != null ? bool.Parse(videoJson.is_muted.ToString()) : false;
             int views = videoJson.views;
             TimeSpan length = new TimeSpan(0, 0, (int)videoJson.length);
             List<TwitchVideoResolution> resolutions = this.ParseResolutions(videoJson.resolutions, videoJson.fps);
@@ -573,7 +572,7 @@ namespace TwitchLeecher.Services.Services
             Uri thumbnail = new Uri(videoJson.preview.ToString());
             Uri url = new Uri(videoJson.url.ToString());
 
-            return new TwitchVideo(title, id, game, isMuted, views, length, resolutions, recordedDate, thumbnail, url);
+            return new TwitchVideo(title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
         }
 
         public List<TwitchVideoResolution> ParseResolutions(dynamic resolutionsJson, dynamic fpsJson)

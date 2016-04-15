@@ -156,7 +156,6 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0" MaxWidth="240" MaxHeight="135">
                                     <Image Source="{Binding Video.Thumbnail}" VerticalAlignment="Center" Width="240" Height="180" Stretch="Uniform" />
-                                    <fa:ImageAwesome Icon="MicrophoneSlash" Foreground="White" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0" Visibility="{Binding Video.IsMuted, Converter={StaticResource BVConverter}}" ToolTip="Parts of this video are muted" />
                                     <StackPanel Orientation="Horizontal"  ToolTip="Views" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,5,0">
                                         <fa:ImageAwesome Icon="Eye" Foreground="White" Width="16" Height="16" VerticalAlignment="Center" Margin="0,2,0,0" />
                                         <TextBlock Text="{Binding Video.Views}" Margin="5,0,0,0" VerticalAlignment="Center" />
