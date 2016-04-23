@@ -8,6 +8,7 @@ namespace TwitchLeecher.Core.Models
     {
         #region Constatnts
 
+        private const string UNTITLED_BROADCAST = "Untitled Broadcast";
         private const string UNKNOWN_GAME = "Unknown";
 
         #endregion Constatnts
@@ -36,11 +37,6 @@ namespace TwitchLeecher.Core.Models
         public TwitchVideo(string title, string id, string game, int views, TimeSpan length,
             List<TwitchVideoResolution> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
         {
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                throw new ArgumentNullException(nameof(title));
-            }
-
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException(nameof(id));
@@ -59,6 +55,11 @@ namespace TwitchLeecher.Core.Models
             if (url == null)
             {
                 throw new ArgumentNullException(nameof(url));
+            }
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                title = UNTITLED_BROADCAST;
             }
 
             this.title = title;
@@ -98,6 +99,14 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return this.id;
+            }
+        }
+
+        public string IdTrimmed
+        {
+            get
+            {
+                return this.id.Substring(1);
             }
         }
 

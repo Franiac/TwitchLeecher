@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.IO;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -15,6 +16,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private TwitchVideo video;
         private TwitchVideoResolution resolution;
 
+        private string folder;
         private string filename;
 
         private ICommand chooseCommand;
@@ -47,7 +49,6 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 this.SetProperty(ref this.video, value, nameof(this.Video));
-                this.Resolution = this.video.Resolutions.FirstOrDefault();
             }
         }
 
@@ -60,6 +61,18 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 this.SetProperty(ref this.resolution, value, nameof(this.Resolution));
+            }
+        }
+
+        public string Folder
+        {
+            get
+            {
+                return this.folder;
+            }
+            set
+            {
+                this.SetProperty(ref this.folder, value, nameof(this.Folder));
             }
         }
 
@@ -122,7 +135,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.ShowSaveFileDialog(this.filename, this.ChooseCallback);
+                this.guiService.ShowFolderBrowserDialog(this.folder, this.ChooseCallback);
             }
             catch (Exception ex)
             {
@@ -130,13 +143,13 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void ChooseCallback(bool cancelled, string filename)
+        private void ChooseCallback(bool cancelled, string folder)
         {
             try
             {
                 if (!cancelled)
                 {
-                    this.Filename = filename;
+                    this.Folder = folder;
                 }
             }
             catch (Exception ex)
@@ -153,7 +166,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (!this.HasErrors)
                 {
-                    this.ResultObject = new DownloadParameters(this.video, this.resolution, this.filename);
+                    string filename = Path.Combine(this.folder, this.filename);
+                    this.ResultObject = new DownloadParameters(this.video, this.resolution, filename);
                     window.DialogResult = true;
                     window.Close();
                 }
@@ -178,17 +192,53 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        protected override void Validate(string propertyName = null)
+        public override void Validate(string propertyName = null)
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.Filename);
+            string currentProperty = nameof(this.Resolution);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (this.resolution == null)
+                {
+                    this.AddError(currentProperty, "Please select a quality!");
+                }
+            }
+
+            currentProperty = nameof(this.Folder);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (string.IsNullOrWhiteSpace(this.folder))
+                {
+                    this.AddError(currentProperty, "Please specify a folder!");
+                }
+                else if (!Directory.Exists(this.folder))
+                {
+                    this.AddError(currentProperty, "The specified folder does not exist!");
+                }
+                else if (!FileSystem.HasWritePermission(this.folder))
+                {
+                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                }
+            }
+
+            currentProperty = nameof(this.Filename);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
                 if (string.IsNullOrWhiteSpace(this.filename))
                 {
                     this.AddError(currentProperty, "Please specify a filename!");
+                }
+                else if (!this.filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.AddError(currentProperty, "Filename must end with '.mp4'!");
+                }
+                else if (FileSystem.FilenameContainsInvalidChars(this.filename))
+                {
+                    this.AddError(currentProperty, "Filename contains invalid characters!");
                 }
             }
         }

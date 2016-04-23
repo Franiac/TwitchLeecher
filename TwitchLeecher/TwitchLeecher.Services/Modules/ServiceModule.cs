@@ -10,8 +10,12 @@ namespace TwitchLeecher.Services.Modules
 
         public override void Load()
         {
+            this.Bind<IUpdateService>().To<UpdateService>().InSingletonScope();
+            this.Bind<IFolderService>().To<FolderService>().InSingletonScope();
             this.Bind<ILogService>().To<LogService>().InSingletonScope();
+            this.Bind<IPreferencesService>().To<PreferencesService>().InSingletonScope();
             this.Bind<ITwitchService>().To<TwitchService>().InSingletonScope();
+            this.Bind<IFilenameService>().To<FilenameService>().InSingletonScope();
         }
 
         #endregion Methods

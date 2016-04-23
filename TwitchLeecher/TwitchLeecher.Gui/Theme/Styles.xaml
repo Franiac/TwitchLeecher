@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                     xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
-                    xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors">
+                    xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
+                    xmlns:fa="http://schemas.fontawesome.io/icons/">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Constants.xaml" />
@@ -22,9 +23,23 @@
         <Setter Property="Width" Value="30" />
     </Style>
 
-    <Style TargetType="{x:Type TextBlock}">
+    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="TextAlignment" Value="Justify" />
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.GrayTextBrushKey}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ToolTipHeadline" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+        <Setter Property="Margin" Value="0,0,0,5" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style TargetType="{x:Type Label}">
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
@@ -55,7 +70,7 @@
     </Style>
 
     <Style TargetType="{x:Type TextBox}">
-        <Setter Property="Padding" Value="3,2,3,0" />
+        <Setter Property="Padding" Value="3,0,3,1" />
         <Setter Property="Height" Value="27" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -75,6 +90,10 @@
     </Style>
 
     <Style x:Key="ScrollingTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush">
             <Setter.Value>
@@ -116,9 +135,9 @@
         <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="820" />
+        <Setter Property="Width" Value="830" />
         <Setter Property="Height" Value="815" />
-        <Setter Property="MinWidth" Value="820" />
+        <Setter Property="MinWidth" Value="830" />
         <Setter Property="MinHeight" Value="570" />
     </Style>
 
@@ -155,5 +174,17 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Padding" Value="10,5,10,5" />
+    </Style>
+
+    <Style x:Key="PrefInfo" TargetType="{x:Type fa:ImageAwesome}">
+        <Setter Property="ToolTipService.InitialShowDelay" Value="100" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Icon" Value="QuestionCircle" />
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{StaticResource MainColor}" />
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

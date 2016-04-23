@@ -33,6 +33,9 @@
                     <DataTemplate DataType="{x:Type vm:DownloadsViewVM}">
                         <view:DownloadsView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:PreferencesViewVM}">
+                        <view:PreferencesView />
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:InfoViewVM}">
                         <view:InfoView />
                     </DataTemplate>
@@ -58,9 +61,10 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Grid.Column="0" Height="40" Margin="10" RenderOptions.BitmapScalingMode="Fant" />
+                <Image Grid.Column="0" Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Height="40" Margin="10" RenderOptions.BitmapScalingMode="Fant" />
 
                 <StackPanel Grid.Column="1" Margin="0,6,0,0">
                     <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding Title, FallbackValue='Twitch Leecher X.Y'}" />
@@ -89,9 +93,15 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding InfoCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding PreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="Preferences">
+                        <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding InfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="About &amp; Support">
                         <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="4" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">                    
                     <Button Style="{StaticResource MiniButton}" Command="{Binding MinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Minimize}" />
                     </Button>
@@ -106,6 +116,9 @@
         </Border>
 
         <ctrl:AnimatedContentControl Grid.Row="2" Content="{Binding MainView}">
+            <Validation.ErrorTemplate>
+                <ControlTemplate />
+            </Validation.ErrorTemplate>
             <ctrl:AnimatedContentControl.Template>
                 <ControlTemplate TargetType="{x:Type ctrl:AnimatedContentControl}">
                     <Grid>

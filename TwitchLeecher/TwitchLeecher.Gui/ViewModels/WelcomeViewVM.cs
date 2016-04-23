@@ -4,7 +4,7 @@ using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class WelcomeViewVM : BindableBase
+    public class WelcomeViewVM : ViewModelBase
     {
         #region Fields
 

@@ -1,11 +1,14 @@
 ﻿using System.IO;
+using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace TwitchLeecher.Shared.IO
 {
     public static class FileSystem
     {
         #region Methods
-
+        
         public static void CleanDirectory(string directory)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(directory);
@@ -75,6 +78,54 @@ namespace TwitchLeecher.Shared.IO
             {
                 File.SetAttributes(file, FileAttributes.Normal);
             }
+        }
+
+        public static bool HasWritePermission(string dir)
+        {
+            if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
+            {
+                return false;
+            }
+
+            DirectoryInfo dirInfo = new DirectoryInfo(dir);
+
+            DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+
+            WindowsIdentity userIdentity = WindowsIdentity.GetCurrent();
+
+            AuthorizationRuleCollection rules = dirSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+            foreach (FileSystemAccessRule rule in rules)
+            {
+                if (rule.FileSystemRights.HasFlag(FileSystemRights.Write))
+                {
+                    if (userIdentity.User == rule.IdentityReference ||
+                        userIdentity.Groups.Any(g => g == rule.IdentityReference))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static bool FilenameContainsInvalidChars(string filename)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                return false;
+            }
+
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                if (filename.Contains(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion Methods

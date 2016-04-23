@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.IO;
 
@@ -10,7 +9,7 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string LOGS_FOLDER_NAME = "Logs";
+        private const string LOGS_FOLDER_NAME = "logs";
 
         #endregion Constants
 
@@ -22,9 +21,14 @@ namespace TwitchLeecher.Services.Services
 
         #region Constructors
 
-        public LogService()
+        public LogService(IFolderService folderService)
         {
-            this.logDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), LOGS_FOLDER_NAME);
+            if (folderService == null)
+            {
+                throw new ArgumentNullException(nameof(folderService));
+            }
+
+            this.logDir = Path.Combine(folderService.GetAppDataFolder(), LOGS_FOLDER_NAME);
         }
 
         #endregion Constructors

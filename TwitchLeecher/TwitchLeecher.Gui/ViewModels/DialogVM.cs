@@ -1,6 +1,8 @@
-﻿namespace TwitchLeecher.Gui.ViewModels
+﻿using TwitchLeecher.Shared.Notification;
+
+namespace TwitchLeecher.Gui.ViewModels
 {
-    public abstract class DialogVM<T> : BaseVM
+    public abstract class DialogVM<T> : ViewModelBase
     {
         #region Properties
 

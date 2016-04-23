@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -76,19 +77,27 @@
     <Compile Include="Modules\GuiModule.cs" />
     <Compile Include="Services\GuiService.cs" />
     <Compile Include="Services\IGuiService.cs" />
-    <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\DialogVM.cs" />
     <Compile Include="ViewModels\LogWindowVM.cs" />
     <Compile Include="ViewModels\DownloadWindowVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="ViewModels\PreferencesViewVM.cs" />
     <Compile Include="ViewModels\SearchWindowVM.cs" />
     <Compile Include="ViewModels\DownloadsViewVM.cs" />
+    <Compile Include="ViewModels\UpdateInfoWindowVM.cs" />
     <Compile Include="ViewModels\VideosLoadingViewVM.cs" />
     <Compile Include="ViewModels\VideosViewVM.cs" />
     <Compile Include="ViewModels\InfoViewVM.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WelcomeViewVM.cs" />
     <Compile Include="Views\DownloadsView.xaml.cs">
       <DependentUpon>DownloadsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UpdateInfoWindow.xaml.cs">
+      <DependentUpon>UpdateInfoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PreferencesView.xaml.cs">
+      <DependentUpon>PreferencesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -140,6 +149,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Resource>
     <Page Include="Views\DownloadsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UpdateInfoWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PreferencesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

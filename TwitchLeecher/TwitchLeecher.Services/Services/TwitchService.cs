@@ -60,9 +60,6 @@ namespace TwitchLeecher.Services.Services
 
         public TwitchService()
         {
-            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; };
-            ServicePointManager.DefaultConnectionLimit = 10;
-
             this.videos = new ObservableCollection<TwitchVideo>();
             this.downloads = new ObservableCollection<TwitchVideoDownload>();
 
@@ -211,7 +208,7 @@ namespace TwitchLeecher.Services.Services
 
                             int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
 
-                            string urlId = video.Id.Substring(1);
+                            string urlId = video.IdTrimmed;
                             string quality = downloadParams.Resolution.VideoQuality.ToTwitchQuality();
                             string qualityFps = downloadParams.Resolution.ResolutionFps;
                             string outputDir = Path.Combine(downloadsDir, urlId);

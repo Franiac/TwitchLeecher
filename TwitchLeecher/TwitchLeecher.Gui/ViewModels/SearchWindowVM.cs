@@ -139,7 +139,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        protected override void Validate(string propertyName = null)
+        public override void Validate(string propertyName = null)
         {
             base.Validate(propertyName);
 

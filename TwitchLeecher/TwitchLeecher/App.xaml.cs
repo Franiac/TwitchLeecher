@@ -1,6 +1,8 @@
 ﻿using Ninject;
 using System;
+using System.Net;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using TwitchLeecher.Gui.Modules;
 using TwitchLeecher.Gui.Views;
@@ -23,6 +25,11 @@ namespace TwitchLeecher
             this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+
+            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; };
+            ServicePointManager.DefaultConnectionLimit = 10;
 
             this.MainWindow = this.kernel.Get<MainWindow>();
             this.MainWindow.Show();
@@ -63,7 +70,7 @@ namespace TwitchLeecher
                     + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal UI Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                Application.Current.Shutdown();
+                Current.Shutdown();
             }
             catch
             {
@@ -75,7 +82,7 @@ namespace TwitchLeecher
                 }
                 finally
                 {
-                    Application.Current.Shutdown();
+                    Current.Shutdown();
                 }
             }
         }
@@ -94,7 +101,7 @@ namespace TwitchLeecher
                     + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                Application.Current.Shutdown();
+                Current.Shutdown();
             }
             catch
             {
@@ -106,7 +113,7 @@ namespace TwitchLeecher
                 }
                 finally
                 {
-                    Application.Current.Shutdown();
+                    Current.Shutdown();
                 }
             }
         }

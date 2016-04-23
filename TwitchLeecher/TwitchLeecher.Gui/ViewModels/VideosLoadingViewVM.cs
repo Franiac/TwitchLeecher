@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class VideosLoadingViewVM : BindableBase
+    public class VideosLoadingViewVM : ViewModelBase
     {
         // Data Template Marker
     }

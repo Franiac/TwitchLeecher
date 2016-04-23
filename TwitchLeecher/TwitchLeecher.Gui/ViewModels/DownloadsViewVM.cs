@@ -9,10 +9,11 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class DownloadsViewVM : BaseVM
+    public class DownloadsViewVM : ViewModelBase
     {
         #region Fields
 

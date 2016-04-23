@@ -34,6 +34,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +60,9 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\DelegateCommandBase.cs" />
     <Compile Include="Commands\PropertySupport.cs" />
+    <Compile Include="Extensions\DateTime.cs" />
+    <Compile Include="Extensions\Guid.cs" />
+    <Compile Include="Extensions\Xml.cs" />
     <Compile Include="Notification\BindableBase.cs" />
     <Compile Include="Reflection\AssemblyUtil.cs" />
     <Compile Include="Extensions\Version.cs" />

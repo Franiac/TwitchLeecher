@@ -48,6 +48,11 @@ namespace TwitchLeecher.Gui.Views
                 HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(WindowProc));
 
                 this.DataContext = viewModel;
+
+                if (viewModel != null)
+                {
+                    viewModel.Loaded();
+                }
             };
         }
 

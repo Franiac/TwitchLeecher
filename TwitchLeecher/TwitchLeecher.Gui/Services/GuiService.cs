@@ -1,13 +1,15 @@
-﻿using Microsoft.Win32;
-using Ninject;
+﻿using Ninject;
 using System;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
+using Cursors = System.Windows.Input.Cursors;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace TwitchLeecher.Gui.Services
 {
@@ -129,11 +131,26 @@ namespace TwitchLeecher.Gui.Services
             dialogCompleteCallback(result != true, resultObject);
         }
 
-        public void ShowDownloadDialog(TwitchVideo video, Action<bool, DownloadParameters> dialogCompleteCallback)
+        public void ShowDownloadDialog(TwitchVideo video, TwitchVideoResolution resolution, string folder, string filename, Action<bool, DownloadParameters> dialogCompleteCallback)
         {
             if (video == null)
             {
                 throw new ArgumentNullException(nameof(video));
+            }
+
+            if (resolution == null)
+            {
+                throw new ArgumentNullException(nameof(resolution));
+            }
+
+            if (string.IsNullOrWhiteSpace(folder))
+            {
+                throw new ArgumentNullException(nameof(folder));
+            }
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException(nameof(filename));
             }
 
             if (dialogCompleteCallback == null)
@@ -143,6 +160,9 @@ namespace TwitchLeecher.Gui.Services
 
             DownloadWindowVM vm = this.kernel.Get<DownloadWindowVM>();
             vm.Video = video;
+            vm.Resolution = resolution;
+            vm.Folder = folder;
+            vm.Filename = filename;
 
             DownloadWindow window = this.kernel.Get<DownloadWindow>();
             window.DataContext = vm;
@@ -152,6 +172,21 @@ namespace TwitchLeecher.Gui.Services
             DownloadParameters resultObject = vm.ResultObject;
 
             dialogCompleteCallback(result != true, resultObject);
+        }
+
+        public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                if (!string.IsNullOrWhiteSpace(folder))
+                {
+                    fbd.SelectedPath = folder;
+                }
+
+                DialogResult result = fbd.ShowDialog();
+
+                dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
+            }
         }
 
         public void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback)
@@ -167,6 +202,17 @@ namespace TwitchLeecher.Gui.Services
             bool? result = sfd.ShowDialog();
 
             dialogCompleteCallback(result != true, sfd.FileName);
+        }
+
+        public void ShowUpdateInfoWindow(UpdateInfo updateInfo)
+        {
+            UpdateInfoWindowVM vm = this.kernel.Get<UpdateInfoWindowVM>();
+            vm.UpdateInfo = updateInfo;
+
+            UpdateInfoWindow window = this.kernel.Get<UpdateInfoWindow>();
+            window.DataContext = vm;
+
+            window.ShowDialog();
         }
 
         public void ShowLog(TwitchVideoDownload download)

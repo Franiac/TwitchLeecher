@@ -39,11 +39,6 @@ namespace TwitchLeecher.Gui.Converters
                 throw new ApplicationException("Parameter has to be of type '" + typeof(VideoType).FullName + "'!");
             }
 
-            if (!(bool)value)
-            {
-                throw new ApplicationException("Value has to be true!");
-            }
-
             return parameter;
         }
 

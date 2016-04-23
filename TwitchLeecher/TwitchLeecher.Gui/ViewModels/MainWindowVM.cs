@@ -1,6 +1,7 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -22,16 +23,19 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private string title;
 
-        private BindableBase mainView;
+        private ViewModelBase mainView;
 
         private IKernel kernel;
         private IEventAggregator eventAggregator;
         private ITwitchService twitchService;
         private IGuiService guiService;
+        private IPreferencesService preferencesService;
+        private IUpdateService updateService;
 
         private ICommand searchCommand;
         private ICommand showVideosCommand;
         private ICommand showDownloadsCommand;
+        private ICommand preferencesCommand;
         private ICommand infoCommand;
         private ICommand minimizeCommand;
         private ICommand maximizeRestoreCommand;
@@ -42,15 +46,20 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private SearchParameters lastSearchParams;
 
-        private Dictionary<Type, BindableBase> mainViews;
+        private Dictionary<Type, ViewModelBase> mainViews;
 
         #endregion Fields
 
         #region Constructors
 
-        public MainWindowVM(IKernel kernel, IEventAggregator eventAggregator, ITwitchService twitchService, IGuiService guiService)
+        public MainWindowVM(IKernel kernel,
+            IEventAggregator eventAggregator,
+            ITwitchService twitchService,
+            IGuiService guiService,
+            IPreferencesService preferencesService,
+            IUpdateService updateService)
         {
-            this.mainViews = new Dictionary<Type, BindableBase>();
+            this.mainViews = new Dictionary<Type, ViewModelBase>();
 
             this.windowState = WindowState.Normal;
 
@@ -62,6 +71,8 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator = eventAggregator;
             this.twitchService = twitchService;
             this.guiService = guiService;
+            this.preferencesService = preferencesService;
+            this.updateService = updateService;
 
             this.ShowMainView<WelcomeViewVM>();
 
@@ -69,7 +80,9 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator.GetEvent<SearchCompleteEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
             this.eventAggregator.GetEvent<ShowVideosEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
             this.eventAggregator.GetEvent<ShowDownloadsEvent>().Subscribe(() => this.ShowMainView<DownloadsViewVM>());
+            this.eventAggregator.GetEvent<ShowPreferencesEvent>().Subscribe(() => this.ShowMainView<PreferencesViewVM>());
             this.eventAggregator.GetEvent<ShowInfoEvent>().Subscribe(() => this.ShowMainView<InfoViewVM>());
+            this.eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(() => this.PreferencesSaved());
         }
 
         #endregion Constructors
@@ -92,7 +105,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public BindableBase MainView
+        public ViewModelBase MainView
         {
             get
             {
@@ -123,7 +136,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.searchCommand == null)
                 {
-                    this.searchCommand = new DelegateCommand(this.Search);
+                    this.searchCommand = new DelegateCommand(this.SearchDialog);
                 }
 
                 return this.searchCommand;
@@ -173,6 +186,29 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.showDownloadsCommand;
+            }
+        }
+
+        public ICommand PreferencesCommand
+        {
+            get
+            {
+                if (this.preferencesCommand == null)
+                {
+                    this.preferencesCommand = new DelegateCommand(() =>
+                    {
+                        try
+                        {
+                            this.eventAggregator.GetEvent<ShowPreferencesEvent>().Publish();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.guiService.ShowAndLogException(ex);
+                        }
+                    });
+                }
+
+                return this.preferencesCommand;
             }
         }
 
@@ -285,16 +321,17 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Methods
 
-        private void Search()
+        private void SearchDialog()
         {
             try
             {
                 if (this.lastSearchParams == null)
                 {
-                    this.lastSearchParams = new SearchParameters();
+                    Preferences currentPrefs = this.preferencesService.CurrentPreferences;
+                    this.lastSearchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
                 }
 
-                this.guiService.ShowSearchDialog(lastSearchParams, this.SearchCallback);
+                this.guiService.ShowSearchDialog(lastSearchParams, this.SearchDialogCallback);
             }
             catch (Exception ex)
             {
@@ -302,21 +339,13 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public void SearchCallback(bool cancelled, SearchParameters searchParams)
+        public void SearchDialogCallback(bool cancelled, SearchParameters searchParams)
         {
             try
             {
                 if (!cancelled)
                 {
-                    this.lastSearchParams = searchParams;
-
-                    this.eventAggregator.GetEvent<SearchBeginEvent>().Publish();
-
-                    Task searchTask = new Task(() => this.twitchService.Search(searchParams));
-
-                    searchTask.ContinueWith(task => this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish(), TaskScheduler.FromCurrentSynchronizationContext());
-
-                    searchTask.Start();
+                    this.Search(searchParams);
                 }
             }
             catch (Exception ex)
@@ -325,9 +354,34 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void ShowMainView<T>() where T : BindableBase
+        private void Search(SearchParameters searchParams)
         {
-            BindableBase vm;
+            this.lastSearchParams = searchParams;
+
+            this.eventAggregator.GetEvent<SearchBeginEvent>().Publish();
+
+            Task searchTask = new Task(() => this.twitchService.Search(searchParams));
+
+            searchTask.ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    this.guiService.ShowAndLogException(task.Exception);
+                }
+                else
+                {
+                    this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish();
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            searchTask.Start();
+        }
+
+        private void ShowMainView<T>() where T : ViewModelBase
+        {
+            this.MainView?.OnBeforeHidden();
+
+            ViewModelBase vm;
 
             if (!this.mainViews.TryGetValue(typeof(T), out vm))
             {
@@ -335,7 +389,62 @@ namespace TwitchLeecher.Gui.ViewModels
                 this.mainViews.Add(typeof(T), vm);
             }
 
+            vm.OnBeforeShown();
+
             this.MainView = vm;
+        }
+
+        private void PreferencesSaved()
+        {
+            try
+            {
+                this.lastSearchParams = null;
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
+        }
+
+        public void Loaded()
+        {
+            try
+            {
+                Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
+
+                if (currentPrefs.SearchOnStartup)
+                {
+                    currentPrefs.Validate();
+
+                    if (!currentPrefs.HasErrors)
+                    {
+                        SearchParameters searchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
+                        this.Search(searchParams);
+                    }
+                }
+
+                if (currentPrefs.AppCheckForUpdates)
+                {
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(500);
+                    }).ContinueWith(task =>
+                    {
+                        UpdateInfo updateInfo;
+
+                        bool updateAvailable = this.updateService.CheckForUpdate(out updateInfo);
+
+                        if (updateAvailable)
+                        {
+                            this.guiService.ShowUpdateInfoWindow(updateInfo);
+                        }
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
         }
 
         private bool CloseApplication()

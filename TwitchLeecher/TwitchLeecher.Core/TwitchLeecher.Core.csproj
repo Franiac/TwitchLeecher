@@ -43,16 +43,21 @@
     <Compile Include="Enums\DownloadStatus.cs" />
     <Compile Include="Enums\VideoQuality.cs" />
     <Compile Include="Enums\VideoType.cs" />
+    <Compile Include="Events\PreferencesSavedEvent.cs" />
     <Compile Include="Events\ShowDownloadsEvent.cs" />
+    <Compile Include="Events\ShowPreferencesEvent.cs" />
     <Compile Include="Events\ShowInfoEvent.cs" />
     <Compile Include="Events\ShowVideosEvent.cs" />
     <Compile Include="Events\SearchBeginEvent.cs" />
     <Compile Include="Events\SearchCompleteEvent.cs" />
     <Compile Include="Models\DownloadParameters.cs" />
+    <Compile Include="Models\FilenameWildcards.cs" />
+    <Compile Include="Models\Preferences.cs" />
     <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\TwitchVideo.cs" />
     <Compile Include="Models\TwitchVideoDownload.cs" />
     <Compile Include="Models\TwitchVideoResolution.cs" />
+    <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

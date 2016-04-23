@@ -1,47 +1,57 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Shared.Commands;
-using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class LogWindowVM : ViewModelBase
+    public class UpdateInfoWindowVM : ViewModelBase
     {
         #region Fields
 
-        private TwitchVideoDownload download;
-
-        private ICommand closeCommand;
-
+        private UpdateInfo updateInfo;
         private IGuiService guiService;
-
-        private object searchLock = new object();
+        private ICommand downloadCommand;
+        private ICommand closeCommand;
 
         #endregion Fields
 
-        #region Constructors
+        #region Constructor
 
-        public LogWindowVM(IGuiService guiService)
+        public UpdateInfoWindowVM(IGuiService guiService)
         {
             this.guiService = guiService;
         }
 
-        #endregion Constructors
+        #endregion Constructor
 
         #region Properties
 
-        public TwitchVideoDownload Download
+        public UpdateInfo UpdateInfo
         {
             get
             {
-                return this.download;
+                return this.updateInfo;
             }
             set
             {
-                this.SetProperty(ref this.download, value, nameof(this.Download));
+                this.updateInfo = value;
+            }
+        }
+
+        public ICommand DownloadCommand
+        {
+            get
+            {
+                if (this.downloadCommand == null)
+                {
+                    this.downloadCommand = new DelegateCommand(this.Download);
+                }
+
+                return this.downloadCommand;
             }
         }
 
@@ -61,6 +71,18 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Properties
 
         #region Methods
+
+        private void Download()
+        {
+            try
+            {
+                Process.Start(this.updateInfo.DownloadUrl);
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
+        }
 
         private void Close(Window window)
         {

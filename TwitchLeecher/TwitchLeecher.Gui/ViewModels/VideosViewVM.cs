@@ -14,13 +14,15 @@ using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class VideosViewVM : BaseVM
+    public class VideosViewVM : ViewModelBase
     {
         #region Fields
 
         private ITwitchService twitchService;
         private IGuiService guiService;
         private IEventAggregator eventAggregator;
+        private IPreferencesService preferencesService;
+        private IFilenameService filenameService;
 
         private ICommand viewCommand;
         private ICommand downloadCommand;
@@ -31,11 +33,17 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public VideosViewVM(ITwitchService twitchService, IGuiService guiService, IEventAggregator eventAggregator)
+        public VideosViewVM(ITwitchService twitchService,
+            IGuiService guiService,
+            IEventAggregator eventAggregator,
+            IPreferencesService preferencesService,
+            IFilenameService filenameService)
         {
             this.twitchService = twitchService;
             this.guiService = guiService;
             this.eventAggregator = eventAggregator;
+            this.preferencesService = preferencesService;
+            this.filenameService = filenameService;
 
             this.twitchService.PropertyChanged += TwitchService_PropertyChanged;
 
@@ -125,7 +133,18 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
-                            this.guiService.ShowDownloadDialog(video, this.DownloadCallback);
+                            Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
+
+                            TwitchVideoResolution resolution = video.Resolutions.Where(r => r.VideoQuality == currentPrefs.DownloadVideoQuality).FirstOrDefault();
+
+                            if (resolution == null)
+                            {
+                                resolution = video.Resolutions.First();
+                            }
+
+                            string filename = this.filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
+
+                            this.guiService.ShowDownloadDialog(video, resolution, currentPrefs.DownloadFolder, filename, this.DownloadCallback);
                         }
                     }
                 }
