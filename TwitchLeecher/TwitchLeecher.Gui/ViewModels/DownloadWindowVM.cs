@@ -167,6 +167,17 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!this.HasErrors)
                 {
                     string filename = Path.Combine(this.folder, this.filename);
+
+                    if (File.Exists(filename))
+                    {
+                        MessageBoxResult result = this.guiService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (result != MessageBoxResult.Yes)
+                        {
+                            return;
+                        }
+                    }
+
                     this.ResultObject = new DownloadParameters(this.video, this.resolution, filename);
                     window.DialogResult = true;
                     window.Close();
