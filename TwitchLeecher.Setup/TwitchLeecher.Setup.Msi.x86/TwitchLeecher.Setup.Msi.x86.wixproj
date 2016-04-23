@@ -22,11 +22,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Features\" />
+    <Folder Include="Actions" />
     <Folder Include="UI\" />
     <Folder Include="UI\Lacalization\" />
     <Folder Include="UI\Texts\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\TwitchLeecher.Setup.Msi.Shared\Actions\CustomActions.wxs">
+      <Link>Actions\CustomActions.wxs</Link>
+    </Compile>
     <Compile Include="..\TwitchLeecher.Setup.Msi.Shared\Features\FeatureTL.wxs">
       <Link>Features\FeatureTL.wxs</Link>
     </Compile>
@@ -55,6 +59,16 @@
       <HintPath>..\Libraries\WixAssemblyInfoExtension.dll</HintPath>
       <Name>WixAssemblyInfoExtension</Name>
     </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TwitchLeecher.Setup.Custom.x86\TwitchLeecher.Setup.Custom.x86.csproj">
+      <Name>TwitchLeecher.Setup.Custom.x86</Name>
+      <Project>{55118ca7-39e7-4ec2-bb86-ebff78160ff7}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

@@ -68,6 +68,8 @@ namespace TwitchLeecher.Setup.Gui
         private string installDir;
         private string installDirPersisted;
 
+        private bool deleteUserData;
+
         #endregion Passed to MSI
 
         #endregion Fields
@@ -251,6 +253,18 @@ namespace TwitchLeecher.Setup.Gui
             get
             {
                 return this.installDirPersisted;
+            }
+        }
+
+        public bool DeleteUserData
+        {
+            get
+            {
+                return this.deleteUserData;
+            }
+            set
+            {
+                this.deleteUserData = value;
             }
         }
 
@@ -817,6 +831,8 @@ namespace TwitchLeecher.Setup.Gui
             this.Engine.StringVariables["TL_INSTALLDIR_REGVALUENAME"] = installDirRegValueName;
             this.Engine.StringVariables["TL_INSTALLDIR"] = this.InstallDir;
             this.Engine.StringVariables["TL_INSTALLDIR_PERSISTED"] = this.InstallDirPersisted;
+
+            this.Engine.StringVariables["TL_DELETE_USER_DATA"] = this.DeleteUserData ? "1" : "0";
         }
 
         private void SetupApplication_PlanComplete(object sender, PlanCompleteEventArgs e)

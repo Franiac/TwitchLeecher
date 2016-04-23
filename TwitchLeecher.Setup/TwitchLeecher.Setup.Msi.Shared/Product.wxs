@@ -62,6 +62,8 @@
       <![CDATA[TL_INSTALLDIR_PERSISTED]]>
     </SetProperty>
 
+    <Property Id="TL_DELETE_USER_DATA" Secure="yes" />
+
     <!-- FEATURES -->
     <Feature Id="FeatureTL"
                Title="$(var.TL_PRODUCT_NAME) $(var.TL_PRODUCT_VERSION_TRIMMED)"
@@ -86,5 +88,14 @@
         <Directory Id="ProgramMenuInstallFolder" Name="$(var.TL_PRODUCT_NAME)" />
       </Directory>
     </Directory>
+
+    <InstallExecuteSequence>
+      <Custom Action="DeleteUserDataDeferredData" Before="InstallFinalize">
+        <![CDATA[TL_DELETE_USER_DATA = 1]]>
+      </Custom>
+      <Custom Action="DeleteUserDataDeferred" After="DeleteUserDataDeferredData">
+        <![CDATA[TL_DELETE_USER_DATA = 1]]>
+      </Custom>
+    </InstallExecuteSequence>
   </Product>
 </Wix>

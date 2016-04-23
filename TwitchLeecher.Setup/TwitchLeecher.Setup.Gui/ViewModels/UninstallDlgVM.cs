@@ -38,6 +38,19 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
+        public bool DeleteUserData
+        {
+            get
+            {
+                return this.bootstrapper.DeleteUserData;
+            }
+            set
+            {
+                this.bootstrapper.DeleteUserData = value;
+                this.FirePropertyChanged("DeleteUserData");
+            }
+        }
+
         public override bool IsUacShieldVisible
         {
             get

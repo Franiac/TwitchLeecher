@@ -21,6 +21,4 @@
   <String Id="UITextUnsupportedOsError">This product is only supported on Windows Vista SP2, Windows 7 SP1, Windows Server 2008 SP2, Windows Server 2008 R2 SP1, or higher.</String>
   <String Id="UIText32BitError">This product is only supported on 32 bit operating systems. Please use the 64 Bit installer.</String>
   <String Id="UIText64BitError">This product is only supported on 64 bit operating systems. Please use the 32 Bit installer.</String>
-  <String Id="UITextCompleteFeatureDescription">Complete Installation</String>
-  <String Id="UITextDeleteProgramMenuFolderDeferredProgress">Deleting remaining folders and registry keys</String>
 </WixLocalization>

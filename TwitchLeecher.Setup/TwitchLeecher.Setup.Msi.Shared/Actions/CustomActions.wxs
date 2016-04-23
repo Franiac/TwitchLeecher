@@ -7,7 +7,7 @@
     <Binary Id="CustomActions" SourceFile="$(var.TL_CUSTOM_ACTION_DLL)" />
 
     <!-- UNINSTALL EXECUTE ACTIONS -->
-    <CustomAction Id="DeleteProgramMenuFolderDeferredData" Property="DeleteProgramMenuFolderDeferred" Value="START_MENU_FOLDER=[ProgramMenuInstallFolder];TL_REGISTRY_PATH=[TL_REGISTRY_PATH]" />
-    <CustomAction Id="DeleteProgramMenuFolderDeferred" BinaryKey="CustomActions" DllEntry="DeleteProgramMenuFolderDeferred" Return="check" Execute="deferred" />
+    <CustomAction Id="DeleteUserDataDeferredData" Property="DeleteUserDataDeferred" Value="TL_PRODUCT_NAME=$(var.TL_PRODUCT_NAME)" />
+    <CustomAction Id="DeleteUserDataDeferred" BinaryKey="CustomActions" DllEntry="DeleteUserDataDeferred" Return="check" Execute="deferred" />
   </Fragment>
 </Wix>

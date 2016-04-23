@@ -27,6 +27,10 @@
                     <RowDefinition Height="50" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
                            Style="{StaticResource MainHeadlineText}"
@@ -37,6 +41,10 @@
                            Text="{Binding ProductNameVersionDisplay,
                                   StringFormat='The Setup Wizard will uninstall \{0\} from your computer. Click &quot;Uninstall&quot; to continue or &quot;Cancel&quot; to exit the Setup Wizard.',
                                   FallbackValue='The Setup Wizard will uninstall Twitch Leecher X.Y from your computer. Click &quot;Uninstall&quot; to continue or &quot;Cancel&quot; to exit the Setup Wizard.'}" />
+                <CheckBox Grid.Row="4" Content="Delete User Settings" IsChecked="{Binding DeleteUserData}" />
+                <TextBlock Grid.Row="6" Style="{StaticResource InfoText}">
+                    Not recommended if you want to install Twitch Leecher again in the future!
+                </TextBlock>
             </Grid>
         </Grid>
     </Grid>

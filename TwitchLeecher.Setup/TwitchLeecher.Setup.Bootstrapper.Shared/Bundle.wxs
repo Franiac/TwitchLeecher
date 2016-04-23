@@ -32,6 +32,7 @@
         <MsiProperty Name="TL_INSTALLDIR_REGVALUENAME" Value="[TL_INSTALLDIR_REGVALUENAME]" />
         <MsiProperty Name="TL_INSTALLDIR" Value="[TL_INSTALLDIR]" />
         <MsiProperty Name="TL_INSTALLDIR_PERSISTED" Value="[TL_INSTALLDIR_PERSISTED]" />
+        <MsiProperty Name="TL_DELETE_USER_DATA" Value="[TL_DELETE_USER_DATA]" />
       </MsiPackage>
     </Chain>
   </Bundle>
