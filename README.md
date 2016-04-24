@@ -32,4 +32,4 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 
 ## Screenshot
 
-![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/twitchleecher.jpg)
+![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/twitchleecher11.jpg)
