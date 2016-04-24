@@ -32,7 +32,7 @@ namespace TwitchLeecher.Services.Services
                     string tagStr = latestReleaseJson.Value<string>("tag_name");
                     string releasedStr = latestReleaseJson.Value<string>("published_at");
                     string infoStr = latestReleaseJson.Value<string>("body");
-                    
+
                     Version releaseVersion = Version.Parse(tagStr.Substring(1));
 
                     Version localVersion = AssemblyUtil.Get.GetAssemblyVersion();

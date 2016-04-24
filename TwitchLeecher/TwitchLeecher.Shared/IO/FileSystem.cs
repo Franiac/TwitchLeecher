@@ -8,7 +8,7 @@ namespace TwitchLeecher.Shared.IO
     public static class FileSystem
     {
         #region Methods
-        
+
         public static void CleanDirectory(string directory)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(directory);

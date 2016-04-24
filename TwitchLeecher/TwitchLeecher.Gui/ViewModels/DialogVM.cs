@@ -1,6 +1,4 @@
-﻿using TwitchLeecher.Shared.Notification;
-
-namespace TwitchLeecher.Gui.ViewModels
+﻿namespace TwitchLeecher.Gui.ViewModels
 {
     public abstract class DialogVM<T> : ViewModelBase
     {

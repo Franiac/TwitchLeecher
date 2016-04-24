@@ -73,7 +73,7 @@ namespace TwitchLeecher.Core.Models
             {
                 this.game = game;
             }
-            
+
             this.views = views;
             this.length = length;
             this.resolutions = resolutions;

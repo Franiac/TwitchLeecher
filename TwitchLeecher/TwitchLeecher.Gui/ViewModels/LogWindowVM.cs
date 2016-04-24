@@ -4,7 +4,6 @@ using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Shared.Commands;
-using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Gui.ViewModels
 {

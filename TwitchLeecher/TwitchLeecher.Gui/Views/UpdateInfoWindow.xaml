@@ -42,13 +42,13 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="10" />
                 <RowDefinition />
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
