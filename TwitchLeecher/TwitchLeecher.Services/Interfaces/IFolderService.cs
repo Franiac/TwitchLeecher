@@ -4,6 +4,8 @@
     {
         string GetAppDataFolder();
 
+        string GetTempFolder();
+
         string GetDownloadFolder();
     }
 }

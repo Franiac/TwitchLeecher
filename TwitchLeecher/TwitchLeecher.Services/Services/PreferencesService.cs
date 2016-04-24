@@ -28,6 +28,7 @@ namespace TwitchLeecher.Services.Services
         private const string SEARCH_SEARCHONSTARTUP_EL = "SearchOnStartup";
 
         private const string DOWNLOAD_EL = "Download";
+        private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
         private const string DOWNLOAD_VIDEOQUALITY_EL = "VideoQuality";
@@ -114,6 +115,13 @@ namespace TwitchLeecher.Services.Services
             searchEl.Add(searchOnStartupEl);
 
             // Download
+            if (!string.IsNullOrWhiteSpace(preferences.DownloadTempFolder))
+            {
+                XElement downloadTempFolderEl = new XElement(DOWNLOAD_TEMPFOLDER_EL);
+                downloadTempFolderEl.SetValue(preferences.DownloadTempFolder);
+                downloadEl.Add(downloadTempFolderEl);
+            }
+
             if (!string.IsNullOrWhiteSpace(preferences.DownloadFolder))
             {
                 XElement downloadFolderEl = new XElement(DOWNLOAD_FOLDER_EL);
@@ -208,6 +216,13 @@ namespace TwitchLeecher.Services.Services
 
                     if (downloadEl != null)
                     {
+                        XElement downloadTempFolderEl = downloadEl.Element(DOWNLOAD_TEMPFOLDER_EL);
+
+                        if (downloadTempFolderEl != null)
+                        {
+                            preferences.DownloadTempFolder = downloadTempFolderEl.GetValueAsString();
+                        }
+
                         XElement downloadFolderEl = downloadEl.Element(DOWNLOAD_FOLDER_EL);
 
                         if (downloadFolderEl != null)
@@ -244,6 +259,7 @@ namespace TwitchLeecher.Services.Services
                 SearchVideoType = VideoType.Broadcast,
                 SearchLoadLimit = 10,
                 SearchOnStartup = false,
+                DownloadTempFolder = this.folderService.GetTempFolder(),
                 DownloadFolder = this.folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
                 DownloadVideoQuality = VideoQuality.Source

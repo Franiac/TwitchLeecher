@@ -30,7 +30,7 @@ namespace TwitchLeecher.Services.Services
         private const string accessTokenUrl = "https://api.twitch.tv/api/vods/{0}/access_token";
         private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true";
 
-        private const string DOWNLOADS_FOLDER_NAME = "Downloads";
+        private const string TEMP_PREFIX = "TL_";
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
@@ -40,6 +40,8 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
+        private IPreferencesService preferencesService;
+
         private Timer downloadTimer;
 
         private ObservableCollection<TwitchVideo> videos;
@@ -48,7 +50,6 @@ namespace TwitchLeecher.Services.Services
         private ConcurrentDictionary<string, DownloadTask> downloadTasks;
 
         private string appDir;
-        private string downloadsDir;
 
         private object changeDownloadLockObject;
 
@@ -58,15 +59,16 @@ namespace TwitchLeecher.Services.Services
 
         #region Constructors
 
-        public TwitchService()
+        public TwitchService(IPreferencesService preferencesService)
         {
+            this.preferencesService = preferencesService;
+
             this.videos = new ObservableCollection<TwitchVideo>();
             this.downloads = new ObservableCollection<TwitchVideoDownload>();
 
             this.downloadTasks = new ConcurrentDictionary<string, DownloadTask>();
 
             this.appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            this.downloadsDir = Path.Combine(this.appDir, DOWNLOADS_FOLDER_NAME);
 
             this.changeDownloadLockObject = new object();
 
@@ -211,7 +213,7 @@ namespace TwitchLeecher.Services.Services
                             string urlId = video.IdTrimmed;
                             string quality = downloadParams.Resolution.VideoQuality.ToTwitchQuality();
                             string qualityFps = downloadParams.Resolution.ResolutionFps;
-                            string outputDir = Path.Combine(downloadsDir, urlId);
+                            string outputDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + urlId);
                             string playlistFile = Path.Combine(outputDir, "vod.m3u8");
                             string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                             string outputFile = downloadParams.Filename;

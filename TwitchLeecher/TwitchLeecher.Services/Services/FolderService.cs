@@ -10,6 +10,7 @@ namespace TwitchLeecher.Services.Services
         #region Fields
 
         private string appDataFolder;
+        private string downloadsTempFolder;
         private string downloadsFolder;
 
         #endregion Fields
@@ -25,6 +26,16 @@ namespace TwitchLeecher.Services.Services
             }
 
             return this.appDataFolder;
+        }
+
+        public string GetTempFolder()
+        {
+            if (string.IsNullOrWhiteSpace(this.downloadsTempFolder))
+            {
+                this.downloadsTempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp");
+            }
+
+            return this.downloadsTempFolder;
         }
 
         public string GetDownloadFolder()

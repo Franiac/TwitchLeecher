@@ -19,6 +19,8 @@ namespace TwitchLeecher.Core.Models
 
         private bool searchOnStartup;
 
+        private string downloadTempFolder;
+
         private string downloadFolder;
 
         private string downloadFileName;
@@ -89,6 +91,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public string DownloadTempFolder
+        {
+            get
+            {
+                return this.downloadTempFolder;
+            }
+            set
+            {
+                this.SetProperty(ref this.downloadTempFolder, value);
+            }
+        }
+
         public string DownloadFolder
         {
             get
@@ -153,6 +167,20 @@ namespace TwitchLeecher.Core.Models
                 }
             }
 
+            currentProperty = nameof(this.DownloadTempFolder);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (string.IsNullOrWhiteSpace(this.DownloadTempFolder))
+                {
+                    this.AddError(currentProperty, "Please specify a temporary download folder!");
+                }
+                else if (!FileSystem.HasWritePermission(this.downloadTempFolder))
+                {
+                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                }
+            }
+
             currentProperty = nameof(this.DownloadFolder);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
@@ -195,6 +223,7 @@ namespace TwitchLeecher.Core.Models
                 SearchVideoType = this.SearchVideoType,
                 SearchLoadLimit = this.SearchLoadLimit,
                 SearchOnStartup = this.SearchOnStartup,
+                DownloadTempFolder = this.DownloadTempFolder,
                 DownloadFolder = this.DownloadFolder,
                 DownloadFileName = this.DownloadFileName,
                 DownloadVideoQuality = this.DownloadVideoQuality

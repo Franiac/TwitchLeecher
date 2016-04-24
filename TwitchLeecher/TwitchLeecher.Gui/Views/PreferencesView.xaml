@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <Grid VerticalAlignment="Center" Margin="20,20,20,20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True" Width="450">
+            <Grid VerticalAlignment="Center" Margin="20,20,20,20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True" Width="500">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -178,6 +178,8 @@
                         <RowDefinition SharedSizeGroup="r1" />
                         <RowDefinition Height="10" />
                         <RowDefinition SharedSizeGroup="r1" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition SharedSizeGroup="r1" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -187,8 +189,31 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Download Folder:" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Temporary Folder:" VerticalAlignment="Center" />
                     <Grid Grid.Column="2" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding Path='CurrentPreferences.DownloadTempFolder', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                        <Button Style="{StaticResource MiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                    </Grid>
+                    <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                        <fa:ImageAwesome.ToolTip>
+                            <ToolTip Width="350">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Temporary Folder" />
+                                    <TextBlock TextAlignment="Justify">
+                                        Specify a temporary download folder. This folder will be used to store temporary files during the download process. You need write permissions on this folder.
+                                    </TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </fa:ImageAwesome.ToolTip>
+                    </fa:ImageAwesome>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder:" VerticalAlignment="Center" />
+                    <Grid Grid.Column="2" Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="5" />
@@ -197,22 +222,22 @@
                         <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding Path='CurrentPreferences.DownloadFolder', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                         <Button Style="{StaticResource MiniButton}" Command="{Binding ChooseDownloadFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                     </Grid>
-                    <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                    <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource PrefInfo}">
                         <fa:ImageAwesome.ToolTip>
                             <ToolTip Width="350">
                                 <StackPanel>
                                     <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Download Folder" />
                                     <TextBlock TextAlignment="Justify">
-                                        Specify a default download folder to use in the download dialog. You need write permissions on that folder.
+                                        Specify a default download folder to use in the download dialog. You need write permissions on this folder.
                                     </TextBlock>
                                 </StackPanel>
                             </ToolTip>
                         </fa:ImageAwesome.ToolTip>
                     </fa:ImageAwesome>
 
-                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Filename Template:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path='CurrentPreferences.DownloadFileName', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
-                    <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Filename Template:" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Path='CurrentPreferences.DownloadFileName', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                    <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
                         <fa:ImageAwesome.ToolTip>
                             <ToolTip Width="400">
                                 <StackPanel>
@@ -283,9 +308,9 @@
                         </fa:ImageAwesome.ToolTip>
                     </fa:ImageAwesome>
 
-                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Video Quality:" VerticalAlignment="Center" />
-                    <ComboBox Name="cmbQuality" Grid.Row="4" Grid.Column="2" ItemsSource="{Binding VideoQualityList}" SelectedItem="{Binding Path='CurrentPreferences.DownloadVideoQuality'}" />
-                    <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Video Quality:" VerticalAlignment="Center" />
+                    <ComboBox Name="cmbQuality" Grid.Row="6" Grid.Column="2" ItemsSource="{Binding VideoQualityList}" SelectedItem="{Binding Path='CurrentPreferences.DownloadVideoQuality'}" />
+                    <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource PrefInfo}">
                         <fa:ImageAwesome.ToolTip>
                             <ToolTip Width="350">
                                 <StackPanel>

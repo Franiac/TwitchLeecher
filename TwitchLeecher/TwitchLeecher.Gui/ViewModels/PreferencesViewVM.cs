@@ -21,6 +21,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private Preferences currentPreferences;
         private IEnumerable<VideoQuality> videoQualityList;
 
+        private ICommand chooseDownloadTempFolderCommand;
         private ICommand chooseDownloadFolderCommand;
         private ICommand saveCommand;
         private ICommand undoCommand;
@@ -68,6 +69,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.videoQualityList;
+            }
+        }
+
+        public ICommand ChooseDownloadTempFolderCommand
+        {
+            get
+            {
+                if (this.chooseDownloadTempFolderCommand == null)
+                {
+                    this.chooseDownloadTempFolderCommand = new DelegateCommand(this.ChooseDownloadTempFolder);
+                }
+
+                return this.chooseDownloadTempFolderCommand;
             }
         }
 
@@ -126,6 +140,33 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Properties
 
         #region Methods
+
+        private void ChooseDownloadTempFolder()
+        {
+            try
+            {
+                this.guiService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ChooseDownloadTempFolderCallback(bool cancelled, string folder)
+        {
+            try
+            {
+                if (!cancelled)
+                {
+                    this.CurrentPreferences.DownloadTempFolder = folder;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.guiService.ShowAndLogException(ex);
+            }
+        }
 
         private void ChooseDownloadFolder()
         {
