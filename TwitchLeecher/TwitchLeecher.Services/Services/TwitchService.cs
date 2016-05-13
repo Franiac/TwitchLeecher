@@ -397,31 +397,39 @@ namespace TwitchLeecher.Services.Services
 
                                         DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
                                         {
-                                            if (!string.IsNullOrWhiteSpace(e.Data))
+                                            try
                                             {
-                                                string dataTrimmed = e.Data.Trim();
-
-                                                if (dataTrimmed.StartsWith("Duration"))
+                                                if (!string.IsNullOrWhiteSpace(e.Data))
                                                 {
-                                                    string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
-                                                    durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
-                                                    duration = TimeSpan.Parse(durationStr);
-                                                }
+                                                    download.AppendLog(Environment.NewLine + e.Data);
 
-                                                if (dataTrimmed.StartsWith("frame"))
-                                                {
-                                                    string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
-                                                    timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
-                                                    timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
-                                                    TimeSpan current = TimeSpan.Parse(timeStr);
+                                                    string dataTrimmed = e.Data.Trim();
 
-                                                    lock (percentageLock)
+                                                    if (dataTrimmed.StartsWith("Duration"))
                                                     {
-                                                        download.Progress = (int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds);
+                                                        string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
+                                                        durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
+                                                        duration = TimeSpan.Parse(durationStr);
+                                                    }
+
+                                                    if (dataTrimmed.StartsWith("frame"))
+                                                    {
+                                                        string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
+                                                        timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
+                                                        timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
+                                                        TimeSpan current = TimeSpan.Parse(timeStr);
+
+                                                        lock (percentageLock)
+                                                        {
+                                                            download.Progress = (int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds);
+                                                        }
                                                     }
                                                 }
-
-                                                download.AppendLog(Environment.NewLine + e.Data);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                download.AppendLog(Environment.NewLine + "An error occured while reading '" + ffmpegFile + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
+                                                p.Kill();
                                             }
                                         });
 
@@ -432,9 +440,16 @@ namespace TwitchLeecher.Services.Services
                                         p.BeginErrorReadLine();
                                         p.BeginOutputReadLine();
                                         p.WaitForExit();
-                                    }
 
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Encoding complete!");
+                                        if (p.ExitCode == 0)
+                                        {
+                                            download.AppendLog(Environment.NewLine + Environment.NewLine + "Encoding complete!");
+                                        }
+                                        else
+                                        {
+                                            throw new ApplicationException("An error occured while encoding the video!");
+                                        }
+                                    }                                    
                                 }
                             }, cancellationTokenSource.Token);
 
