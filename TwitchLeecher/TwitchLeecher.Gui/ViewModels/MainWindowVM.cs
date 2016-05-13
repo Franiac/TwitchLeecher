@@ -430,11 +430,9 @@ namespace TwitchLeecher.Gui.ViewModels
                         Thread.Sleep(500);
                     }).ContinueWith(task =>
                     {
-                        UpdateInfo updateInfo;
+                        UpdateInfo updateInfo = this.updateService.CheckForUpdate();
 
-                        bool updateAvailable = this.updateService.CheckForUpdate(out updateInfo);
-
-                        if (updateAvailable)
+                        if (updateInfo != null)
                         {
                             this.guiService.ShowUpdateInfoWindow(updateInfo);
                         }

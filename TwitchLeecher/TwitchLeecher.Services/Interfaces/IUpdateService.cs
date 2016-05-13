@@ -4,6 +4,6 @@ namespace TwitchLeecher.Services.Interfaces
 {
     public interface IUpdateService
     {
-        bool CheckForUpdate(out UpdateInfo updateInfo);
+        UpdateInfo CheckForUpdate();
     }
 }

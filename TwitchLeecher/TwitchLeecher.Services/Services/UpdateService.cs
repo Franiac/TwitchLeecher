@@ -15,7 +15,7 @@ namespace TwitchLeecher.Services.Services
         private const string latestReleaseUrl = "https://github.com/Franiac/TwitchLeecher/releases/tag/v{0}";
         private const string releasesApiUrl = "https://api.github.com/repos/Franiac/TwitchLeecher/releases";
 
-        public bool CheckForUpdate(out UpdateInfo updateInfo)
+        public UpdateInfo CheckForUpdate()
         {
             try
             {
@@ -27,31 +27,43 @@ namespace TwitchLeecher.Services.Services
 
                     JToken releasesJson = JToken.Parse(result);
 
-                    JToken latestReleaseJson = releasesJson.First;
+                    foreach (JToken releaseJson in releasesJson)
+                    {
+                        bool draft = releaseJson.Value<bool>("draft");
+                        bool prerelease = releaseJson.Value<bool>("prerelease");
 
-                    string tagStr = latestReleaseJson.Value<string>("tag_name");
-                    string releasedStr = latestReleaseJson.Value<string>("published_at");
-                    string infoStr = latestReleaseJson.Value<string>("body");
+                        if (!draft && !prerelease)
+                        {
+                            string tagStr = releaseJson.Value<string>("tag_name");
+                            string releasedStr = releaseJson.Value<string>("published_at");
+                            string infoStr = releaseJson.Value<string>("body");
 
-                    Version releaseVersion = Version.Parse(tagStr.Substring(1));
+                            Version releaseVersion = Version.Parse(tagStr.Substring(1));
 
-                    Version localVersion = AssemblyUtil.Get.GetAssemblyVersion();
+                            Version localVersion = AssemblyUtil.Get.GetAssemblyVersion();
 
-                    DateTime released = DateTime.Parse(releasedStr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+                            DateTime released = DateTime.Parse(releasedStr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
-                    string downloadUrl = string.Format(latestReleaseUrl, releaseVersion.Trim().ToString());
+                            string downloadUrl = string.Format(latestReleaseUrl, releaseVersion.Trim().ToString());
 
-                    updateInfo = new UpdateInfo(releaseVersion, released, downloadUrl, infoStr);
-
-                    return releaseVersion > localVersion;
+                            if (releaseVersion > localVersion)
+                            {
+                                return new UpdateInfo(releaseVersion, released, downloadUrl, infoStr);
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
                 }
             }
             catch
             {
-                updateInfo = null;
+                // Update check should not distract the application
             }
 
-            return false;
+            return null;
         }
     }
 }
