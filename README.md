@@ -20,6 +20,7 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Intuitive and stylish GUI
 - Up to 20 times faster download speed compared to direct download with FFMPEG
 - Browse your past broadcasts and highlights within the application
+- Time Selection for VOD downloads
 - Queue multiple downloads
 - Specify default search parameters
 - Specify default download folders
