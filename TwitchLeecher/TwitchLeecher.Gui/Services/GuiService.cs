@@ -131,26 +131,11 @@ namespace TwitchLeecher.Gui.Services
             dialogCompleteCallback(result != true, resultObject);
         }
 
-        public void ShowDownloadDialog(TwitchVideo video, TwitchVideoResolution resolution, string folder, string filename, Action<bool, DownloadParameters> dialogCompleteCallback)
+        public void ShowDownloadDialog(DownloadParameters downloadParams, Action<bool, DownloadParameters> dialogCompleteCallback)
         {
-            if (video == null)
+            if (downloadParams == null)
             {
-                throw new ArgumentNullException(nameof(video));
-            }
-
-            if (resolution == null)
-            {
-                throw new ArgumentNullException(nameof(resolution));
-            }
-
-            if (string.IsNullOrWhiteSpace(folder))
-            {
-                throw new ArgumentNullException(nameof(folder));
-            }
-
-            if (string.IsNullOrWhiteSpace(filename))
-            {
-                throw new ArgumentNullException(nameof(filename));
+                throw new ArgumentNullException(nameof(downloadParams));
             }
 
             if (dialogCompleteCallback == null)
@@ -159,10 +144,7 @@ namespace TwitchLeecher.Gui.Services
             }
 
             DownloadWindowVM vm = this.kernel.Get<DownloadWindowVM>();
-            vm.Video = video;
-            vm.Resolution = resolution;
-            vm.Folder = folder;
-            vm.Filename = filename;
+            vm.DownloadParams = downloadParams;
 
             DownloadWindow window = this.kernel.Get<DownloadWindow>();
             window.DataContext = vm;

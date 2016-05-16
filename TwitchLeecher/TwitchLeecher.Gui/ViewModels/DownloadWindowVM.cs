@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Shared.Commands;
-using TwitchLeecher.Shared.IO;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -13,11 +14,7 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private TwitchVideo video;
-        private TwitchVideoResolution resolution;
-
-        private string folder;
-        private string filename;
+        private DownloadParameters downloadParams;
 
         private ICommand chooseCommand;
         private ICommand downloadCommand;
@@ -40,51 +37,53 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public TwitchVideo Video
+        public DownloadParameters DownloadParams
         {
             get
             {
-                return this.video;
+                return this.downloadParams;
             }
             set
             {
-                this.SetProperty(ref this.video, value, nameof(this.Video));
+                this.SetProperty(ref this.downloadParams, value, nameof(this.DownloadParams));
             }
         }
 
-        public TwitchVideoResolution Resolution
+        public string CropStartTime
         {
             get
             {
-                return this.resolution;
+                return this.downloadParams.CropStartTime.ToString();
             }
             set
             {
-                this.SetProperty(ref this.resolution, value, nameof(this.Resolution));
+                TimeSpan ts;
+
+                if (TimeSpan.TryParse(value, out ts))
+                {
+                    this.downloadParams.CropStartTime = ts;
+                }
+
+                this.FirePropertyChanged(nameof(this.CropStartTime));
             }
         }
 
-        public string Folder
+        public string CropEndTime
         {
             get
             {
-                return this.folder;
+                return this.downloadParams.CropEndTime.ToString();
             }
             set
             {
-                this.SetProperty(ref this.folder, value, nameof(this.Folder));
-            }
-        }
+                TimeSpan ts;
 
-        public string Filename
-        {
-            get
-            {
-                return this.filename;
-            }
-            set
-            {
-                this.SetProperty(ref this.filename, value, nameof(this.Filename));
+                if (TimeSpan.TryParse(value, out ts))
+                {
+                    this.downloadParams.CropEndTime = ts;
+                }
+
+                this.FirePropertyChanged(nameof(this.CropEndTime));
             }
         }
 
@@ -135,7 +134,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.ShowFolderBrowserDialog(this.folder, this.ChooseCallback);
+                this.guiService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
             }
             catch (Exception ex)
             {
@@ -149,7 +148,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    this.Folder = folder;
+                    this.downloadParams.Folder = folder;
                 }
             }
             catch (Exception ex)
@@ -166,9 +165,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (!this.HasErrors)
                 {
-                    string filename = Path.Combine(this.folder, this.filename);
-
-                    if (File.Exists(filename))
+                    if (File.Exists(this.downloadParams.FullPath))
                     {
                         MessageBoxResult result = this.guiService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -178,7 +175,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                     }
 
-                    this.ResultObject = new DownloadParameters(this.video, this.resolution, filename);
+                    this.ResultObject = this.downloadParams;
                     window.DialogResult = true;
                     window.Close();
                 }
@@ -207,49 +204,49 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.Resolution);
+            string currentProperty = nameof(this.DownloadParams);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.resolution == null)
+                this.DownloadParams?.Validate();
+
+                if (this.DownloadParams.HasErrors)
                 {
-                    this.AddError(currentProperty, "Please select a quality!");
+                    this.AddError(currentProperty, "Invalid Download Parameters!");
                 }
             }
 
-            currentProperty = nameof(this.Folder);
+            currentProperty = nameof(this.CropStartTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.folder))
+                this.DownloadParams?.Validate(currentProperty);
+
+                if (this.DownloadParams.HasErrors)
                 {
-                    this.AddError(currentProperty, "Please specify a folder!");
-                }
-                else if (!Directory.Exists(this.folder))
-                {
-                    this.AddError(currentProperty, "The specified folder does not exist!");
-                }
-                else if (!FileSystem.HasWritePermission(this.folder))
-                {
-                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                    List<string> errors = this.DownloadParams.GetErrors(currentProperty) as List<string>;
+
+                    if (errors != null && errors.Count > 0)
+                    {
+                        this.AddError(currentProperty, errors.First());
+                    }
                 }
             }
 
-            currentProperty = nameof(this.Filename);
+            currentProperty = nameof(this.CropEndTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.filename))
+                this.DownloadParams?.Validate(currentProperty);
+
+                if (this.DownloadParams.HasErrors)
                 {
-                    this.AddError(currentProperty, "Please specify a filename!");
-                }
-                else if (!this.filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                {
-                    this.AddError(currentProperty, "Filename must end with '.mp4'!");
-                }
-                else if (FileSystem.FilenameContainsInvalidChars(this.filename))
-                {
-                    this.AddError(currentProperty, "Filename contains invalid characters!");
+                    List<string> errors = this.DownloadParams.GetErrors(currentProperty) as List<string>;
+
+                    if (errors != null && errors.Count > 0)
+                    {
+                        this.AddError(currentProperty, errors.First());
+                    }
                 }
             }
         }

@@ -184,11 +184,11 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                         if (download != null)
                         {
-                            string folder = Path.GetDirectoryName(download.DownloadParams.Filename);
+                            string folder = download.DownloadParams.Folder;
 
                             if (Directory.Exists(folder))
                             {
@@ -212,7 +212,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                         if (download != null)
                         {

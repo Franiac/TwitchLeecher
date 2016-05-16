@@ -12,11 +12,16 @@ namespace TwitchLeecher.Core.Models
         private DownloadParameters downloadParams;
 
         private DownloadStatus downloadStatus;
+        private object downloadStatusLockObject;
 
         private StringBuilder log;
         private object logLockObject;
+
         private int progress;
+        private object progressLockObject;
+
         private string status;
+        private object statusLockObject;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,7 +40,10 @@ namespace TwitchLeecher.Core.Models
 
             this.log = new StringBuilder();
 
+            this.downloadStatusLockObject = new object();
             this.logLockObject = new object();
+            this.progressLockObject = new object();
+            this.statusLockObject = new object();
         }
 
         #endregion Constructors
@@ -56,7 +64,7 @@ namespace TwitchLeecher.Core.Models
             {
                 return this.downloadStatus;
             }
-            set
+            private set
             {
                 this.downloadStatus = value;
                 this.FirePropertyChanged(nameof(this.DownloadStatus));
@@ -78,7 +86,7 @@ namespace TwitchLeecher.Core.Models
             {
                 return this.progress;
             }
-            set
+            private set
             {
                 this.progress = value;
                 this.FirePropertyChanged(nameof(this.Progress));
@@ -96,18 +104,10 @@ namespace TwitchLeecher.Core.Models
 
                 return this.status;
             }
-            set
+            private set
             {
                 this.status = value;
                 this.FirePropertyChanged(nameof(this.Status));
-            }
-        }
-
-        public TwitchVideo Video
-        {
-            get
-            {
-                return this.downloadParams.Video;
             }
         }
 
@@ -115,20 +115,20 @@ namespace TwitchLeecher.Core.Models
 
         #region Methods
 
-        public void AppendLog(string text)
+        public void SetDownloadStatus(DownloadStatus downloadStatus)
         {
-            lock (logLockObject)
+            lock (this.downloadStatusLockObject)
             {
-                this.log.Append(text);
-                this.FirePropertyChanged(nameof(this.Log));
+                this.DownloadStatus = downloadStatus;
             }
         }
 
-        public void FirePropertyChanged(string propertyName = null)
+        public void AppendLog(string text)
         {
-            if (this.PropertyChanged != null)
+            lock (this.logLockObject)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.log.Append(text);
+                this.FirePropertyChanged(nameof(this.Log));
             }
         }
 
@@ -139,6 +139,27 @@ namespace TwitchLeecher.Core.Models
                 this.log.Clear();
                 this.FirePropertyChanged(nameof(this.Log));
             }
+        }
+
+        public void SetProgress(int progress)
+        {
+            lock (this.progressLockObject)
+            {
+                this.Progress = progress;
+            }
+        }
+
+        public void SetStatus(string status)
+        {
+            lock (this.statusLockObject)
+            {
+                this.Status = status;
+            }
+        }
+
+        public void FirePropertyChanged(string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion Methods

@@ -22,7 +22,7 @@ namespace TwitchLeecher.Gui.Services
 
         void ShowSearchDialog(SearchParameters lastSearchParams, Action<bool, SearchParameters> dialogCompleteCallback);
 
-        void ShowDownloadDialog(TwitchVideo video, TwitchVideoResolution resolution, string folder, string filename, Action<bool, DownloadParameters> dialogCompleteCallback);
+        void ShowDownloadDialog(DownloadParameters downloadParams, Action<bool, DownloadParameters> dialogCompleteCallback);
 
         void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback);
 

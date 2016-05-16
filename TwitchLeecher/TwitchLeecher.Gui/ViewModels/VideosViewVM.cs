@@ -123,7 +123,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        if (this.twitchService.Downloads.Where(d => d.Video.Id == id).Any())
+                        if (this.twitchService.Downloads.Where(d => d.DownloadParams.Video.Id == id).Any())
                         {
                             this.guiService.ShowMessageBox("This video is already being downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
                             return;
@@ -144,7 +144,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             string filename = this.filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            this.guiService.ShowDownloadDialog(video, resolution, currentPrefs.DownloadFolder, filename, this.DownloadCallback);
+                            DownloadParameters downloadParams = new DownloadParameters(video, resolution, currentPrefs.DownloadFolder, filename);
+
+                            this.guiService.ShowDownloadDialog(downloadParams, this.DownloadCallback);
                         }
                     }
                 }

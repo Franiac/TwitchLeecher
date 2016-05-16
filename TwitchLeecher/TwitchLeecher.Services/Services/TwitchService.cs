@@ -16,6 +16,7 @@ using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Extensions;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Services.Models;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 
@@ -31,6 +32,7 @@ namespace TwitchLeecher.Services.Services
         private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true";
 
         private const string TEMP_PREFIX = "TL_";
+        private const string PLAYLIST_NAME = "vod.m3u8";
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
@@ -39,8 +41,6 @@ namespace TwitchLeecher.Services.Services
         #endregion Constants
 
         #region Fields
-
-        private IPreferencesService preferencesService;
 
         private Timer downloadTimer;
 
@@ -59,10 +59,8 @@ namespace TwitchLeecher.Services.Services
 
         #region Constructors
 
-        public TwitchService(IPreferencesService preferencesService)
+        public TwitchService()
         {
-            this.preferencesService = preferencesService;
-
             this.videos = new ObservableCollection<TwitchVideo>();
             this.downloads = new ObservableCollection<TwitchVideoDownload>();
 
@@ -198,302 +196,116 @@ namespace TwitchLeecher.Services.Services
                     {
                         TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
 
-                        if (download != null)
+                        if (download == null)
                         {
-                            TwitchVideo video = download.Video;
-                            DownloadParameters downloadParams = download.DownloadParams;
+                            return;
+                        }
 
-                            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                            CancellationToken cancellationToken = cancellationTokenSource.Token;
+                        DownloadParameters downloadParams = download.DownloadParams;
 
-                            long completedChunkDownloads = 0;
+                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                        CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-                            int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
+                        string urlId = downloadParams.Video.Id;
+                        string urlIdTrimmed = downloadParams.Video.IdTrimmed;
+                        string tempDir = Path.Combine(downloadParams.Folder, TEMP_PREFIX + urlIdTrimmed);
+                        string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
+                        string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
+                        string outputFile = downloadParams.FullPath;
 
-                            string urlId = video.IdTrimmed;
-                            string quality = downloadParams.Resolution.VideoQuality.ToTwitchQuality();
-                            string qualityFps = downloadParams.Resolution.ResolutionFps;
-                            string outputDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + urlId);
-                            string playlistFile = Path.Combine(outputDir, "vod.m3u8");
-                            string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
-                            string outputFile = downloadParams.Filename;
+                        bool cropStart = downloadParams.CropStart;
+                        bool cropEnd = downloadParams.CropEnd;
 
-                            Task downloadVideoTask = new Task(() =>
+                        TimeSpan cropStartTime = downloadParams.CropStartTime;
+                        TimeSpan cropEndTime = downloadParams.CropEndTime;
+
+                        TwitchVideoResolution resolution = downloadParams.Resolution;
+
+                        Action<DownloadStatus> setDownloadStatus = download.SetDownloadStatus;
+                        Action<string> log = download.AppendLog;
+                        Action<string> setStatus = download.SetStatus;
+                        Action<int> setProgress = download.SetProgress;
+
+                        Task downloadVideoTask = new Task(() =>
+                        {
+                            setStatus("Initializing");
+
+                            log("Download task has been started!");
+
+                            this.WriteDownloadInfo(log, downloadParams, ffmpegFile, tempDir);
+
+                            this.CheckTempDirectory(log, tempDir);
+
+                            using (WebClient webClient = new WebClient())
                             {
-                                download.Status = "Initializing";
+                                AuthInfo authInfo = this.RetrieveAuthInfo(log, webClient, urlIdTrimmed);
 
-                                download.AppendLog("Download task has been started!");
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                download.AppendLog(Environment.NewLine + Environment.NewLine + "VOD ID: " + urlId);
-                                download.AppendLog(Environment.NewLine + "Selected Quality: " + qualityFps);
-                                download.AppendLog(Environment.NewLine + "Download Url: " + video.Url.ToString());
-                                download.AppendLog(Environment.NewLine + "Output File: " + outputFile);
-                                download.AppendLog(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
-                                download.AppendLog(Environment.NewLine + "Temporary Download Folder: " + outputDir);
+                                string playlistUrl = this.RetrievePlaylistUrlForQuality(log, webClient, resolution, urlIdTrimmed, authInfo);
 
-                                if (!Directory.Exists(outputDir))
-                                {
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Creating directory '" + outputDir + "'...");
-                                    FileSystem.CreateDirectory(outputDir);
-                                    download.AppendLog(" done!");
-                                }
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                if (Directory.EnumerateFileSystemEntries(outputDir).Any())
-                                {
-                                    throw new ApplicationException("Temporary download directory '" + outputDir + "' is not empty!");
-                                }
+                                WebChunkList webChunkList = this.RetrieveWebChunkList(log, webClient, tempDir, playlistUrl);
 
-                                using (WebClient webClient = new WebClient())
-                                {
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Retrieving access token and signature...");
-                                    string accessTokenStr = webClient.DownloadString(string.Format(accessTokenUrl, urlId));
-                                    download.AppendLog(" done!");
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                    dynamic accessTokenJson = JsonConvert.DeserializeObject(accessTokenStr);
+                                CropInfo cropInfo = this.CropWebChunkList(webChunkList, cropStart, cropEnd, cropStartTime, cropEndTime);
 
-                                    string token = Uri.EscapeDataString(accessTokenJson.token.ToString());
-                                    string sig = accessTokenJson.sig.ToString();
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                    download.AppendLog(Environment.NewLine + "Token: " + token);
-                                    download.AppendLog(Environment.NewLine + "Signature: " + sig);
+                                this.DownloadChunks(log, setStatus, setProgress, webChunkList, cancellationToken);
 
-                                    cancellationToken.ThrowIfCancellationRequested();
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-                                    string allPlaylistsStr = webClient.DownloadString(string.Format(allPlaylistsUrl, urlId, sig, token));
-                                    download.AppendLog(" done!");
+                                this.WriteNewPlaylist(log, webChunkList, playlistFile);
 
-                                    List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                                    allPlaylistsList.ForEach(url =>
-                                    {
-                                        download.AppendLog(Environment.NewLine + url);
-                                    });
-
-                                    string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(quality)).First();
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + qualityFps + " is " + playlistUrl);
-
-                                    cancellationToken.ThrowIfCancellationRequested();
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Retrieving list of video chunks...");
-                                    string playlistStr = webClient.DownloadString(playlistUrl);
-                                    download.AppendLog(" done!");
-
-                                    List<string> playlistLines = playlistStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-                                    List<string> webChunkList = playlistLines.Where(s => !s.StartsWith("#")).ToList();
-
-                                    string webChunkUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
-
-                                    long webChunkCount = webChunkList.Count;
-                                    download.AppendLog(Environment.NewLine + "Number of video chunks to download: " + webChunkCount);
-                                    download.AppendLog(Environment.NewLine + "Maximum connection count: " + maxConnectionCount);
-
-                                    List<string> webChunkFilenames = new List<string>();
-
-                                    List<WebChunk> downloadQueue = new List<WebChunk>();
-
-                                    int counter = 0;
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Initializing video chunk download queue...");
-
-                                    foreach (string webChunk in webChunkList)
-                                    {
-                                        string filename = Path.Combine(outputDir, counter.ToString("D8") + ".ts");
-                                        webChunkFilenames.Add(filename);
-                                        downloadQueue.Add(new WebChunk(filename, webChunkUrlPrefix + webChunk));
-                                        counter++;
-
-                                        cancellationToken.ThrowIfCancellationRequested();
-                                    }
-
-                                    download.AppendLog(" done!");
-
-                                    download.AppendLog(Environment.NewLine + "Starting parallel video chunk download...");
-
-                                    download.Status = "Downloading";
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Parallel video chunk download is running...");
-
-                                    object percentageLock = new object();
-
-                                    Parallel.ForEach(downloadQueue, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (webChunk, loopState) =>
-                                    {
-                                        using (WebClient downloadClient = new WebClient())
-                                        {
-                                            byte[] bytes = downloadClient.DownloadData(webChunk.Url);
-
-                                            Interlocked.Increment(ref completedChunkDownloads);
-
-                                            FileSystem.DeleteFile(webChunk.Filename);
-
-                                            File.WriteAllBytes(webChunk.Filename, bytes);
-
-                                            long completed = Interlocked.Read(ref completedChunkDownloads);
-
-                                            lock (percentageLock)
-                                            {
-                                                download.Progress = (int)(completedChunkDownloads * 100 / webChunkCount);
-                                            }
-                                        }
-
-                                        if (cancellationToken.IsCancellationRequested)
-                                        {
-                                            loopState.Stop();
-                                        }
-                                    });
-
-                                    download.Progress = 100;
-
-                                    cancellationToken.ThrowIfCancellationRequested();
-
-                                    download.AppendLog(" done!");
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG");
-
-                                    int chunkIndex = 0;
-
-                                    for (int i = 0; i < playlistLines.Count; i++)
-                                    {
-                                        if (!playlistLines[i].StartsWith("#"))
-                                        {
-                                            playlistLines[i] = webChunkFilenames[chunkIndex];
-                                            chunkIndex++;
-                                        }
-                                    }
-
-                                    string newPlaylistStr = string.Join("\n", playlistLines);
-
-                                    FileSystem.DeleteFile(playlistFile);
-
-                                    download.AppendLog(Environment.NewLine + "Writing playlist to '" + playlistFile + "'");
-                                    File.WriteAllText(playlistFile, newPlaylistStr);
-
-                                    download.Status = "Encoding";
-
-                                    download.Progress = 0;
-
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
-
-                                    cancellationToken.ThrowIfCancellationRequested();
-
-                                    ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-                                    psi.Arguments = "-y -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc \"" + outputFile + "\"";
-                                    psi.RedirectStandardError = true;
-                                    psi.RedirectStandardOutput = true;
-                                    psi.StandardErrorEncoding = Encoding.UTF8;
-                                    psi.StandardOutputEncoding = Encoding.UTF8;
-                                    psi.UseShellExecute = false;
-                                    psi.CreateNoWindow = true;
-
-                                    download.AppendLog(Environment.NewLine + "Command line arguments: " + psi.Arguments + Environment.NewLine);
-
-                                    using (Process p = new Process())
-                                    {
-                                        TimeSpan duration = new TimeSpan();
-
-                                        DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
-                                        {
-                                            try
-                                            {
-                                                if (!string.IsNullOrWhiteSpace(e.Data))
-                                                {
-                                                    download.AppendLog(Environment.NewLine + e.Data);
-
-                                                    string dataTrimmed = e.Data.Trim();
-
-                                                    if (dataTrimmed.StartsWith("Duration"))
-                                                    {
-                                                        string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
-                                                        durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
-                                                        duration = TimeSpan.Parse(durationStr);
-                                                    }
-
-                                                    if (dataTrimmed.StartsWith("frame"))
-                                                    {
-                                                        string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
-                                                        timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
-                                                        timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
-                                                        TimeSpan current = TimeSpan.Parse(timeStr);
-
-                                                        lock (percentageLock)
-                                                        {
-                                                            download.Progress = (int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                download.AppendLog(Environment.NewLine + "An error occured while reading '" + ffmpegFile + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
-                                                p.Kill();
-                                            }
-                                        });
-
-                                        p.OutputDataReceived += outputDataReceived;
-                                        p.ErrorDataReceived += outputDataReceived;
-                                        p.StartInfo = psi;
-                                        p.Start();
-                                        p.BeginErrorReadLine();
-                                        p.BeginOutputReadLine();
-                                        p.WaitForExit();
-
-                                        if (p.ExitCode == 0)
-                                        {
-                                            download.AppendLog(Environment.NewLine + Environment.NewLine + "Encoding complete!");
-                                        }
-                                        else
-                                        {
-                                            throw new ApplicationException("An error occured while encoding the video!");
-                                        }
-                                    }                                    
-                                }
-                            }, cancellationTokenSource.Token);
-
-                            Task continueTask = downloadVideoTask.ContinueWith(task =>
-                            {
-                                download.AppendLog(Environment.NewLine + Environment.NewLine + "Starting temporary download folder cleanup!");
-                                this.CleanUp(outputDir, download);
-
-                                download.Progress = 100;
-
-                                if (task.IsFaulted)
-                                {
-                                    download.DownloadStatus = DownloadStatus.Error;
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Download task ended with an error!");
-
-                                    if (task.Exception != null)
-                                    {
-                                        download.AppendLog(Environment.NewLine + Environment.NewLine + task.Exception.ToString());
-                                    }
-                                }
-                                else if (task.IsCanceled)
-                                {
-                                    download.DownloadStatus = DownloadStatus.Canceled;
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Download task was canceled!");
-                                }
-                                else
-                                {
-                                    download.DownloadStatus = DownloadStatus.Finished;
-                                    download.AppendLog(Environment.NewLine + Environment.NewLine + "Download task ended successfully!");
-                                }
-
-                                DownloadTask downloadTask;
-
-                                if (!this.downloadTasks.TryRemove(video.Id, out downloadTask))
-                                {
-                                    throw new ApplicationException("Could not remove download task with ID '" + video.Id + "' from download task collection!");
-                                }
-                            });
-
-                            if (this.downloadTasks.TryAdd(video.Id, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
-                            {
-                                downloadVideoTask.Start();
-                                download.DownloadStatus = DownloadStatus.Active;
+                                this.EncodeVideo(log, setStatus, setProgress, ffmpegFile, playlistFile, outputFile, cropInfo);
                             }
+                        }, cancellationToken);
+
+                        Task continueTask = downloadVideoTask.ContinueWith(task =>
+                        {
+                            log(Environment.NewLine + Environment.NewLine + "Starting temporary download folder cleanup!");
+                            this.CleanUp(tempDir, log);
+
+                            setProgress(100);
+
+                            if (task.IsFaulted)
+                            {
+                                setDownloadStatus(DownloadStatus.Error);
+                                log(Environment.NewLine + Environment.NewLine + "Download task ended with an error!");
+
+                                if (task.Exception != null)
+                                {
+                                    log(Environment.NewLine + Environment.NewLine + task.Exception.ToString());
+                                }
+                            }
+                            else if (task.IsCanceled)
+                            {
+                                setDownloadStatus(DownloadStatus.Canceled);
+                                log(Environment.NewLine + Environment.NewLine + "Download task was canceled!");
+                            }
+                            else
+                            {
+                                setDownloadStatus(DownloadStatus.Finished);
+                                log(Environment.NewLine + Environment.NewLine + "Download task ended successfully!");
+                            }
+
+                            DownloadTask downloadTask;
+
+                            if (!this.downloadTasks.TryRemove(urlId, out downloadTask))
+                            {
+                                throw new ApplicationException("Could not remove download task with ID '" + urlId + "' from download task collection!");
+                            }
+                        });
+
+                        if (this.downloadTasks.TryAdd(urlId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
+                        {
+                            downloadVideoTask.Start();
+                            setDownloadStatus(DownloadStatus.Active);
                         }
                     }
                 }
@@ -504,13 +316,316 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void CleanUp(string directory, TwitchVideoDownload download)
+        private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, string ffmpegFile, string tempDir)
+        {
+            log(Environment.NewLine + Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.ResolutionFps);
+            log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
+            log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
+            log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
+            log(Environment.NewLine + "Temporary Download Folder: " + tempDir);
+            log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
+            log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
+        }
+
+        private void CheckTempDirectory(Action<string> log, string tempDir)
+        {
+            if (!Directory.Exists(tempDir))
+            {
+                log(Environment.NewLine + Environment.NewLine + "Creating directory '" + tempDir + "'...");
+                FileSystem.CreateDirectory(tempDir);
+                log(" done!");
+            }
+
+            if (Directory.EnumerateFileSystemEntries(tempDir).Any())
+            {
+                throw new ApplicationException("Temporary download directory '" + tempDir + "' is not empty!");
+            }
+        }
+
+        private AuthInfo RetrieveAuthInfo(Action<string> log, WebClient webClient, string urlIdTrimmed)
+        {
+            log(Environment.NewLine + Environment.NewLine + "Retrieving access token and signature...");
+            string accessTokenStr = webClient.DownloadString(string.Format(accessTokenUrl, urlIdTrimmed));
+            log(" done!");
+
+            dynamic accessTokenJson = JsonConvert.DeserializeObject(accessTokenStr);
+
+            string token = Uri.EscapeDataString(accessTokenJson.token.ToString());
+            string signature = accessTokenJson.sig.ToString();
+
+            log(Environment.NewLine + "Token: " + token);
+            log(Environment.NewLine + "Signature: " + signature);
+
+            return new AuthInfo(token, signature);
+        }
+
+        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoResolution resolution, string urlIdTrimmed, AuthInfo authInfo)
+        {
+            log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
+            string allPlaylistsStr = webClient.DownloadString(string.Format(allPlaylistsUrl, urlIdTrimmed, authInfo.Signature, authInfo.Token));
+            log(" done!");
+
+            List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
+
+            allPlaylistsList.ForEach(url =>
+            {
+                log(Environment.NewLine + url);
+            });
+
+            string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.VideoQuality.ToTwitchQuality())).First();
+
+            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.ResolutionFps + " is " + playlistUrl);
+
+            return playlistUrl;
+        }
+
+        private WebChunkList RetrieveWebChunkList(Action<string> log, WebClient webClient, string tempDir, string playlistUrl)
+        {
+            log(Environment.NewLine + Environment.NewLine + "Retrieving playlist...");
+            string playlistStr = webClient.DownloadString(playlistUrl);
+            log(" done!");
+
+            string playlistUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
+
+            log(Environment.NewLine + "Parsing playlist...");
+            WebChunkList webChunkList = WebChunkList.Parse(tempDir, playlistStr, playlistUrlPrefix);
+            log(" done!");
+
+            log(Environment.NewLine + "Number of video chunks: " + webChunkList.Content.Count);
+
+            return webChunkList;
+        }
+
+        private CropInfo CropWebChunkList(WebChunkList webChunkList, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
+        {
+            double start = cropStartTime.TotalMilliseconds;
+            double lengthOrg = cropEndTime.TotalMilliseconds;
+            double length = cropEndTime.TotalMilliseconds;
+
+            if (cropStart)
+            {
+                length -= start;
+            }
+
+            start = Math.Round(start / 1000, 3);
+            lengthOrg = Math.Round(lengthOrg / 1000, 3);
+            length = Math.Round(length / 1000, 3);
+
+            List<WebChunk> content = webChunkList.Content;
+
+            List<WebChunk> deleteStart = new List<WebChunk>();
+            List<WebChunk> deleteEnd = new List<WebChunk>();
+
+            if (cropStart)
+            {
+                double chunkSum = 0;
+
+                foreach (WebChunk webChunk in content)
+                {
+                    chunkSum += webChunk.Length;
+
+                    if (chunkSum < start)
+                    {
+                        deleteStart.Add(webChunk);
+                    }
+                    else
+                    {
+                        start = Math.Round(chunkSum - start, 3);
+                        break;
+                    }
+                }
+            }
+
+            if (cropEnd)
+            {
+                double chunkSum = 0;
+
+                foreach (WebChunk webChunk in content)
+                {
+                    chunkSum += webChunk.Length;
+
+                    if (chunkSum > lengthOrg)
+                    {
+                        deleteEnd.Add(webChunk);
+                    }
+                }
+            }
+
+            deleteStart.ForEach(webChunk =>
+            {
+                content.Remove(webChunk);
+            });
+
+            deleteEnd.ForEach(webChunk =>
+            {
+                content.Remove(webChunk);
+            });
+
+            return new CropInfo(cropStart, cropEnd, cropStart ? start : 0, length);
+        }
+
+        private void DownloadChunks(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            WebChunkList webChunkList, CancellationToken cancellationToken)
+        {
+            int webChunkCount = webChunkList.Content.Count;
+            int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
+
+            log(Environment.NewLine + Environment.NewLine + "Starting parallel video chunk download");
+            log(Environment.NewLine + "Number of video chunks to download: " + webChunkCount);
+            log(Environment.NewLine + "Maximum connection count: " + maxConnectionCount);
+
+            setStatus("Downloading");
+
+            log(Environment.NewLine + Environment.NewLine + "Parallel video chunk download is running...");
+
+            long completedChunkDownloads = 0;
+
+            Parallel.ForEach(webChunkList.Content, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (webChunk, loopState) =>
+            {
+                using (WebClient downloadClient = new WebClient())
+                {
+                    byte[] bytes = downloadClient.DownloadData(webChunk.DownloadUrl);
+
+                    Interlocked.Increment(ref completedChunkDownloads);
+
+                    FileSystem.DeleteFile(webChunk.LocalFile);
+
+                    File.WriteAllBytes(webChunk.LocalFile, bytes);
+
+                    long completed = Interlocked.Read(ref completedChunkDownloads);
+
+                    setProgress((int)(completedChunkDownloads * 100 / webChunkCount));
+                }
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    loopState.Stop();
+                }
+            });
+
+            setProgress(100);
+
+            log(" done!");
+
+            log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
+        }
+
+        private void WriteNewPlaylist(Action<string> log, WebChunkList webChunkList, string playlistFile)
+        {
+            log(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG...");
+
+            StringBuilder sb = new StringBuilder();
+
+            webChunkList.Header.ForEach(line =>
+            {
+                sb.AppendLine(line);
+            });
+
+            webChunkList.Content.ForEach(webChunk =>
+            {
+                sb.AppendLine(webChunk.ExtInf);
+                sb.AppendLine(webChunk.LocalFile);
+            });
+
+            webChunkList.Footer.ForEach(line =>
+            {
+                sb.AppendLine(line);
+            });
+
+            log(" done!");
+
+            log(Environment.NewLine + "Writing playlist to '" + playlistFile + "'...");
+            FileSystem.DeleteFile(playlistFile);
+            File.WriteAllText(playlistFile, sb.ToString());
+            log(" done!");
+        }
+
+        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
+        {
+            setStatus("Encoding");
+
+            setProgress(0);
+
+            log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
+
+            ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
+            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length : null) + " \"" + outputFile + "\"";
+            psi.RedirectStandardError = true;
+            psi.RedirectStandardOutput = true;
+            psi.StandardErrorEncoding = Encoding.UTF8;
+            psi.StandardOutputEncoding = Encoding.UTF8;
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
+
+            log(Environment.NewLine + "Command line arguments: " + psi.Arguments + Environment.NewLine);
+
+            using (Process p = new Process())
+            {
+                TimeSpan duration = new TimeSpan();
+
+                DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(e.Data))
+                        {
+                            log(Environment.NewLine + e.Data);
+
+                            string dataTrimmed = e.Data.Trim();
+
+                            if (dataTrimmed.StartsWith("Duration"))
+                            {
+                                string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
+                                durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
+                                duration = TimeSpan.Parse(durationStr);
+                            }
+
+                            if (dataTrimmed.StartsWith("frame"))
+                            {
+                                string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
+                                timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
+                                timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
+                                TimeSpan current = TimeSpan.Parse(timeStr);
+
+                                setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        log(Environment.NewLine + "An error occured while reading '" + ffmpegFile + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
+                        p.Kill();
+                    }
+                });
+
+                p.OutputDataReceived += outputDataReceived;
+                p.ErrorDataReceived += outputDataReceived;
+                p.StartInfo = psi;
+                p.Start();
+                p.BeginErrorReadLine();
+                p.BeginOutputReadLine();
+                p.WaitForExit();
+
+                if (p.ExitCode == 0)
+                {
+                    log(Environment.NewLine + Environment.NewLine + "Encoding complete!");
+                }
+                else
+                {
+                    throw new ApplicationException("An error occured while encoding the video!");
+                }
+            }
+        }
+
+        private void CleanUp(string directory, Action<string> log)
         {
             try
             {
-                download.AppendLog(Environment.NewLine + "Deleting directory '" + directory + "'...");
+                log(Environment.NewLine + "Deleting directory '" + directory + "'...");
                 FileSystem.DeleteDirectory(directory);
-                download.AppendLog(" done!");
+                log(" done!");
             }
             catch
             {
@@ -543,14 +658,14 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                     if (download != null && (download.DownloadStatus == DownloadStatus.Canceled || download.DownloadStatus == DownloadStatus.Error))
                     {
                         download.ResetLog();
-                        download.Progress = 0;
-                        download.DownloadStatus = DownloadStatus.Queued;
-                        download.Status = "Initializing";
+                        download.SetProgress(0);
+                        download.SetDownloadStatus(DownloadStatus.Queued);
+                        download.SetStatus("Initializing");
                     }
                 }
             }
@@ -564,7 +679,7 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                     if (download != null)
                     {
@@ -690,7 +805,7 @@ namespace TwitchLeecher.Services.Services
                 // Don't care about aborted tasks
             }
 
-            List<string> toRemove = this.downloads.Select(d => d.Video.Id).ToList();
+            List<string> toRemove = this.downloads.Select(d => d.DownloadParams.Video.Id).ToList();
 
             foreach (string id in toRemove)
             {
@@ -699,38 +814,5 @@ namespace TwitchLeecher.Services.Services
         }
 
         #endregion Methods
-
-        #region Nested Classes
-
-        private class WebChunk
-        {
-            public WebChunk(string filename, string url)
-            {
-                this.Filename = filename;
-                this.Url = url;
-            }
-
-            public string Filename { get; private set; }
-
-            public string Url { get; private set; }
-        }
-
-        private class DownloadTask
-        {
-            public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
-            {
-                this.Task = task;
-                this.ContinueTask = continueTask;
-                this.CancellationTokenSource = cancellationTokenSource;
-            }
-
-            public Task Task { get; private set; }
-
-            public Task ContinueTask { get; private set; }
-
-            public CancellationTokenSource CancellationTokenSource { get; private set; }
-        }
-
-        #endregion Nested Classes
     }
 }

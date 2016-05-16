@@ -56,6 +56,11 @@
     <Compile Include="Interfaces\IPreferencesService.cs" />
     <Compile Include="Interfaces\ITwitchService.cs" />
     <Compile Include="Interfaces\IUpdateService.cs" />
+    <Compile Include="Models\CropInfo.cs" />
+    <Compile Include="Models\DownloadTask.cs" />
+    <Compile Include="Models\AuthInfo.cs" />
+    <Compile Include="Models\WebChunk.cs" />
+    <Compile Include="Models\WebChunkList.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FilenameService.cs" />
