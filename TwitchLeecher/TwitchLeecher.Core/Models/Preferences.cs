@@ -27,6 +27,8 @@ namespace TwitchLeecher.Core.Models
 
         private VideoQuality downloadVideoQuality;
 
+        private bool downloadRemoveCompleted;
+
         #endregion Fields
 
         #region Properties
@@ -139,6 +141,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool DownloadRemoveCompleted
+        {
+            get
+            {
+                return this.downloadRemoveCompleted;
+            }
+            set
+            {
+                this.SetProperty(ref this.downloadRemoveCompleted, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -226,7 +240,8 @@ namespace TwitchLeecher.Core.Models
                 DownloadTempFolder = this.DownloadTempFolder,
                 DownloadFolder = this.DownloadFolder,
                 DownloadFileName = this.DownloadFileName,
-                DownloadVideoQuality = this.DownloadVideoQuality
+                DownloadVideoQuality = this.DownloadVideoQuality,
+                DownloadRemoveCompleted = this.DownloadRemoveCompleted
             };
 
             return clone;

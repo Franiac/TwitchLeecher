@@ -180,6 +180,8 @@
                         <RowDefinition SharedSizeGroup="r1" />
                         <RowDefinition Height="10" />
                         <RowDefinition SharedSizeGroup="r1" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition SharedSizeGroup="r1" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -318,6 +320,20 @@
                                     <TextBlock TextAlignment="Justify">
                                         Specify a default video quality to use in the download dialog.
                                         If the specified quality is not available, the best possible will be selected.
+                                    </TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </fa:ImageAwesome.ToolTip>
+                    </fa:ImageAwesome>
+
+                    <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.DownloadRemoveCompleted'}" Content="Remove successful downloads from queue" VerticalAlignment="Center" />
+                    <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                        <fa:ImageAwesome.ToolTip>
+                            <ToolTip  Width="350">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Remove Successful Downloads" />
+                                    <TextBlock TextAlignment="Justify">
+                                        If enabled, successfully downloaded VODs get removed from the download queue.
                                     </TextBlock>
                                 </StackPanel>
                             </ToolTip>

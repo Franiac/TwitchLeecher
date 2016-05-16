@@ -13,10 +13,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TwitchLeecher.Core.Enums;
+using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Extensions;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Models;
+using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 
@@ -42,6 +44,9 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
+        private IPreferencesService preferencesService;
+        private IEventAggregator eventAggregator;
+
         private Timer downloadTimer;
 
         private ObservableCollection<TwitchVideo> videos;
@@ -59,8 +64,21 @@ namespace TwitchLeecher.Services.Services
 
         #region Constructors
 
-        public TwitchService()
+        public TwitchService(IPreferencesService preferencesService, IEventAggregator eventAggregator)
         {
+            if (preferencesService == null)
+            {
+                throw new ArgumentNullException(nameof(preferencesService));
+            }
+
+            if (eventAggregator == null)
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
+            }
+
+            this.preferencesService = preferencesService;
+            this.eventAggregator = eventAggregator;
+
             this.videos = new ObservableCollection<TwitchVideo>();
             this.downloads = new ObservableCollection<TwitchVideoDownload>();
 
@@ -167,7 +185,7 @@ namespace TwitchLeecher.Services.Services
 
             lock (this.changeDownloadLockObject)
             {
-                this.Downloads.Add(new TwitchVideoDownload(downloadParams));
+                this.downloads.Add(new TwitchVideoDownload(downloadParams));
             }
         }
 
@@ -192,9 +210,9 @@ namespace TwitchLeecher.Services.Services
             {
                 try
                 {
-                    if (!this.Downloads.Where(d => d.DownloadStatus == DownloadStatus.Active).Any())
+                    if (!this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active).Any())
                     {
-                        TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
+                        TwitchVideoDownload download = this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
 
                         if (download == null)
                         {
@@ -273,6 +291,8 @@ namespace TwitchLeecher.Services.Services
 
                             setProgress(100);
 
+                            bool success = false;
+
                             if (task.IsFaulted)
                             {
                                 setDownloadStatus(DownloadStatus.Error);
@@ -290,6 +310,7 @@ namespace TwitchLeecher.Services.Services
                             }
                             else
                             {
+                                success = true;
                                 setDownloadStatus(DownloadStatus.Finished);
                                 log(Environment.NewLine + Environment.NewLine + "Download task ended successfully!");
                             }
@@ -299,6 +320,11 @@ namespace TwitchLeecher.Services.Services
                             if (!this.downloadTasks.TryRemove(urlId, out downloadTask))
                             {
                                 throw new ApplicationException("Could not remove download task with ID '" + urlId + "' from download task collection!");
+                            }
+
+                            if (success && this.preferencesService.CurrentPreferences.DownloadRemoveCompleted)
+                            {
+                                this.eventAggregator.GetEvent<DownloadCompletedEvent>().Publish(urlId);
                             }
                         });
 
@@ -658,7 +684,7 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                     if (download != null && (download.DownloadStatus == DownloadStatus.Canceled || download.DownloadStatus == DownloadStatus.Error))
                     {
@@ -679,11 +705,11 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
 
                     if (download != null)
                     {
-                        this.Downloads.Remove(download);
+                        this.downloads.Remove(download);
                     }
                 }
             }
@@ -776,7 +802,7 @@ namespace TwitchLeecher.Services.Services
 
             try
             {
-                return !this.Downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
+                return !this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
             }
             finally
             {

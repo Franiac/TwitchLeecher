@@ -32,6 +32,7 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
         private const string DOWNLOAD_VIDEOQUALITY_EL = "VideoQuality";
+        private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
 
         #endregion Constants
 
@@ -140,6 +141,10 @@ namespace TwitchLeecher.Services.Services
             downloadVideoQualityEl.SetValue(preferences.DownloadVideoQuality);
             downloadEl.Add(downloadVideoQualityEl);
 
+            XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
+            downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
+            downloadEl.Add(downloadRemoveCompletedEl);
+
             string appDataFolder = this.folderService.GetAppDataFolder();
 
             FileSystem.CreateDirectory(appDataFolder);
@@ -243,6 +248,13 @@ namespace TwitchLeecher.Services.Services
                         {
                             preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsEnum<VideoQuality>();
                         }
+
+                        XElement donwloadRemoveCompletedEl = downloadEl.Element(DOWNLOAD_REMOVECOMPLETED_EL);
+
+                        if (donwloadRemoveCompletedEl != null)
+                        {
+                            preferences.DownloadRemoveCompleted = donwloadRemoveCompletedEl.GetValueAsBool();
+                        }
                     }
                 }
             }
@@ -262,7 +274,8 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = this.folderService.GetTempFolder(),
                 DownloadFolder = this.folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadVideoQuality = VideoQuality.Source
+                DownloadVideoQuality = VideoQuality.Source,
+                DownloadRemoveCompleted = false
             };
 
             return preferences;
