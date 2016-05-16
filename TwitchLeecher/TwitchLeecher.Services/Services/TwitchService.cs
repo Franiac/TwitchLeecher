@@ -577,7 +577,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
