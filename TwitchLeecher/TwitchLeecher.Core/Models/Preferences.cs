@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
@@ -7,6 +8,18 @@ namespace TwitchLeecher.Core.Models
 {
     public class Preferences : BindableBase
     {
+        #region Constants
+
+        public const int DEFAULT_LOAD_LIMIT = 10;
+
+        #endregion Constants
+
+        #region Static Fields
+
+        private static List<int> LOAD_LIMITS;
+
+        #endregion Static Fields
+
         #region Fields
 
         private bool appCheckForUpdates;
@@ -155,6 +168,26 @@ namespace TwitchLeecher.Core.Models
 
         #endregion Properties
 
+        #region Static Methods
+
+        public static List<int> GetLoadLimits()
+        {
+            if (LOAD_LIMITS == null)
+            {
+                LOAD_LIMITS = new List<int>();
+                LOAD_LIMITS.Add(10);
+                LOAD_LIMITS.Add(25);
+                LOAD_LIMITS.Add(50);
+                LOAD_LIMITS.Add(100);
+                LOAD_LIMITS.Add(500);
+                LOAD_LIMITS.Add(1000);
+            }
+
+            return LOAD_LIMITS;
+        }
+
+        #endregion Static Methods
+
         #region Methods
 
         public override void Validate(string propertyName = null)
@@ -175,9 +208,9 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchLoadLimit < 1 || this.searchLoadLimit > 100)
+                if (this.searchLoadLimit < 1 || this.searchLoadLimit > 1000)
                 {
-                    this.AddError(currentProperty, "Load limit has to be a value between 1 and 100!");
+                    this.AddError(currentProperty, "Load limit has to be a value between 1 and 1000!");
                 }
             }
 

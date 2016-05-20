@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using TwitchLeecher.Core.Models;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -7,6 +8,8 @@ namespace TwitchLeecher.Gui.Views
         public PreferencesView()
         {
             InitializeComponent();
+
+            this.cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
         }
     }
 }

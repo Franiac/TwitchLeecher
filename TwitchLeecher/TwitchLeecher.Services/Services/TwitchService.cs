@@ -157,31 +157,81 @@ namespace TwitchLeecher.Services.Services
         {
             using (WebClient webClient = new WebClient() { Encoding = Encoding.UTF8 })
             {
+                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
                 if (searchParams.VideoType == VideoType.Broadcast)
                 {
                     webClient.QueryString.Add("broadcasts", "true");
                 }
 
-                webClient.QueryString.Add("limit", searchParams.LoadLimit.ToString());
+                int limit = searchParams.LoadLimit;
+
+                webClient.QueryString.Add("limit", (limit > 100 ? "100" : limit.ToString()));
 
                 string result = webClient.DownloadString(string.Format(videosUrl, searchParams.Username));
 
-                JObject videoListJson = JObject.Parse(result);
+                JObject videoRequestJson = JObject.Parse(result);
 
-                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
-
-                if (videoListJson != null)
+                if (videoRequestJson != null)
                 {
-                    foreach (JObject videoJson in videoListJson.Value<JArray>("videos"))
+                    List<JArray> videoArrays = new List<JArray>();
+
+                    JArray firstArray = videoRequestJson.Value<JArray>("videos");
+
+                    videoArrays.Add(firstArray);
+
+                    int sum = firstArray.Count;
+                    int total = videoRequestJson.Value<int>("_total");
+
+                    if (limit > 100 && sum < total)
                     {
-                        if (videoJson.Value<string>("_id").StartsWith("v"))
+                        JObject linksJson = videoRequestJson.Value<JObject>("_links");
+
+                        string nextUrl = linksJson.Value<string>("next");
+
+                        webClient.QueryString.Clear();
+
+                        this.LoadVideosRecursive(webClient, nextUrl, limit, sum, total, videoArrays);
+                    }
+
+                    foreach (JArray videoArray in videoArrays)
+                    {
+                        foreach (JObject videoJson in videoArray)
                         {
-                            videos.Add(this.ParseVideo(videoJson));
+                            if (videoJson.Value<string>("_id").StartsWith("v"))
+                            {
+                                videos.Add(this.ParseVideo(videoJson));
+                            }
                         }
                     }
                 }
 
                 this.Videos = videos;
+            }
+        }
+
+        private void LoadVideosRecursive(WebClient webClient, string nextUrl, int limit, int sum, int total, List<JArray> videoArrays)
+        {
+            string result = webClient.DownloadString(nextUrl);
+
+            JObject videoRequestJson = JObject.Parse(result);
+
+            if (videoRequestJson != null)
+            {
+                JArray array = videoRequestJson.Value<JArray>("videos");
+
+                videoArrays.Add(array);
+
+                sum += array.Count;
+
+                if (sum < limit && sum < total)
+                {
+                    JObject linksJson = videoRequestJson.Value<JObject>("_links");
+
+                    string next = linksJson.Value<string>("next");
+
+                    this.LoadVideosRecursive(webClient, next, limit, sum, total, videoArrays);
+                }
             }
         }
 

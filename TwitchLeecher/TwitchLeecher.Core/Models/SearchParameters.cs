@@ -14,7 +14,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public SearchParameters() : this(null, VideoType.Broadcast, 10)
+        public SearchParameters() : this(null, VideoType.Broadcast, Preferences.DEFAULT_LOAD_LIMIT)
         {
         }
 

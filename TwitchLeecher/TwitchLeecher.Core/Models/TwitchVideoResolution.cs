@@ -27,10 +27,10 @@ namespace TwitchLeecher.Core.Models
             this.videoQuality = videoQuality;
             this.resolution = string.IsNullOrWhiteSpace(resolution) ? UNKNOWN : resolution;
             this.fps = string.IsNullOrWhiteSpace(fps) ? UNKNOWN : fps;
-            
+
             if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
             {
-                this.resolutionFps = resolution + "@" + fps + "fps";                
+                this.resolutionFps = resolution + "@" + fps + "fps";
             }
             else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
             {

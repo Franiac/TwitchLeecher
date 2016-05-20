@@ -206,7 +206,16 @@ namespace TwitchLeecher.Services.Services
 
                         if (searchLoadLimitEl != null)
                         {
-                            preferences.SearchLoadLimit = searchLoadLimitEl.GetValueAsInt();
+                            int limit = searchLoadLimitEl.GetValueAsInt();
+
+                            if (Preferences.GetLoadLimits().Contains(limit))
+                            {
+                                preferences.SearchLoadLimit = limit;
+                            }
+                            else
+                            {
+                                preferences.SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT;
+                            }
                         }
 
                         XElement searchOnStartupEl = searchEl.Element(SEARCH_SEARCHONSTARTUP_EL);
@@ -269,7 +278,7 @@ namespace TwitchLeecher.Services.Services
                 AppCheckForUpdates = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
-                SearchLoadLimit = 10,
+                SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,
                 SearchOnStartup = false,
                 DownloadTempFolder = this.folderService.GetTempFolder(),
                 DownloadFolder = this.folderService.GetDownloadFolder(),

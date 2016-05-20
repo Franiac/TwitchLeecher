@@ -127,15 +127,7 @@
                     </fa:ImageAwesome>
 
                     <TextBlock Grid.Row="4" Grid.Column="0"  Text="Load Limit:" VerticalAlignment="Center" />
-                    <Grid Grid.Row="4" Grid.Column="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Slider Grid.Row="0" Grid.Column="0" Maximum="100" Minimum="1" SmallChange="1" LargeChange="5" Value="{Binding Path='CurrentPreferences.SearchLoadLimit', FallbackValue='10'}" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path='CurrentPreferences.SearchLoadLimit', FallbackValue='100'}" VerticalAlignment="Center" Width="25" />
-                    </Grid>
+                    <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding Path='CurrentPreferences.SearchLoadLimit'}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
                     <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
                         <fa:ImageAwesome.ToolTip>
                             <ToolTip Width="350">

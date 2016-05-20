@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Shell;
 using System.Windows.Threading;
+using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 
 namespace TwitchLeecher.Gui.Views
@@ -27,6 +28,8 @@ namespace TwitchLeecher.Gui.Views
             };
 
             WindowChrome.SetWindowChrome(this, windowChrome);
+
+            this.cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
 
             this.Loaded += SearchRequestView_Loaded;
         }
