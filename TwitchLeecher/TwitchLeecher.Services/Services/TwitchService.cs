@@ -40,6 +40,8 @@ namespace TwitchLeecher.Services.Services
 
         private const int TIMER_INTERVALL = 2;
 
+        private const int TWITCH_MAX_LOAD_LIMIT = 100;
+
         #endregion Constants
 
         #region Fields
@@ -166,7 +168,7 @@ namespace TwitchLeecher.Services.Services
 
                 int limit = searchParams.LoadLimit;
 
-                webClient.QueryString.Add("limit", (limit > 100 ? "100" : limit.ToString()));
+                webClient.QueryString.Add("limit", (limit > TWITCH_MAX_LOAD_LIMIT ? TWITCH_MAX_LOAD_LIMIT.ToString() : limit.ToString()));
 
                 string result = webClient.DownloadString(string.Format(videosUrl, searchParams.Username));
 
@@ -183,7 +185,7 @@ namespace TwitchLeecher.Services.Services
                     int sum = firstArray.Count;
                     int total = videoRequestJson.Value<int>("_total");
 
-                    if (limit > 100 && sum < total)
+                    if (limit > TWITCH_MAX_LOAD_LIMIT && sum < total)
                     {
                         JObject linksJson = videoRequestJson.Value<JObject>("_links");
 
