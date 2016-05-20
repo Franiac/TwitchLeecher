@@ -368,10 +368,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.guiService.ShowAndLogException(task.Exception);
                 }
-                else
-                {
-                    this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish();
-                }
+
+                this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish();
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             searchTask.Start();

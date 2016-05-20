@@ -76,7 +76,10 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.log.ToString();
+                lock (logLockObject)
+                {
+                    return this.log.ToString();
+                }
             }
         }
 

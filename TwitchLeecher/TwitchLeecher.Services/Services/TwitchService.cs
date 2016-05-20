@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -60,6 +60,8 @@ namespace TwitchLeecher.Services.Services
 
         private volatile bool paused;
 
+        private Dictionary<VideoQuality, int> orderMap;
+
         #endregion Fields
 
         #region Constructors
@@ -87,6 +89,13 @@ namespace TwitchLeecher.Services.Services
             this.appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             this.changeDownloadLockObject = new object();
+
+            this.orderMap = new Dictionary<VideoQuality, int>();
+            this.orderMap.Add(VideoQuality.Source, 0);
+            this.orderMap.Add(VideoQuality.High, 1);
+            this.orderMap.Add(VideoQuality.Medium, 2);
+            this.orderMap.Add(VideoQuality.Low, 3);
+            this.orderMap.Add(VideoQuality.Mobile, 4);
 
             this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
         }
@@ -157,15 +166,15 @@ namespace TwitchLeecher.Services.Services
 
                 string result = webClient.DownloadString(string.Format(videosUrl, searchParams.Username));
 
-                dynamic videoListJson = JsonConvert.DeserializeObject(result);
+                JObject videoListJson = JObject.Parse(result);
 
                 ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
 
                 if (videoListJson != null)
                 {
-                    foreach (dynamic videoJson in videoListJson.videos)
+                    foreach (JObject videoJson in videoListJson.Value<JArray>("videos"))
                     {
-                        if (videoJson._id.ToString().StartsWith("v"))
+                        if (videoJson.Value<string>("_id").StartsWith("v"))
                         {
                             videos.Add(this.ParseVideo(videoJson));
                         }
@@ -375,10 +384,10 @@ namespace TwitchLeecher.Services.Services
             string accessTokenStr = webClient.DownloadString(string.Format(accessTokenUrl, urlIdTrimmed));
             log(" done!");
 
-            dynamic accessTokenJson = JsonConvert.DeserializeObject(accessTokenStr);
+            JObject accessTokenJson = JObject.Parse(accessTokenStr);
 
-            string token = Uri.EscapeDataString(accessTokenJson.token.ToString());
-            string signature = accessTokenJson.sig.ToString();
+            string token = Uri.EscapeDataString(accessTokenJson.Value<string>("token"));
+            string signature = accessTokenJson.Value<string>("sig");
 
             log(Environment.NewLine + "Token: " + token);
             log(Environment.NewLine + "Signature: " + signature);
@@ -572,12 +581,10 @@ namespace TwitchLeecher.Services.Services
         {
             setStatus("Encoding");
 
-            setProgress(0);
-
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -loglevel error -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
@@ -589,34 +596,13 @@ namespace TwitchLeecher.Services.Services
 
             using (Process p = new Process())
             {
-                TimeSpan duration = new TimeSpan();
-
                 DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
                 {
                     try
                     {
                         if (!string.IsNullOrWhiteSpace(e.Data))
                         {
-                            log(Environment.NewLine + e.Data);
-
-                            string dataTrimmed = e.Data.Trim();
-
-                            if (dataTrimmed.StartsWith("Duration"))
-                            {
-                                string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
-                                durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
-                                duration = TimeSpan.Parse(durationStr);
-                            }
-
-                            if (dataTrimmed.StartsWith("frame"))
-                            {
-                                string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
-                                timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
-                                timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
-                                TimeSpan current = TimeSpan.Parse(timeStr);
-
-                                setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
-                            }
+                            log(Environment.NewLine + e.Data.Trim());
                         }
                     }
                     catch (Exception ex)
@@ -636,7 +622,7 @@ namespace TwitchLeecher.Services.Services
 
                 if (p.ExitCode == 0)
                 {
-                    log(Environment.NewLine + Environment.NewLine + "Encoding complete!");
+                    log(Environment.NewLine + "Encoding complete!");
                 }
                 else
                 {
@@ -715,22 +701,22 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        public TwitchVideo ParseVideo(dynamic videoJson)
+        public TwitchVideo ParseVideo(JObject videoJson)
         {
-            string title = videoJson.title;
-            string id = videoJson._id;
-            string game = videoJson.game;
-            int views = videoJson.views;
-            TimeSpan length = new TimeSpan(0, 0, (int)videoJson.length);
-            List<TwitchVideoResolution> resolutions = this.ParseResolutions(videoJson.resolutions, videoJson.fps);
-            DateTime recordedDate = DateTime.Parse(videoJson.recorded_at.ToString(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal);
-            Uri thumbnail = new Uri(videoJson.preview.ToString());
-            Uri url = new Uri(videoJson.url.ToString());
+            string title = videoJson.Value<string>("title");
+            string id = videoJson.Value<string>("_id");
+            string game = videoJson.Value<string>("game");
+            int views = videoJson.Value<int>("views");
+            TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
+            List<TwitchVideoResolution> resolutions = this.ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
+            DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("recorded_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+            Uri thumbnail = new Uri(videoJson.Value<string>("preview"));
+            Uri url = new Uri(videoJson.Value<string>("url"));
 
             return new TwitchVideo(title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
         }
 
-        public List<TwitchVideoResolution> ParseResolutions(dynamic resolutionsJson, dynamic fpsJson)
+        public List<TwitchVideoResolution> ParseResolutions(JObject resolutionsJson, JObject fpsJson)
         {
             List<TwitchVideoResolution> resolutions = new List<TwitchVideoResolution>();
 
@@ -738,48 +724,50 @@ namespace TwitchLeecher.Services.Services
 
             if (fpsJson != null)
             {
-                foreach (dynamic fps in fpsJson)
+                foreach (JProperty fps in fpsJson.Values<JProperty>())
                 {
-                    fpsList.Add(fps.Name, ((int)Math.Round((double)fps.Value, 0)).ToString());
+                    fpsList.Add(fps.Name, ((int)Math.Round(fps.Value.Value<double>(), 0)).ToString());
                 }
             }
 
-            foreach (dynamic resolution in resolutionsJson)
+            if (resolutionsJson != null)
             {
-                string quality = resolution.Name.ToString();
-
-                switch (quality)
+                foreach (JProperty resolution in resolutionsJson.Values<JProperty>())
                 {
-                    case "chunked":
-                        resolutions.Add(new TwitchVideoResolution(VideoQuality.Source, resolution.Value.ToString(), fpsList.ContainsKey("chunked") ? fpsList["chunked"] : null));
-                        break;
+                    string quality = resolution.Name;
+                    string value = resolution.Value.Value<string>();
 
-                    case "high":
-                        resolutions.Add(new TwitchVideoResolution(VideoQuality.High, resolution.Value.ToString(), fpsList.ContainsKey("high") ? fpsList["high"] : null));
-                        break;
+                    switch (quality)
+                    {
+                        case "chunked":
+                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Source, value, fpsList.ContainsKey("chunked") ? fpsList["chunked"] : null));
+                            break;
 
-                    case "medium":
-                        resolutions.Add(new TwitchVideoResolution(VideoQuality.Medium, resolution.Value.ToString(), fpsList.ContainsKey("medium") ? fpsList["medium"] : null));
-                        break;
+                        case "high":
+                            resolutions.Add(new TwitchVideoResolution(VideoQuality.High, value, fpsList.ContainsKey("high") ? fpsList["high"] : null));
+                            break;
 
-                    case "low":
-                        resolutions.Add(new TwitchVideoResolution(VideoQuality.Low, resolution.Value.ToString(), fpsList.ContainsKey("low") ? fpsList["low"] : null));
-                        break;
+                        case "medium":
+                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Medium, value, fpsList.ContainsKey("medium") ? fpsList["medium"] : null));
+                            break;
 
-                    case "mobile":
-                        resolutions.Add(new TwitchVideoResolution(VideoQuality.Mobile, resolution.Value.ToString(), fpsList.ContainsKey("mobile") ? fpsList["mobile"] : null));
-                        break;
+                        case "low":
+                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Low, value, fpsList.ContainsKey("low") ? fpsList["low"] : null));
+                            break;
+
+                        case "mobile":
+                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Mobile, value, fpsList.ContainsKey("mobile") ? fpsList["mobile"] : null));
+                            break;
+                    }
                 }
             }
 
-            Dictionary<VideoQuality, int> orderMap = new Dictionary<VideoQuality, int>();
-            orderMap.Add(VideoQuality.Source, 0);
-            orderMap.Add(VideoQuality.High, 1);
-            orderMap.Add(VideoQuality.Medium, 2);
-            orderMap.Add(VideoQuality.Low, 3);
-            orderMap.Add(VideoQuality.Mobile, 4);
+            if (!resolutions.Any())
+            {
+                resolutions.Add(new TwitchVideoResolution(VideoQuality.Source, null, null));
+            }
 
-            resolutions = resolutions.OrderBy(r => orderMap[r.VideoQuality]).ToList();
+            resolutions = resolutions.OrderBy(r => this.orderMap[r.VideoQuality]).ToList();
 
             return resolutions;
         }

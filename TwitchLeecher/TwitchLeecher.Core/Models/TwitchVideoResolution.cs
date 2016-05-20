@@ -1,15 +1,14 @@
-﻿using System;
-using TwitchLeecher.Core.Enums;
+﻿using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Core.Models
 {
     public class TwitchVideoResolution
     {
-        #region Constatnts
+        #region Constants
 
-        private const string UNKNOWN_FPS = "Unknown";
+        private const string UNKNOWN = "Unknown";
 
-        #endregion Constatnts
+        #endregion Constants
 
         #region Fields
 
@@ -25,23 +24,21 @@ namespace TwitchLeecher.Core.Models
 
         public TwitchVideoResolution(VideoQuality videoQuality, string resolution, string fps)
         {
-            if (resolution == null)
-            {
-                throw new ArgumentNullException(nameof(resolution));
-            }
-
             this.videoQuality = videoQuality;
-            this.resolution = resolution;
-
-            if (string.IsNullOrWhiteSpace(fps))
+            this.resolution = string.IsNullOrWhiteSpace(resolution) ? UNKNOWN : resolution;
+            this.fps = string.IsNullOrWhiteSpace(fps) ? UNKNOWN : fps;
+            
+            if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
             {
-                this.fps = UNKNOWN_FPS;
+                this.resolutionFps = resolution + "@" + fps + "fps";                
+            }
+            else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
+            {
                 this.resolutionFps = resolution;
             }
             else
             {
-                this.fps = fps;
-                this.resolutionFps = resolution + "@" + fps + "fps";
+                this.resolutionFps = UNKNOWN;
             }
         }
 
