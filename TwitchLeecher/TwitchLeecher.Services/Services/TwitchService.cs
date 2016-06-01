@@ -357,6 +357,7 @@ namespace TwitchLeecher.Services.Services
                             this.CleanUp(tempDir, log);
 
                             setProgress(100);
+                            setIsEncoding(false);
 
                             bool success = false;
 
