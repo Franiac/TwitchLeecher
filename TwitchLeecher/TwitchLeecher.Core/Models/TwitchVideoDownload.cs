@@ -1,11 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Text;
 using TwitchLeecher.Core.Enums;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class TwitchVideoDownload : INotifyPropertyChanged
+    public class TwitchVideoDownload : BindableBase
     {
         #region Fields
 
@@ -23,7 +23,8 @@ namespace TwitchLeecher.Core.Models
         private string status;
         private object statusLockObject;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool isEncoding;
+        private object isEncodingLockObject;
 
         #endregion Fields
 
@@ -44,6 +45,7 @@ namespace TwitchLeecher.Core.Models
             this.logLockObject = new object();
             this.progressLockObject = new object();
             this.statusLockObject = new object();
+            this.isEncodingLockObject = new object();
         }
 
         #endregion Constructors
@@ -91,8 +93,7 @@ namespace TwitchLeecher.Core.Models
             }
             private set
             {
-                this.progress = value;
-                this.FirePropertyChanged(nameof(this.Progress));
+                this.SetProperty(ref this.progress, value);
             }
         }
 
@@ -109,8 +110,19 @@ namespace TwitchLeecher.Core.Models
             }
             private set
             {
-                this.status = value;
-                this.FirePropertyChanged(nameof(this.Status));
+                this.SetProperty(ref this.status, value);
+            }
+        }
+
+        public bool IsEncoding
+        {
+            get
+            {
+                return this.isEncoding;
+            }
+            private set
+            {
+                this.SetProperty(ref this.isEncoding, value);
             }
         }
 
@@ -160,9 +172,12 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void FirePropertyChanged(string propertyName = null)
+        public void SetIsEncoding(bool isEncoding)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            lock (this.isEncodingLockObject)
+            {
+                this.IsEncoding = isEncoding;
+            }
         }
 
         #endregion Methods

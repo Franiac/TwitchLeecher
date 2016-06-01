@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
+                    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
                     <converters:DownloadStatusToVisConverter x:Key="downloadStatusToVisibilityConverter" />
                     <converters:DownloadStatusToColorConverter x:Key="downloadStatusToColorConverter" />
 
@@ -205,8 +206,8 @@
                                     <SolidColorBrush Color="{StaticResource OutlineColor}" />
                                 </Border.BorderBrush>
                                 <Grid Height="26">
-                                    <ProgressBar Value="{Binding Progress}" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsEncoding}" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsEncoding, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="Black" />
                                         </TextBlock.Foreground>

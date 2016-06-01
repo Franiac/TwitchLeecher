@@ -304,6 +304,7 @@ namespace TwitchLeecher.Services.Services
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
                         Action<int> setProgress = download.SetProgress;
+                        Action<bool> setIsEncoding = download.SetIsEncoding;
 
                         Task downloadVideoTask = new Task(() =>
                         {
@@ -341,7 +342,7 @@ namespace TwitchLeecher.Services.Services
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                this.EncodeVideo(log, setStatus, setProgress, ffmpegFile, playlistFile, outputFile, cropInfo);
+                                this.EncodeVideo(log, setStatus, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
                             }
                         }, cancellationToken);
 
@@ -628,10 +629,11 @@ namespace TwitchLeecher.Services.Services
             log(" done!");
         }
 
-        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<bool> setIsEncoding,
             string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Encoding");
+            setIsEncoding(true);
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 

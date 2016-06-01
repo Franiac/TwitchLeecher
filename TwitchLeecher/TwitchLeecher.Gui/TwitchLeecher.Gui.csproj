@@ -71,6 +71,7 @@
     <Compile Include="Controls\ThemedMessageBox.cs" />
     <Compile Include="Converters\DownloadStatusToVisConverter.cs" />
     <Compile Include="Converters\DownloadStatusToColorConverter.cs" />
+    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Extensions\Icon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converters\VideoTypeToBooleanConverter.cs" />
