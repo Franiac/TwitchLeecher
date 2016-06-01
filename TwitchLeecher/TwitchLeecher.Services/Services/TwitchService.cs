@@ -166,7 +166,12 @@ namespace TwitchLeecher.Services.Services
                     webClient.QueryString.Add("broadcasts", "true");
                 }
 
-                int limit = searchParams.LoadLimit;
+                int limit;
+
+                if (!int.TryParse(searchParams.LoadLimit, out limit))
+                {
+                    limit = int.MaxValue;
+                }
 
                 webClient.QueryString.Add("limit", (limit > TWITCH_MAX_LOAD_LIMIT ? TWITCH_MAX_LOAD_LIMIT.ToString() : limit.ToString()));
 

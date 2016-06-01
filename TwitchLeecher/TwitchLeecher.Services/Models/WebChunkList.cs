@@ -21,7 +21,7 @@ namespace TwitchLeecher.Services.Models
                 throw new ArgumentNullException(nameof(content));
             }
 
-            if (footer == null || footer.Count == 0)
+            if (footer == null)
             {
                 throw new ArgumentNullException(nameof(footer));
             }

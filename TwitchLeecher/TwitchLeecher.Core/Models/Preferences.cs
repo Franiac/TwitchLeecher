@@ -10,13 +10,13 @@ namespace TwitchLeecher.Core.Models
     {
         #region Constants
 
-        public const int DEFAULT_LOAD_LIMIT = 10;
+        public const string DEFAULT_LOAD_LIMIT = "10";
 
         #endregion Constants
 
         #region Static Fields
 
-        private static List<int> LOAD_LIMITS;
+        private static List<string> LOAD_LIMITS;
 
         #endregion Static Fields
 
@@ -28,7 +28,7 @@ namespace TwitchLeecher.Core.Models
 
         private VideoType searchVideoType;
 
-        private int searchLoadLimit;
+        private string searchLoadLimit;
 
         private bool searchOnStartup;
 
@@ -82,7 +82,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public int SearchLoadLimit
+        public string SearchLoadLimit
         {
             get
             {
@@ -170,17 +170,16 @@ namespace TwitchLeecher.Core.Models
 
         #region Static Methods
 
-        public static List<int> GetLoadLimits()
+        public static List<string> GetLoadLimits()
         {
             if (LOAD_LIMITS == null)
             {
-                LOAD_LIMITS = new List<int>();
-                LOAD_LIMITS.Add(10);
-                LOAD_LIMITS.Add(25);
-                LOAD_LIMITS.Add(50);
-                LOAD_LIMITS.Add(100);
-                LOAD_LIMITS.Add(500);
-                LOAD_LIMITS.Add(1000);
+                LOAD_LIMITS = new List<string>();
+                LOAD_LIMITS.Add("10");
+                LOAD_LIMITS.Add("25");
+                LOAD_LIMITS.Add("50");
+                LOAD_LIMITS.Add("100");
+                LOAD_LIMITS.Add("All");
             }
 
             return LOAD_LIMITS;
@@ -208,9 +207,9 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchLoadLimit < 1 || this.searchLoadLimit > 1000)
+                if (!LOAD_LIMITS.Contains(this.searchLoadLimit))
                 {
-                    this.AddError(currentProperty, "Load limit has to be a value between 1 and 1000!");
+                    this.AddError(currentProperty, "Load limit has to be in '" + string.Join(", ", LOAD_LIMITS) + "'!");
                 }
             }
 

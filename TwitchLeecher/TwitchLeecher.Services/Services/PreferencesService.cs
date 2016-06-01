@@ -206,7 +206,7 @@ namespace TwitchLeecher.Services.Services
 
                         if (searchLoadLimitEl != null)
                         {
-                            int limit = searchLoadLimitEl.GetValueAsInt();
+                            string limit = searchLoadLimitEl.GetValueAsString();
 
                             if (Preferences.GetLoadLimits().Contains(limit))
                             {
