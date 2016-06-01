@@ -9,6 +9,8 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
+        private string id;
+
         private DownloadParameters downloadParams;
 
         private DownloadStatus downloadStatus;
@@ -37,6 +39,7 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(downloadParams));
             }
 
+            this.id = Guid.NewGuid().ToString();
             this.downloadParams = downloadParams;
 
             this.log = new StringBuilder();
@@ -51,6 +54,14 @@ namespace TwitchLeecher.Core.Models
         #endregion Constructors
 
         #region Properties
+
+        public string Id
+        {
+            get
+            {
+                return this.id;
+            }
+        }
 
         public DownloadParameters DownloadParams
         {

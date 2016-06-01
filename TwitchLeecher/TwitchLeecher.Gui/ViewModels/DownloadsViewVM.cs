@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
 using TwitchLeecher.Services.Interfaces;
@@ -56,8 +55,6 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator = eventAggregator;
 
             this.twitchService.PropertyChanged += TwitchService_PropertyChanged;
-
-            this.eventAggregator.GetEvent<DownloadCompletedEvent>().Subscribe(this.DownloadCompleted, ThreadOption.UIThread);
 
             this.commandLockObject = new object();
         }
@@ -205,7 +202,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.Id == id).FirstOrDefault();
 
                         if (download != null)
                         {
@@ -233,7 +230,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideoDownload download = this.Downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                        TwitchVideoDownload download = this.Downloads.Where(d => d.Id == id).FirstOrDefault();
 
                         if (download != null)
                         {
@@ -241,18 +238,6 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.guiService.ShowAndLogException(ex);
-            }
-        }
-
-        private void DownloadCompleted(string id)
-        {
-            try
-            {
-                this.RemoveDownload(id);
             }
             catch (Exception ex)
             {

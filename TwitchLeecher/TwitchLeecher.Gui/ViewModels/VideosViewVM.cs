@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
@@ -123,12 +122,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        if (this.twitchService.Downloads.Where(d => d.DownloadParams.Video.Id == id).Any())
-                        {
-                            this.guiService.ShowMessageBox("This video is already being downloaded!", "Download Video", MessageBoxButton.OK, MessageBoxImage.Information);
-                            return;
-                        }
-
                         TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
 
                         if (video != null)

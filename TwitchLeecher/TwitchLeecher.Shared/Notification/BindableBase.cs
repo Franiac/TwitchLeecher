@@ -52,7 +52,7 @@ namespace TwitchLeecher.Shared.Notification
             return null;
         }
 
-        protected void AddError(string propertyName, string error)
+        public void AddError(string propertyName, string error)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {

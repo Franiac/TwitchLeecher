@@ -100,6 +100,8 @@ namespace TwitchLeecher.Services.Services
             this.orderMap.Add(VideoQuality.Mobile, 4);
 
             this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
+
+            this.eventAggregator.GetEvent<DownloadCompletedEvent>().Subscribe(this.Remove, ThreadOption.UIThread);
         }
 
         #endregion Constructors
@@ -290,9 +292,9 @@ namespace TwitchLeecher.Services.Services
                         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                         CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-                        string urlId = downloadParams.Video.Id;
+                        string downloadId = download.Id;
                         string urlIdTrimmed = downloadParams.Video.IdTrimmed;
-                        string tempDir = Path.Combine(downloadParams.Folder, TEMP_PREFIX + urlIdTrimmed);
+                        string tempDir = Path.Combine(downloadParams.Folder, TEMP_PREFIX + downloadId);
                         string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
                         string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
@@ -385,18 +387,18 @@ namespace TwitchLeecher.Services.Services
 
                             DownloadTask downloadTask;
 
-                            if (!this.downloadTasks.TryRemove(urlId, out downloadTask))
+                            if (!this.downloadTasks.TryRemove(downloadId, out downloadTask))
                             {
-                                throw new ApplicationException("Could not remove download task with ID '" + urlId + "' from download task collection!");
+                                throw new ApplicationException("Could not remove download task with ID '" + downloadId + "' from download task collection!");
                             }
 
                             if (success && this.preferencesService.CurrentPreferences.DownloadRemoveCompleted)
                             {
-                                this.eventAggregator.GetEvent<DownloadCompletedEvent>().Publish(urlId);
+                                this.eventAggregator.GetEvent<DownloadCompletedEvent>().Publish(downloadId);
                             }
                         });
 
-                        if (this.downloadTasks.TryAdd(urlId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
+                        if (this.downloadTasks.TryAdd(downloadId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
                         {
                             downloadVideoTask.Start();
                             setDownloadStatus(DownloadStatus.Active);
@@ -730,7 +732,7 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.downloads.Where(d => d.Id == id).FirstOrDefault();
 
                     if (download != null && (download.DownloadStatus == DownloadStatus.Canceled || download.DownloadStatus == DownloadStatus.Error))
                     {
@@ -751,7 +753,7 @@ namespace TwitchLeecher.Services.Services
 
                 if (!this.downloadTasks.TryGetValue(id, out downloadTask))
                 {
-                    TwitchVideoDownload download = this.downloads.Where(d => d.DownloadParams.Video.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = this.downloads.Where(d => d.Id == id).FirstOrDefault();
 
                     if (download != null)
                     {
@@ -879,7 +881,7 @@ namespace TwitchLeecher.Services.Services
                 // Don't care about aborted tasks
             }
 
-            List<string> toRemove = this.downloads.Select(d => d.DownloadParams.Video.Id).ToList();
+            List<string> toRemove = this.downloads.Select(d => d.Id).ToList();
 
             foreach (string id in toRemove)
             {

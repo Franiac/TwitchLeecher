@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
@@ -21,6 +22,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand cancelCommand;
 
         private IGuiService guiService;
+        private ITwitchService twitchService;
 
         private object searchLock = new object();
 
@@ -28,9 +30,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadWindowVM(IGuiService guiService)
+        public DownloadWindowVM(IGuiService guiService, ITwitchService twitchService)
         {
             this.guiService = guiService;
+            this.twitchService = twitchService;
         }
 
         #endregion Constructors
@@ -209,6 +212,13 @@ namespace TwitchLeecher.Gui.ViewModels
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
                 this.DownloadParams?.Validate();
+
+                if (this.twitchService.Downloads.Where(d =>
+                    d.DownloadParams.Video.Id == this.downloadParams.Video.Id &&
+                    d.DownloadParams.FullPath.Equals(this.downloadParams.FullPath)).Any())
+                {
+                    this.DownloadParams.AddError(nameof(this.DownloadParams.Filename), "Another video is already being downloaded to this file!");
+                }
 
                 if (this.DownloadParams.HasErrors)
                 {
