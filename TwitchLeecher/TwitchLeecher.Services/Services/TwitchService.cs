@@ -349,7 +349,7 @@ namespace TwitchLeecher.Services.Services
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                this.EncodeVideo(log, setStatus, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
+                                this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
                             }
                         }, cancellationToken);
 
@@ -637,8 +637,8 @@ namespace TwitchLeecher.Services.Services
             log(" done!");
         }
 
-        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<bool> setIsEncoding,
-            string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
+        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Encoding");
             setIsEncoding(true);
@@ -646,7 +646,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " -loglevel error \"" + outputFile + "\"";
+            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
@@ -658,19 +658,56 @@ namespace TwitchLeecher.Services.Services
 
             using (Process p = new Process())
             {
+                TimeSpan duration = new TimeSpan();
+
+                bool durationReceived = false;
+
                 DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
                 {
                     try
                     {
                         if (!string.IsNullOrWhiteSpace(e.Data))
                         {
-                            log(Environment.NewLine + e.Data.Trim());
+                            string dataTrimmed = e.Data.Trim();
+
+                            File.AppendAllText("D:\\log.txt", Environment.NewLine + dataTrimmed);
+
+                            if (dataTrimmed.StartsWith("Duration") && !durationReceived)
+                            {
+                                string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
+                                durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
+
+                                if (TimeSpan.TryParse(durationStr, out duration))
+                                {
+                                    duration = TimeSpan.Parse(durationStr);
+                                    durationReceived = true;
+                                    setProgress(0);
+                                }
+                            }
+
+                            if (dataTrimmed.StartsWith("frame") && durationReceived && duration != TimeSpan.Zero)
+                            {
+                                string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
+                                timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
+                                timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
+
+                                TimeSpan current;
+
+                                if (TimeSpan.TryParse(timeStr, out current))
+                                {
+                                    setIsEncoding(false);
+                                    setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
+                                }
+                                else
+                                {
+                                    setIsEncoding(true);
+                                }
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
                         log(Environment.NewLine + "An error occured while reading '" + ffmpegFile + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
-                        p.Kill();
                     }
                 });
 
