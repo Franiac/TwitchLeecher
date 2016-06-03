@@ -670,8 +670,6 @@ namespace TwitchLeecher.Services.Services
                         {
                             string dataTrimmed = e.Data.Trim();
 
-                            File.AppendAllText("D:\\log.txt", Environment.NewLine + dataTrimmed);
-
                             if (dataTrimmed.StartsWith("Duration") && !durationReceived)
                             {
                                 string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
