@@ -7,6 +7,7 @@ namespace TwitchLeecher.Core.Models
         #region Constants
 
         private const string UNKNOWN = "Unknown";
+        private const string NOTAVAILABLE = "N/A";
 
         #endregion Constants
 
@@ -38,7 +39,7 @@ namespace TwitchLeecher.Core.Models
             }
             else
             {
-                this.resolutionFps = UNKNOWN;
+                this.resolutionFps = videoQuality == VideoQuality.AudioOnly ? NOTAVAILABLE : UNKNOWN;
             }
         }
 

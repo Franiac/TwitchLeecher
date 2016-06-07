@@ -24,6 +24,9 @@ namespace TwitchLeecher.Services.Extensions
                 case VideoQuality.Mobile:
                     return "mobile";
 
+                case VideoQuality.AudioOnly:
+                    return "audio_only";
+
                 default:
                     throw new ApplicationException("Cannot convert enum value '" + videoQuality.ToString() + "' to Twitch quality string!");
             }
