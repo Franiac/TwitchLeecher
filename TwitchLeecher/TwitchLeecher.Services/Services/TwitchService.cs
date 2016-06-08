@@ -28,7 +28,7 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string usersUrl = "https://api.twitch.tv/kraken/users/{0}";
+        private const string channelsUrl = "https://api.twitch.tv/api/channels/{0}";
         private const string videosUrl = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string accessTokenUrl = "https://api.twitch.tv/api/vods/{0}/access_token";
         private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true";
@@ -147,7 +147,7 @@ namespace TwitchLeecher.Services.Services
             {
                 try
                 {
-                    string result = webClient.DownloadString(string.Format(usersUrl, username));
+                    string result = webClient.DownloadString(string.Format(channelsUrl, username));
                     return true;
                 }
                 catch
