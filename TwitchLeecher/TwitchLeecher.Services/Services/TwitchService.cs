@@ -31,7 +31,7 @@ namespace TwitchLeecher.Services.Services
         private const string channelsUrl = "https://api.twitch.tv/api/channels/{0}";
         private const string videosUrl = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string accessTokenUrl = "https://api.twitch.tv/api/vods/{0}/access_token";
-        private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true";
+        private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
 
         private const string TEMP_PREFIX = "TL_";
         private const string PLAYLIST_NAME = "vod.m3u8";
@@ -98,6 +98,7 @@ namespace TwitchLeecher.Services.Services
             this.orderMap.Add(VideoQuality.Medium, 2);
             this.orderMap.Add(VideoQuality.Low, 3);
             this.orderMap.Add(VideoQuality.Mobile, 4);
+            this.orderMap.Add(VideoQuality.AudioOnly, 5);
 
             this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
 
@@ -857,6 +858,11 @@ namespace TwitchLeecher.Services.Services
                             break;
                     }
                 }
+            }
+
+            if (fpsList.ContainsKey("audio_only"))
+            {
+                resolutions.Add(new TwitchVideoResolution(VideoQuality.AudioOnly, null, null));
             }
 
             if (!resolutions.Any())

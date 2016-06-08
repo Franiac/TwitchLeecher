@@ -6,6 +6,7 @@
         High,
         Medium,
         Low,
-        Mobile
+        Mobile,
+        AudioOnly
     }
 }
