@@ -41,6 +41,8 @@ namespace TwitchLeecher.Services.Services
         private const int TIMER_INTERVALL = 2;
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
+        private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
+        private const string TWITCH_CLIENT_ID_HEADER = "Client-ID";
 
         #endregion Constants
 
@@ -137,6 +139,14 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
+        private WebClient CreateTwitchWebClient()
+        {
+            WebClient wc = new WebClient();
+            wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
+            wc.Encoding = Encoding.UTF8;
+            return wc;
+        }
+
         public bool UserExists(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
@@ -144,7 +154,7 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(username));
             }
 
-            using (WebClient webClient = new WebClient() { Encoding = Encoding.UTF8 })
+            using (WebClient webClient = this.CreateTwitchWebClient())
             {
                 try
                 {
@@ -160,7 +170,7 @@ namespace TwitchLeecher.Services.Services
 
         public void Search(SearchParameters searchParams)
         {
-            using (WebClient webClient = new WebClient() { Encoding = Encoding.UTF8 })
+            using (WebClient webClient = this.CreateTwitchWebClient())
             {
                 ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
 
@@ -324,7 +334,7 @@ namespace TwitchLeecher.Services.Services
 
                             this.CheckTempDirectory(log, tempDir);
 
-                            using (WebClient webClient = new WebClient())
+                            using (WebClient webClient = this.CreateTwitchWebClient())
                             {
                                 AuthInfo authInfo = this.RetrieveAuthInfo(log, webClient, urlIdTrimmed);
 
@@ -580,7 +590,7 @@ namespace TwitchLeecher.Services.Services
 
             Parallel.ForEach(webChunkList.Content, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (webChunk, loopState) =>
             {
-                using (WebClient downloadClient = new WebClient())
+                using (WebClient downloadClient = this.CreateTwitchWebClient())
                 {
                     byte[] bytes = downloadClient.DownloadData(webChunk.DownloadUrl);
 
