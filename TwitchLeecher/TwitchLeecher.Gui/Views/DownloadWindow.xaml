@@ -68,9 +68,7 @@
                 <ComboBox Name="cmbQuality" Grid.Row="0" Grid.Column="2" ItemsSource="{Binding DownloadParams.Video.Resolutions}" SelectedItem="{Binding DownloadParams.Resolution}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock>
-                                <Run Text="{Binding VideoQuality, Mode=OneWay}" /><Run Text=" (" /><Run Text="{Binding ResolutionFps, Mode=OneWay}" /><Run Text=")" />
-                            </TextBlock>
+                            <TextBlock Text="{Binding}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

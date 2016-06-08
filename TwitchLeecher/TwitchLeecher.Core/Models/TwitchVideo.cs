@@ -148,10 +148,10 @@ namespace TwitchLeecher.Core.Models
             {
                 if (this.resolutions == null || this.resolutions.Count == 0)
                 {
-                    return "N/A";
+                    return TwitchVideoResolution.UNKNOWN;
                 }
 
-                return this.resolutions.First().ResolutionFps;
+                return this.resolutions.First().ResolutionAsString;
             }
         }
 

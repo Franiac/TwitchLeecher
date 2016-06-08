@@ -40,6 +40,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
     <Compile Include="Enums\DownloadStatus.cs" />
     <Compile Include="Enums\VideoQuality.cs" />
     <Compile Include="Enums\VideoType.cs" />

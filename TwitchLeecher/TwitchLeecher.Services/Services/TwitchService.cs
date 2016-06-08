@@ -416,7 +416,7 @@ namespace TwitchLeecher.Services.Services
         private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, string ffmpegFile, string tempDir)
         {
             log(Environment.NewLine + Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
-            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.ResolutionFps);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.ResolutionAsString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
@@ -472,7 +472,7 @@ namespace TwitchLeecher.Services.Services
 
             string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.VideoQuality.ToTwitchQuality())).First();
 
-            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.ResolutionFps + " is " + playlistUrl);
+            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.ResolutionAsString + " is " + playlistUrl);
 
             return playlistUrl;
         }
