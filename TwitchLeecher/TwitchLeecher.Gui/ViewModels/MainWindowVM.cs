@@ -1,6 +1,7 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -74,7 +75,7 @@ namespace TwitchLeecher.Gui.ViewModels
             this.preferencesService = preferencesService;
             this.updateService = updateService;
 
-            this.ShowMainView<WelcomeViewVM>();
+            this.twitchService.Downloads.CollectionChanged += TwitchServiceDownloads_CollectionChanged;
 
             this.eventAggregator.GetEvent<SearchBeginEvent>().Subscribe(() => this.ShowMainView<VideosLoadingViewVM>());
             this.eventAggregator.GetEvent<SearchCompleteEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
@@ -83,6 +84,8 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator.GetEvent<ShowPreferencesEvent>().Subscribe(() => this.ShowMainView<PreferencesViewVM>());
             this.eventAggregator.GetEvent<ShowInfoEvent>().Subscribe(() => this.ShowMainView<InfoViewVM>());
             this.eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(() => this.PreferencesSaved());
+
+            this.ShowMainView<WelcomeViewVM>();
         }
 
         #endregion Constructors
@@ -114,6 +117,14 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 this.SetProperty(ref this.mainView, value, nameof(this.MainView));
+            }
+        }
+
+        public int DownloadsCount
+        {
+            get
+            {
+                return this.twitchService.Downloads.Count;
             }
         }
 
@@ -471,5 +482,14 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Methods
+
+        #region EventHandlers
+
+        private void TwitchServiceDownloads_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.FirePropertyChanged(nameof(this.DownloadsCount));
+        }
+
+        #endregion EventHandlers
     }
 }

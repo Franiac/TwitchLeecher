@@ -72,22 +72,24 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" VerticalAlignment="Center">
-                    <Button FontWeight="Bold" Command="{Binding SearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120" Margin="0,0,5,0">
+                    <Button FontWeight="Bold" Command="{Binding SearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="100" Margin="0,0,5,0">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="Search" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Search" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
                     </Button>
-                    <Button FontWeight="Bold" Command="{Binding ShowVideosCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120" Margin="0,0,5,0">
+                    <Button FontWeight="Bold" Command="{Binding ShowVideosCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="100" Margin="0,0,5,0">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="VideoCamera" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Videos" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
                     </Button>
-                    <Button FontWeight="Bold" Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="120">
+                    <Button FontWeight="Bold" Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="150">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="Download" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                            <TextBlock Text="Downloads" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5">
+                                <Run Text="Downloads" /><Run Text="{Binding DownloadsCount, Mode=OneWay, StringFormat=' ({0})', FallbackValue=' (100)'}" />
+                            </TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
