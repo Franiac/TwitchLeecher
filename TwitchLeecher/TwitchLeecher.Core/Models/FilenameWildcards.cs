@@ -2,6 +2,8 @@
 {
     public static class FilenameWildcards
     {
+        public static string CHANNEL = "{channel}";
+
         public static string GAME = "{game}";
 
         public static string DATE = "{date}";

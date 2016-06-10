@@ -15,6 +15,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Fields
 
+        private string channel;
         private string title;
         private string id;
         private string game;
@@ -34,9 +35,14 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public TwitchVideo(string title, string id, string game, int views, TimeSpan length,
+        public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
             List<TwitchVideoResolution> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
         {
+            if (string.IsNullOrWhiteSpace(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException(nameof(id));
@@ -62,6 +68,7 @@ namespace TwitchLeecher.Core.Models
                 title = UNTITLED_BROADCAST;
             }
 
+            this.channel = channel;
             this.title = title;
             this.id = id;
 
@@ -85,6 +92,14 @@ namespace TwitchLeecher.Core.Models
         #endregion Constructors
 
         #region Properties
+
+        public string Channel
+        {
+            get
+            {
+                return this.channel;
+            }
+        }
 
         public string Title
         {

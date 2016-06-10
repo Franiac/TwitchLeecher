@@ -811,6 +811,7 @@ namespace TwitchLeecher.Services.Services
 
         public TwitchVideo ParseVideo(JObject videoJson)
         {
+            string channel = videoJson.Value<JObject>("channel").Value<string>("display_name");
             string title = videoJson.Value<string>("title");
             string id = videoJson.Value<string>("_id");
             string game = videoJson.Value<string>("game");
@@ -821,7 +822,7 @@ namespace TwitchLeecher.Services.Services
             Uri thumbnail = new Uri(videoJson.Value<string>("preview"));
             Uri url = new Uri(videoJson.Value<string>("url"));
 
-            return new TwitchVideo(title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
+            return new TwitchVideo(channel, title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
         }
 
         public List<TwitchVideoResolution> ParseResolutions(JObject resolutionsJson, JObject fpsJson)

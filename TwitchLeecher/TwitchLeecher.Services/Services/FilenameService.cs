@@ -29,6 +29,7 @@ namespace TwitchLeecher.Services.Services
 
             TwitchVideoResolution resolution = video.Resolutions.First();
 
+            result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.GAME, video.Game);
             result = result.Replace(FilenameWildcards.DATE, recorded.ToString("yyyyMMdd"));
             result = result.Replace(FilenameWildcards.TIME, recorded.ToString("hhmmsstt", CultureInfo.InvariantCulture));
