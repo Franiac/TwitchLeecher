@@ -206,7 +206,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     this.preferencesService.Save(this.currentPreferences);
                     this.CurrentPreferences = null;
-                    this.guiService.ShowMessageBox("Saved!", "Preferences", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.guiService.ShowNotification("Preferences saved");
                 }
             }
             catch (Exception ex)

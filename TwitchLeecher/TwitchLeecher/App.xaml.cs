@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using TwitchLeecher.Gui.Modules;
+using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Modules;
@@ -47,6 +48,8 @@ namespace TwitchLeecher
 
         private void RegisterTypes(IKernel kernel)
         {
+            kernel.Bind<MainWindow>().ToSelf().InSingletonScope();
+            kernel.Bind<MainWindowVM>().ToSelf().InSingletonScope();
             kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
         }
 

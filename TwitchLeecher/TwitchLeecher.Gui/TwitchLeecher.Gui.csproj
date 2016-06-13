@@ -94,6 +94,9 @@
     <Compile Include="Views\DownloadsView.xaml.cs">
       <DependentUpon>DownloadsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NotificationStrip.xaml.cs">
+      <DependentUpon>NotificationStrip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UpdateInfoWindow.xaml.cs">
       <DependentUpon>UpdateInfoWindow.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,10 @@
     <Page Include="Views\DownloadsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NotificationStrip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UpdateInfoWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

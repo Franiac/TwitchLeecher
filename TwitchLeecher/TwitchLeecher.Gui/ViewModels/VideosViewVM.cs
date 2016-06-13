@@ -157,6 +157,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!cancelled)
                 {
                     this.twitchService.Enqueue(downloadParams);
+                    this.guiService.ShowNotification("Download added");
                 }
             }
             catch (Exception ex)

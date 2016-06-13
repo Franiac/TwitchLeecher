@@ -28,9 +28,11 @@ namespace TwitchLeecher.Gui.Services
 
         void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback);
 
-        void ShowUpdateInfoWindow(UpdateInfo updateInfo);
+        void ShowUpdateInfoWindow(UpdateInfo updateInfo);        
 
         void ShowLog(TwitchVideoDownload download);
+
+        void ShowNotification(string text);
 
         void SetBusy();
     }

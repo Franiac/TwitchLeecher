@@ -213,6 +213,11 @@ namespace TwitchLeecher.Gui.Services
             window.ShowDialog();
         }
 
+        public void ShowNotification(string text)
+        {
+            this.kernel.Get<MainWindow>().ShowNotification(text);
+        }
+
         public void SetBusy()
         {
             this.SetBusy(true);

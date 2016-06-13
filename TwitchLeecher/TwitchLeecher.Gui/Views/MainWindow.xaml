@@ -117,6 +117,12 @@
             </Grid>
         </Border>
 
+        <view:NotificationStrip x:Name="notificationStrip" Grid.Row="2" VerticalAlignment="Top" Panel.ZIndex="1000">
+            <view:NotificationStrip.Background>
+                <SolidColorBrush Color="{StaticResource ControlBackgroundColor}" />
+            </view:NotificationStrip.Background>
+        </view:NotificationStrip>
+
         <ctrl:AnimatedContentControl Grid.Row="2" Content="{Binding MainView}">
             <Validation.ErrorTemplate>
                 <ControlTemplate />

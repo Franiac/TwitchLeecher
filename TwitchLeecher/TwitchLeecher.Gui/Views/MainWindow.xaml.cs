@@ -147,6 +147,11 @@ namespace TwitchLeecher.Gui.Views
             Marshal.StructureToPtr(mmi, lParam, true);
         }
 
+        public void ShowNotification(string text)
+        {
+            this.notificationStrip.ShowNotification(text);
+        }
+
         #endregion Methods
     }
 }
