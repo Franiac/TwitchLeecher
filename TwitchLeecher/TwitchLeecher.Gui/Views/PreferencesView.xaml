@@ -52,7 +52,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <CheckBox Grid.Row="0" Grid.Column="0" Content="Check fo Updates" IsChecked="{Binding Path='CurrentPreferences.AppCheckForUpdates'}" VerticalAlignment="Center" />
+                    <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates" IsChecked="{Binding Path='CurrentPreferences.AppCheckForUpdates'}" VerticalAlignment="Center" />
                     <fa:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource PrefInfo}">
                         <fa:ImageAwesome.ToolTip>
                             <ToolTip Width="350">
