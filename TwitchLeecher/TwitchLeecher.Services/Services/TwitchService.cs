@@ -305,7 +305,7 @@ namespace TwitchLeecher.Services.Services
 
                         string downloadId = download.Id;
                         string urlIdTrimmed = downloadParams.Video.IdTrimmed;
-                        string tempDir = Path.Combine(downloadParams.Folder, TEMP_PREFIX + downloadId);
+                        string tempDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
                         string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
                         string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
