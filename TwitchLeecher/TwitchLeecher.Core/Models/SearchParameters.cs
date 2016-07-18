@@ -8,7 +8,7 @@ namespace TwitchLeecher.Core.Models
 
         private string username;
         private VideoType videoType;
-        private string loadLimit;
+        private int loadLimit;
 
         #endregion Fields
 
@@ -18,7 +18,7 @@ namespace TwitchLeecher.Core.Models
         {
         }
 
-        public SearchParameters(string username, VideoType videoType, string loadLimit)
+        public SearchParameters(string username, VideoType videoType, int loadLimit)
         {
             this.username = username;
             this.videoType = videoType;
@@ -45,7 +45,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string LoadLimit
+        public int LoadLimit
         {
             get
             {

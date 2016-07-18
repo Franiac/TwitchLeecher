@@ -180,7 +180,14 @@ namespace TwitchLeecher.Services.Services
 
                         if (appCheckForUpdatesEl != null)
                         {
-                            preferences.AppCheckForUpdates = appCheckForUpdatesEl.GetValueAsBool();
+                            try
+                            {
+                                preferences.AppCheckForUpdates = appCheckForUpdatesEl.GetValueAsBool();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
                     }
 
@@ -192,29 +199,50 @@ namespace TwitchLeecher.Services.Services
 
                         if (searchChannelNameEl != null)
                         {
-                            preferences.SearchChannelName = searchChannelNameEl.GetValueAsString();
+                            try
+                            {
+                                preferences.SearchChannelName = searchChannelNameEl.GetValueAsString();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement searchVideoTypeEl = searchEl.Element(SEARCH_VIDEOTYPE_EL);
 
                         if (searchVideoTypeEl != null)
                         {
-                            preferences.SearchVideoType = searchVideoTypeEl.GetValueAsEnum<VideoType>();
+                            try
+                            {
+                                preferences.SearchVideoType = searchVideoTypeEl.GetValueAsEnum<VideoType>();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement searchLoadLimitEl = searchEl.Element(SEARCH_LOADLIMIT_EL);
 
                         if (searchLoadLimitEl != null)
                         {
-                            string limit = searchLoadLimitEl.GetValueAsString();
+                            try
+                            {
+                                int limit = searchLoadLimitEl.GetValueAsInt();
 
-                            if (Preferences.GetLoadLimits().Contains(limit))
-                            {
-                                preferences.SearchLoadLimit = limit;
+                                if (Preferences.GetLoadLimits().Contains(limit))
+                                {
+                                    preferences.SearchLoadLimit = limit;
+                                }
+                                else
+                                {
+                                    preferences.SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT;
+                                }
                             }
-                            else
+                            catch
                             {
-                                preferences.SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT;
+                                // Value from config file could not be loaded, use default value
                             }
                         }
 
@@ -222,7 +250,14 @@ namespace TwitchLeecher.Services.Services
 
                         if (searchOnStartupEl != null)
                         {
-                            preferences.SearchOnStartup = searchOnStartupEl.GetValueAsBool();
+                            try
+                            {
+                                preferences.SearchOnStartup = searchOnStartupEl.GetValueAsBool();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
                     }
 
@@ -234,35 +269,70 @@ namespace TwitchLeecher.Services.Services
 
                         if (downloadTempFolderEl != null)
                         {
-                            preferences.DownloadTempFolder = downloadTempFolderEl.GetValueAsString();
+                            try
+                            {
+                                preferences.DownloadTempFolder = downloadTempFolderEl.GetValueAsString();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement downloadFolderEl = downloadEl.Element(DOWNLOAD_FOLDER_EL);
 
                         if (downloadFolderEl != null)
                         {
-                            preferences.DownloadFolder = downloadFolderEl.GetValueAsString();
+                            try
+                            {
+                                preferences.DownloadFolder = downloadFolderEl.GetValueAsString();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement downloadFileNameEl = downloadEl.Element(DOWNLOAD_FILENAME_EL);
 
                         if (downloadFileNameEl != null)
                         {
-                            preferences.DownloadFileName = downloadFileNameEl.GetValueAsString();
+                            try
+                            {
+                                preferences.DownloadFileName = downloadFileNameEl.GetValueAsString();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement downloadVideoQualityEl = downloadEl.Element(DOWNLOAD_VIDEOQUALITY_EL);
 
                         if (downloadVideoQualityEl != null)
                         {
-                            preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsEnum<VideoQuality>();
+                            try
+                            {
+                                preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsEnum<VideoQuality>();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
 
                         XElement donwloadRemoveCompletedEl = downloadEl.Element(DOWNLOAD_REMOVECOMPLETED_EL);
 
                         if (donwloadRemoveCompletedEl != null)
                         {
-                            preferences.DownloadRemoveCompleted = donwloadRemoveCompletedEl.GetValueAsBool();
+                            try
+                            {
+                                preferences.DownloadRemoveCompleted = donwloadRemoveCompletedEl.GetValueAsBool();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
                         }
                     }
                 }

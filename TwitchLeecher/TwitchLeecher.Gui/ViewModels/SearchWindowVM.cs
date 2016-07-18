@@ -15,7 +15,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private string username;
         private VideoType videoType;
-        private string loadLimit;
+        private int loadLimit;
 
         private ICommand searchCommand;
         private ICommand cancelCommand;
@@ -63,7 +63,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public string LoadLimit
+        public int LoadLimit
         {
             get
             {
