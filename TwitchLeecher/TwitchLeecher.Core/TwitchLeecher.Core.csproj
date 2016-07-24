@@ -50,8 +50,7 @@
     <Compile Include="Events\ShowPreferencesEvent.cs" />
     <Compile Include="Events\ShowInfoEvent.cs" />
     <Compile Include="Events\ShowVideosEvent.cs" />
-    <Compile Include="Events\SearchBeginEvent.cs" />
-    <Compile Include="Events\SearchCompleteEvent.cs" />
+    <Compile Include="Events\ShowLoadingEvent.cs" />
     <Compile Include="Models\DownloadParameters.cs" />
     <Compile Include="Models\FilenameWildcards.cs" />
     <Compile Include="Models\Preferences.cs" />

@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Core.Events
 {
-    public class SearchCompleteEvent : EmptyPresentationEvent
+    public class ShowLoadingEvent : EmptyPresentationEvent
     {
     }
 }

@@ -77,8 +77,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
             this.twitchService.Downloads.CollectionChanged += TwitchServiceDownloads_CollectionChanged;
 
-            this.eventAggregator.GetEvent<SearchBeginEvent>().Subscribe(() => this.ShowMainView<VideosLoadingViewVM>());
-            this.eventAggregator.GetEvent<SearchCompleteEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
+            this.eventAggregator.GetEvent<ShowLoadingEvent>().Subscribe(() => this.ShowMainView<VideosLoadingViewVM>());
             this.eventAggregator.GetEvent<ShowVideosEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
             this.eventAggregator.GetEvent<ShowDownloadsEvent>().Subscribe(() => this.ShowMainView<DownloadsViewVM>());
             this.eventAggregator.GetEvent<ShowPreferencesEvent>().Subscribe(() => this.ShowMainView<PreferencesViewVM>());
@@ -369,7 +368,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             this.lastSearchParams = searchParams;
 
-            this.eventAggregator.GetEvent<SearchBeginEvent>().Publish();
+            this.eventAggregator.GetEvent<ShowLoadingEvent>().Publish();
 
             Task searchTask = new Task(() => this.twitchService.Search(searchParams));
 
@@ -380,7 +379,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     this.dialogService.ShowAndLogException(task.Exception);
                 }
 
-                this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish();
+                this.eventAggregator.GetEvent<ShowVideosEvent>().Publish();
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             searchTask.Start();
