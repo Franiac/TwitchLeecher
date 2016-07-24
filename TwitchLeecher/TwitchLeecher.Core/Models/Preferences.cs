@@ -179,6 +179,7 @@ namespace TwitchLeecher.Core.Models
                 LOAD_LIMITS.Add(25);
                 LOAD_LIMITS.Add(50);
                 LOAD_LIMITS.Add(100);
+                LOAD_LIMITS.Add(250);
                 LOAD_LIMITS.Add(500);
                 LOAD_LIMITS.Add(1000);
             }
