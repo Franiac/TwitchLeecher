@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
@@ -15,7 +15,8 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IGuiService guiService;
+        private IDialogService dialogService;
+        private INotificationService notificationService;
         private IPreferencesService preferencesService;
 
         private Preferences currentPreferences;
@@ -31,9 +32,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public PreferencesViewVM(IGuiService guiService, IPreferencesService preferencesService)
+        public PreferencesViewVM(
+            IDialogService dialogService,
+            INotificationService notificationService,
+            IPreferencesService preferencesService)
         {
-            this.guiService = guiService;
+            this.dialogService = dialogService;
+            this.notificationService = notificationService;
             this.preferencesService = preferencesService;
         }
 
@@ -145,11 +150,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
+                this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -164,7 +169,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -172,11 +177,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadFolder, this.ChooseDownloadFolderCallback);
+                this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadFolder, this.ChooseDownloadFolderCallback);
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -191,7 +196,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -199,19 +204,19 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.SetBusy();
+                this.dialogService.SetBusy();
                 this.Validate();
 
                 if (!this.HasErrors)
                 {
                     this.preferencesService.Save(this.currentPreferences);
                     this.CurrentPreferences = null;
-                    this.guiService.ShowNotification("Preferences saved");
+                    this.notificationService.ShowNotification("Preferences saved");
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -219,17 +224,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                MessageBoxResult result = this.guiService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = this.dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    this.guiService.SetBusy();
+                    this.dialogService.SetBusy();
                     this.CurrentPreferences = null;
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -237,18 +242,18 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                MessageBoxResult result = this.guiService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = this.dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    this.guiService.SetBusy();
+                    this.dialogService.SetBusy();
                     this.preferencesService.Save(this.preferencesService.CreateDefault());
                     this.CurrentPreferences = null;
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -277,7 +282,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

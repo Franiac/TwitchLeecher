@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Input;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.Reflection;
@@ -17,19 +17,19 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand linkCommand;
         private ICommand donateCommand;
 
-        private IGuiService guiService;
+        private IDialogService dialogService;
 
         #endregion Fields
 
         #region Constructors
 
-        public InfoViewVM(IGuiService guiService)
+        public InfoViewVM(IDialogService dialogService)
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
             this.productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
-            this.guiService = guiService;
+            this.dialogService = dialogService;
         }
 
         #endregion Constructors
@@ -58,7 +58,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -81,7 +81,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }

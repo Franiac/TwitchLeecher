@@ -4,9 +4,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
-using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
@@ -18,7 +17,8 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private ITwitchService twitchService;
-        private IGuiService guiService;
+        private IDialogService dialogService;
+        private INotificationService notificationService;
         private IEventAggregator eventAggregator;
         private IPreferencesService preferencesService;
         private IFilenameService filenameService;
@@ -32,14 +32,17 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public VideosViewVM(ITwitchService twitchService,
-            IGuiService guiService,
+        public VideosViewVM(
+            ITwitchService twitchService,
+            IDialogService dialogService,
+            INotificationService notificationService,
             IEventAggregator eventAggregator,
             IPreferencesService preferencesService,
             IFilenameService filenameService)
         {
             this.twitchService = twitchService;
-            this.guiService = guiService;
+            this.dialogService = dialogService;
+            this.notificationService = notificationService;
             this.eventAggregator = eventAggregator;
             this.preferencesService = preferencesService;
             this.filenameService = filenameService;
@@ -110,7 +113,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -139,14 +142,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             DownloadParameters downloadParams = new DownloadParameters(video, resolution, currentPrefs.DownloadFolder, filename);
 
-                            this.guiService.ShowDownloadDialog(downloadParams, this.DownloadCallback);
+                            this.dialogService.ShowDownloadDialog(downloadParams, this.DownloadCallback);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -157,12 +160,12 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!cancelled)
                 {
                     this.twitchService.Enqueue(downloadParams);
-                    this.guiService.ShowNotification("Download added");
+                    this.notificationService.ShowNotification("Download added");
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

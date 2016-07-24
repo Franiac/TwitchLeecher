@@ -2,9 +2,9 @@
 using System.Windows;
 using TwitchLeecher.Core.Models;
 
-namespace TwitchLeecher.Gui.Services
+namespace TwitchLeecher.Gui.Interfaces
 {
-    public interface IGuiService
+    public interface IDialogService
     {
         MessageBoxResult ShowMessageBox(string message);
 
@@ -28,11 +28,9 @@ namespace TwitchLeecher.Gui.Services
 
         void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback);
 
-        void ShowUpdateInfoWindow(UpdateInfo updateInfo);        
+        void ShowUpdateInfoWindow(UpdateInfo updateInfo);
 
         void ShowLog(TwitchVideoDownload download);
-
-        void ShowNotification(string text);
 
         void SetBusy();
     }

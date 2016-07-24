@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
@@ -29,7 +29,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private IKernel kernel;
         private IEventAggregator eventAggregator;
         private ITwitchService twitchService;
-        private IGuiService guiService;
+        private IDialogService dialogService;
         private IPreferencesService preferencesService;
         private IUpdateService updateService;
 
@@ -56,7 +56,7 @@ namespace TwitchLeecher.Gui.ViewModels
         public MainWindowVM(IKernel kernel,
             IEventAggregator eventAggregator,
             ITwitchService twitchService,
-            IGuiService guiService,
+            IDialogService dialogService,
             IPreferencesService preferencesService,
             IUpdateService updateService)
         {
@@ -71,7 +71,7 @@ namespace TwitchLeecher.Gui.ViewModels
             this.kernel = kernel;
             this.eventAggregator = eventAggregator;
             this.twitchService = twitchService;
-            this.guiService = guiService;
+            this.dialogService = dialogService;
             this.preferencesService = preferencesService;
             this.updateService = updateService;
 
@@ -168,7 +168,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -191,7 +191,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -214,7 +214,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -237,7 +237,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -260,7 +260,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -283,7 +283,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -306,7 +306,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            this.guiService.ShowAndLogException(ex);
+                            this.dialogService.ShowAndLogException(ex);
                         }
                     });
                 }
@@ -342,11 +342,11 @@ namespace TwitchLeecher.Gui.ViewModels
                     this.lastSearchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
                 }
 
-                this.guiService.ShowSearchDialog(lastSearchParams, this.SearchDialogCallback);
+                this.dialogService.ShowSearchDialog(lastSearchParams, this.SearchDialogCallback);
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -361,7 +361,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -377,7 +377,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (task.IsFaulted)
                 {
-                    this.guiService.ShowAndLogException(task.Exception);
+                    this.dialogService.ShowAndLogException(task.Exception);
                 }
 
                 this.eventAggregator.GetEvent<SearchCompleteEvent>().Publish();
@@ -411,7 +411,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -443,14 +443,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (updateInfo != null)
                         {
-                            this.guiService.ShowUpdateInfoWindow(updateInfo);
+                            this.dialogService.ShowUpdateInfoWindow(updateInfo);
                         }
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -462,7 +462,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (!this.twitchService.CanShutdown())
                 {
-                    MessageBoxResult result = this.guiService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    MessageBoxResult result = this.dialogService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                     if (result == MessageBoxResult.No)
                     {
@@ -475,7 +475,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
 
             return true;

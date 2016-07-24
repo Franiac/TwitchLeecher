@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Shell;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 
 namespace TwitchLeecher.Gui.Views
 {
     public partial class DownloadWindow : Window
     {
-        private IGuiService guiService;
+        private IDialogService dialogService;
 
-        public DownloadWindow(IGuiService guiService)
+        public DownloadWindow(IDialogService dialogService)
         {
-            this.guiService = guiService;
+            this.dialogService = dialogService;
 
             InitializeComponent();
 
@@ -38,7 +38,7 @@ namespace TwitchLeecher.Gui.Views
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
     }

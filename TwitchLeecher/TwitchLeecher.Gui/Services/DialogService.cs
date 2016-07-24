@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TwitchLeecher.Core.Models;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
@@ -13,7 +14,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace TwitchLeecher.Gui.Services
 {
-    internal class GuiService : IGuiService
+    internal class DialogService : IDialogService
     {
         #region Fields
 
@@ -26,7 +27,7 @@ namespace TwitchLeecher.Gui.Services
 
         #region Constructor
 
-        public GuiService(IKernel kernel, ILogService logService)
+        public DialogService(IKernel kernel, ILogService logService)
         {
             this.kernel = kernel;
             this.logService = logService;
@@ -211,11 +212,6 @@ namespace TwitchLeecher.Gui.Services
             window.DataContext = vm;
 
             window.ShowDialog();
-        }
-
-        public void ShowNotification(string text)
-        {
-            this.kernel.Get<MainWindow>().ShowNotification(text);
         }
 
         public void SetBusy()

@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
@@ -18,7 +18,7 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private ITwitchService twitchService;
-        private IGuiService guiService;
+        private IDialogService dialogService;
         private IEventAggregator eventAggregator;
 
         private ICommand retryDownloadCommand;
@@ -33,16 +33,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadsViewVM(ITwitchService twitchService, IGuiService guiService, IEventAggregator eventAggregator)
+        public DownloadsViewVM(ITwitchService twitchService, IDialogService dialogService, IEventAggregator eventAggregator)
         {
             if (twitchService == null)
             {
                 throw new ArgumentNullException(nameof(twitchService));
             }
 
-            if (guiService == null)
+            if (dialogService == null)
             {
-                throw new ArgumentNullException(nameof(guiService));
+                throw new ArgumentNullException(nameof(dialogService));
             }
 
             if (eventAggregator == null)
@@ -51,7 +51,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
 
             this.twitchService = twitchService;
-            this.guiService = guiService;
+            this.dialogService = dialogService;
             this.eventAggregator = eventAggregator;
 
             this.twitchService.PropertyChanged += TwitchService_PropertyChanged;
@@ -154,7 +154,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -172,7 +172,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -190,7 +190,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -218,7 +218,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -234,14 +234,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (download != null)
                         {
-                            this.guiService.ShowLog(download);
+                            this.dialogService.ShowLog(download);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

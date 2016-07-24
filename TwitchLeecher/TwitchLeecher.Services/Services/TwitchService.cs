@@ -104,7 +104,7 @@ namespace TwitchLeecher.Services.Services
 
             this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
 
-            this.eventAggregator.GetEvent<DownloadCompletedEvent>().Subscribe(this.Remove, ThreadOption.UIThread);
+            this.eventAggregator.GetEvent<RemoveDownloadEvent>().Subscribe(this.Remove, ThreadOption.UIThread);
         }
 
         #endregion Constructors
@@ -400,7 +400,7 @@ namespace TwitchLeecher.Services.Services
 
                             if (success && this.preferencesService.CurrentPreferences.DownloadRemoveCompleted)
                             {
-                                this.eventAggregator.GetEvent<DownloadCompletedEvent>().Publish(downloadId);
+                                this.eventAggregator.GetEvent<RemoveDownloadEvent>().Publish(downloadId);
                             }
                         });
 

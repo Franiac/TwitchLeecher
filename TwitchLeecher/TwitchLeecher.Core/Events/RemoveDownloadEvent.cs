@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Core.Events
 {
-    public class DownloadCompletedEvent : PubSubEvent<string>
+    public class RemoveDownloadEvent : PubSubEvent<string>
     {
     }
 }

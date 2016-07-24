@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
@@ -21,7 +21,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand cancelCommand;
 
         private ITwitchService twitchService;
-        private IGuiService guiService;
+        private IDialogService dialogService;
 
         private object searchLock = new object();
 
@@ -29,10 +29,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public SearchWindowVM(ITwitchService twitchService, IGuiService guiService)
+        public SearchWindowVM(ITwitchService twitchService, IDialogService dialogService)
         {
             this.twitchService = twitchService;
-            this.guiService = guiService;
+            this.dialogService = dialogService;
         }
 
         #endregion Constructors
@@ -109,7 +109,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.SetBusy();
+                this.dialogService.SetBusy();
                 this.Validate();
 
                 if (!this.HasErrors)
@@ -121,7 +121,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -135,7 +135,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

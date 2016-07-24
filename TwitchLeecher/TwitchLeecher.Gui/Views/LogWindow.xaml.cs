@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -18,11 +18,11 @@ namespace TwitchLeecher.Gui.Views
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x10000;
 
-        private IGuiService guiService;
+        private IDialogService dialogService;
 
-        public LogWindow(IGuiService guiService)
+        public LogWindow(IDialogService dialogService)
         {
-            this.guiService = guiService;
+            this.dialogService = dialogService;
 
             InitializeComponent();
 
@@ -53,7 +53,7 @@ namespace TwitchLeecher.Gui.Views
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -66,7 +66,7 @@ namespace TwitchLeecher.Gui.Views
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
     }

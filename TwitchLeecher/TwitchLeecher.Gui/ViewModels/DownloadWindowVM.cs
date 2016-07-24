@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
@@ -21,7 +21,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand downloadCommand;
         private ICommand cancelCommand;
 
-        private IGuiService guiService;
+        private IDialogService dialogService;
         private ITwitchService twitchService;
 
         private object searchLock = new object();
@@ -30,9 +30,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadWindowVM(IGuiService guiService, ITwitchService twitchService)
+        public DownloadWindowVM(IDialogService dialogService, ITwitchService twitchService)
         {
-            this.guiService = guiService;
+            this.dialogService = dialogService;
             this.twitchService = twitchService;
         }
 
@@ -137,11 +137,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.guiService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
+                this.dialogService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -156,7 +156,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -170,7 +170,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (File.Exists(this.downloadParams.FullPath))
                     {
-                        MessageBoxResult result = this.guiService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        MessageBoxResult result = this.dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                         if (result != MessageBoxResult.Yes)
                         {
@@ -185,7 +185,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -199,7 +199,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

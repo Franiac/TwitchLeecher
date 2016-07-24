@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Gui.Services;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
@@ -13,7 +13,7 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private UpdateInfo updateInfo;
-        private IGuiService guiService;
+        private IDialogService dialogService;
         private ICommand downloadCommand;
         private ICommand closeCommand;
 
@@ -21,9 +21,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructor
 
-        public UpdateInfoWindowVM(IGuiService guiService)
+        public UpdateInfoWindowVM(IDialogService dialogService)
         {
-            this.guiService = guiService;
+            this.dialogService = dialogService;
         }
 
         #endregion Constructor
@@ -80,7 +80,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -93,7 +93,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.guiService.ShowAndLogException(ex);
+                this.dialogService.ShowAndLogException(ex);
             }
         }
 

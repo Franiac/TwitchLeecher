@@ -76,8 +76,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converters\VideoTypeToBooleanConverter.cs" />
     <Compile Include="Modules\GuiModule.cs" />
-    <Compile Include="Services\GuiService.cs" />
-    <Compile Include="Services\IGuiService.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Interfaces\IDialogService.cs" />
+    <Compile Include="Interfaces\INotificationService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="ViewModels\ContentVM.cs" />
     <Compile Include="ViewModels\DialogVM.cs" />
     <Compile Include="ViewModels\LogWindowVM.cs" />
     <Compile Include="ViewModels\DownloadWindowVM.cs" />
