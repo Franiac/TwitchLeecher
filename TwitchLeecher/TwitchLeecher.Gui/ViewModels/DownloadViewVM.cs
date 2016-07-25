@@ -11,7 +11,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class DownloadWindowVM : DialogVM<DownloadParameters>
+    public class DownloadViewVM : ViewModelBase
     {
         #region Fields
 
@@ -23,17 +23,27 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private IDialogService dialogService;
         private ITwitchService twitchService;
+        private INavigationService navigationService;
+        private INotificationService notificationService;
 
-        private object searchLock = new object();
+        private readonly object commandLockObject;
 
         #endregion Fields
 
         #region Constructors
 
-        public DownloadWindowVM(IDialogService dialogService, ITwitchService twitchService)
+        public DownloadViewVM(
+            IDialogService dialogService,
+            ITwitchService twitchService,
+            INavigationService navigationService,
+            INotificationService notificationService)
         {
             this.dialogService = dialogService;
             this.twitchService = twitchService;
+            this.navigationService = navigationService;
+            this.notificationService = notificationService;
+
+            this.commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -109,7 +119,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.downloadCommand == null)
                 {
-                    this.downloadCommand = new DelegateCommand<Window>(this.Download);
+                    this.downloadCommand = new DelegateCommand(this.Download);
                 }
 
                 return this.downloadCommand;
@@ -122,7 +132,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand<Window>(this.Cancel);
+                    this.cancelCommand = new DelegateCommand(this.Cancel);
                 }
 
                 return this.cancelCommand;
@@ -137,7 +147,10 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.dialogService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
+                lock (this.commandLockObject)
+                {
+                    this.dialogService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
+                }
             }
             catch (Exception ex)
             {
@@ -160,27 +173,30 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Download(Window window)
+        private void Download()
         {
             try
             {
-                this.Validate();
-
-                if (!this.HasErrors)
+                lock (this.commandLockObject)
                 {
-                    if (File.Exists(this.downloadParams.FullPath))
+                    this.Validate();
+
+                    if (!this.HasErrors)
                     {
-                        MessageBoxResult result = this.dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                        if (result != MessageBoxResult.Yes)
+                        if (File.Exists(this.downloadParams.FullPath))
                         {
-                            return;
-                        }
-                    }
+                            MessageBoxResult result = this.dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    this.ResultObject = this.downloadParams;
-                    window.DialogResult = true;
-                    window.Close();
+                            if (result != MessageBoxResult.Yes)
+                            {
+                                return;
+                            }
+                        }
+
+                        this.twitchService.Enqueue(downloadParams);
+                        this.navigationService.NavigateBack();
+                        this.notificationService.ShowNotification("Download added");
+                    }
                 }
             }
             catch (Exception ex)
@@ -189,13 +205,14 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Cancel(Window window)
+        private void Cancel()
         {
             try
             {
-                this.ResultObject = null;
-                window.DialogResult = false;
-                window.Close();
+                lock (this.commandLockObject)
+                {
+                    this.navigationService.NavigateBack();
+                }
             }
             catch (Exception ex)
             {
@@ -259,6 +276,21 @@ namespace TwitchLeecher.Gui.ViewModels
                     }
                 }
             }
+        }
+
+        protected override List<MenuCommand> BuildMenu()
+        {
+            List<MenuCommand> menuCommands = base.BuildMenu();
+
+            if (menuCommands == null)
+            {
+                menuCommands = new List<MenuCommand>();
+            }
+
+            menuCommands.Add(new MenuCommand(this.DownloadCommand, "Download", "Download"));
+            menuCommands.Add(new MenuCommand(this.CancelCommand, "Cancel", "Times"));
+
+            return menuCommands;
         }
 
         #endregion Methods

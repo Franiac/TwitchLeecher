@@ -1,13 +1,12 @@
 ﻿using Ninject;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
+using TwitchLeecher.Gui.Events;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
@@ -24,30 +23,32 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private string title;
 
+        private int videosCount;
+        private int downloadsCount;
+
         private ViewModelBase mainView;
 
         private IKernel kernel;
         private IEventAggregator eventAggregator;
         private ITwitchService twitchService;
         private IDialogService dialogService;
+        private INavigationService navigationService;
+        private ISearchService searchService;
         private IPreferencesService preferencesService;
         private IUpdateService updateService;
 
-        private ICommand searchCommand;
-        private ICommand showVideosCommand;
+        private ICommand showSearchCommand;
         private ICommand showDownloadsCommand;
-        private ICommand preferencesCommand;
-        private ICommand infoCommand;
-        private ICommand minimizeCommand;
-        private ICommand maximizeRestoreCommand;
-        private ICommand closeCommand;
+        private ICommand showPreferencesCommand;
+        private ICommand showInfoCommand;
+        private ICommand doMinimizeCommand;
+        private ICommand doMmaximizeRestoreCommand;
+        private ICommand doCloseCommand;
         private ICommand requestCloseCommand;
 
         private WindowState windowState;
 
-        private SearchParameters lastSearchParams;
-
-        private Dictionary<Type, ViewModelBase> mainViews;
+        private readonly object commandLockObject;
 
         #endregion Fields
 
@@ -57,11 +58,11 @@ namespace TwitchLeecher.Gui.ViewModels
             IEventAggregator eventAggregator,
             ITwitchService twitchService,
             IDialogService dialogService,
+            INavigationService navigationService,
+            ISearchService searchService,
             IPreferencesService preferencesService,
             IUpdateService updateService)
         {
-            this.mainViews = new Dictionary<Type, ViewModelBase>();
-
             this.windowState = WindowState.Normal;
 
             AssemblyUtil au = AssemblyUtil.Get;
@@ -72,19 +73,18 @@ namespace TwitchLeecher.Gui.ViewModels
             this.eventAggregator = eventAggregator;
             this.twitchService = twitchService;
             this.dialogService = dialogService;
+            this.navigationService = navigationService;
+            this.searchService = searchService;
             this.preferencesService = preferencesService;
             this.updateService = updateService;
 
-            this.twitchService.Downloads.CollectionChanged += TwitchServiceDownloads_CollectionChanged;
+            this.commandLockObject = new object();
 
-            this.eventAggregator.GetEvent<ShowLoadingEvent>().Subscribe(() => this.ShowMainView<VideosLoadingViewVM>());
-            this.eventAggregator.GetEvent<ShowVideosEvent>().Subscribe(() => this.ShowMainView<VideosViewVM>());
-            this.eventAggregator.GetEvent<ShowDownloadsEvent>().Subscribe(() => this.ShowMainView<DownloadsViewVM>());
-            this.eventAggregator.GetEvent<ShowPreferencesEvent>().Subscribe(() => this.ShowMainView<PreferencesViewVM>());
-            this.eventAggregator.GetEvent<ShowInfoEvent>().Subscribe(() => this.ShowMainView<InfoViewVM>());
-            this.eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(() => this.PreferencesSaved());
+            this.eventAggregator.GetEvent<ShowViewEvent>().Subscribe(this.ShowView);
+            this.eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(this.VideosCountChanged);
+            this.eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(this.DownloadsCountChanged);
 
-            this.ShowMainView<WelcomeViewVM>();
+            this.navigationService.ShowWelcome();
         }
 
         #endregion Constructors
@@ -119,11 +119,19 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public int VideosCount
+        {
+            get
+            {
+                return this.videosCount;
+            }
+        }
+
         public int DownloadsCount
         {
             get
             {
-                return this.twitchService.Downloads.Count;
+                return this.downloadsCount;
             }
         }
 
@@ -140,39 +148,16 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand SearchCommand
+        public ICommand ShowSearchCommand
         {
             get
             {
-                if (this.searchCommand == null)
+                if (this.showSearchCommand == null)
                 {
-                    this.searchCommand = new DelegateCommand(this.SearchDialog);
+                    this.showSearchCommand = new DelegateCommand(this.ShowSearch);
                 }
 
-                return this.searchCommand;
-            }
-        }
-
-        public ICommand ShowVideosCommand
-        {
-            get
-            {
-                if (this.showVideosCommand == null)
-                {
-                    this.showVideosCommand = new DelegateCommand(() =>
-                    {
-                        try
-                        {
-                            this.eventAggregator.GetEvent<ShowVideosEvent>().Publish();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
-                }
-
-                return this.showVideosCommand;
+                return this.showSearchCommand;
             }
         }
 
@@ -182,135 +167,75 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.showDownloadsCommand == null)
                 {
-                    this.showDownloadsCommand = new DelegateCommand(() =>
-                    {
-                        try
-                        {
-                            this.eventAggregator.GetEvent<ShowDownloadsEvent>().Publish();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.showDownloadsCommand = new DelegateCommand(this.ShowDownloads);
                 }
 
                 return this.showDownloadsCommand;
             }
         }
 
-        public ICommand PreferencesCommand
+        public ICommand ShowPreferencesCommand
         {
             get
             {
-                if (this.preferencesCommand == null)
+                if (this.showPreferencesCommand == null)
                 {
-                    this.preferencesCommand = new DelegateCommand(() =>
-                    {
-                        try
-                        {
-                            this.eventAggregator.GetEvent<ShowPreferencesEvent>().Publish();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.showPreferencesCommand = new DelegateCommand(this.ShowPreferences);
                 }
 
-                return this.preferencesCommand;
+                return this.showPreferencesCommand;
             }
         }
 
-        public ICommand InfoCommand
+        public ICommand ShowInfoCommand
         {
             get
             {
-                if (this.infoCommand == null)
+                if (this.showInfoCommand == null)
                 {
-                    this.infoCommand = new DelegateCommand(() =>
-                    {
-                        try
-                        {
-                            this.eventAggregator.GetEvent<ShowInfoEvent>().Publish();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.showInfoCommand = new DelegateCommand(this.ShowInfo);
                 }
 
-                return this.infoCommand;
+                return this.showInfoCommand;
             }
         }
 
-        public ICommand MinimizeCommand
+        public ICommand DoMinimizeCommand
         {
             get
             {
-                if (this.minimizeCommand == null)
+                if (this.doMinimizeCommand == null)
                 {
-                    this.minimizeCommand = new DelegateCommand<Window>(window =>
-                    {
-                        try
-                        {
-                            window.WindowState = WindowState.Minimized;
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.doMinimizeCommand = new DelegateCommand<Window>(this.DoMinimize);
                 }
 
-                return this.minimizeCommand;
+                return this.doMinimizeCommand;
             }
         }
 
-        public ICommand MaximizeRestoreCommand
+        public ICommand DoMaximizeRestoreCommand
         {
             get
             {
-                if (this.maximizeRestoreCommand == null)
+                if (this.doMmaximizeRestoreCommand == null)
                 {
-                    this.maximizeRestoreCommand = new DelegateCommand<Window>(window =>
-                    {
-                        try
-                        {
-                            window.WindowState = window.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.doMmaximizeRestoreCommand = new DelegateCommand<Window>(this.DoMaximizeRestore);
                 }
 
-                return this.maximizeRestoreCommand;
+                return this.doMmaximizeRestoreCommand;
             }
         }
 
-        public ICommand CloseCommand
+        public ICommand DoCloseCommand
         {
             get
             {
-                if (this.closeCommand == null)
+                if (this.doCloseCommand == null)
                 {
-                    this.closeCommand = new DelegateCommand<Window>(window =>
-                    {
-                        try
-                        {
-                            window.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.doCloseCommand = new DelegateCommand<Window>(this.DoClose);
                 }
 
-                return this.closeCommand;
+                return this.doCloseCommand;
             }
         }
 
@@ -331,31 +256,20 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Methods
 
-        private void SearchDialog()
+        private void ShowSearch()
         {
             try
             {
-                if (this.lastSearchParams == null)
+                lock (this.commandLockObject)
                 {
-                    Preferences currentPrefs = this.preferencesService.CurrentPreferences;
-                    this.lastSearchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
-                }
-
-                this.dialogService.ShowSearchDialog(lastSearchParams, this.SearchDialogCallback);
-            }
-            catch (Exception ex)
-            {
-                this.dialogService.ShowAndLogException(ex);
-            }
-        }
-
-        public void SearchDialogCallback(bool cancelled, SearchParameters searchParams)
-        {
-            try
-            {
-                if (!cancelled)
-                {
-                    this.Search(searchParams);
+                    if (this.videosCount > 0)
+                    {
+                        this.navigationService.ShowSearchResults();
+                    }
+                    else
+                    {
+                        this.navigationService.ShowSearch();
+                    }
                 }
             }
             catch (Exception ex)
@@ -364,54 +278,129 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Search(SearchParameters searchParams)
-        {
-            this.lastSearchParams = searchParams;
-
-            this.eventAggregator.GetEvent<ShowLoadingEvent>().Publish();
-
-            Task searchTask = new Task(() => this.twitchService.Search(searchParams));
-
-            searchTask.ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    this.dialogService.ShowAndLogException(task.Exception);
-                }
-
-                this.eventAggregator.GetEvent<ShowVideosEvent>().Publish();
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-
-            searchTask.Start();
-        }
-
-        private void ShowMainView<T>() where T : ViewModelBase
-        {
-            this.MainView?.OnBeforeHidden();
-
-            ViewModelBase vm;
-
-            if (!this.mainViews.TryGetValue(typeof(T), out vm))
-            {
-                vm = this.kernel.Get<T>();
-                this.mainViews.Add(typeof(T), vm);
-            }
-
-            vm.OnBeforeShown();
-
-            this.MainView = vm;
-        }
-
-        private void PreferencesSaved()
+        private void ShowDownloads()
         {
             try
             {
-                this.lastSearchParams = null;
+                lock (this.commandLockObject)
+                {
+                    this.navigationService.ShowDownloads();
+                }
             }
             catch (Exception ex)
             {
                 this.dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private void ShowPreferences()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    this.navigationService.ShowPreferences();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ShowInfo()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    this.navigationService.ShowInfo();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void DoMinimize(Window window)
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    if (window == null)
+                    {
+                        throw new ArgumentNullException(nameof(window));
+                    }
+
+                    window.WindowState = WindowState.Minimized;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void DoMaximizeRestore(Window window)
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    if (window == null)
+                    {
+                        throw new ArgumentNullException(nameof(window));
+                    }
+
+                    window.WindowState = window.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void DoClose(Window window)
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    if (window == null)
+                    {
+                        throw new ArgumentNullException(nameof(window));
+                    }
+
+                    window.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ShowView(ViewModelBase contentVM)
+        {
+            if (contentVM != null)
+            {
+                this.MainView = contentVM;
+            }
+        }
+
+        private void VideosCountChanged(int count)
+        {
+            this.videosCount = count;
+            this.FirePropertyChanged(nameof(this.VideosCount));
+        }
+
+        private void DownloadsCountChanged(int count)
+        {
+            this.downloadsCount = count;
+            this.FirePropertyChanged(nameof(this.DownloadsCount));
         }
 
         public void Loaded()
@@ -420,31 +409,27 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
 
-                if (currentPrefs.SearchOnStartup)
+                bool updateAvailable = false;
+
+                if (currentPrefs.AppCheckForUpdates)
+                {
+                    UpdateInfo updateInfo = this.updateService.CheckForUpdate();
+
+                    if (updateInfo != null)
+                    {
+                        updateAvailable = true;
+                        this.navigationService.ShowUpdateInfo(updateInfo);
+                    }
+                }
+
+                if (!updateAvailable && currentPrefs.SearchOnStartup)
                 {
                     currentPrefs.Validate();
 
                     if (!currentPrefs.HasErrors)
                     {
-                        SearchParameters searchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
-                        this.Search(searchParams);
+                        this.searchService.PerformSearch(new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit));
                     }
-                }
-
-                if (currentPrefs.AppCheckForUpdates)
-                {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(500);
-                    }).ContinueWith(task =>
-                    {
-                        UpdateInfo updateInfo = this.updateService.CheckForUpdate();
-
-                        if (updateInfo != null)
-                        {
-                            this.dialogService.ShowUpdateInfoWindow(updateInfo);
-                        }
-                    }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
             }
             catch (Exception ex)
@@ -481,14 +466,5 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Methods
-
-        #region EventHandlers
-
-        private void TwitchServiceDownloads_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            this.FirePropertyChanged(nameof(this.DownloadsCount));
-        }
-
-        #endregion EventHandlers
     }
 }

@@ -14,10 +14,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private string productName;
 
-        private ICommand linkCommand;
+        private ICommand openlinkCommand;
         private ICommand donateCommand;
 
         private IDialogService dialogService;
+
+        private readonly object commandLockObject;
 
         #endregion Fields
 
@@ -30,6 +32,8 @@ namespace TwitchLeecher.Gui.ViewModels
             this.productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
             this.dialogService = dialogService;
+
+            this.commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -44,26 +48,16 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand LinkCommand
+        public ICommand OpenLinkCommand
         {
             get
             {
-                if (this.linkCommand == null)
+                if (this.openlinkCommand == null)
                 {
-                    this.linkCommand = new DelegateCommand<string>(link =>
-                    {
-                        try
-                        {
-                            Process.Start(link);
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.openlinkCommand = new DelegateCommand<string>(this.OpenLink);
                 }
 
-                return this.linkCommand;
+                return this.openlinkCommand;
             }
         }
 
@@ -73,17 +67,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (this.donateCommand == null)
                 {
-                    this.donateCommand = new DelegateCommand(() =>
-                    {
-                        try
-                        {
-                            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE");
-                        }
-                        catch (Exception ex)
-                        {
-                            this.dialogService.ShowAndLogException(ex);
-                        }
-                    });
+                    this.donateCommand = new DelegateCommand(this.Donate);
                 }
 
                 return this.donateCommand;
@@ -91,5 +75,44 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Properties
+
+        #region Methods
+
+        private void OpenLink(string link)
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    if (string.IsNullOrWhiteSpace(link))
+                    {
+                        throw new ArgumentNullException(nameof(link));
+                    }
+
+                    Process.Start(link);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void Donate()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        #endregion Methods
     }
 }

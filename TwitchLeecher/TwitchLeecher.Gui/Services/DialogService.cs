@@ -4,9 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
-using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
-using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using Cursors = System.Windows.Input.Cursors;
@@ -53,24 +51,6 @@ namespace TwitchLeecher.Gui.Services
             return msg.Result;
         }
 
-        public MessageBoxResult ShowMessageBox(Window owner, string message)
-        {
-            MessageBoxWindow msg = new MessageBoxWindow(message);
-            msg.Owner = owner;
-            msg.ShowDialog();
-
-            return msg.Result;
-        }
-
-        public MessageBoxResult ShowMessageBox(Window owner, string message, string caption)
-        {
-            MessageBoxWindow msg = new MessageBoxWindow(message, caption);
-            msg.Owner = owner;
-            msg.ShowDialog();
-
-            return msg.Result;
-        }
-
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons);
@@ -105,58 +85,6 @@ namespace TwitchLeecher.Gui.Services
             msg.ShowDialog();
         }
 
-        public void ShowSearchDialog(SearchParameters lastSearchParams, Action<bool, SearchParameters> dialogCompleteCallback)
-        {
-            if (lastSearchParams == null)
-            {
-                throw new ArgumentNullException(nameof(lastSearchParams));
-            }
-
-            if (dialogCompleteCallback == null)
-            {
-                throw new ArgumentNullException(nameof(dialogCompleteCallback));
-            }
-
-            SearchWindowVM vm = this.kernel.Get<SearchWindowVM>();
-            vm.Username = lastSearchParams.Username;
-            vm.VideoType = lastSearchParams.VideoType;
-            vm.LoadLimit = lastSearchParams.LoadLimit;
-
-            SearchWindow window = this.kernel.Get<SearchWindow>();
-            window.DataContext = vm;
-
-            bool? result = window.ShowDialog();
-
-            SearchParameters resultObject = vm.ResultObject;
-
-            dialogCompleteCallback(result != true, resultObject);
-        }
-
-        public void ShowDownloadDialog(DownloadParameters downloadParams, Action<bool, DownloadParameters> dialogCompleteCallback)
-        {
-            if (downloadParams == null)
-            {
-                throw new ArgumentNullException(nameof(downloadParams));
-            }
-
-            if (dialogCompleteCallback == null)
-            {
-                throw new ArgumentNullException(nameof(dialogCompleteCallback));
-            }
-
-            DownloadWindowVM vm = this.kernel.Get<DownloadWindowVM>();
-            vm.DownloadParams = downloadParams;
-
-            DownloadWindow window = this.kernel.Get<DownloadWindow>();
-            window.DataContext = vm;
-
-            bool? result = window.ShowDialog();
-
-            DownloadParameters resultObject = vm.ResultObject;
-
-            dialogCompleteCallback(result != true, resultObject);
-        }
-
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
@@ -185,33 +113,6 @@ namespace TwitchLeecher.Gui.Services
             bool? result = sfd.ShowDialog();
 
             dialogCompleteCallback(result != true, sfd.FileName);
-        }
-
-        public void ShowUpdateInfoWindow(UpdateInfo updateInfo)
-        {
-            UpdateInfoWindowVM vm = this.kernel.Get<UpdateInfoWindowVM>();
-            vm.UpdateInfo = updateInfo;
-
-            UpdateInfoWindow window = this.kernel.Get<UpdateInfoWindow>();
-            window.DataContext = vm;
-
-            window.ShowDialog();
-        }
-
-        public void ShowLog(TwitchVideoDownload download)
-        {
-            if (download == null)
-            {
-                throw new ArgumentNullException(nameof(download));
-            }
-
-            LogWindowVM vm = this.kernel.Get<LogWindowVM>();
-            vm.Download = download;
-
-            LogWindow window = this.kernel.Get<LogWindow>();
-            window.DataContext = vm;
-
-            window.ShowDialog();
         }
 
         public void SetBusy()

@@ -8,6 +8,9 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Constants.xaml" />
         <ResourceDictionary Source="Templates.xaml" />
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BVConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type ContentPresenter}">
@@ -135,9 +138,9 @@
         <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="830" />
-        <Setter Property="Height" Value="815" />
-        <Setter Property="MinWidth" Value="830" />
+        <Setter Property="Width" Value="800" />
+        <Setter Property="Height" Value="828" />
+        <Setter Property="MinWidth" Value="800" />
         <Setter Property="MinHeight" Value="570" />
     </Style>
 
@@ -184,6 +187,80 @@
         <Setter Property="Foreground">
             <Setter.Value>
                 <SolidColorBrush Color="{StaticResource MainColor}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FadeContentControlStyle" TargetType="ContentControl">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Grid>
+                        <Rectangle x:Name="Tpl_Part_PaintArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" />
+                        <ContentControl Content="{TemplateBinding Content}" x:Name="Tpl_Part_MainContent" Visibility="Hidden">
+                            <ContentControl.Template>
+                                <ControlTemplate TargetType="ContentControl">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <ContentPresenter Grid.Row="0" Content="{TemplateBinding Content}" />
+
+                                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" Visibility="{Binding HasMenu, Converter={StaticResource BVConverter}}">
+                                            <ContentPresenter.ContentTemplate>
+                                                <DataTemplate>
+                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0">
+                                                        <Border.BorderBrush>
+                                                            <SolidColorBrush Color="{StaticResource MainColor}" />
+                                                        </Border.BorderBrush>
+                                                        <Border.Background>
+                                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                <GradientStop Color="{StaticResource WindowBottomColor}" Offset="1" />
+                                                                <GradientStop Color="{StaticResource WindowTopColor}" Offset="0" />
+                                                            </LinearGradientBrush>
+                                                        </Border.Background>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <ItemsControl Grid.Column="1" ItemsSource="{Binding MenuCommands}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Horizontal" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Button Command="{Binding Command}" FontWeight="Bold" Width="120" Margin="0,0,5,0">
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <fa:ImageAwesome Icon="{Binding Icon}" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                                                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                                                                            </StackPanel>
+                                                                        </Button>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ContentPresenter.ContentTemplate>
+                                        </ContentPresenter>
+                                    </Grid>
+                                </ControlTemplate>
+                            </ContentControl.Template>
+                        </ContentControl>
+                    </Grid>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

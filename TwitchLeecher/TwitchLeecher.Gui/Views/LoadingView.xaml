@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TwitchLeecher.Gui.Views.VideosLoadingView"
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.LoadingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:fa="http://schemas.fontawesome.io/icons/">

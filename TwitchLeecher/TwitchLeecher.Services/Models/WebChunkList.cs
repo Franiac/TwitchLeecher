@@ -82,7 +82,7 @@ namespace TwitchLeecher.Services.Models
                     footer.Add(line);
                 }
             }
-            
+
             if (!footer.Any())
             {
                 footer.Add("#EXT-X-ENDLIST");

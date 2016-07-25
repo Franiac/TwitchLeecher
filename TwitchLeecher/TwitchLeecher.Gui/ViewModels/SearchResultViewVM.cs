@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,12 +13,13 @@ using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class VideosViewVM : ViewModelBase
+    public class SearchResultViewVM : ViewModelBase
     {
         #region Fields
 
         private ITwitchService twitchService;
         private IDialogService dialogService;
+        private INavigationService navigationService;
         private INotificationService notificationService;
         private IEventAggregator eventAggregator;
         private IPreferencesService preferencesService;
@@ -25,6 +27,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private ICommand viewCommand;
         private ICommand downloadCommand;
+        private ICommand seachCommand;
 
         private object commandLockObject;
 
@@ -32,9 +35,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public VideosViewVM(
+        public SearchResultViewVM(
             ITwitchService twitchService,
             IDialogService dialogService,
+            INavigationService navigationService,
             INotificationService notificationService,
             IEventAggregator eventAggregator,
             IPreferencesService preferencesService,
@@ -42,6 +46,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             this.twitchService = twitchService;
             this.dialogService = dialogService;
+            this.navigationService = navigationService;
             this.notificationService = notificationService;
             this.eventAggregator = eventAggregator;
             this.preferencesService = preferencesService;
@@ -87,6 +92,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.downloadCommand;
+            }
+        }
+
+        public ICommand SeachCommnad
+        {
+            get
+            {
+                if (this.seachCommand == null)
+                {
+                    this.seachCommand = new DelegateCommand(this.ShowSearch);
+                }
+
+                return this.seachCommand;
             }
         }
 
@@ -142,7 +160,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             DownloadParameters downloadParams = new DownloadParameters(video, resolution, currentPrefs.DownloadFolder, filename);
 
-                            this.dialogService.ShowDownloadDialog(downloadParams, this.DownloadCallback);
+                            this.navigationService.ShowDownload(downloadParams);
                         }
                     }
                 }
@@ -153,20 +171,33 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public void DownloadCallback(bool cancelled, DownloadParameters downloadParams)
+        public void ShowSearch()
         {
             try
             {
-                if (!cancelled)
+                lock (this.commandLockObject)
                 {
-                    this.twitchService.Enqueue(downloadParams);
-                    this.notificationService.ShowNotification("Download added");
+                    this.navigationService.ShowSearch();
                 }
             }
             catch (Exception ex)
             {
                 this.dialogService.ShowAndLogException(ex);
             }
+        }
+
+        protected override List<MenuCommand> BuildMenu()
+        {
+            List<MenuCommand> menuCommands = base.BuildMenu();
+
+            if (menuCommands == null)
+            {
+                menuCommands = new List<MenuCommand>();
+            }
+
+            menuCommands.Add(new MenuCommand(this.SeachCommnad, "New Search", "Search"));
+
+            return menuCommands;
         }
 
         #endregion Methods

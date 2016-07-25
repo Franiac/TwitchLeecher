@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -85,8 +86,8 @@ namespace TwitchLeecher.Services.Services
             this.preferencesService = preferencesService;
             this.eventAggregator = eventAggregator;
 
-            this.videos = new ObservableCollection<TwitchVideo>();
-            this.downloads = new ObservableCollection<TwitchVideoDownload>();
+            this.Videos = new ObservableCollection<TwitchVideo>();
+            this.Downloads = new ObservableCollection<TwitchVideoDownload>();
 
             this.downloadTasks = new ConcurrentDictionary<string, DownloadTask>();
 
@@ -119,7 +120,19 @@ namespace TwitchLeecher.Services.Services
             }
             private set
             {
+                if (this.videos != null)
+                {
+                    this.videos.CollectionChanged -= Videos_CollectionChanged;
+                }
+
                 this.SetProperty(ref this.videos, value, nameof(this.Videos));
+
+                if (this.videos != null)
+                {
+                    this.videos.CollectionChanged += Videos_CollectionChanged;
+                }
+
+                this.FireVideosCountChanged();
             }
         }
 
@@ -131,7 +144,19 @@ namespace TwitchLeecher.Services.Services
             }
             private set
             {
+                if (this.downloads != null)
+                {
+                    this.downloads.CollectionChanged -= Downloads_CollectionChanged;
+                }
+
                 this.SetProperty(ref this.downloads, value, nameof(this.Downloads));
+
+                if (this.downloads != null)
+                {
+                    this.downloads.CollectionChanged += Downloads_CollectionChanged;
+                }
+
+                this.FireDownloadsCountChanged();
             }
         }
 
@@ -936,6 +961,30 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
+        private void FireVideosCountChanged()
+        {
+            this.eventAggregator.GetEvent<VideosCountChangedEvent>().Publish(this.videos != null ? this.videos.Count : 0);
+        }
+
+        private void FireDownloadsCountChanged()
+        {
+            this.eventAggregator.GetEvent<DownloadsCountChangedEvent>().Publish(this.downloads != null ? this.downloads.Count : 0);
+        }
+
         #endregion Methods
+
+        #region EventHandlers
+
+        private void Videos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.FireVideosCountChanged();
+        }
+
+        private void Downloads_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.FireDownloadsCountChanged();
+        }
+
+        #endregion EventHandlers
     }
 }

@@ -73,7 +73,7 @@ namespace TwitchLeecher
                     + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal UI Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                Current.Shutdown();
+                Current?.Shutdown();
             }
             catch
             {
@@ -85,7 +85,7 @@ namespace TwitchLeecher
                 }
                 finally
                 {
-                    Current.Shutdown();
+                    Current?.Shutdown();
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace TwitchLeecher
                     + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                Current.Shutdown();
+                Current?.Shutdown();
             }
             catch
             {
@@ -116,7 +116,7 @@ namespace TwitchLeecher
                 }
                 finally
                 {
-                    Current.Shutdown();
+                    Current?.Shutdown();
                 }
             }
         }

@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
@@ -8,22 +8,27 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class UpdateInfoWindowVM : ViewModelBase
+    public class UpdateInfoViewVM : ViewModelBase
     {
         #region Fields
 
         private UpdateInfo updateInfo;
+
         private IDialogService dialogService;
+
         private ICommand downloadCommand;
-        private ICommand closeCommand;
+
+        private readonly object commandLockObject;
 
         #endregion Fields
 
         #region Constructor
 
-        public UpdateInfoWindowVM(IDialogService dialogService)
+        public UpdateInfoViewVM(IDialogService dialogService)
         {
             this.dialogService = dialogService;
+
+            this.commandLockObject = new object();
         }
 
         #endregion Constructor
@@ -55,19 +60,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand CloseCommand
-        {
-            get
-            {
-                if (this.closeCommand == null)
-                {
-                    this.closeCommand = new DelegateCommand<Window>(this.Close);
-                }
-
-                return this.closeCommand;
-            }
-        }
-
         #endregion Properties
 
         #region Methods
@@ -76,7 +68,10 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                Process.Start(this.updateInfo.DownloadUrl);
+                lock (this.commandLockObject)
+                {
+                    Process.Start(this.updateInfo.DownloadUrl);
+                }
             }
             catch (Exception ex)
             {
@@ -84,17 +79,18 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Close(Window window)
+        protected override List<MenuCommand> BuildMenu()
         {
-            try
+            List<MenuCommand> menuCommands = base.BuildMenu();
+
+            if (menuCommands == null)
             {
-                window.DialogResult = false;
-                window.Close();
+                menuCommands = new List<MenuCommand>();
             }
-            catch (Exception ex)
-            {
-                this.dialogService.ShowAndLogException(ex);
-            }
+
+            menuCommands.Add(new MenuCommand(this.DownloadCommand, "Download", "Download"));
+
+            return menuCommands;
         }
 
         #endregion Methods

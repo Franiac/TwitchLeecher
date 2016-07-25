@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Core.Events
 {
-    public class ShowInfoEvent : EmptyPresentationEvent
+    public class DownloadsCountChangedEvent : PubSubEvent<int>
     {
     }
 }

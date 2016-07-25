@@ -28,6 +28,8 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand undoCommand;
         private ICommand defaultsCommand;
 
+        private readonly object commandLockObject;
+
         #endregion Fields
 
         #region Constructors
@@ -40,6 +42,8 @@ namespace TwitchLeecher.Gui.ViewModels
             this.dialogService = dialogService;
             this.notificationService = notificationService;
             this.preferencesService = preferencesService;
+
+            this.commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -150,7 +154,10 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
+                lock (this.commandLockObject)
+                {
+                    this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
+                }
             }
             catch (Exception ex)
             {
@@ -177,7 +184,10 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadFolder, this.ChooseDownloadFolderCallback);
+                lock (this.commandLockObject)
+                {
+                    this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadFolder, this.ChooseDownloadFolderCallback);
+                }
             }
             catch (Exception ex)
             {
@@ -204,14 +214,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.dialogService.SetBusy();
-                this.Validate();
-
-                if (!this.HasErrors)
+                lock (this.commandLockObject)
                 {
-                    this.preferencesService.Save(this.currentPreferences);
-                    this.CurrentPreferences = null;
-                    this.notificationService.ShowNotification("Preferences saved");
+                    this.dialogService.SetBusy();
+                    this.Validate();
+
+                    if (!this.HasErrors)
+                    {
+                        this.preferencesService.Save(this.currentPreferences);
+                        this.CurrentPreferences = null;
+                        this.notificationService.ShowNotification("Preferences saved");
+                    }
                 }
             }
             catch (Exception ex)
@@ -224,12 +237,15 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                MessageBoxResult result = this.dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
+                lock (this.commandLockObject)
                 {
-                    this.dialogService.SetBusy();
-                    this.CurrentPreferences = null;
+                    MessageBoxResult result = this.dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        this.dialogService.SetBusy();
+                        this.CurrentPreferences = null;
+                    }
                 }
             }
             catch (Exception ex)
@@ -242,13 +258,16 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                MessageBoxResult result = this.dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
+                lock (this.commandLockObject)
                 {
-                    this.dialogService.SetBusy();
-                    this.preferencesService.Save(this.preferencesService.CreateDefault());
-                    this.CurrentPreferences = null;
+                    MessageBoxResult result = this.dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        this.dialogService.SetBusy();
+                        this.preferencesService.Save(this.preferencesService.CreateDefault());
+                        this.CurrentPreferences = null;
+                    }
                 }
             }
             catch (Exception ex)
@@ -284,6 +303,22 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 this.dialogService.ShowAndLogException(ex);
             }
+        }
+
+        protected override List<MenuCommand> BuildMenu()
+        {
+            List<MenuCommand> menuCommands = base.BuildMenu();
+
+            if (menuCommands == null)
+            {
+                menuCommands = new List<MenuCommand>();
+            }
+
+            menuCommands.Add(new MenuCommand(this.SaveCommand, "Save", "Save"));
+            menuCommands.Add(new MenuCommand(this.UndoCommand, "Undo", "Undo"));
+            menuCommands.Add(new MenuCommand(this.DefaultsCommand, "Default", "Wrench"));
+
+            return menuCommands;
         }
 
         #endregion Methods

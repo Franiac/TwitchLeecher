@@ -19,6 +19,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private ITwitchService twitchService;
         private IDialogService dialogService;
+        private INavigationService navigationService;
         private IEventAggregator eventAggregator;
 
         private ICommand retryDownloadCommand;
@@ -33,25 +34,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadsViewVM(ITwitchService twitchService, IDialogService dialogService, IEventAggregator eventAggregator)
+        public DownloadsViewVM(
+            ITwitchService twitchService,
+            IDialogService dialogService,
+            INavigationService navigationService,
+            IEventAggregator eventAggregator)
         {
-            if (twitchService == null)
-            {
-                throw new ArgumentNullException(nameof(twitchService));
-            }
-
-            if (dialogService == null)
-            {
-                throw new ArgumentNullException(nameof(dialogService));
-            }
-
-            if (eventAggregator == null)
-            {
-                throw new ArgumentNullException(nameof(eventAggregator));
-            }
-
             this.twitchService = twitchService;
             this.dialogService = dialogService;
+            this.navigationService = navigationService;
             this.eventAggregator = eventAggregator;
 
             this.twitchService.PropertyChanged += TwitchService_PropertyChanged;
@@ -234,7 +225,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (download != null)
                         {
-                            this.dialogService.ShowLog(download);
+                            this.navigationService.ShowLog(download);
                         }
                     }
                 }

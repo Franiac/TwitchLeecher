@@ -2,9 +2,9 @@
 
 namespace TwitchLeecher.Gui.Views
 {
-    public partial class VideosLoadingView : UserControl
+    public partial class SearchResultView : UserControl
     {
-        public VideosLoadingView()
+        public SearchResultView()
         {
             InitializeComponent();
         }

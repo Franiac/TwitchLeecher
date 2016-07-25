@@ -44,7 +44,7 @@
 
             <TextBlock Grid.Row="3" Text="Contact" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="4" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="mailto:contact@fakesmilerevolution.com">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="mailto:contact@fakesmilerevolution.com">
                 contact@fakesmilerevolution.com
             </Hyperlink>
             </TextBlock>
@@ -79,39 +79,39 @@
 
             <TextBlock Grid.Row="8" Text="Source Code &amp; Documentation" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="9" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
                 http://github.com/Franiac/TwitchLeecher
             </Hyperlink>
             </TextBlock>
 
             <TextBlock Grid.Row="10" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="11" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
                 http://www.fakesmilerevolution.com
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="12" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.twitch.tv/fakesmilerevolution">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.twitch.tv/fakesmilerevolution">
                 http://www.twitch.tv/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="13" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://plus.google.com/+fakesmilerevolution">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://plus.google.com/+fakesmilerevolution">
                 http://plus.google.com/+fakesmilerevolution
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="14" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
                 http://www.youtube.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="15" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
                 http://www.facebook.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="16" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding LinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
                 http://www.soundcloud.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>

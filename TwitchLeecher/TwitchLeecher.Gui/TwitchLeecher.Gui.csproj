@@ -65,32 +65,35 @@
     </Compile>
     <Compile Include="Behaviors\CenterMainWindowBehavior.cs" />
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
-    <Compile Include="Controls\AnimatedContentControl.cs" />
+    <Compile Include="Controls\FadeContentControl.cs" />
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Controls\SpacedUniformGrid.cs" />
     <Compile Include="Controls\ThemedMessageBox.cs" />
     <Compile Include="Converters\DownloadStatusToVisConverter.cs" />
     <Compile Include="Converters\DownloadStatusToColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Extensions\Icon.cs" />
+    <Compile Include="Interfaces\INavigationService.cs" />
+    <Compile Include="Interfaces\ISearchService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converters\VideoTypeToBooleanConverter.cs" />
     <Compile Include="Modules\GuiModule.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Interfaces\IDialogService.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
-    <Compile Include="ViewModels\ContentVM.cs" />
-    <Compile Include="ViewModels\DialogVM.cs" />
-    <Compile Include="ViewModels\LogWindowVM.cs" />
-    <Compile Include="ViewModels\DownloadWindowVM.cs" />
+    <Compile Include="Services\SearchService.cs" />
+    <Compile Include="ViewModels\LogViewVM.cs" />
+    <Compile Include="ViewModels\DownloadViewVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\PreferencesViewVM.cs" />
-    <Compile Include="ViewModels\SearchWindowVM.cs" />
+    <Compile Include="ViewModels\SearchViewVM.cs" />
     <Compile Include="ViewModels\DownloadsViewVM.cs" />
-    <Compile Include="ViewModels\UpdateInfoWindowVM.cs" />
-    <Compile Include="ViewModels\VideosLoadingViewVM.cs" />
-    <Compile Include="ViewModels\VideosViewVM.cs" />
+    <Compile Include="ViewModels\UpdateInfoViewVM.cs" />
+    <Compile Include="ViewModels\LoadingViewVM.cs" />
+    <Compile Include="ViewModels\SearchResultViewVM.cs" />
     <Compile Include="ViewModels\InfoViewVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WelcomeViewVM.cs" />
@@ -100,8 +103,8 @@
     <Compile Include="Views\NotificationStrip.xaml.cs">
       <DependentUpon>NotificationStrip.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UpdateInfoWindow.xaml.cs">
-      <DependentUpon>UpdateInfoWindow.xaml</DependentUpon>
+    <Compile Include="Views\UpdateInfoView.xaml.cs">
+      <DependentUpon>UpdateInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PreferencesView.xaml.cs">
       <DependentUpon>PreferencesView.xaml</DependentUpon>
@@ -112,11 +115,11 @@
     <Compile Include="Views\MessageBoxWindow.xaml.cs">
       <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DownloadWindow.xaml.cs">
-      <DependentUpon>DownloadWindow.xaml</DependentUpon>
+    <Compile Include="Views\DownloadView.xaml.cs">
+      <DependentUpon>DownloadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LogWindow.xaml.cs">
-      <DependentUpon>LogWindow.xaml</DependentUpon>
+    <Compile Include="Views\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InfoView.xaml.cs">
       <DependentUpon>InfoView.xaml</DependentUpon>
@@ -124,14 +127,14 @@
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VideosView.xaml.cs">
-      <DependentUpon>VideosView.xaml</DependentUpon>
+    <Compile Include="Views\SearchResultView.xaml.cs">
+      <DependentUpon>SearchResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VideosLoadingView.xaml.cs">
-      <DependentUpon>VideosLoadingView.xaml</DependentUpon>
+    <Compile Include="Views\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SearchWindow.xaml.cs">
-      <DependentUpon>SearchWindow.xaml</DependentUpon>
+    <Compile Include="Views\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -163,7 +166,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UpdateInfoWindow.xaml">
+    <Page Include="Views\UpdateInfoView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -179,11 +182,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DownloadWindow.xaml">
+    <Page Include="Views\DownloadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LogWindow.xaml">
+    <Page Include="Views\LogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -195,15 +198,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VideosView.xaml">
+    <Page Include="Views\SearchResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VideosLoadingView.xaml">
+    <Page Include="Views\LoadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SearchWindow.xaml">
+    <Page Include="Views\SearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

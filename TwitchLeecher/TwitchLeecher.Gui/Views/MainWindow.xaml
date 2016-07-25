@@ -24,11 +24,17 @@
                     <DataTemplate DataType="{x:Type vm:WelcomeViewVM}">
                         <view:WelcomeView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:VideosLoadingViewVM}">
-                        <view:VideosLoadingView />
+                    <DataTemplate DataType="{x:Type vm:LoadingViewVM}">
+                        <view:LoadingView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:VideosViewVM}">
-                        <view:VideosView />
+                    <DataTemplate DataType="{x:Type vm:SearchResultViewVM}">
+                        <view:SearchResultView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SearchViewVM}">
+                        <view:SearchView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:DownloadViewVM}">
+                        <view:DownloadView />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:DownloadsViewVM}">
                         <view:DownloadsView />
@@ -39,6 +45,19 @@
                     <DataTemplate DataType="{x:Type vm:InfoViewVM}">
                         <view:InfoView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:LogViewVM}">
+                        <view:LogView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UpdateInfoViewVM}">
+                        <view:UpdateInfoView />
+                    </DataTemplate>
+
+                    <Storyboard x:Key="FadeInStoryBoard">
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                    </Storyboard>
+                    <Storyboard x:Key="FadeOutStoryBoard">
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3" />
+                    </Storyboard>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -47,7 +66,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -55,6 +73,12 @@
             <Border.BorderBrush>
                 <SolidColorBrush Color="{StaticResource MainColor}" />
             </Border.BorderBrush>
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="{StaticResource WindowTopColor}" Offset="1" />
+                    <GradientStop Color="{StaticResource WindowBottomColor}" Offset="0" />
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -72,16 +96,12 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" VerticalAlignment="Center">
-                    <Button FontWeight="Bold" Command="{Binding SearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="100" Margin="0,0,5,0">
+                    <Button FontWeight="Bold" Command="{Binding ShowSearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="150" Margin="0,0,5,0">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="Search" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                            <TextBlock Text="Search" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
-                        </StackPanel>
-                    </Button>
-                    <Button FontWeight="Bold" Command="{Binding ShowVideosCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="100" Margin="0,0,5,0">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="VideoCamera" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                            <TextBlock Text="Videos" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5">
+                                <Run Text="Search" /><Run Text="{Binding VideosCount, Mode=OneWay, StringFormat=' ({0})', FallbackValue=' (100)'}" />
+                            </TextBlock>
                         </StackPanel>
                     </Button>
                     <Button FontWeight="Bold" Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="150">
@@ -95,46 +115,34 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding PreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="Preferences">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="Preferences">
                         <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding InfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="About &amp; Support">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding ShowInfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30" ToolTip="About &amp; Support">
                         <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding MinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoMinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Minimize}" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding MaximizeRestoreCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoMaximizeRestoreCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_MaximizeRestore}" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoCloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Close}" />
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <view:NotificationStrip x:Name="notificationStrip" Grid.Row="2" VerticalAlignment="Top" Panel.ZIndex="1000">
+        <view:NotificationStrip x:Name="notificationStrip" Grid.Row="1" VerticalAlignment="Top" Panel.ZIndex="1000">
             <view:NotificationStrip.Background>
                 <SolidColorBrush Color="{StaticResource ControlBackgroundColor}" />
             </view:NotificationStrip.Background>
         </view:NotificationStrip>
 
-        <ctrl:AnimatedContentControl Grid.Row="2" Content="{Binding MainView}">
-            <Validation.ErrorTemplate>
-                <ControlTemplate />
-            </Validation.ErrorTemplate>
-            <ctrl:AnimatedContentControl.Template>
-                <ControlTemplate TargetType="{x:Type ctrl:AnimatedContentControl}">
-                    <Grid>
-                        <Rectangle x:Name="Tpl_Part_PaintArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <ContentPresenter Content="{TemplateBinding Content}" x:Name="Tpl_Part_MainContent" />
-                    </Grid>
-                </ControlTemplate>
-            </ctrl:AnimatedContentControl.Template>
-        </ctrl:AnimatedContentControl>
+        <ctrl:FadeContentControl Grid.Row="1" Content="{Binding MainView}" Style="{StaticResource FadeContentControlStyle}" />
     </Grid>
 </Window>

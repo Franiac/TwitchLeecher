@@ -1,8 +1,9 @@
 ﻿using TwitchLeecher.Core.Enums;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class SearchParameters
+    public class SearchParameters : BindableBase
     {
         #region Fields
 
@@ -13,10 +14,6 @@ namespace TwitchLeecher.Core.Models
         #endregion Fields
 
         #region Constructors
-
-        public SearchParameters() : this(null, VideoType.Broadcast, Preferences.DEFAULT_LOAD_LIMIT)
-        {
-        }
 
         public SearchParameters(string username, VideoType videoType, int loadLimit)
         {
@@ -35,6 +32,10 @@ namespace TwitchLeecher.Core.Models
             {
                 return this.username;
             }
+            set
+            {
+                this.SetProperty(ref this.username, value, nameof(this.Username));
+            }
         }
 
         public VideoType VideoType
@@ -42,6 +43,10 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return this.videoType;
+            }
+            set
+            {
+                this.SetProperty(ref this.videoType, value, nameof(this.VideoType));
             }
         }
 
@@ -51,8 +56,36 @@ namespace TwitchLeecher.Core.Models
             {
                 return this.loadLimit;
             }
+            set
+            {
+                this.SetProperty(ref this.loadLimit, value, nameof(this.LoadLimit));
+            }
         }
 
         #endregion Properties
+
+        #region Methods
+
+        public override void Validate(string propertyName = null)
+        {
+            base.Validate(propertyName);
+
+            string currentProperty = nameof(this.Username);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (string.IsNullOrWhiteSpace(this.username))
+                {
+                    this.AddError(currentProperty, "Please specify a username!");
+                }
+            }
+        }
+
+        public SearchParameters Clone()
+        {
+            return new SearchParameters(this.Username, this.VideoType, this.LoadLimit);
+        }
+
+        #endregion Methods
     }
 }
