@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.SearchView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
         xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core">
     <UserControl.Resources>
@@ -12,6 +13,7 @@
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
+                    <converters:SearchTypeToBooleanConverter x:Key="searchTypeToBooleanConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -27,38 +29,98 @@
             <Border.BorderBrush>
                 <SolidColorBrush Color="{StaticResource MainColor}" />
             </Border.BorderBrush>
-            <TextBlock  Text="Search Channel" FontSize="21.333" FontWeight="Bold" />
+            <TextBlock  Text="Search" FontSize="21.333" FontWeight="Bold" />
         </Border>
 
-        <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <TabControl Grid.Row="1" Height="310">
+            <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Channel}}" Width="85">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="Channel" />
+                </TabItem.Header>
+                <Grid Margin="0,10,0,0" Grid.IsSharedSizeScope="True" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition SharedSizeGroup="g1" />
-                <RowDefinition Height="10" />
-                <RowDefinition SharedSizeGroup="g1" />
-                <RowDefinition Height="10" />
-                <RowDefinition SharedSizeGroup="g1" />
-            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition SharedSizeGroup="g1" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition SharedSizeGroup="g1" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition SharedSizeGroup="g1" />
+                    </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            <TextBox Grid.Column="2" Grid.Row="0" Name="txtUsername" Text="{Binding SearchParams.Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
-                <TextBox.InputBindings>
-                    <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
-                    <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
-                </TextBox.InputBindings>
-            </TextBox>
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
-            <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
-                <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-            </StackPanel>
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
-            <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
-        </Grid>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Grid.Column="2" Grid.Row="0" Name="txtUsername" Text="{Binding SearchParams.Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
+                    <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
+                        <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
+                    <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
+                </Grid>
+            </TabItem>
+            <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Urls}}" Width="85">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="Urls" />
+                </TabItem.Header>
+                <Grid Margin="0,10,0,0" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video urls in the textbox below. Make sure that every url is placed in a new line." />
+                    <TextBlock Grid.Row="2" Text="Example: https://www.twitch.tv/yourchannel/v/12345678" />
+                    <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
+                    <Button Grid.Row="6" Command="{Binding ClearUrlsCommand}" Width="75" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock Text="Clear" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Ids}}" Width="85">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="IDs" />
+                </TabItem.Header>
+                <Grid Margin="0,10,0,0" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video IDs in the textbox below. Make sure that every ID is placed in a new line." />
+                    <TextBlock Grid.Row="2" Text="Examples: v12345678 or 12345678" />
+                    <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
+                    <Button Grid.Row="6" Command="{Binding ClearIdsCommand}" Width="75" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock Text="Clear" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

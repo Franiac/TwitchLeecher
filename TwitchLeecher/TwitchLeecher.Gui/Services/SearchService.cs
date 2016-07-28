@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
@@ -51,7 +52,15 @@ namespace TwitchLeecher.Gui.Services
                 if (this.lastSearchParams == null)
                 {
                     Preferences currentPrefs = this.preferencesService.CurrentPreferences;
-                    this.lastSearchParams = new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit);
+
+                    SearchParameters defaultParams = new SearchParameters(SearchType.Channel)
+                    {
+                        Username = currentPrefs.SearchChannelName,
+                        VideoType = currentPrefs.SearchVideoType,
+                        LoadLimit = currentPrefs.SearchLoadLimit
+                    };
+
+                    this.lastSearchParams = defaultParams;
                 }
 
                 return this.lastSearchParams;

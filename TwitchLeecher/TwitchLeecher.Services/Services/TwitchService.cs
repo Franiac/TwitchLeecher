@@ -31,8 +31,9 @@ namespace TwitchLeecher.Services.Services
         #region Constants
 
         private const string krakenUrl = "https://api.twitch.tv/kraken";
+        private const string videoUrl = "https://api.twitch.tv/kraken/videos/{0}";
         private const string channelsUrl = "https://api.twitch.tv/kraken/channels/{0}";
-        private const string videosUrl = "https://api.twitch.tv/kraken/channels/{0}/videos";
+        private const string channelVideosUrl = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string accessTokenUrl = "https://api.twitch.tv/api/vods/{0}/access_token";
 
         private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
@@ -327,20 +328,46 @@ namespace TwitchLeecher.Services.Services
 
         public void Search(SearchParameters searchParams)
         {
+            if (searchParams == null)
+            {
+                throw new ArgumentNullException(nameof(searchParams));
+            }
+
+            switch (searchParams.SearchType)
+            {
+                case SearchType.Channel:
+                    this.SearchChannel(searchParams.Username, searchParams.VideoType, searchParams.LoadLimit);
+                    break;
+
+                case SearchType.Urls:
+                    this.SearchUrls(searchParams.Urls);
+                    break;
+
+                case SearchType.Ids:
+                    this.SearchIds(searchParams.Ids);
+                    break;
+            }
+        }
+
+        private void SearchChannel(string username, VideoType videoType, int loadLimit)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentNullException(nameof(username));
+            }
+
             using (WebClient webClient = this.CreateTwitchWebClient())
             {
                 ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
 
-                if (searchParams.VideoType == VideoType.Broadcast)
+                if (videoType == VideoType.Broadcast)
                 {
                     webClient.QueryString.Add("broadcasts", "true");
                 }
 
-                int limit = searchParams.LoadLimit;
+                webClient.QueryString.Add("limit", (loadLimit > TWITCH_MAX_LOAD_LIMIT ? TWITCH_MAX_LOAD_LIMIT.ToString() : loadLimit.ToString()));
 
-                webClient.QueryString.Add("limit", (limit > TWITCH_MAX_LOAD_LIMIT ? TWITCH_MAX_LOAD_LIMIT.ToString() : limit.ToString()));
-
-                string result = webClient.DownloadString(string.Format(videosUrl, searchParams.Username));
+                string result = webClient.DownloadString(string.Format(channelVideosUrl, username));
 
                 JObject videoRequestJson = JObject.Parse(result);
 
@@ -355,7 +382,7 @@ namespace TwitchLeecher.Services.Services
                     int sum = firstArray.Count;
                     int total = videoRequestJson.Value<int>("_total");
 
-                    if (limit > TWITCH_MAX_LOAD_LIMIT && sum < total)
+                    if (loadLimit > TWITCH_MAX_LOAD_LIMIT && sum < total)
                     {
                         JObject linksJson = videoRequestJson.Value<JObject>("_links");
 
@@ -363,7 +390,7 @@ namespace TwitchLeecher.Services.Services
 
                         webClient.QueryString.Clear();
 
-                        this.LoadVideosRecursive(webClient, nextUrl, limit, sum, total, videoArrays);
+                        this.LoadVideosRecursive(webClient, nextUrl, loadLimit, sum, total, videoArrays);
                     }
 
                     foreach (JArray videoArray in videoArrays)
@@ -380,6 +407,173 @@ namespace TwitchLeecher.Services.Services
 
                 this.Videos = videos;
             }
+        }
+
+        private void SearchUrls(string urls)
+        {
+            if (string.IsNullOrWhiteSpace(urls))
+            {
+                throw new ArgumentNullException(nameof(urls));
+            }
+
+            using (WebClient webClient = this.CreateTwitchWebClient())
+            {
+                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
+                string[] urlArr = urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (urlArr.Length > 0)
+                {
+                    HashSet<string> addedIds = new HashSet<string>();
+
+                    foreach (string url in urlArr)
+                    {
+                        string id = this.GetVideoIdFromUrl(url);
+
+                        if (!string.IsNullOrWhiteSpace(id) && !addedIds.Contains(id))
+                        {
+                            TwitchVideo video = this.GetTwitchVideoFromId(webClient, id);
+
+                            if (video != null)
+                            {
+                                videos.Add(video);
+                                addedIds.Add(id);
+                            }
+                        }
+                    }
+                }
+
+                this.Videos = videos;
+            }
+        }
+
+        private void SearchIds(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                throw new ArgumentNullException(nameof(ids));
+            }
+
+            using (WebClient webClient = this.CreateTwitchWebClient())
+            {
+                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
+                string[] idsArr = ids.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (idsArr.Length > 0)
+                {
+                    HashSet<int> addedIds = new HashSet<int>();
+
+                    foreach (string id in idsArr)
+                    {
+                        string idStr = id.TrimStart(new char[] { 'v' });
+
+                        int idInt;
+
+                        if (int.TryParse(idStr, out idInt) && !addedIds.Contains(idInt))
+                        {
+                            TwitchVideo video = this.GetTwitchVideoFromId(webClient, "v" + idInt);
+
+                            if (video != null)
+                            {
+                                videos.Add(video);
+                                addedIds.Add(idInt);
+                            }
+                        }
+                    }
+                }
+
+                this.Videos = videos;
+            }
+        }
+
+        private string GetVideoIdFromUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return null;
+            }
+
+            Uri validUrl;
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out validUrl))
+            {
+                return null;
+            }
+
+            string[] segments = validUrl.Segments;
+
+            if (segments.Length < 2)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < segments.Length; i++)
+            {
+                if (segments[i].Equals("v/", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (segments.Length > (i + 1))
+                    {
+                        string idStr = segments[i + 1];
+
+                        if (!string.IsNullOrWhiteSpace(idStr))
+                        {
+                            idStr = idStr.Trim(new char[] { '/' });
+
+                            int idInt;
+
+                            if (int.TryParse(idStr, out idInt) && idInt > 0)
+                            {
+                                return "v" + idInt;
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            return null;
+        }
+
+        private TwitchVideo GetTwitchVideoFromId(WebClient webClient, string id)
+        {
+            if (webClient == null)
+            {
+                throw new ArgumentNullException(nameof(webClient));
+            }
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            try
+            {
+                string result = webClient.DownloadString(string.Format(videoUrl, id));
+
+                JObject videoJson = JObject.Parse(result);
+
+                if (videoJson != null && videoJson.Value<string>("_id").StartsWith("v"))
+                {
+                    return this.ParseVideo(videoJson);
+                }
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse resp = ex.Response as HttpWebResponse;
+
+                if (resp != null && resp.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return null;
         }
 
         private void LoadVideosRecursive(WebClient webClient, string nextUrl, int limit, int sum, int total, List<JArray> videoArrays)

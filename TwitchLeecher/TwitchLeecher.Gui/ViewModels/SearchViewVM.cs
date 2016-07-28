@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
@@ -14,6 +15,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private SearchParameters searchParams;
 
+        private ICommand clearUrlsCommand;
+        private ICommand clearIdsCommand;
         private ICommand searchCommand;
         private ICommand cancelCommand;
 
@@ -63,6 +66,32 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public ICommand ClearUrlsCommand
+        {
+            get
+            {
+                if (this.clearUrlsCommand == null)
+                {
+                    this.clearUrlsCommand = new DelegateCommand(this.ClearUrls);
+                }
+
+                return this.clearUrlsCommand;
+            }
+        }
+
+        public ICommand ClearIdsCommand
+        {
+            get
+            {
+                if (this.clearIdsCommand == null)
+                {
+                    this.clearIdsCommand = new DelegateCommand(this.ClearIds);
+                }
+
+                return this.clearIdsCommand;
+            }
+        }
+
         public ICommand SearchCommand
         {
             get
@@ -92,6 +121,36 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Properties
 
         #region Methods
+
+        private void ClearUrls()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    this.SearchParams.Urls = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ClearIds()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    this.SearchParams.Ids = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
 
         private void Search()
         {
@@ -139,7 +198,9 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 this.SearchParams.Validate();
 
-                if (!string.IsNullOrWhiteSpace(this.SearchParams.Username) && !this.twitchService.UserExists(this.SearchParams.Username))
+                if (this.SearchParams.SearchType == SearchType.Channel &&
+                    !string.IsNullOrWhiteSpace(this.SearchParams.Username) &&
+                    !this.twitchService.UserExists(this.SearchParams.Username))
                 {
                     this.SearchParams.AddError(nameof(this.SearchParams.Username), "The specified username does not exist on Twitch!");
                 }

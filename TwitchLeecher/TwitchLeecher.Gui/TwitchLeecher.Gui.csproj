@@ -73,6 +73,7 @@
     <Compile Include="Converters\DownloadStatusToVisConverter.cs" />
     <Compile Include="Converters\DownloadStatusToColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Extensions\Icon.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />

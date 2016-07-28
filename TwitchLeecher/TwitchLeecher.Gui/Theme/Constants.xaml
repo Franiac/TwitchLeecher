@@ -20,6 +20,7 @@
     <Color x:Key="ControlForegroundDisabledColor">#FF8C8C8C</Color>
     <Color x:Key="ControlBackgroundColor">#FFFFC864</Color>
     <Color x:Key="ControlBackgroundHoverColor">#FFFFE1AA</Color>
+    <Color x:Key="ControlBackgroundUnselectedColor">#FFFFE1AA</Color>
     <Color x:Key="ControlBackgroundPressedColor">#FFFFFFFF</Color>
-    <Color x:Key="ControlBackgroundDisabledColor">#FFFFE1AA</Color>
+    <Color x:Key="ControlBackgroundDisabledColor">#FFFFE1AA</Color>    
 </ResourceDictionary>

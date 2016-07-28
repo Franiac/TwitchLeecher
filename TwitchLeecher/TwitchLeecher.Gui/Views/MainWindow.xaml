@@ -12,7 +12,7 @@
         Name="thisWindow"
         Title="{Binding Title}"
         WindowState="{Binding WindowState}"
-        b:RequestClosingBehavior.RequestClosing="{Binding RequestCloseCommand}" AllowsTransparency="False">
+        b:RequestClosingBehavior.RequestClosing="{Binding RequestCloseCommand}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

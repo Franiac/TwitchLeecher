@@ -43,6 +43,7 @@
     <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
     <Compile Include="Enums\DownloadStatus.cs" />
     <Compile Include="Enums\VideoQuality.cs" />
+    <Compile Include="Enums\SearchType.cs" />
     <Compile Include="Enums\VideoType.cs" />
     <Compile Include="Events\DownloadsCountChangedEvent.cs" />
     <Compile Include="Events\IsAuthorizedChangedEvent.cs" />

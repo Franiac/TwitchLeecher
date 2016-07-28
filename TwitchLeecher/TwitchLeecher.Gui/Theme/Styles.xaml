@@ -67,6 +67,14 @@
         </Setter>
     </Style>
 
+    <Style x:Key="TextTabItem" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{StaticResource ControlForegroundColor}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type Hyperlink}">
         <Setter Property="Foreground" Value="#FF2994FF" />
     </Style>
@@ -80,7 +88,7 @@
         <Setter Property="FontStyle" Value="Italic" />
     </Style>
 
-    <Style TargetType="{x:Type TextBox}">
+    <Style x:Key="NormalTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="Padding" Value="3,0,3,1" />
         <Setter Property="Height" Value="27" />
         <Setter Property="TextWrapping" Value="NoWrap" />
@@ -98,6 +106,15 @@
                 <Setter Property="ToolTip" Value="{Binding (Validation.Errors).CurrentItem.ErrorContent, RelativeSource={RelativeSource Self}}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MultilineTextBox" TargetType="TextBox" BasedOn="{StaticResource NormalTextBox}">
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Template" Value="{StaticResource ScrollTextBoxTpl}" />
     </Style>
 
     <Style x:Key="ScrollingTextBox" TargetType="{x:Type TextBox}">
@@ -126,7 +143,7 @@
 
     <Style x:Key="MainWindow" TargetType="{x:Type Window}">
         <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush">
             <Setter.Value>

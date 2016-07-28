@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Events;
@@ -492,7 +493,15 @@ namespace TwitchLeecher.Gui.ViewModels
                     if (!currentPrefs.HasErrors)
                     {
                         searchOnStartup = true;
-                        this.searchService.PerformSearch(new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit));
+
+                        SearchParameters searchParams = new SearchParameters(SearchType.Channel)
+                        {
+                            Username = currentPrefs.SearchChannelName,
+                            VideoType = currentPrefs.SearchVideoType,
+                            LoadLimit = currentPrefs.SearchLoadLimit
+                        };
+
+                        this.searchService.PerformSearch(searchParams);
                     }
                 }
 
