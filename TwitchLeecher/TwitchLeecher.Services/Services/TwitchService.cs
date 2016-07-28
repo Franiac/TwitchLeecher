@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
@@ -29,9 +30,11 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
+        private const string krakenUrl = "https://api.twitch.tv/kraken";
         private const string channelsUrl = "https://api.twitch.tv/kraken/channels/{0}";
         private const string videosUrl = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string accessTokenUrl = "https://api.twitch.tv/api/vods/{0}/access_token";
+
         private const string allPlaylistsUrl = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
 
         private const string TEMP_PREFIX = "TL_";
@@ -44,12 +47,14 @@ namespace TwitchLeecher.Services.Services
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
         private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
         private const string TWITCH_CLIENT_ID_HEADER = "Client-ID";
+        private const string TWITCH_AUTHORIZATION_HEADER = "Authorization";
 
         #endregion Constants
 
         #region Fields
 
         private IPreferencesService preferencesService;
+        private IRuntimeDataService runtimeDataService;
         private IEventAggregator eventAggregator;
 
         private Timer downloadTimer;
@@ -58,6 +63,8 @@ namespace TwitchLeecher.Services.Services
         private ObservableCollection<TwitchVideoDownload> downloads;
 
         private ConcurrentDictionary<string, DownloadTask> downloadTasks;
+        private Dictionary<VideoQuality, int> orderMap;
+        private TwitchAuthInfo twitchAuthInfo;
 
         private string appDir;
 
@@ -65,25 +72,17 @@ namespace TwitchLeecher.Services.Services
 
         private volatile bool paused;
 
-        private Dictionary<VideoQuality, int> orderMap;
-
         #endregion Fields
 
         #region Constructors
 
-        public TwitchService(IPreferencesService preferencesService, IEventAggregator eventAggregator)
+        public TwitchService(
+            IPreferencesService preferencesService,
+            IRuntimeDataService runtimeDataService,
+            IEventAggregator eventAggregator)
         {
-            if (preferencesService == null)
-            {
-                throw new ArgumentNullException(nameof(preferencesService));
-            }
-
-            if (eventAggregator == null)
-            {
-                throw new ArgumentNullException(nameof(eventAggregator));
-            }
-
             this.preferencesService = preferencesService;
+            this.runtimeDataService = runtimeDataService;
             this.eventAggregator = eventAggregator;
 
             this.Videos = new ObservableCollection<TwitchVideo>();
@@ -111,6 +110,14 @@ namespace TwitchLeecher.Services.Services
         #endregion Constructors
 
         #region Properties
+
+        public bool IsAuthorized
+        {
+            get
+            {
+                return this.twitchAuthInfo != null;
+            }
+        }
 
         public ObservableCollection<TwitchVideo> Videos
         {
@@ -168,8 +175,82 @@ namespace TwitchLeecher.Services.Services
         {
             WebClient wc = new WebClient();
             wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
+
+            if (this.IsAuthorized)
+            {
+                wc.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + this.twitchAuthInfo.AccessToken);
+            }
+
             wc.Encoding = Encoding.UTF8;
             return wc;
+        }
+
+        public VodAuthInfo RetrieveVodAuthInfo(string idTrimmed)
+        {
+            if (string.IsNullOrWhiteSpace(idTrimmed))
+            {
+                throw new ArgumentNullException(nameof(idTrimmed));
+            }
+
+            using (WebClient webClient = this.CreateTwitchWebClient())
+            {
+                string accessTokenStr = webClient.DownloadString(string.Format(accessTokenUrl, idTrimmed));
+
+                JObject accessTokenJson = JObject.Parse(accessTokenStr);
+
+                string token = Uri.EscapeDataString(accessTokenJson.Value<string>("token"));
+                string signature = accessTokenJson.Value<string>("sig");
+
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    throw new ApplicationException("VOD access token is null!");
+                }
+
+                if (string.IsNullOrWhiteSpace(signature))
+                {
+                    throw new ApplicationException("VOD signature is null!");
+                }
+
+                bool privileged = false;
+                bool subOnly = false;
+
+                JObject tokenJson = JObject.Parse(HttpUtility.UrlDecode(token));
+
+                if (tokenJson == null)
+                {
+                    throw new ApplicationException("Decoded VOD access token is null!");
+                }
+
+                privileged = tokenJson.Value<bool>("privileged");
+
+                if (privileged)
+                {
+                    subOnly = true;
+                }
+                else
+                {
+                    JObject chansubJson = tokenJson.Value<JObject>("chansub");
+
+                    if (chansubJson == null)
+                    {
+                        throw new ApplicationException("Token property 'chansub' is null!");
+                    }
+
+                    JArray restrictedQualitiesJson = chansubJson.Value<JArray>("restricted_bitrates");
+
+                    if (restrictedQualitiesJson == null)
+                    {
+                        throw new ApplicationException("Token property 'chansub -> restricted_bitrates' is null!");
+                    }
+
+                    if (restrictedQualitiesJson.Count > 0)
+                    {
+                        subOnly = true;
+                    }
+                }
+
+                return new VodAuthInfo(token, signature, privileged, subOnly);
+            }
         }
 
         public bool UserExists(string username)
@@ -191,6 +272,57 @@ namespace TwitchLeecher.Services.Services
                     return false;
                 }
             }
+        }
+
+        public bool Authorize(string accessToken)
+        {
+            if (!string.IsNullOrWhiteSpace(accessToken))
+            {
+                using (WebClient webClient = this.CreateTwitchWebClient())
+                {
+                    webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + accessToken);
+
+                    string result = webClient.DownloadString(krakenUrl);
+
+                    JObject verifyRequestJson = JObject.Parse(result);
+
+                    if (verifyRequestJson != null)
+                    {
+                        bool identified = verifyRequestJson.Value<bool>("identified");
+
+                        if (identified)
+                        {
+                            JObject tokenJson = verifyRequestJson.Value<JObject>("token");
+
+                            if (tokenJson != null)
+                            {
+                                bool valid = tokenJson.Value<bool>("valid");
+
+                                if (valid)
+                                {
+                                    string username = tokenJson.Value<string>("user_name");
+
+                                    if (!string.IsNullOrWhiteSpace(username))
+                                    {
+                                        this.twitchAuthInfo = new TwitchAuthInfo(accessToken, username);
+                                        this.FireIsAuthorizedChanged();
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.RevokeAuthorization();
+            return false;
+        }
+
+        public void RevokeAuthorization()
+        {
+            this.twitchAuthInfo = null;
+            this.FireIsAuthorizedChanged();
         }
 
         public void Search(SearchParameters searchParams)
@@ -338,6 +470,8 @@ namespace TwitchLeecher.Services.Services
 
                         TwitchVideoResolution resolution = downloadParams.Resolution;
 
+                        VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
+
                         Action<DownloadStatus> setDownloadStatus = download.SetDownloadStatus;
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
@@ -356,15 +490,13 @@ namespace TwitchLeecher.Services.Services
 
                             using (WebClient webClient = this.CreateTwitchWebClient())
                             {
-                                AuthInfo authInfo = this.RetrieveAuthInfo(log, webClient, urlIdTrimmed);
+                                cancellationToken.ThrowIfCancellationRequested();
+
+                                string playlistUrl = this.RetrievePlaylistUrlForQuality(log, webClient, resolution, urlIdTrimmed, vodAuthInfo);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                string playlistUrl = this.RetrievePlaylistUrlForQuality(log, webClient, resolution, urlIdTrimmed, authInfo);
-
-                                cancellationToken.ThrowIfCancellationRequested();
-
-                                WebChunkList webChunkList = this.RetrieveWebChunkList(log, webClient, tempDir, playlistUrl);
+                                WebChunkList webChunkList = this.RetrieveWebChunkList(log, tempDir, playlistUrl);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -445,14 +577,28 @@ namespace TwitchLeecher.Services.Services
 
         private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, string ffmpegFile, string tempDir)
         {
-            log(Environment.NewLine + Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
+            log(Environment.NewLine + Environment.NewLine + "VOD INFO");
+            log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
+            log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
             log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.ResolutionAsString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
+            log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
+            log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
+
+            log(Environment.NewLine + Environment.NewLine + "OUTPUT INFO");
+            log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
             log(Environment.NewLine + "Temporary Download Folder: " + tempDir);
-            log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
-            log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
+
+            VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
+
+            log(Environment.NewLine + Environment.NewLine + "ACCESS INFO");
+            log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
+            log(Environment.NewLine + "Token: " + vodAuthInfo.Token);
+            log(Environment.NewLine + "Signature: " + vodAuthInfo.Signature);
+            log(Environment.NewLine + "Sub-Only: " + (vodAuthInfo.SubOnly ? "Yes" : "No"));
+            log(Environment.NewLine + "Privileged: " + (vodAuthInfo.Privileged ? "Yes" : "No"));
         }
 
         private void CheckTempDirectory(Action<string> log, string tempDir)
@@ -470,27 +616,10 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private AuthInfo RetrieveAuthInfo(Action<string> log, WebClient webClient, string urlIdTrimmed)
-        {
-            log(Environment.NewLine + Environment.NewLine + "Retrieving access token and signature...");
-            string accessTokenStr = webClient.DownloadString(string.Format(accessTokenUrl, urlIdTrimmed));
-            log(" done!");
-
-            JObject accessTokenJson = JObject.Parse(accessTokenStr);
-
-            string token = Uri.EscapeDataString(accessTokenJson.Value<string>("token"));
-            string signature = accessTokenJson.Value<string>("sig");
-
-            log(Environment.NewLine + "Token: " + token);
-            log(Environment.NewLine + "Signature: " + signature);
-
-            return new AuthInfo(token, signature);
-        }
-
-        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoResolution resolution, string urlIdTrimmed, AuthInfo authInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoResolution resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
             log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-            string allPlaylistsStr = webClient.DownloadString(string.Format(allPlaylistsUrl, urlIdTrimmed, authInfo.Signature, authInfo.Token));
+            string allPlaylistsStr = webClient.DownloadString(string.Format(allPlaylistsUrl, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
             log(" done!");
 
             List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
@@ -507,21 +636,24 @@ namespace TwitchLeecher.Services.Services
             return playlistUrl;
         }
 
-        private WebChunkList RetrieveWebChunkList(Action<string> log, WebClient webClient, string tempDir, string playlistUrl)
+        private WebChunkList RetrieveWebChunkList(Action<string> log, string tempDir, string playlistUrl)
         {
-            log(Environment.NewLine + Environment.NewLine + "Retrieving playlist...");
-            string playlistStr = webClient.DownloadString(playlistUrl);
-            log(" done!");
+            using (WebClient webClient = new WebClient())
+            {
+                log(Environment.NewLine + Environment.NewLine + "Retrieving playlist...");
+                string playlistStr = webClient.DownloadString(playlistUrl);
+                log(" done!");
 
-            string playlistUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
+                string playlistUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
 
-            log(Environment.NewLine + "Parsing playlist...");
-            WebChunkList webChunkList = WebChunkList.Parse(tempDir, playlistStr, playlistUrlPrefix);
-            log(" done!");
+                log(Environment.NewLine + "Parsing playlist...");
+                WebChunkList webChunkList = WebChunkList.Parse(tempDir, playlistStr, playlistUrlPrefix);
+                log(" done!");
 
-            log(Environment.NewLine + "Number of video chunks: " + webChunkList.Content.Count);
+                log(Environment.NewLine + "Number of video chunks: " + webChunkList.Content.Count);
 
-            return webChunkList;
+                return webChunkList;
+            }
         }
 
         private CropInfo CropWebChunkList(WebChunkList webChunkList, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
@@ -610,7 +742,7 @@ namespace TwitchLeecher.Services.Services
 
             Parallel.ForEach(webChunkList.Content, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (webChunk, loopState) =>
             {
-                using (WebClient downloadClient = this.CreateTwitchWebClient())
+                using (WebClient downloadClient = new WebClient())
                 {
                     byte[] bytes = downloadClient.DownloadData(webChunk.DownloadUrl);
 
@@ -959,6 +1091,47 @@ namespace TwitchLeecher.Services.Services
             {
                 this.Remove(id);
             }
+        }
+
+        private VideoQuality ConvertStringToVideoQuality(string quality)
+        {
+            if (string.IsNullOrEmpty(quality))
+            {
+                throw new ArgumentNullException(nameof(quality));
+            }
+
+            switch (quality)
+            {
+                case "chunked":
+                    return VideoQuality.Source;
+
+                case "high":
+                    return VideoQuality.High;
+
+                case "medium":
+                    return VideoQuality.Medium;
+
+                case "low":
+                    return VideoQuality.Low;
+
+                case "mobile":
+                    return VideoQuality.Mobile;
+
+                case "audio_only":
+                    return VideoQuality.AudioOnly;
+
+                default:
+                    throw new ApplicationException("Cannot convert '" + quality + "' into type '" + typeof(VideoQuality).FullName + "'!");
+            }
+        }
+
+        private void FireIsAuthorizedChanged()
+        {
+            this.runtimeDataService.RuntimeData.AccessToken = this.twitchAuthInfo != null ? this.twitchAuthInfo.AccessToken : null;
+            this.runtimeDataService.Save();
+
+            this.FirePropertyChanged(nameof(this.IsAuthorized));
+            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Publish(this.IsAuthorized);
         }
 
         private void FireVideosCountChanged()

@@ -17,50 +17,48 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Padding="20">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+    <Grid Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="450">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="{StaticResource MainColor}" />
+            </Border.BorderBrush>
+            <TextBlock  Text="Search Channel" FontSize="21.333" FontWeight="Bold" />
+        </Border>
+
+        <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition SharedSizeGroup="g1" />
+                <RowDefinition Height="10" />
+                <RowDefinition SharedSizeGroup="g1" />
+                <RowDefinition Height="10" />
+                <RowDefinition SharedSizeGroup="g1" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
-                </Border.BorderBrush>
-                <TextBlock  Text="Search Channel" FontSize="21.333" FontWeight="Bold" />
-            </Border>
-
-            <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="15" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition SharedSizeGroup="g1" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition SharedSizeGroup="g1" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition SharedSizeGroup="g1" />
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <TextBox Grid.Column="2" Grid.Row="0" Name="txtUsername" Text="{Binding SearchParams.Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
-                    <TextBox.InputBindings>
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
-                    </TextBox.InputBindings>
-                </TextBox>
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
-                <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
-                    <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                    <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                </StackPanel>
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
-                <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
-            </Grid>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            <TextBox Grid.Column="2" Grid.Row="0" Name="txtUsername" Text="{Binding SearchParams.Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                    <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
+            <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
+                <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+            </StackPanel>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
+            <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
         </Grid>
-    </Border>
+    </Grid>
 </UserControl>

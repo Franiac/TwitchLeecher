@@ -41,4 +41,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="Img_Connect" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Connect.png" />
+    </Style>
 </ResourceDictionary>

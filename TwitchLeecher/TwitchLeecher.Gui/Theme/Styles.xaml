@@ -26,6 +26,14 @@
         <Setter Property="Width" Value="30" />
     </Style>
 
+    <Style x:Key="ImageButton" BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
     <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="TextAlignment" Value="Justify" />

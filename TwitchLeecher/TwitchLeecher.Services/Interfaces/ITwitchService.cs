@@ -8,6 +8,8 @@ namespace TwitchLeecher.Services.Interfaces
     {
         #region Properties
 
+        bool IsAuthorized { get; }
+
         ObservableCollection<TwitchVideo> Videos { get; }
 
         ObservableCollection<TwitchVideoDownload> Downloads { get; }
@@ -16,7 +18,13 @@ namespace TwitchLeecher.Services.Interfaces
 
         #region Methods
 
+        VodAuthInfo RetrieveVodAuthInfo(string idTrimmed);
+
         bool UserExists(string username);
+
+        bool Authorize(string accessToken);
+
+        void RevokeAuthorization();
 
         void Search(SearchParameters searchParams);
 

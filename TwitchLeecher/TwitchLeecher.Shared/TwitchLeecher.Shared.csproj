@@ -62,6 +62,7 @@
     <Compile Include="Commands\PropertySupport.cs" />
     <Compile Include="Extensions\DateTime.cs" />
     <Compile Include="Extensions\Guid.cs" />
+    <Compile Include="Extensions\NameValueCollection.cs" />
     <Compile Include="Extensions\Xml.cs" />
     <Compile Include="Helpers\FixedSizeQueue.cs" />
     <Compile Include="Notification\BindableBase.cs" />

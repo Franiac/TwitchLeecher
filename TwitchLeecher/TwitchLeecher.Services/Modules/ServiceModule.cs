@@ -14,6 +14,7 @@ namespace TwitchLeecher.Services.Modules
             this.Bind<IFolderService>().To<FolderService>().InSingletonScope();
             this.Bind<ILogService>().To<LogService>().InSingletonScope();
             this.Bind<IPreferencesService>().To<PreferencesService>().InSingletonScope();
+            this.Bind<IRuntimeDataService>().To<RuntimeDataService>().InSingletonScope();
             this.Bind<ITwitchService>().To<TwitchService>().InSingletonScope();
             this.Bind<IFilenameService>().To<FilenameService>().InSingletonScope();
         }

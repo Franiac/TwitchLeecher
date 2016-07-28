@@ -1,10 +1,12 @@
 ﻿using System;
 
-namespace TwitchLeecher.Services.Models
+namespace TwitchLeecher.Core.Models
 {
-    public class AuthInfo
+    public class VodAuthInfo
     {
-        public AuthInfo(string token, string signature)
+        #region Constructors
+
+        public VodAuthInfo(string token, string signature, bool privileged, bool subOnly)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -18,10 +20,22 @@ namespace TwitchLeecher.Services.Models
 
             this.Token = token;
             this.Signature = signature;
+            this.Privileged = privileged;
+            this.SubOnly = subOnly;
         }
+
+        #endregion Constructors
+
+        #region Properties
 
         public string Token { get; private set; }
 
         public string Signature { get; private set; }
+
+        public bool Privileged { get; set; }
+
+        public bool SubOnly { get; set; }
+
+        #endregion Properties
     }
 }

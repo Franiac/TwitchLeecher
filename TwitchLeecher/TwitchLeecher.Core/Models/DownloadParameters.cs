@@ -11,33 +11,36 @@ namespace TwitchLeecher.Core.Models
 
         private TwitchVideo video;
         private TwitchVideoResolution resolution;
+        private VodAuthInfo vodAuthInfo;
+
         private string folder;
         private string filename;
+
         private bool cropStart;
-        private TimeSpan cropStartTime;
         private bool cropEnd;
+
+        private TimeSpan cropStartTime;
         private TimeSpan cropEndTime;
 
         #endregion Fields
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video)
+        public DownloadParameters(TwitchVideo video, TwitchVideoResolution resolution, VodAuthInfo vodAuthInfo, string folder, string filename)
         {
             if (video == null)
             {
                 throw new ArgumentNullException(nameof(video));
             }
 
-            this.video = video;
-            this.CropEndTime = video.Length;
-        }
-
-        public DownloadParameters(TwitchVideo video, TwitchVideoResolution resolution, string folder, string filename) : this(video)
-        {
             if (resolution == null)
             {
                 throw new ArgumentNullException(nameof(resolution));
+            }
+
+            if (vodAuthInfo == null)
+            {
+                throw new ArgumentNullException(nameof(vodAuthInfo));
             }
 
             if (string.IsNullOrWhiteSpace(folder))
@@ -50,9 +53,13 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(filename));
             }
 
+            this.video = video;
             this.resolution = resolution;
+            this.vodAuthInfo = vodAuthInfo;
             this.folder = folder;
             this.filename = filename;
+
+            this.CropEndTime = video.Length;
         }
 
         #endregion Constructors
@@ -76,6 +83,14 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 this.SetProperty(ref this.resolution, value, nameof(this.Resolution));
+            }
+        }
+
+        public VodAuthInfo VodAuthInfo
+        {
+            get
+            {
+                return this.vodAuthInfo;
             }
         }
 

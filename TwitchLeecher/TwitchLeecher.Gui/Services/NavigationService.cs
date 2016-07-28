@@ -70,6 +70,21 @@ namespace TwitchLeecher.Gui.Services
             this.Navigate(this.kernel.Get<DownloadsViewVM>());
         }
 
+        public void ShowAuthorize()
+        {
+            this.Navigate(this.kernel.Get<AuthorizeViewVM>());
+        }
+
+        public void ShowRevokeAuthorization()
+        {
+            this.Navigate(this.kernel.Get<RevokeAuthorizationViewVM>());
+        }
+
+        public void ShowTwitchConnect()
+        {
+            this.Navigate(this.kernel.Get<TwitchConnectViewVM>());
+        }
+
         public void ShowPreferences()
         {
             this.Navigate(this.kernel.Get<PreferencesViewVM>());

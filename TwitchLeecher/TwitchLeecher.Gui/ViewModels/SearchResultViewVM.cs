@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
@@ -147,6 +148,22 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
+                            VodAuthInfo vodAuthInfo = this.twitchService.RetrieveVodAuthInfo(video.IdTrimmed);
+
+                            if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
+                            {
+                                if (!this.twitchService.IsAuthorized)
+                                {
+                                    this.dialogService.ShowMessageBox("This video is sub-only! Please authorize your Twitch account by clicking the Twitch button in the menu.", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                }
+                                else
+                                {
+                                    this.dialogService.ShowMessageBox("This video is sub-only but you are not subscribed to '" + video.Channel + "'!", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                }
+
+                                return;
+                            }
+
                             Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
 
                             TwitchVideoResolution resolution = video.Resolutions.Where(r => r.VideoQuality == currentPrefs.DownloadVideoQuality).FirstOrDefault();
@@ -158,7 +175,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             string filename = this.filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, resolution, currentPrefs.DownloadFolder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, resolution, vodAuthInfo, currentPrefs.DownloadFolder, filename);
 
                             this.navigationService.ShowDownload(downloadParams);
                         }

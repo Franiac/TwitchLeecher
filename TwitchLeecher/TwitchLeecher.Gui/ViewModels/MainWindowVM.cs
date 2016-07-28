@@ -1,7 +1,5 @@
 ﻿using Ninject;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Events;
@@ -23,6 +21,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private string title;
 
+        private bool isAuthorized;
+
         private int videosCount;
         private int downloadsCount;
 
@@ -35,10 +35,12 @@ namespace TwitchLeecher.Gui.ViewModels
         private INavigationService navigationService;
         private ISearchService searchService;
         private IPreferencesService preferencesService;
+        private IRuntimeDataService runtimeDataService;
         private IUpdateService updateService;
 
         private ICommand showSearchCommand;
         private ICommand showDownloadsCommand;
+        private ICommand showAuthorizeCommand;
         private ICommand showPreferencesCommand;
         private ICommand showInfoCommand;
         private ICommand doMinimizeCommand;
@@ -61,6 +63,7 @@ namespace TwitchLeecher.Gui.ViewModels
             INavigationService navigationService,
             ISearchService searchService,
             IPreferencesService preferencesService,
+            IRuntimeDataService runtimeDataService,
             IUpdateService updateService)
         {
             this.windowState = WindowState.Normal;
@@ -76,20 +79,56 @@ namespace TwitchLeecher.Gui.ViewModels
             this.navigationService = navigationService;
             this.searchService = searchService;
             this.preferencesService = preferencesService;
+            this.runtimeDataService = runtimeDataService;
             this.updateService = updateService;
 
             this.commandLockObject = new object();
 
             this.eventAggregator.GetEvent<ShowViewEvent>().Subscribe(this.ShowView);
+            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(this.IsAuthorizedChanged);
             this.eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(this.VideosCountChanged);
             this.eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(this.DownloadsCountChanged);
-
-            this.navigationService.ShowWelcome();
         }
 
         #endregion Constructors
 
         #region Properties
+
+        public bool IsAuthorized
+        {
+            get
+            {
+                return this.isAuthorized;
+            }
+            private set
+            {
+                this.SetProperty(ref this.isAuthorized, value, nameof(this.IsAuthorized));
+            }
+        }
+
+        public int VideosCount
+        {
+            get
+            {
+                return this.videosCount;
+            }
+            private set
+            {
+                this.SetProperty(ref this.videosCount, value, nameof(this.VideosCount));
+            }
+        }
+
+        public int DownloadsCount
+        {
+            get
+            {
+                return this.downloadsCount;
+            }
+            private set
+            {
+                this.SetProperty(ref this.downloadsCount, value, nameof(this.DownloadsCount));
+            }
+        }
 
         public string Title
         {
@@ -116,22 +155,6 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 this.SetProperty(ref this.mainView, value, nameof(this.MainView));
-            }
-        }
-
-        public int VideosCount
-        {
-            get
-            {
-                return this.videosCount;
-            }
-        }
-
-        public int DownloadsCount
-        {
-            get
-            {
-                return this.downloadsCount;
             }
         }
 
@@ -171,6 +194,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return this.showDownloadsCommand;
+            }
+        }
+
+        public ICommand ShowAuthorizeCommand
+        {
+            get
+            {
+                if (this.showAuthorizeCommand == null)
+                {
+                    this.showAuthorizeCommand = new DelegateCommand(this.ShowAuthorize);
+                }
+
+                return this.showAuthorizeCommand;
             }
         }
 
@@ -293,6 +329,28 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void ShowAuthorize()
+        {
+            try
+            {
+                lock (this.commandLockObject)
+                {
+                    if (this.twitchService.IsAuthorized)
+                    {
+                        this.navigationService.ShowRevokeAuthorization();
+                    }
+                    else
+                    {
+                        this.navigationService.ShowAuthorize();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
         private void ShowPreferences()
         {
             try
@@ -391,16 +449,19 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void IsAuthorizedChanged(bool isAuthorized)
+        {
+            this.IsAuthorized = isAuthorized;
+        }
+
         private void VideosCountChanged(int count)
         {
-            this.videosCount = count;
-            this.FirePropertyChanged(nameof(this.VideosCount));
+            this.VideosCount = count;
         }
 
         private void DownloadsCountChanged(int count)
         {
-            this.downloadsCount = count;
-            this.FirePropertyChanged(nameof(this.DownloadsCount));
+            this.DownloadsCount = count;
         }
 
         public void Loaded()
@@ -422,15 +483,25 @@ namespace TwitchLeecher.Gui.ViewModels
                     }
                 }
 
+                bool searchOnStartup = false;
+
                 if (!updateAvailable && currentPrefs.SearchOnStartup)
                 {
                     currentPrefs.Validate();
 
                     if (!currentPrefs.HasErrors)
                     {
+                        searchOnStartup = true;
                         this.searchService.PerformSearch(new SearchParameters(currentPrefs.SearchChannelName, currentPrefs.SearchVideoType, currentPrefs.SearchLoadLimit));
                     }
                 }
+
+                if (!updateAvailable && !searchOnStartup)
+                {
+                    this.navigationService.ShowWelcome();
+                }
+
+                this.twitchService.Authorize(this.runtimeDataService.RuntimeData.AccessToken);
             }
             catch (Exception ex)
             {

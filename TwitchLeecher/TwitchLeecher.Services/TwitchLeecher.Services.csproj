@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -53,12 +54,12 @@
     <Compile Include="Interfaces\IFilenameService.cs" />
     <Compile Include="Interfaces\IFolderService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
+    <Compile Include="Interfaces\IRuntimeDataService.cs" />
     <Compile Include="Interfaces\IPreferencesService.cs" />
     <Compile Include="Interfaces\ITwitchService.cs" />
     <Compile Include="Interfaces\IUpdateService.cs" />
     <Compile Include="Models\CropInfo.cs" />
     <Compile Include="Models\DownloadTask.cs" />
-    <Compile Include="Models\AuthInfo.cs" />
     <Compile Include="Models\WebChunk.cs" />
     <Compile Include="Models\WebChunkList.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Services\FilenameService.cs" />
     <Compile Include="Services\FolderService.cs" />
     <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\RuntimeDataService.cs" />
     <Compile Include="Services\PreferencesService.cs" />
     <Compile Include="Services\TwitchService.cs" />
     <Compile Include="Services\UpdateService.cs" />
