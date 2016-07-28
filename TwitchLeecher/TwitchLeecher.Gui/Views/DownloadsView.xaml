@@ -44,7 +44,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer x:Name="scroller" VerticalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding Downloads, UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

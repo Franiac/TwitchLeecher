@@ -13,7 +13,7 @@ using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class DownloadsViewVM : ViewModelBase
+    public class DownloadsViewVM : ViewModelBase, INavigationState
     {
         #region Fields
 
@@ -53,6 +53,8 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Constructors
 
         #region Properties
+
+        double INavigationState.ScrollPosition { get; set; }
 
         public ObservableCollection<TwitchVideoDownload> Downloads
         {
