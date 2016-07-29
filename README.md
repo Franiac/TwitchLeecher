@@ -20,6 +20,8 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Intuitive and stylish GUI
 - Up to 20 times faster download speed compared to direct download with FFMPEG
 - Browse your past broadcasts and highlights within the application
+- Search channels, VOD urls and VOD IDs
+- Subscriber-Only VOD download support
 - Time Selection for VOD downloads
 - Queue multiple downloads
 - Specify default search parameters
@@ -33,4 +35,4 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 
 ## Screenshot
 
-![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/twitchleecher11.jpg)
+![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/TL13.jpg)
