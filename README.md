@@ -14,7 +14,7 @@ Once installed, future releases will automatically update current installations 
 
 Nearly all of the well known VOD downloaders execute the download process via FFMPEG's integrated download capabilities. However, this is extremely slow. The download speed rarely exceeds 1.5Mbit even if the internet connection is 100 times faster. Twitch Leecher does not use FFMPEG for download tasks at all. It downloads thousands of small video chunks (usually ~500kb) in parallel while using all of the available bandwidth of your internet connection. As soon as all video chunks are downloaded, FFMPEG is only used to merge those chunks together in order to create a single video file again.
 
-## Main Features
+## Features
 
 - Very easy to use, no manual needed
 - Intuitive and stylish GUI
