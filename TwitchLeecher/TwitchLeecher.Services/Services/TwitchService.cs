@@ -997,7 +997,7 @@ namespace TwitchLeecher.Services.Services
         private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
             Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
-            setStatus("Encoding");
+            setStatus("Processing");
             setIsEncoding(true);
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
