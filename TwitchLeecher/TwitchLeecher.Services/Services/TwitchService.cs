@@ -838,6 +838,11 @@ namespace TwitchLeecher.Services.Services
                 string playlistStr = webClient.DownloadString(playlistUrl);
                 log(" done!");
 
+                if (string.IsNullOrWhiteSpace(playlistStr))
+                {
+                    throw new ApplicationException("The playlist is empty!");
+                }
+
                 string playlistUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
 
                 log(Environment.NewLine + "Parsing playlist...");
