@@ -21,7 +21,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private INavigationService navigationService;
         private INotificationService notificationService;
 
-        private ICommand navigatedCommand;
+        private ICommand navigatingCommand;
         private ICommand cancelCommand;
 
         private readonly object commandLockObject;
@@ -48,16 +48,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public ICommand NavigatedCommand
+        public ICommand NavigatingCommand
         {
             get
             {
-                if (this.navigatedCommand == null)
+                if (this.navigatingCommand == null)
                 {
-                    this.navigatedCommand = new DelegateCommand<Uri>(this.Navigated);
+                    this.navigatingCommand = new DelegateCommand<Uri>(this.Navigating);
                 }
 
-                return this.navigatedCommand;
+                return this.navigatingCommand;
             }
         }
 
@@ -78,7 +78,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Methods
 
-        private void Navigated(Uri url)
+        private void Navigating(Uri url)
         {
             try
             {
