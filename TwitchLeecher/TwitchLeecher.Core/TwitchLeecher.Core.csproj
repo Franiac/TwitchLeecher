@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
     <Compile Include="Enums\DownloadStatus.cs" />
-    <Compile Include="Enums\VideoQuality.cs" />
     <Compile Include="Enums\SearchType.cs" />
     <Compile Include="Enums\VideoType.cs" />
     <Compile Include="Events\DownloadsCountChangedEvent.cs" />
@@ -60,7 +59,7 @@
     <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\TwitchVideo.cs" />
     <Compile Include="Models\TwitchVideoDownload.cs" />
-    <Compile Include="Models\TwitchVideoResolution.cs" />
+    <Compile Include="Models\TwitchVideoQuality.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

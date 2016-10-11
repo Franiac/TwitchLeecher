@@ -50,7 +50,6 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\VideoQuality.cs" />
     <Compile Include="Interfaces\IFilenameService.cs" />
     <Compile Include="Interfaces\IFolderService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />

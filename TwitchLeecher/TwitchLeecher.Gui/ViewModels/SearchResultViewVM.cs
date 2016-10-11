@@ -168,7 +168,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
 
-                            TwitchVideoResolution resolution = video.Resolutions.Where(r => r.VideoQuality == currentPrefs.DownloadVideoQuality).FirstOrDefault();
+                            TwitchVideoQuality resolution = video.Resolutions.Where(r => r.QualityFormatted == currentPrefs.DownloadVideoQuality).FirstOrDefault();
 
                             if (resolution == null)
                             {

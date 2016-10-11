@@ -24,7 +24,7 @@ namespace TwitchLeecher.Core.Models
 
         private TimeSpan length;
 
-        private List<TwitchVideoResolution> resolutions;
+        private List<TwitchVideoQuality> resolutions;
 
         private DateTime recordedDate;
 
@@ -36,7 +36,7 @@ namespace TwitchLeecher.Core.Models
         #region Constructors
 
         public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
-            List<TwitchVideoResolution> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
+            List<TwitchVideoQuality> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -149,7 +149,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public List<TwitchVideoResolution> Resolutions
+        public List<TwitchVideoQuality> Resolutions
         {
             get
             {
@@ -163,10 +163,10 @@ namespace TwitchLeecher.Core.Models
             {
                 if (this.resolutions == null || this.resolutions.Count == 0)
                 {
-                    return TwitchVideoResolution.UNKNOWN;
+                    return TwitchVideoQuality.UNKNOWN;
                 }
 
-                return this.resolutions.First().ResolutionAsString;
+                return this.resolutions.First().DisplayStringShort;
             }
         }
 

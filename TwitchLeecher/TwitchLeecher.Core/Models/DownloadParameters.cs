@@ -10,7 +10,7 @@ namespace TwitchLeecher.Core.Models
         #region Fields
 
         private TwitchVideo video;
-        private TwitchVideoResolution resolution;
+        private TwitchVideoQuality resolution;
         private VodAuthInfo vodAuthInfo;
 
         private string folder;
@@ -26,7 +26,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, TwitchVideoResolution resolution, VodAuthInfo vodAuthInfo, string folder, string filename)
+        public DownloadParameters(TwitchVideo video, TwitchVideoQuality resolution, VodAuthInfo vodAuthInfo, string folder, string filename)
         {
             if (video == null)
             {
@@ -74,7 +74,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public TwitchVideoResolution Resolution
+        public TwitchVideoQuality Resolution
         {
             get
             {

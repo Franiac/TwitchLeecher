@@ -38,7 +38,7 @@ namespace TwitchLeecher.Core.Models
 
         private string downloadFileName;
 
-        private VideoQuality downloadVideoQuality;
+        private string downloadVideoQuality;
 
         private bool downloadRemoveCompleted;
 
@@ -142,7 +142,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public VideoQuality DownloadVideoQuality
+        public string DownloadVideoQuality
         {
             get
             {

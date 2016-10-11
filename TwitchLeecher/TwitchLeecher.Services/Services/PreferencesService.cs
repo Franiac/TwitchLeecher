@@ -322,7 +322,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsEnum<VideoQuality>();
+                                    preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsString();
                                 }
                                 catch
                                 {
@@ -363,7 +363,7 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = this.folderService.GetTempFolder(),
                 DownloadFolder = this.folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadVideoQuality = VideoQuality.Source,
+                DownloadVideoQuality = TwitchVideoQuality.QUALITY_SOURCE,
                 DownloadRemoveCompleted = false
             };
 

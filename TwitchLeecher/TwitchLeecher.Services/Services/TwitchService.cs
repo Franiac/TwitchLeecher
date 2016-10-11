@@ -17,7 +17,6 @@ using System.Web;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
-using TwitchLeecher.Services.Extensions;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Models;
 using TwitchLeecher.Shared.Events;
@@ -64,7 +63,8 @@ namespace TwitchLeecher.Services.Services
         private ObservableCollection<TwitchVideoDownload> downloads;
 
         private ConcurrentDictionary<string, DownloadTask> downloadTasks;
-        private Dictionary<VideoQuality, int> orderMap;
+        private Dictionary<string, int> qualityOrderMap;
+        private Dictionary<string, int> resolutionOrderMap;
         private TwitchAuthInfo twitchAuthInfo;
 
         private string appDir;
@@ -95,13 +95,21 @@ namespace TwitchLeecher.Services.Services
 
             this.changeDownloadLockObject = new object();
 
-            this.orderMap = new Dictionary<VideoQuality, int>();
-            this.orderMap.Add(VideoQuality.Source, 0);
-            this.orderMap.Add(VideoQuality.High, 1);
-            this.orderMap.Add(VideoQuality.Medium, 2);
-            this.orderMap.Add(VideoQuality.Low, 3);
-            this.orderMap.Add(VideoQuality.Mobile, 4);
-            this.orderMap.Add(VideoQuality.AudioOnly, 5);
+            this.qualityOrderMap = new Dictionary<string, int>();
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_SOURCE, 0);
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_HIGH, 1);
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_MEDIUM, 2);
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_LOW, 3);
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_MOBILE, 4);
+            this.qualityOrderMap.Add(TwitchVideoQuality.QUALITY_AUDIO, 5);
+
+            this.resolutionOrderMap = new Dictionary<string, int>();
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_1080P, 0);
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_720P, 1);
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_480P, 2);
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_360P, 3);
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_240P, 4);
+            this.resolutionOrderMap.Add(TwitchVideoQuality.QUALITY_144P, 5);
 
             this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
 
@@ -662,7 +670,7 @@ namespace TwitchLeecher.Services.Services
                         TimeSpan cropStartTime = downloadParams.CropStartTime;
                         TimeSpan cropEndTime = downloadParams.CropEndTime;
 
-                        TwitchVideoResolution resolution = downloadParams.Resolution;
+                        TwitchVideoQuality resolution = downloadParams.Resolution;
 
                         VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
 
@@ -774,7 +782,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
-            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.ResolutionAsString);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.DisplayStringShort);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
             log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
@@ -810,7 +818,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoResolution resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
             log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
             string allPlaylistsStr = webClient.DownloadString(string.Format(allPlaylistsUrl, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
@@ -823,9 +831,9 @@ namespace TwitchLeecher.Services.Services
                 log(Environment.NewLine + url);
             });
 
-            string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.VideoQuality.ToTwitchQuality())).First();
+            string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.QualityId)).First();
 
-            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.ResolutionAsString + " is " + playlistUrl);
+            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
 
             return playlistUrl;
         }
@@ -1186,7 +1194,7 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoResolution> resolutions = this.ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
+            List<TwitchVideoQuality> resolutions = this.ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("recorded_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             Uri thumbnail = new Uri(videoJson.Value<string>("preview"));
             Uri url = new Uri(videoJson.Value<string>("url"));
@@ -1194,9 +1202,9 @@ namespace TwitchLeecher.Services.Services
             return new TwitchVideo(channel, title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
         }
 
-        public List<TwitchVideoResolution> ParseResolutions(JObject resolutionsJson, JObject fpsJson)
+        public List<TwitchVideoQuality> ParseResolutions(JObject resolutionsJson, JObject fpsJson)
         {
-            List<TwitchVideoResolution> resolutions = new List<TwitchVideoResolution>();
+            List<TwitchVideoQuality> resolutions = new List<TwitchVideoQuality>();
 
             Dictionary<string, string> fpsList = new Dictionary<string, string>();
 
@@ -1212,45 +1220,41 @@ namespace TwitchLeecher.Services.Services
             {
                 foreach (JProperty resolution in resolutionsJson.Values<JProperty>())
                 {
-                    string quality = resolution.Name;
+                    string qualityId = resolution.Name;
                     string value = resolution.Value.Value<string>();
+                    string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
 
-                    switch (quality)
-                    {
-                        case "chunked":
-                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Source, value, fpsList.ContainsKey("chunked") ? fpsList["chunked"] : null));
-                            break;
-
-                        case "high":
-                            resolutions.Add(new TwitchVideoResolution(VideoQuality.High, value, fpsList.ContainsKey("high") ? fpsList["high"] : null));
-                            break;
-
-                        case "medium":
-                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Medium, value, fpsList.ContainsKey("medium") ? fpsList["medium"] : null));
-                            break;
-
-                        case "low":
-                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Low, value, fpsList.ContainsKey("low") ? fpsList["low"] : null));
-                            break;
-
-                        case "mobile":
-                            resolutions.Add(new TwitchVideoResolution(VideoQuality.Mobile, value, fpsList.ContainsKey("mobile") ? fpsList["mobile"] : null));
-                            break;
-                    }
+                    resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
                 }
             }
 
-            if (fpsList.ContainsKey("audio_only"))
+            if (fpsList.ContainsKey(TwitchVideoQuality.QUALITY_AUDIO))
             {
-                resolutions.Add(new TwitchVideoResolution(VideoQuality.AudioOnly, null, null));
+                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_AUDIO));
             }
 
             if (!resolutions.Any())
             {
-                resolutions.Add(new TwitchVideoResolution(VideoQuality.Source, null, null));
+                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_SOURCE));
             }
 
-            resolutions = resolutions.OrderBy(r => this.orderMap[r.VideoQuality]).ToList();
+            try
+            {
+                resolutions = resolutions.OrderBy(r => this.resolutionOrderMap[r.QualityId]).ToList();
+            }
+            catch
+            {
+                // If sort fails, ignore
+            }
+
+            try
+            {
+                resolutions = resolutions.OrderBy(r => this.qualityOrderMap[r.QualityId]).ToList();
+            }
+            catch
+            {
+                // If sort fails, ignore
+            }            
 
             return resolutions;
         }
@@ -1307,38 +1311,6 @@ namespace TwitchLeecher.Services.Services
             foreach (string id in toRemove)
             {
                 this.Remove(id);
-            }
-        }
-
-        private VideoQuality ConvertStringToVideoQuality(string quality)
-        {
-            if (string.IsNullOrEmpty(quality))
-            {
-                throw new ArgumentNullException(nameof(quality));
-            }
-
-            switch (quality)
-            {
-                case "chunked":
-                    return VideoQuality.Source;
-
-                case "high":
-                    return VideoQuality.High;
-
-                case "medium":
-                    return VideoQuality.Medium;
-
-                case "low":
-                    return VideoQuality.Low;
-
-                case "mobile":
-                    return VideoQuality.Mobile;
-
-                case "audio_only":
-                    return VideoQuality.AudioOnly;
-
-                default:
-                    throw new ApplicationException("Cannot convert '" + quality + "' into type '" + typeof(VideoQuality).FullName + "'!");
             }
         }
 

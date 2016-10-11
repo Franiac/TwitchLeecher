@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
@@ -20,7 +18,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private IPreferencesService preferencesService;
 
         private Preferences currentPreferences;
-        private IEnumerable<VideoQuality> videoQualityList;
+        private IEnumerable<string> videoQualityList;
 
         private ICommand chooseDownloadTempFolderCommand;
         private ICommand chooseDownloadFolderCommand;
@@ -68,13 +66,21 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public IEnumerable<VideoQuality> VideoQualityList
+        public IEnumerable<string> VideoQualityList
         {
             get
             {
                 if (this.videoQualityList == null)
                 {
-                    this.videoQualityList = Enum.GetValues(typeof(VideoQuality)).Cast<VideoQuality>();
+                    this.videoQualityList = new List<string>()
+                    {
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_SOURCE),
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_HIGH),
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_MEDIUM),
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_LOW),
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_MOBILE),
+                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_AUDIO)
+                    };
                 }
 
                 return this.videoQualityList;
