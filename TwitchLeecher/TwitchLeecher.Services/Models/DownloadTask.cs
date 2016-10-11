@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace TwitchLeecher.Services.Models
 {
-    public class DownloadTask
+    internal class DownloadTask
     {
         public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
         {

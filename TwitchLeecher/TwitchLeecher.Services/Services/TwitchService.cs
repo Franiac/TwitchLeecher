@@ -690,19 +690,19 @@ namespace TwitchLeecher.Services.Services
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                WebChunkList webChunkList = this.RetrieveWebChunkList(log, tempDir, playlistUrl);
+                                VodPlaylist vodPlaylist = this.RetrieveVodPlaylist(log, tempDir, playlistUrl);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                CropInfo cropInfo = this.CropWebChunkList(webChunkList, cropStart, cropEnd, cropStartTime, cropEndTime);
+                                CropInfo cropInfo = this.CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                this.DownloadChunks(log, setStatus, setProgress, webChunkList, cancellationToken);
+                                this.DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                this.WriteNewPlaylist(log, webChunkList, playlistFile);
+                                this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
 
                                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -830,7 +830,7 @@ namespace TwitchLeecher.Services.Services
             return playlistUrl;
         }
 
-        private WebChunkList RetrieveWebChunkList(Action<string> log, string tempDir, string playlistUrl)
+        private VodPlaylist RetrieveVodPlaylist(Action<string> log, string tempDir, string playlistUrl)
         {
             using (WebClient webClient = new WebClient())
             {
@@ -843,19 +843,19 @@ namespace TwitchLeecher.Services.Services
                     throw new ApplicationException("The playlist is empty!");
                 }
 
-                string playlistUrlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
+                string urlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
 
                 log(Environment.NewLine + "Parsing playlist...");
-                WebChunkList webChunkList = WebChunkList.Parse(tempDir, playlistStr, playlistUrlPrefix);
+                VodPlaylist vodPlaylist = VodPlaylist.Parse(tempDir, playlistStr, urlPrefix);
                 log(" done!");
 
-                log(Environment.NewLine + "Number of video chunks: " + webChunkList.Content.Count);
+                log(Environment.NewLine + "Number of video chunks: " + vodPlaylist.OfType<IVodPlaylistPartExt>().Count());
 
-                return webChunkList;
+                return vodPlaylist;
             }
         }
 
-        private CropInfo CropWebChunkList(WebChunkList webChunkList, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
+        private CropInfo CropVodPlaylist(VodPlaylist vodPlaylist, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
         {
             double start = cropStartTime.TotalMilliseconds;
             double lengthOrg = cropEndTime.TotalMilliseconds;
@@ -870,26 +870,30 @@ namespace TwitchLeecher.Services.Services
             lengthOrg = Math.Round(lengthOrg / 1000, 3);
             length = Math.Round(length / 1000, 3);
 
-            List<WebChunk> content = webChunkList.Content;
+            List<IVodPlaylistPartExt> parts = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
 
-            List<WebChunk> deleteStart = new List<WebChunk>();
-            List<WebChunk> deleteEnd = new List<WebChunk>();
+            int firstPartIndex = parts.First().Index;
+            int lastPartIndex = parts.Last().Index;
+
+            List<IVodPlaylistPartExt> deleteStart = new List<IVodPlaylistPartExt>();
+            List<IVodPlaylistPartExt> deleteEnd = new List<IVodPlaylistPartExt>();
 
             if (cropStart)
             {
-                double chunkSum = 0;
+                double lengthSum = 0;
 
-                foreach (WebChunk webChunk in content)
+                foreach (IVodPlaylistPartExt part in vodPlaylist.OfType<IVodPlaylistPartExt>())
                 {
-                    chunkSum += webChunk.Length;
+                    double partLength = part.Length;
 
-                    if (chunkSum < start)
+                    if (lengthSum + partLength < start)
                     {
-                        deleteStart.Add(webChunk);
+                        lengthSum += partLength;
+                        deleteStart.Add(part);
                     }
                     else
                     {
-                        start = Math.Round(chunkSum - start, 3);
+                        start = Math.Round(lengthSum - start, 3);
                         break;
                     }
                 }
@@ -897,63 +901,88 @@ namespace TwitchLeecher.Services.Services
 
             if (cropEnd)
             {
-                double chunkSum = 0;
+                double lengthSum = 0;
 
-                foreach (WebChunk webChunk in content)
+                foreach (IVodPlaylistPartExt part in vodPlaylist.OfType<IVodPlaylistPartExt>())
                 {
-                    chunkSum += webChunk.Length;
-
-                    if (chunkSum > lengthOrg)
+                    if (lengthSum >= lengthOrg)
                     {
-                        deleteEnd.Add(webChunk);
+                        deleteEnd.Add(part);
                     }
+
+                    lengthSum += part.Length;
                 }
             }
 
-            deleteStart.ForEach(webChunk =>
+            deleteStart.ForEach(part =>
             {
-                content.Remove(webChunk);
+                vodPlaylist.Remove(part);
             });
 
-            deleteEnd.ForEach(webChunk =>
+            deleteEnd.ForEach(part =>
             {
-                content.Remove(webChunk);
+                vodPlaylist.Remove(part);
+            });
+
+            List<IVodPlaylistPartExt> partsCropped = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
+
+            int firstPartCroppedIndex = partsCropped.First().Index;
+            int lastPartCroppedIndex = partsCropped.Last().Index;
+
+            List<IVodPlaylistPart> deleteInfo = new List<IVodPlaylistPart>();
+
+            foreach (IVodPlaylistPart part in vodPlaylist.OfType<IVodPlaylistPart>())
+            {
+                int index = part.Index;
+
+                if ((index > firstPartIndex && index < firstPartCroppedIndex) ||
+                    (index > lastPartCroppedIndex && index < lastPartIndex))
+                {
+                    deleteInfo.Add(part);
+                }
+            }
+
+            deleteInfo.ForEach(part =>
+            {
+                vodPlaylist.Remove(part);
             });
 
             return new CropInfo(cropStart, cropEnd, cropStart ? start : 0, length);
         }
 
-        private void DownloadChunks(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            WebChunkList webChunkList, CancellationToken cancellationToken)
+        private void DownloadParts(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            VodPlaylist vodPlaylist, CancellationToken cancellationToken)
         {
-            int webChunkCount = webChunkList.Content.Count;
+            List<IVodPlaylistPartExt> parts = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
+
+            int partsCount = parts.Count;
             int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
 
             log(Environment.NewLine + Environment.NewLine + "Starting parallel video chunk download");
-            log(Environment.NewLine + "Number of video chunks to download: " + webChunkCount);
+            log(Environment.NewLine + "Number of video chunks to download: " + partsCount);
             log(Environment.NewLine + "Maximum connection count: " + maxConnectionCount);
 
             setStatus("Downloading");
 
             log(Environment.NewLine + Environment.NewLine + "Parallel video chunk download is running...");
 
-            long completedChunkDownloads = 0;
+            long completedPartDownloads = 0;
 
-            Parallel.ForEach(webChunkList.Content, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (webChunk, loopState) =>
+            Parallel.ForEach(parts, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (part, loopState) =>
             {
                 using (WebClient downloadClient = new WebClient())
                 {
-                    byte[] bytes = downloadClient.DownloadData(webChunk.DownloadUrl);
+                    byte[] bytes = downloadClient.DownloadData(part.DownloadUrl);
 
-                    Interlocked.Increment(ref completedChunkDownloads);
+                    Interlocked.Increment(ref completedPartDownloads);
 
-                    FileSystem.DeleteFile(webChunk.LocalFile);
+                    FileSystem.DeleteFile(part.LocalFile);
 
-                    File.WriteAllBytes(webChunk.LocalFile, bytes);
+                    File.WriteAllBytes(part.LocalFile, bytes);
 
-                    long completed = Interlocked.Read(ref completedChunkDownloads);
+                    long completed = Interlocked.Read(ref completedPartDownloads);
 
-                    setProgress((int)(completedChunkDownloads * 100 / webChunkCount));
+                    setProgress((int)(completedPartDownloads * 100 / partsCount));
                 }
 
                 if (cancellationToken.IsCancellationRequested)
@@ -969,26 +998,15 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void WriteNewPlaylist(Action<string> log, WebChunkList webChunkList, string playlistFile)
+        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string playlistFile)
         {
             log(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG...");
 
             StringBuilder sb = new StringBuilder();
 
-            webChunkList.Header.ForEach(line =>
+            vodPlaylist.ForEach(part =>
             {
-                sb.AppendLine(line);
-            });
-
-            webChunkList.Content.ForEach(webChunk =>
-            {
-                sb.AppendLine(webChunk.ExtInf);
-                sb.AppendLine(webChunk.LocalFile);
-            });
-
-            webChunkList.Footer.ForEach(line =>
-            {
-                sb.AppendLine(line);
+                sb.AppendLine(part.GetOutput());
             });
 
             log(" done!");
@@ -1008,7 +1026,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
