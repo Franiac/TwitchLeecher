@@ -33,6 +33,7 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.GAME, video.Game);
             result = result.Replace(FilenameWildcards.DATE, recorded.ToString("yyyyMMdd"));
             result = result.Replace(FilenameWildcards.TIME, recorded.ToString("hhmmsstt", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.ID, video.IdTrimmed);
             result = result.Replace(FilenameWildcards.TITLE, video.Title);
             result = result.Replace(FilenameWildcards.RES, resolution.Resolution);

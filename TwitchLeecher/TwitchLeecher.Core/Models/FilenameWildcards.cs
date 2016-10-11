@@ -10,6 +10,8 @@
 
         public static string TIME = "{time}";
 
+        public static string TIME24 = "{time24}";
+
         public static string TITLE = "{title}";
 
         public static string RES = "{res}";

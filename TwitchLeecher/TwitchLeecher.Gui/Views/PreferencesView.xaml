@@ -227,7 +227,7 @@
                 <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Path='CurrentPreferences.DownloadFileName', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
                     <fa:ImageAwesome.ToolTip>
-                        <ToolTip Width="400">
+                        <ToolTip Width="415">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Filename Template" />
                                 <TextBlock TextAlignment="Justify">
@@ -235,6 +235,8 @@
                                 </TextBlock>
                                 <Grid Margin="0,5,0,0">
                                     <Grid.RowDefinitions>
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
                                         <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
@@ -281,21 +283,25 @@
                                     <TextBlock Grid.Row="8" Grid.Column="2" Text="Recording time" />
                                     <TextBlock Grid.Row="8" Grid.Column="4" Text="034622PM" />
 
-                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{id}" />
-                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Twitch video ID" />
-                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="54869708" />
+                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{time24}" />
+                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Recording time (24 hours)" />
+                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="154622" />
 
-                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{title}" />
-                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Video Title" />
-                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="Best Strim Evr!!!" />
+                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{id}" />
+                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Twitch video ID" />
+                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="54869708" />
 
-                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{res}" />
-                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Video Resolution" />
-                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="1280x720" />
+                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{title}" />
+                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Video Title" />
+                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="Best Strim Evr!!!" />
 
-                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{fps}" />
-                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Video Framerate" />
-                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="60" />
+                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{res}" />
+                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Video Resolution" />
+                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="1280x720" />
+
+                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{fps}" />
+                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Video Framerate" />
+                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="60" />
                                 </Grid>
                             </StackPanel>
                         </ToolTip>
