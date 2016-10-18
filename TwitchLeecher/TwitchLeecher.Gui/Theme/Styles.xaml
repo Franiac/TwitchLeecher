@@ -34,7 +34,7 @@
     </ToolTip>
 
     <ToolTip x:Key="UnauthorizedToolTip">
-        <TextBlock Text="Authorize your Twitch account in order to donwload sub-only VODs" />
+        <TextBlock Text="Authorize your Twitch account in order to download sub-only VODs" />
     </ToolTip>
 
     <Style x:Key="LoginButton" TargetType="Button" BasedOn="{StaticResource MiniButton}">
