@@ -866,7 +866,7 @@ namespace TwitchLeecher.Services.Services
         private CropInfo CropVodPlaylist(VodPlaylist vodPlaylist, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
         {
             double start = cropStartTime.TotalMilliseconds;
-            double lengthOrg = cropEndTime.TotalMilliseconds;
+            double end = cropEndTime.TotalMilliseconds;
             double length = cropEndTime.TotalMilliseconds;
 
             if (cropStart)
@@ -875,7 +875,7 @@ namespace TwitchLeecher.Services.Services
             }
 
             start = Math.Round(start / 1000, 3);
-            lengthOrg = Math.Round(lengthOrg / 1000, 3);
+            end = Math.Round(end / 1000, 3);
             length = Math.Round(length / 1000, 3);
 
             List<IVodPlaylistPartExt> parts = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
@@ -901,6 +901,7 @@ namespace TwitchLeecher.Services.Services
                     }
                     else
                     {
+                        lengthSum += partLength;
                         start = Math.Round(lengthSum - start, 3);
                         break;
                     }
@@ -913,7 +914,7 @@ namespace TwitchLeecher.Services.Services
 
                 foreach (IVodPlaylistPartExt part in vodPlaylist.OfType<IVodPlaylistPartExt>())
                 {
-                    if (lengthSum >= lengthOrg)
+                    if (lengthSum >= end)
                     {
                         deleteEnd.Add(part);
                     }
@@ -1034,7 +1035,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
@@ -1254,7 +1255,7 @@ namespace TwitchLeecher.Services.Services
             catch
             {
                 // If sort fails, ignore
-            }            
+            }
 
             return resolutions;
         }
