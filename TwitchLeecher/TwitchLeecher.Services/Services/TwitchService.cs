@@ -45,6 +45,8 @@ namespace TwitchLeecher.Services.Services
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
         private const int TIMER_INTERVALL = 2;
+        private const int DOWNLOAD_RETRIES = 3;
+        private const int DOWNLOAD_RETRY_TIME = 20;
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
         private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
@@ -985,20 +987,47 @@ namespace TwitchLeecher.Services.Services
 
             Parallel.ForEach(parts, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (part, loopState) =>
             {
-                using (WebClient downloadClient = new WebClient())
+                int retryCounter = 0;
+
+                bool success = false;
+
+                do
                 {
-                    byte[] bytes = downloadClient.DownloadData(part.DownloadUrl);
+                    try
+                    {
+                        using (WebClient downloadClient = new WebClient())
+                        {
+                            byte[] bytes = downloadClient.DownloadData(part.DownloadUrl);
 
-                    Interlocked.Increment(ref completedPartDownloads);
+                            Interlocked.Increment(ref completedPartDownloads);
 
-                    FileSystem.DeleteFile(part.LocalFile);
+                            FileSystem.DeleteFile(part.LocalFile);
 
-                    File.WriteAllBytes(part.LocalFile, bytes);
+                            File.WriteAllBytes(part.LocalFile, bytes);
 
-                    long completed = Interlocked.Read(ref completedPartDownloads);
+                            long completed = Interlocked.Read(ref completedPartDownloads);
 
-                    setProgress((int)(completedPartDownloads * 100 / partsCount));
+                            setProgress((int)(completedPartDownloads * 100 / partsCount));
+
+                            success = true;
+                        }
+                    }
+                    catch (WebException ex)
+                    {
+                        if (retryCounter < DOWNLOAD_RETRIES)
+                        {
+                            retryCounter++;
+                            log(Environment.NewLine + Environment.NewLine + "Downloading file '" + part.DownloadUrl + "' failed! Trying again in " + DOWNLOAD_RETRY_TIME + "s");
+                            log(Environment.NewLine + ex.ToString());
+                            Thread.Sleep(DOWNLOAD_RETRY_TIME * 1000);
+                        }
+                        else
+                        {
+                            throw new ApplicationException("Could not download file '" + part.DownloadUrl + "' after " + DOWNLOAD_RETRIES + " retries!");
+                        }
+                    }
                 }
+                while (!success);
 
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -1007,8 +1036,6 @@ namespace TwitchLeecher.Services.Services
             });
 
             setProgress(100);
-
-            log(" done!");
 
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
