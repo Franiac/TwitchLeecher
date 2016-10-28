@@ -20,8 +20,10 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Models;
 using TwitchLeecher.Shared.Events;
+using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
+using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Services.Services
 {
@@ -779,6 +781,10 @@ namespace TwitchLeecher.Services.Services
 
         private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, string ffmpegFile, string tempDir)
         {
+            log(Environment.NewLine + Environment.NewLine + "TWITCH LEECHER INFO");
+            log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
+            log(Environment.NewLine + "Version: " + AssemblyUtil.Get.GetAssemblyVersion().Trim());
+
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
