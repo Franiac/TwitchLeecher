@@ -1321,6 +1321,21 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
+        public bool IsFileNameUsed(string fullPath)
+        {
+            IEnumerable<TwitchVideoDownload> downloads = this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued);
+
+            foreach (TwitchVideoDownload download in downloads)
+            {
+                if (download.DownloadParams.FullPath.Equals(fullPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void FireIsAuthorizedChanged()
         {
             this.runtimeDataService.RuntimeData.AccessToken = this.twitchAuthInfo != null ? this.twitchAuthInfo.AccessToken : null;

@@ -230,9 +230,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 this.DownloadParams?.Validate();
 
-                if (this.twitchService.Downloads.Where(d =>
-                    d.DownloadParams.Video.Id == this.downloadParams.Video.Id &&
-                    d.DownloadParams.FullPath.Equals(this.downloadParams.FullPath)).Any())
+                if (this.twitchService.IsFileNameUsed(this.downloadParams.FullPath))
                 {
                     this.DownloadParams.AddError(nameof(this.DownloadParams.Filename), "Another video is already being downloaded to this file!");
                 }

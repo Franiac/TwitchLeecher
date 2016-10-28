@@ -44,6 +44,8 @@ namespace TwitchLeecher.Services.Interfaces
 
         void Shutdown();
 
+        bool IsFileNameUsed(string fullPath);
+
         #endregion Methods
     }
 }
