@@ -1,5 +1,6 @@
 ﻿using Ninject;
 using System;
+using System.Collections.Generic;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Events;
 using TwitchLeecher.Gui.Interfaces;
@@ -18,6 +19,8 @@ namespace TwitchLeecher.Gui.Services
         private ViewModelBase lastView;
         private ViewModelBase currentView;
 
+        private Dictionary<Type, ViewModelBase> persistentViews;
+
         #endregion Fields
 
         #region Constructor
@@ -26,6 +29,8 @@ namespace TwitchLeecher.Gui.Services
         {
             this.kernel = kernel;
             this.eventAggregator = eventAggregator;
+
+            this.persistentViews = new Dictionary<Type, ViewModelBase>();
         }
 
         #endregion Constructor
@@ -49,7 +54,15 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowSearchResults()
         {
-            this.Navigate(this.kernel.Get<SearchResultViewVM>());
+            ViewModelBase vm;
+
+            if (!this.persistentViews.TryGetValue(typeof(SearchResultViewVM), out vm))
+            {
+                vm = this.kernel.Get<SearchResultViewVM>();
+                this.persistentViews.Add(typeof(SearchResultViewVM), vm);
+            }
+
+            this.Navigate(vm);
         }
 
         public void ShowDownload(DownloadParameters downloadParams)
@@ -67,7 +80,15 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowDownloads()
         {
-            this.Navigate(this.kernel.Get<DownloadsViewVM>());
+            ViewModelBase vm;
+
+            if (!this.persistentViews.TryGetValue(typeof(DownloadsViewVM), out vm))
+            {
+                vm = this.kernel.Get<DownloadsViewVM>();
+                this.persistentViews.Add(typeof(DownloadsViewVM), vm);
+            }
+
+            this.Navigate(vm);
         }
 
         public void ShowAuthorize()
