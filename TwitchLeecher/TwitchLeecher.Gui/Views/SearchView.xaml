@@ -53,7 +53,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <TextBox Grid.Column="2" Grid.Row="0" Name="txtUsername" Text="{Binding SearchParams.Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
+                    <TextBox Grid.Column="2" Grid.Row="0" Name="txtChannel" Text="{Binding SearchParams.Channel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
                         <TextBox.InputBindings>
                             <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
                             <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
@@ -63,6 +63,7 @@
                     <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
                         <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                        <RadioButton GroupName="VideoType" Content="Upload" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
                     <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />

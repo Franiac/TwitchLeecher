@@ -94,8 +94,8 @@
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0" MaxWidth="240" MaxHeight="135">
-                                    <Image Source="{Binding Thumbnail}" VerticalAlignment="Center" Width="240" Height="180" Stretch="Uniform" />
+                                <Grid Grid.Column="0">
+                                    <Image Source="{Binding Thumbnail}" VerticalAlignment="Center" Stretch="Uniform" />
                                     <StackPanel Orientation="Horizontal"  ToolTip="Views" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,5,0">
                                         <fa:ImageAwesome Icon="Eye" Foreground="White" Width="16" Height="16" VerticalAlignment="Center" Margin="0,2,0,0" />
                                         <TextBlock Text="{Binding Views}" Margin="5,0,0,0" VerticalAlignment="Center" />

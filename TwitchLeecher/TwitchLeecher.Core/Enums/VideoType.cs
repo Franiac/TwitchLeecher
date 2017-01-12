@@ -3,6 +3,7 @@
     public enum VideoType
     {
         Broadcast,
-        Highlight
+        Highlight,
+        Upload
     }
 }

@@ -48,6 +48,8 @@ namespace TwitchLeecher.Core.Models
 
         public string QualityFormatted { get; private set; }
 
+        public int QualityPriority { get; private set; }
+
         public string Resolution { get; private set; }
 
         public string Fps { get; private set; }
@@ -62,7 +64,7 @@ namespace TwitchLeecher.Core.Models
 
         private void Initialize()
         {
-            this.QualityFormatted = GetQualityFormatted(this.QualityId);
+            this.InitializeQuality(this.QualityId);
 
             string resolution = this.Resolution;
             string fps = this.Fps;
@@ -106,6 +108,66 @@ namespace TwitchLeecher.Core.Models
                     this.DisplayStringShort = UNKNOWN;
                     this.DisplayStringLong = UNKNOWN;
                 }
+            }
+        }
+
+        public void InitializeQuality(string qualityId)
+        {
+            this.QualityFormatted = GetQualityFormatted(qualityId);
+
+            switch (qualityId.ToLowerInvariant())
+            {
+                case QUALITY_SOURCE:
+                    this.QualityPriority = 0;
+                    break;
+
+                case QUALITY_HIGH:
+                    this.QualityPriority = 1;
+                    break;
+
+                case QUALITY_MEDIUM:
+                    this.QualityPriority = 2;
+                    break;
+
+                case QUALITY_LOW:
+                    this.QualityPriority = 3;
+                    break;
+
+                case QUALITY_MOBILE:
+                    this.QualityPriority = 4;
+                    break;
+
+                case QUALITY_AUDIO:
+                    this.QualityPriority = 5;
+                    break;
+
+                case QUALITY_1080P:
+                    this.QualityPriority = 10;
+                    break;
+
+                case QUALITY_720P:
+                    this.QualityPriority = 11;
+                    break;
+
+                case QUALITY_480P:
+                    this.QualityPriority = 12;
+                    break;
+
+                case QUALITY_360P:
+                    this.QualityPriority = 13;
+                    break;
+
+                case QUALITY_240P:
+                    this.QualityPriority = 14;
+                    break;
+
+                case QUALITY_144P:
+                    this.QualityPriority = 15;
+                    break;
+
+                default:
+                    this.QualityPriority = 100;
+                    break;
             }
         }
 

@@ -11,7 +11,7 @@ namespace TwitchLeecher.Core.Models
         private SearchType searchType;
         private VideoType videoType;
 
-        private string username;
+        private string channel;
         private string urls;
         private string ids;
 
@@ -54,15 +54,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string Username
+        public string Channel
         {
             get
             {
-                return this.username;
+                return this.channel;
             }
             set
             {
-                this.SetProperty(ref this.username, value, nameof(this.Username));
+                this.SetProperty(ref this.channel, value, nameof(this.Channel));
             }
         }
 
@@ -110,13 +110,13 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.Username);
+            string currentProperty = nameof(this.Channel);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchType == SearchType.Channel && string.IsNullOrWhiteSpace(this.username))
+                if (this.searchType == SearchType.Channel && string.IsNullOrWhiteSpace(this.channel))
                 {
-                    this.AddError(currentProperty, "Please specify a username!");
+                    this.AddError(currentProperty, "Please specify a channel name!");
                 }
             }
 
@@ -237,7 +237,7 @@ namespace TwitchLeecher.Core.Models
             return new SearchParameters(this.searchType)
             {
                 VideoType = this.videoType,
-                Username = this.username,
+                Channel = this.channel,
                 Urls = this.urls,
                 Ids = this.ids,
                 LoadLimit = this.loadLimit

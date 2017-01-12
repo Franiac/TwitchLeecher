@@ -106,6 +106,7 @@
                 <StackPanel Grid.Row="2" Grid.Column="2"  Orientation="Horizontal">
                     <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding Path='CurrentPreferences.SearchVideoType', Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding Path='CurrentPreferences.SearchVideoType', Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                    <RadioButton GroupName="VideoType" Content="Upload" IsChecked="{Binding Path='CurrentPreferences.SearchVideoType', Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                 </StackPanel>
                 <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource PrefInfo}">
                     <fa:ImageAwesome.ToolTip>

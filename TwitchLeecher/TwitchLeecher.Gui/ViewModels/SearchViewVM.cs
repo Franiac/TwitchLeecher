@@ -199,10 +199,10 @@ namespace TwitchLeecher.Gui.ViewModels
                 this.SearchParams.Validate();
 
                 if (this.SearchParams.SearchType == SearchType.Channel &&
-                    !string.IsNullOrWhiteSpace(this.SearchParams.Username) &&
-                    !this.twitchService.UserExists(this.SearchParams.Username))
+                    !string.IsNullOrWhiteSpace(this.SearchParams.Channel) &&
+                    !this.twitchService.ChannelExists(this.SearchParams.Channel))
                 {
-                    this.SearchParams.AddError(nameof(this.SearchParams.Username), "The specified username does not exist on Twitch!");
+                    this.SearchParams.AddError(nameof(this.SearchParams.Channel), "The specified channel does not exist on Twitch!");
                 }
 
                 if (this.SearchParams.HasErrors)

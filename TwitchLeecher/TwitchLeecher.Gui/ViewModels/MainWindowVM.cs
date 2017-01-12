@@ -496,7 +496,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         SearchParameters searchParams = new SearchParameters(SearchType.Channel)
                         {
-                            Username = currentPrefs.SearchChannelName,
+                            Channel = currentPrefs.SearchChannelName,
                             VideoType = currentPrefs.SearchVideoType,
                             LoadLimit = currentPrefs.SearchLoadLimit
                         };
