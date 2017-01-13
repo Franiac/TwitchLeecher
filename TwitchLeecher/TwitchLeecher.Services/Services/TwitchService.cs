@@ -39,7 +39,7 @@ namespace TwitchLeecher.Services.Services
         private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
 
         private const string TEMP_PREFIX = "TL_";
-        private const string PLAYLIST_NAME = "vod.m3u8";
+        private const string PLAYLIST_NAME = "parts.txt";
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
@@ -497,35 +497,32 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(urls));
             }
 
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
+            string[] urlArr = urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (urlArr.Length > 0)
             {
-                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+                HashSet<string> addedIds = new HashSet<string>();
 
-                string[] urlArr = urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (urlArr.Length > 0)
+                foreach (string url in urlArr)
                 {
-                    HashSet<string> addedIds = new HashSet<string>();
+                    string id = this.GetVideoIdFromUrl(url);
 
-                    foreach (string url in urlArr)
+                    if (!string.IsNullOrWhiteSpace(id) && !addedIds.Contains(id))
                     {
-                        string id = this.GetVideoIdFromUrl(url);
+                        TwitchVideo video = this.GetTwitchVideoFromId(id);
 
-                        if (!string.IsNullOrWhiteSpace(id) && !addedIds.Contains(id))
+                        if (video != null)
                         {
-                            TwitchVideo video = this.GetTwitchVideoFromId(webClient, id);
-
-                            if (video != null)
-                            {
-                                videos.Add(video);
-                                addedIds.Add(id);
-                            }
+                            videos.Add(video);
+                            addedIds.Add(id);
                         }
                     }
                 }
-
-                this.Videos = videos;
             }
+
+            this.Videos = videos;
         }
 
         private void SearchIds(string ids)
@@ -535,37 +532,34 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(ids));
             }
 
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
+            string[] idsArr = ids.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (idsArr.Length > 0)
             {
-                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+                HashSet<int> addedIds = new HashSet<int>();
 
-                string[] idsArr = ids.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (idsArr.Length > 0)
+                foreach (string id in idsArr)
                 {
-                    HashSet<int> addedIds = new HashSet<int>();
+                    string idStr = id.TrimStart(new char[] { 'v' });
 
-                    foreach (string id in idsArr)
+                    int idInt;
+
+                    if (int.TryParse(idStr, out idInt) && !addedIds.Contains(idInt))
                     {
-                        string idStr = id.TrimStart(new char[] { 'v' });
+                        TwitchVideo video = this.GetTwitchVideoFromId("v" + idInt);
 
-                        int idInt;
-
-                        if (int.TryParse(idStr, out idInt) && !addedIds.Contains(idInt))
+                        if (video != null)
                         {
-                            TwitchVideo video = this.GetTwitchVideoFromId(webClient, "v" + idInt);
-
-                            if (video != null)
-                            {
-                                videos.Add(video);
-                                addedIds.Add(idInt);
-                            }
+                            videos.Add(video);
+                            addedIds.Add(idInt);
                         }
                     }
                 }
-
-                this.Videos = videos;
             }
+
+            this.Videos = videos;
         }
 
         private string GetVideoIdFromUrl(string url)
@@ -617,40 +611,38 @@ namespace TwitchLeecher.Services.Services
             return null;
         }
 
-        private TwitchVideo GetTwitchVideoFromId(WebClient webClient, string id)
+        private TwitchVideo GetTwitchVideoFromId(string id)
         {
-            if (webClient == null)
-            {
-                throw new ArgumentNullException(nameof(webClient));
-            }
-
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            try
+            using (WebClient webClient = this.CreateTwitchWebClient())
             {
-                string result = webClient.DownloadString(string.Format(VIDEO_URL, id));
-
-                JObject videoJson = JObject.Parse(result);
-
-                if (videoJson != null && videoJson.Value<string>("_id").StartsWith("v"))
+                try
                 {
-                    return this.ParseVideo(videoJson);
+                    string result = webClient.DownloadString(string.Format(VIDEO_URL, id));
+
+                    JObject videoJson = JObject.Parse(result);
+
+                    if (videoJson != null && videoJson.Value<string>("_id").StartsWith("v"))
+                    {
+                        return this.ParseVideo(videoJson);
+                    }
                 }
-            }
-            catch (WebException ex)
-            {
-                HttpWebResponse resp = ex.Response as HttpWebResponse;
+                catch (WebException ex)
+                {
+                    HttpWebResponse resp = ex.Response as HttpWebResponse;
 
-                if (resp != null && resp.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
+                    if (resp != null && resp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
@@ -738,32 +730,29 @@ namespace TwitchLeecher.Services.Services
 
                             this.CheckTempDirectory(log, tempDir);
 
-                            using (WebClient webClient = this.CreateTwitchWebClient())
-                            {
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                string playlistUrl = this.RetrievePlaylistUrlForQuality(log, webClient, resolution, urlIdTrimmed, vodAuthInfo);
+                            string playlistUrl = this.RetrievePlaylistUrlForQuality(log, resolution, urlIdTrimmed, vodAuthInfo);
 
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                VodPlaylist vodPlaylist = this.RetrieveVodPlaylist(log, tempDir, playlistUrl);
+                            VodPlaylist vodPlaylist = this.RetrieveVodPlaylist(log, tempDir, playlistUrl);
 
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                CropInfo cropInfo = this.CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
+                            CropInfo cropInfo = this.CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
 
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                this.DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
+                            this.DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
 
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
+                            this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
 
-                                cancellationToken.ThrowIfCancellationRequested();
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                                this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
-                            }
+                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -870,24 +859,27 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, WebClient webClient, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
-            log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-            string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
-            log(" done!");
-
-            List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
-
-            allPlaylistsList.ForEach(url =>
+            using (WebClient webClient = this.CreateTwitchWebClient())
             {
-                log(Environment.NewLine + url);
-            });
+                log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
+                string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
+                log(" done!");
 
-            string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.QualityId)).First();
+                List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
 
-            log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
+                allPlaylistsList.ForEach(url =>
+                {
+                    log(Environment.NewLine + url);
+                });
 
-            return playlistUrl;
+                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.QualityId)).First();
+
+                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
+
+                return playlistUrl;
+            }
         }
 
         private VodPlaylist RetrieveVodPlaylist(Action<string> log, string tempDir, string playlistUrl)
@@ -1090,10 +1082,10 @@ namespace TwitchLeecher.Services.Services
 
             StringBuilder sb = new StringBuilder();
 
-            vodPlaylist.ForEach(part =>
+            foreach (VodPlaylistPartExt part in vodPlaylist.Where(p => p is VodPlaylistPartExt))
             {
-                sb.AppendLine(part.GetOutput());
-            });
+                sb.AppendLine("file '" + part.LocalFile + "'");
+            };
 
             log(" done!");
 
@@ -1112,7 +1104,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y -f concat -safe 0 -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
