@@ -88,7 +88,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (this.commandLockObject)
                 {
-                    Clipboard.SetText(this.download?.Log);
+                    Clipboard.SetDataObject(this.download?.Log);
                 }
             }
             catch (Exception ex)
