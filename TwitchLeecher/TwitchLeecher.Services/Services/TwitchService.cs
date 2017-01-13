@@ -39,7 +39,7 @@ namespace TwitchLeecher.Services.Services
         private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
 
         private const string TEMP_PREFIX = "TL_";
-        private const string PLAYLIST_NAME = "parts.txt";
+        private const string FFMPEG_PART_LIST = "parts.txt";
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
@@ -700,7 +700,7 @@ namespace TwitchLeecher.Services.Services
                         string downloadId = download.Id;
                         string urlIdTrimmed = downloadParams.Video.IdTrimmed;
                         string tempDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
-                        string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
+                        string partList = Path.Combine(tempDir, FFMPEG_PART_LIST);
                         string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
 
@@ -748,11 +748,11 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
+                            this.WriteNewPlaylist(log, vodPlaylist, partList);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
+                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, partList, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -1076,9 +1076,9 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string playlistFile)
+        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string partList)
         {
-            log(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG...");
+            log(Environment.NewLine + Environment.NewLine + "Creating local file list for FFMPEG...");
 
             StringBuilder sb = new StringBuilder();
 
@@ -1089,14 +1089,14 @@ namespace TwitchLeecher.Services.Services
 
             log(" done!");
 
-            log(Environment.NewLine + "Writing playlist to '" + playlistFile + "'...");
-            FileSystem.DeleteFile(playlistFile);
-            File.WriteAllText(playlistFile, sb.ToString());
+            log(Environment.NewLine + "Writing file list to '" + partList + "'...");
+            FileSystem.DeleteFile(partList);
+            File.WriteAllText(partList, sb.ToString());
             log(" done!");
         }
 
         private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
+            Action<bool> setIsEncoding, string ffmpegFile, string partList, string outputFile, CropInfo cropInfo)
         {
             setStatus("Processing");
             setIsEncoding(true);
@@ -1104,7 +1104,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y -f concat -safe 0 -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y -f concat -safe 0 -i \"" + partList + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
@@ -1116,9 +1116,7 @@ namespace TwitchLeecher.Services.Services
 
             using (Process p = new Process())
             {
-                TimeSpan duration = new TimeSpan();
-
-                bool durationReceived = false;
+                TimeSpan duration = TimeSpan.FromSeconds(cropInfo.Length);
 
                 DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
                 {
@@ -1128,20 +1126,7 @@ namespace TwitchLeecher.Services.Services
                         {
                             string dataTrimmed = e.Data.Trim();
 
-                            if (dataTrimmed.StartsWith("Duration") && !durationReceived)
-                            {
-                                string durationStr = dataTrimmed.Substring(dataTrimmed.IndexOf(":") + 1).Trim();
-                                durationStr = durationStr.Substring(0, durationStr.IndexOf(",")).Trim();
-
-                                if (TimeSpan.TryParse(durationStr, out duration))
-                                {
-                                    duration = TimeSpan.Parse(durationStr);
-                                    durationReceived = true;
-                                    setProgress(0);
-                                }
-                            }
-
-                            if (dataTrimmed.StartsWith("frame") && durationReceived && duration != TimeSpan.Zero)
+                            if (dataTrimmed.StartsWith("frame", StringComparison.OrdinalIgnoreCase) && duration != TimeSpan.Zero)
                             {
                                 string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
                                 timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
