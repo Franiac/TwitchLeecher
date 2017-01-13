@@ -945,8 +945,7 @@ namespace TwitchLeecher.Services.Services
                     }
                     else
                     {
-                        lengthSum += partLength;
-                        start = Math.Round(lengthSum - start, 3);
+                        start = Math.Round(start - lengthSum, 3);
                         break;
                     }
                 }
