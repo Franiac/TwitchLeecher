@@ -62,7 +62,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        double INavigationState.ScrollPosition { get; set; }
+        public double ScrollPosition { get; set; }
 
         public ObservableCollection<TwitchVideo> Videos
         {
@@ -225,7 +225,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void TwitchService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            this.FirePropertyChanged(e.PropertyName);
+            string propertyName = e.PropertyName;
+
+            this.FirePropertyChanged(propertyName);
+
+            if (propertyName.Equals(nameof(this.Videos)))
+            {
+                this.ScrollPosition = 0;
+            }
         }
 
         #endregion EventHandlers
