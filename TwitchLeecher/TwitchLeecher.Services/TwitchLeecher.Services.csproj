@@ -57,13 +57,6 @@
     <Compile Include="Interfaces\IPreferencesService.cs" />
     <Compile Include="Interfaces\ITwitchService.cs" />
     <Compile Include="Interfaces\IUpdateService.cs" />
-    <Compile Include="Models\CropInfo.cs" />
-    <Compile Include="Models\DownloadTask.cs" />
-    <Compile Include="Models\IVodPlaylistPart.cs" />
-    <Compile Include="Models\IVodPlaylistPartExt.cs" />
-    <Compile Include="Models\VodPlaylistPart.cs" />
-    <Compile Include="Models\VodPlaylistPartExt.cs" />
-    <Compile Include="Models\VodPlaylist.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FilenameService.cs" />

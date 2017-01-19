@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TwitchLeecher.Services.Models
+namespace TwitchLeecher.Core.Models
 {
-    internal class VodPlaylist : List<IVodPlaylistPart>
+    public class VodPlaylist : List<IVodPlaylistPart>
     {
         #region Static Methods
 

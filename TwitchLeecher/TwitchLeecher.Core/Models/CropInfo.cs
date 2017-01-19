@@ -1,6 +1,6 @@
-﻿namespace TwitchLeecher.Services.Models
+﻿namespace TwitchLeecher.Core.Models
 {
-    internal class CropInfo
+    public class CropInfo
     {
         public CropInfo(bool cropStart, bool cropEnd, double start, double length)
         {

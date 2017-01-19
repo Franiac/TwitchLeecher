@@ -18,7 +18,6 @@ using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Services.Models;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;

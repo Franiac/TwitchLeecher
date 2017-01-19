@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 
-namespace TwitchLeecher.Services.Models
+namespace TwitchLeecher.Core.Models
 {
-    internal class VodPlaylistPartExt : IVodPlaylistPartExt
+    public class VodPlaylistPartExt : IVodPlaylistPartExt
     {
         #region Fields
 

@@ -1,6 +1,6 @@
-﻿namespace TwitchLeecher.Services.Models
+﻿namespace TwitchLeecher.Core.Models
 {
-    internal class VodPlaylistPart : IVodPlaylistPart
+    public class VodPlaylistPart : IVodPlaylistPart
     {
         #region Fields
 

@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TwitchLeecher.Services.Models
+namespace TwitchLeecher.Core.Models
 {
-    internal class DownloadTask
+    public class DownloadTask
     {
         public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
         {

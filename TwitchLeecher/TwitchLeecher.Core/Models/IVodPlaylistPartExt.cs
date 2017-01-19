@@ -1,6 +1,6 @@
-﻿namespace TwitchLeecher.Services.Models
+﻿namespace TwitchLeecher.Core.Models
 {
-    internal interface IVodPlaylistPartExt : IVodPlaylistPart
+    public interface IVodPlaylistPartExt : IVodPlaylistPart
     {
         string DownloadUrl { get; }
 
