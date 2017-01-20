@@ -1,11 +1,16 @@
 ﻿using FontAwesome.WPF;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
+using TwitchLeecher.Core.Models;
+using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
+using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Native;
 using static TwitchLeecher.Shared.Native.Api;
@@ -17,14 +22,21 @@ namespace TwitchLeecher.Gui.Views
         #region Fields
 
         private IEventAggregator eventAggregator;
+        private IDialogService dialogService;
+        private IRuntimeDataService runtimeDataService;
 
         #endregion Fields
 
         #region Constructors
 
-        public MainWindow(MainWindowVM viewModel, IEventAggregator eventAggregator)
+        public MainWindow(MainWindowVM viewModel,
+            IEventAggregator eventAggregator,
+            IDialogService dialogService,
+            IRuntimeDataService runtimeDataService)
         {
             this.eventAggregator = eventAggregator;
+            this.dialogService = dialogService;
+            this.runtimeDataService = runtimeDataService;
 
             InitializeComponent();
 
@@ -43,6 +55,24 @@ namespace TwitchLeecher.Gui.Views
             // Hold reference to FontAwesome library
             ImageAwesome.CreateImageSource(FontAwesomeIcon.Times, Brushes.Black);
 
+            this.SizeChanged += (s, e) =>
+            {
+                if (this.WindowState == WindowState.Normal)
+                {
+                    this.WidthNormal = this.Width;
+                    this.HeightNormal = this.Height;
+                }
+            };
+
+            this.LocationChanged += (s, e) =>
+            {
+                if (this.WindowState == WindowState.Normal)
+                {
+                    this.TopNormal = this.Top;
+                    this.LeftNormal = this.Left;
+                }
+            };
+
             this.Loaded += (s, e) =>
             {
                 HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(WindowProc));
@@ -53,12 +83,127 @@ namespace TwitchLeecher.Gui.Views
                 {
                     viewModel.Loaded();
                 }
+
+                this.LoadWindowState();
+            };
+
+            this.Closed += (s, e) =>
+            {
+                this.SaveWindowState();
             };
         }
 
         #endregion Constructors
 
+        #region Properties
+
+        public double WidthNormal { get; set; }
+
+        public double HeightNormal { get; set; }
+
+        public double TopNormal { get; set; }
+
+        public double LeftNormal { get; set; }
+
+        public WindowState LastWindowState { get; set; }
+
+        #endregion Properties
+
         #region Methods
+
+        public void LoadWindowState()
+        {
+            try
+            {
+                MainWindowInfo mainWindowInfo = this.runtimeDataService.RuntimeData.MainWindowInfo;
+
+                if (mainWindowInfo != null)
+                {
+                    this.Width = mainWindowInfo.Width;
+                    this.Height = mainWindowInfo.Height;
+                    this.Top = mainWindowInfo.Top;
+                    this.Left = mainWindowInfo.Left;
+                    this.WindowState = mainWindowInfo.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+                    this.ValidateWindowState(false);
+                }
+                else
+                {
+                    this.ValidateWindowState(true);
+                }
+
+                this.LastWindowState = this.WindowState;
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        public void SaveWindowState()
+        {
+            try
+            {
+                MainWindowInfo mainWindowInfo = new MainWindowInfo()
+                {
+                    Width = this.WidthNormal,
+                    Height = this.HeightNormal,
+                    Top = this.TopNormal,
+                    Left = this.LeftNormal,
+                    IsMaximized = this.WindowState == WindowState.Maximized
+                };
+
+                this.runtimeDataService.RuntimeData.MainWindowInfo = mainWindowInfo;
+                this.runtimeDataService.Save();
+            }
+            catch (Exception ex)
+            {
+                this.dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ValidateWindowState(bool firstStart)
+        {
+            if (firstStart)
+            {
+                Screen screen = Screen.FromHandle(new WindowInteropHelper(this).Handle);
+
+                double availableHeight = screen.WorkingArea.Height;
+
+                if (this.Height > availableHeight)
+                {
+                    this.Height = Math.Max(this.MinHeight, availableHeight);
+
+                    if (this.Height > availableHeight)
+                    {
+                        this.Top = 0;
+                    }
+                    else
+                    {
+                        this.Top = (availableHeight / 2) - (this.Height / 2);
+                    }
+                }
+            }
+            else
+            {
+                Screen currentScreen = Screen.FromRectangle(new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height));
+                Screen mostRightScreen = Screen.AllScreens.Aggregate((s1, s2) => s1.Bounds.Right > s2.Bounds.Right ? s1 : s2);
+
+                if (this.Top < 0 || this.Top > currentScreen.WorkingArea.Height)
+                {
+                    this.Top = 0;
+                }
+
+                if (this.Left < 0)
+                {
+                    this.Left = 0;
+                }
+
+                if (this.Left > mostRightScreen.Bounds.Right)
+                {
+                    this.Left = mostRightScreen.Bounds.Right - this.Width;
+                }
+            }
+        }
 
         private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handeled)
         {

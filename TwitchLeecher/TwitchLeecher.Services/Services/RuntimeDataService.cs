@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;
 
 namespace TwitchLeecher.Services.Services
@@ -12,11 +11,6 @@ namespace TwitchLeecher.Services.Services
         #region Constants
 
         private const string RUNTIMEDATA_FILE = "runtime.xml";
-
-        private const string RUNTIMEDATA_EL = "RuntimeData";
-
-        private const string AUTH_EL = "Authorization";
-        private const string AUTH_ACCESSTOKEN_EL = "AccessToken";
 
         #endregion Constants
 
@@ -35,7 +29,6 @@ namespace TwitchLeecher.Services.Services
         public RuntimeDataService(IFolderService folderService)
         {
             this.folderService = folderService;
-
             this.commandLockObject = new object();
         }
 
@@ -68,18 +61,9 @@ namespace TwitchLeecher.Services.Services
 
                 XDocument doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
-                XElement runtimeDataEl = new XElement(RUNTIMEDATA_EL);
+                XElement runtimeDataEl = runtimeData.GetXml();
+
                 doc.Add(runtimeDataEl);
-
-                if (!string.IsNullOrWhiteSpace(runtimeData.AccessToken))
-                {
-                    XElement authEl = new XElement(AUTH_EL);
-                    runtimeDataEl.Add(authEl);
-
-                    XElement accessTokenEl = new XElement(AUTH_ACCESSTOKEN_EL);
-                    accessTokenEl.SetValue(this.runtimeData.AccessToken);
-                    authEl.Add(accessTokenEl);
-                }
 
                 string appDataFolder = this.folderService.GetAppDataFolder();
 
@@ -102,30 +86,7 @@ namespace TwitchLeecher.Services.Services
                 if (File.Exists(configFile))
                 {
                     XDocument doc = XDocument.Load(configFile);
-
-                    XElement runtimedataEl = doc.Root;
-
-                    if (runtimedataEl != null)
-                    {
-                        XElement authEl = runtimedataEl.Element(AUTH_EL);
-
-                        if (authEl != null)
-                        {
-                            XElement accessTokenEl = authEl.Element(AUTH_ACCESSTOKEN_EL);
-
-                            if (accessTokenEl != null)
-                            {
-                                try
-                                {
-                                    runtimeData.AccessToken = accessTokenEl.GetValueAsString();
-                                }
-                                catch
-                                {
-                                    // Value from config file could not be loaded, use default value
-                                }
-                            }
-                        }
-                    }
+                    runtimeData = RuntimeData.GetFromXml(doc.Root);
                 }
 
                 return runtimeData;

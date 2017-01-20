@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj">
@@ -53,6 +54,7 @@
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\IVodPlaylistPart.cs" />
     <Compile Include="Models\IVodPlaylistPartExt.cs" />
+    <Compile Include="Models\MainWindowInfo.cs" />
     <Compile Include="Models\TwitchAuthInfo.cs" />
     <Compile Include="Models\VodAuthInfo.cs" />
     <Compile Include="Models\DownloadParameters.cs" />

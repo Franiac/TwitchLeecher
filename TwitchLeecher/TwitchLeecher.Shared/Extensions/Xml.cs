@@ -230,6 +230,20 @@ namespace TwitchLeecher.Shared.Extensions
             }
         }
 
+        public static double GetValueAsDouble(this XElement xel)
+        {
+            xel.CheckValueNotNullOrWhitespace();
+
+            try
+            {
+                return double.Parse(xel.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Could not convert element value '" + xel.Value + "' into type '" + typeof(double).FullName + "'!", ex);
+            }
+        }
+
         public static bool GetValueAsBool(this XElement xel)
         {
             xel.CheckValueNotNullOrWhitespace();
@@ -257,6 +271,11 @@ namespace TwitchLeecher.Shared.Extensions
         public static int? GetValueAsNullableInt(this XElement xel)
         {
             return xel.GetNullableValue<int>();
+        }
+
+        public static double? GetValueAsNullableDouble(this XElement xel)
+        {
+            return xel.GetNullableValue<double>();
         }
 
         public static Version GetValueAsVersion(this XElement xel)

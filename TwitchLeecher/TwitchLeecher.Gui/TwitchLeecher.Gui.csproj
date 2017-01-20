@@ -64,7 +64,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Behaviors\CenterMainWindowBehavior.cs" />
+    <Compile Include="Behaviors\CenterWindowBehavior.cs" />
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
     <Compile Include="Controls\FadeContentControl.cs" />
     <Compile Include="Controls\ScrollingTextBox.cs" />

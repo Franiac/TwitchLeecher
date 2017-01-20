@@ -4,7 +4,7 @@ using System.Windows.Interactivity;
 
 namespace TwitchLeecher.Gui.Behaviors
 {
-    public class CenterMainWindowBehavior : Behavior<Window>
+    public class CenterWindowBehavior : Behavior<Window>
     {
         private WindowState mainWindowState;
 

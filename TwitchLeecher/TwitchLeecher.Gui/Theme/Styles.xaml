@@ -184,7 +184,7 @@
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Width" Value="800" />
-        <Setter Property="Height" Value="828" />
+        <Setter Property="Height" Value="800" />
         <Setter Property="MinWidth" Value="800" />
         <Setter Property="MinHeight" Value="570" />
     </Style>

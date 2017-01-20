@@ -17,7 +17,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <i:Interaction.Behaviors>
-        <b:CenterMainWindowBehavior />
+        <b:CenterWindowBehavior />
     </i:Interaction.Behaviors>
     <Border Padding="20" BorderThickness="1">
         <Border.BorderBrush>
