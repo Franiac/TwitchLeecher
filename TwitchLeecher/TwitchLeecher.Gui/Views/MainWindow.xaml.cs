@@ -105,8 +105,6 @@ namespace TwitchLeecher.Gui.Views
 
         public double LeftNormal { get; set; }
 
-        public WindowState LastWindowState { get; set; }
-
         #endregion Properties
 
         #region Methods
@@ -130,8 +128,6 @@ namespace TwitchLeecher.Gui.Views
                 {
                     this.ValidateWindowState(true);
                 }
-
-                this.LastWindowState = this.WindowState;
             }
             catch (Exception ex)
             {
