@@ -184,9 +184,14 @@ namespace TwitchLeecher.Gui.Views
                 Screen currentScreen = Screen.FromRectangle(new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height));
                 Screen mostRightScreen = Screen.AllScreens.Aggregate((s1, s2) => s1.Bounds.Right > s2.Bounds.Right ? s1 : s2);
 
-                if (this.Top < 0 || this.Top > currentScreen.WorkingArea.Height)
+                if (this.Top < 0)
                 {
                     this.Top = 0;
+                }
+
+                if (this.Top > currentScreen.WorkingArea.Height)
+                {
+                    this.Top = Math.Max(0, currentScreen.WorkingArea.Height - this.Height);
                 }
 
                 if (this.Left < 0)
@@ -196,7 +201,7 @@ namespace TwitchLeecher.Gui.Views
 
                 if (this.Left > mostRightScreen.Bounds.Right)
                 {
-                    this.Left = mostRightScreen.Bounds.Right - this.Width;
+                    this.Left = Math.Max(mostRightScreen.Bounds.Left, mostRightScreen.Bounds.Right - this.Width);
                 }
             }
         }
