@@ -11,7 +11,6 @@
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         Name="thisWindow"
         Title="{Binding Title}"
-        WindowState="{Binding WindowState}"
         b:RequestClosingBehavior.RequestClosing="{Binding RequestCloseCommand}">
     <Window.Resources>
         <ResourceDictionary>

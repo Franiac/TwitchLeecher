@@ -49,8 +49,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand doCloseCommand;
         private ICommand requestCloseCommand;
 
-        private WindowState windowState;
-
         private readonly object commandLockObject;
 
         #endregion Fields
@@ -67,8 +65,6 @@ namespace TwitchLeecher.Gui.ViewModels
             IRuntimeDataService runtimeDataService,
             IUpdateService updateService)
         {
-            this.windowState = WindowState.Normal;
-
             AssemblyUtil au = AssemblyUtil.Get;
 
             this.title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
@@ -139,14 +135,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public bool IsMaximized
-        {
-            get
-            {
-                return this.windowState == WindowState.Maximized;
-            }
-        }
-
         public ViewModelBase MainView
         {
             get
@@ -156,19 +144,6 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 this.SetProperty(ref this.mainView, value, nameof(this.MainView));
-            }
-        }
-
-        public WindowState WindowState
-        {
-            get
-            {
-                return this.windowState;
-            }
-            set
-            {
-                this.SetProperty(ref this.windowState, value, nameof(this.WindowState));
-                this.FirePropertyChanged(nameof(this.IsMaximized));
             }
         }
 

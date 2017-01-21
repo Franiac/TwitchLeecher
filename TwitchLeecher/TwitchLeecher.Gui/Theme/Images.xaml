@@ -19,7 +19,7 @@
         <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Maximize.png" />
         <Setter Property="Margin" Value="0,1,0,0" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsMaximized}" Value="True">
+            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static WindowState.Maximized}">
                 <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Restore.png" />
                 <Setter Property="Margin" Value="0,0,0,0" />
             </DataTrigger>
