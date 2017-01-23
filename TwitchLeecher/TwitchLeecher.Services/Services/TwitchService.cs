@@ -308,8 +308,6 @@ namespace TwitchLeecher.Services.Services
                 {
                     return id;
                 }
-
-                Debug.WriteLine("RETRY!");
             }
 
             return null;
@@ -329,26 +327,24 @@ namespace TwitchLeecher.Services.Services
 
                     if (verifyRequestJson != null)
                     {
-                        bool identified = verifyRequestJson.Value<bool>("identified");
+                        JObject tokenJson = verifyRequestJson.Value<JObject>("token");
 
-                        if (identified)
+                        if (tokenJson != null)
                         {
-                            JObject tokenJson = verifyRequestJson.Value<JObject>("token");
+                            bool valid = tokenJson.Value<bool>("valid");
 
-                            if (tokenJson != null)
+                            if (valid)
                             {
-                                bool valid = tokenJson.Value<bool>("valid");
+                                string username = tokenJson.Value<string>("user_name");
+                                string clientId = tokenJson.Value<string>("client_id");
 
-                                if (valid)
+                                if (!string.IsNullOrWhiteSpace(username) &&
+                                    !string.IsNullOrWhiteSpace(clientId) &&
+                                    clientId.Equals(TWITCH_CLIENT_ID, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    string username = tokenJson.Value<string>("user_name");
-
-                                    if (!string.IsNullOrWhiteSpace(username))
-                                    {
-                                        this.twitchAuthInfo = new TwitchAuthInfo(accessToken, username);
-                                        this.FireIsAuthorizedChanged();
-                                        return true;
-                                    }
+                                    this.twitchAuthInfo = new TwitchAuthInfo(accessToken, username);
+                                    this.FireIsAuthorizedChanged();
+                                    return true;
                                 }
                             }
                         }
