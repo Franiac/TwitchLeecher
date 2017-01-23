@@ -79,7 +79,7 @@
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                <Setter Property="Foreground" Value="#FF6D6D6D" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -93,7 +93,7 @@
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                <Setter Property="Foreground" Value="#FF6D6D6D" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -154,11 +154,6 @@
         </Setter>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Height" Value="Auto" />
-    </Style>
-
-    <Style TargetType="{x:Type CheckBox}">
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="MainWindow" TargetType="{x:Type Window}">
