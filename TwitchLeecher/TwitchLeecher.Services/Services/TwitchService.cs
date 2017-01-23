@@ -869,7 +869,7 @@ namespace TwitchLeecher.Services.Services
                     log(Environment.NewLine + url);
                 });
 
-                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains(resolution.QualityId)).First();
+                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + resolution.QualityId + "/")).First();
 
                 log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
 
