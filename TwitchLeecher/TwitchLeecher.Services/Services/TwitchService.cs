@@ -439,32 +439,31 @@ namespace TwitchLeecher.Services.Services
                     int sum = firstArray.Count;
                     int total = videosRequestJson.Value<int>("_total");
 
-                    if (loadLimit > TWITCH_MAX_LOAD_LIMIT && sum < total)
+                    int offset = 0;
+
+                    while (sum < loadLimit && sum < total)
                     {
-                        int offset = 0;
+                        offset += TWITCH_MAX_LOAD_LIMIT;
 
-                        while (sum < total)
+                        actualLoadLimit = Math.Min(TWITCH_MAX_LOAD_LIMIT, loadLimit - sum);
+
+                        using (WebClient webClientReload = this.CreateTwitchWebClient())
                         {
-                            offset += TWITCH_MAX_LOAD_LIMIT;
+                            webClientReload.QueryString.Add("broadcast_type", broadcastTypeParam);
+                            webClientReload.QueryString.Add("limit", actualLoadLimit.ToString());
+                            webClientReload.QueryString.Add("offset", offset.ToString());
 
-                            using (WebClient webClientReload = this.CreateTwitchWebClient())
+                            result = webClientReload.DownloadString(channelVideosUrl);
+
+                            videosRequestJson = JObject.Parse(result);
+
+                            if (videosRequestJson != null)
                             {
-                                webClientReload.QueryString.Add("broadcast_type", broadcastTypeParam);
-                                webClientReload.QueryString.Add("limit", actualLoadLimit.ToString());
-                                webClientReload.QueryString.Add("offset", offset.ToString());
+                                JArray array = videosRequestJson.Value<JArray>("videos");
 
-                                result = webClientReload.DownloadString(channelVideosUrl);
+                                videoArrays.Add(array);
 
-                                videosRequestJson = JObject.Parse(result);
-
-                                if (videosRequestJson != null)
-                                {
-                                    JArray array = videosRequestJson.Value<JArray>("videos");
-
-                                    videoArrays.Add(array);
-
-                                    sum += array.Count;
-                                }
+                                sum += array.Count;
                             }
                         }
                     }
