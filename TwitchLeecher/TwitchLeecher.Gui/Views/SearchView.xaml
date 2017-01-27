@@ -85,7 +85,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="Paste one or more Twitch video urls in the textbox below. Make sure that every url is placed in a new line." />
-                    <TextBlock Grid.Row="2" Text="Example: https://www.twitch.tv/yourchannel/v/12345678" />
+                    <TextBlock Grid.Row="2" Text="Example: https://www.twitch.tv/videos/123456789" />
                     <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearUrlsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
@@ -112,7 +112,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="Paste one or more Twitch video IDs in the textbox below. Make sure that every ID is placed in a new line." />
-                    <TextBlock Grid.Row="2" Text="Examples: v12345678 or 12345678" />
+                    <TextBlock Grid.Row="2" Text="Example: 123456789" />
                     <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearIdsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">

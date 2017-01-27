@@ -163,7 +163,7 @@ namespace TwitchLeecher.Core.Models
 
                                 for (int i = 0; i < segments.Length; i++)
                                 {
-                                    if (segments[i].Equals("v/", StringComparison.OrdinalIgnoreCase))
+                                    if (segments[i].Equals("videos/", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (segments.Length > (i + 1))
                                         {
@@ -216,11 +216,9 @@ namespace TwitchLeecher.Core.Models
                         {
                             foreach (string id in ids)
                             {
-                                string idStr = id.TrimStart(new char[] { 'v' });
-
                                 int idInt;
 
-                                if (!int.TryParse(idStr, out idInt))
+                                if (!int.TryParse(id, out idInt) || idInt <= 0)
                                 {
                                     this.AddError(currentProperty, "One or more IDs are invalid!");
                                     break;

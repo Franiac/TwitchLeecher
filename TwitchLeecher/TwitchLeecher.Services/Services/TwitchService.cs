@@ -497,20 +497,20 @@ namespace TwitchLeecher.Services.Services
 
             if (urlArr.Length > 0)
             {
-                HashSet<string> addedIds = new HashSet<string>();
+                HashSet<int> addedIds = new HashSet<int>();
 
                 foreach (string url in urlArr)
                 {
-                    string id = this.GetVideoIdFromUrl(url);
+                    int? id = this.GetVideoIdFromUrl(url);
 
-                    if (!string.IsNullOrWhiteSpace(id) && !addedIds.Contains(id))
+                    if (id.HasValue && !addedIds.Contains(id.Value))
                     {
-                        TwitchVideo video = this.GetTwitchVideoFromId(id);
+                        TwitchVideo video = this.GetTwitchVideoFromId(id.Value);
 
                         if (video != null)
                         {
                             videos.Add(video);
-                            addedIds.Add(id);
+                            addedIds.Add(id.Value);
                         }
                     }
                 }
@@ -536,13 +536,11 @@ namespace TwitchLeecher.Services.Services
 
                 foreach (string id in idsArr)
                 {
-                    string idStr = id.TrimStart(new char[] { 'v' });
-
                     int idInt;
 
-                    if (int.TryParse(idStr, out idInt) && !addedIds.Contains(idInt))
+                    if (int.TryParse(id, out idInt) && !addedIds.Contains(idInt))
                     {
-                        TwitchVideo video = this.GetTwitchVideoFromId("v" + idInt);
+                        TwitchVideo video = this.GetTwitchVideoFromId(idInt);
 
                         if (video != null)
                         {
@@ -556,7 +554,7 @@ namespace TwitchLeecher.Services.Services
             this.Videos = videos;
         }
 
-        private string GetVideoIdFromUrl(string url)
+        private int? GetVideoIdFromUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -579,7 +577,7 @@ namespace TwitchLeecher.Services.Services
 
             for (int i = 0; i < segments.Length; i++)
             {
-                if (segments[i].Equals("v/", StringComparison.OrdinalIgnoreCase))
+                if (segments[i].Equals("videos/", StringComparison.OrdinalIgnoreCase))
                 {
                     if (segments.Length > (i + 1))
                     {
@@ -593,7 +591,7 @@ namespace TwitchLeecher.Services.Services
 
                             if (int.TryParse(idStr, out idInt) && idInt > 0)
                             {
-                                return "v" + idInt;
+                                return idInt;
                             }
                         }
                     }
@@ -605,13 +603,8 @@ namespace TwitchLeecher.Services.Services
             return null;
         }
 
-        private TwitchVideo GetTwitchVideoFromId(string id)
+        private TwitchVideo GetTwitchVideoFromId(int id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             using (WebClient webClient = this.CreateTwitchWebClient())
             {
                 try
@@ -620,7 +613,7 @@ namespace TwitchLeecher.Services.Services
 
                     JObject videoJson = JObject.Parse(result);
 
-                    if (videoJson != null && videoJson.Value<string>("_id").StartsWith("v"))
+                    if (videoJson != null)
                     {
                         return this.ParseVideo(videoJson);
                     }
