@@ -1,6 +1,6 @@
 # Twitch Leecher
 
-If you are looking for a extremely fast and easy to use Twitch VOD downloader, this is your tool!
+If you are looking for an extremely fast and easy to use Twitch VOD downloader, this is your tool!
 
 ## Download & Requirements
 
