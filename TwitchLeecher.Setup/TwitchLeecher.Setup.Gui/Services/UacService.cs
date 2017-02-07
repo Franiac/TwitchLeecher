@@ -56,7 +56,7 @@ namespace TwitchLeecher.Setup.Gui.Services
             {
                 if (this.uacIcon == null)
                 {
-                    this.uacIcon = this.GetUacIcon();
+                    this.CreateUacIcon();
                 }
 
                 return this.uacIcon;
@@ -98,27 +98,30 @@ namespace TwitchLeecher.Setup.Gui.Services
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        private BitmapImage GetUacIcon()
+        private void CreateUacIcon()
         {
             lock (this.uacIconLock)
             {
-                SHSTOCKICONINFO iconResult = new SHSTOCKICONINFO();
-                iconResult.cbSize = (uint)Marshal.SizeOf(iconResult);
+                if (this.uacIcon == null)
+                {
+                    SHSTOCKICONINFO iconResult = new SHSTOCKICONINFO();
+                    iconResult.cbSize = (uint)Marshal.SizeOf(iconResult);
 
-                NativeMethods.SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref iconResult);
+                    SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref iconResult);
 
-                Bitmap bmp = Bitmap.FromHicon(iconResult.hIcon);
+                    Bitmap bmp = Bitmap.FromHicon(iconResult.hIcon);
 
-                BitmapImage bmpImg = new BitmapImage();
+                    BitmapImage bmpImg = new BitmapImage();
 
-                MemoryStream ms = new MemoryStream();
-                bmp.Save(ms, ImageFormat.Png);
+                    MemoryStream ms = new MemoryStream();
+                    bmp.Save(ms, ImageFormat.Png);
 
-                bmpImg.BeginInit();
-                bmpImg.StreamSource = ms;
-                bmpImg.EndInit();
+                    bmpImg.BeginInit();
+                    bmpImg.StreamSource = ms;
+                    bmpImg.EndInit();
 
-                return bmpImg;
+                    this.uacIcon = bmpImg;
+                }
             }
         }
 
