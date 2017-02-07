@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
 using TwitchLeecher.Setup.Gui.Services;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels
@@ -62,14 +61,6 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public virtual string AdditionalButtonText
-        {
-            get
-            {
-                return "Refresh";
-            }
-        }
-
         public virtual string NextButtonText
         {
             get
@@ -78,27 +69,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public virtual bool IsAdditionalButtonVisible
+        public virtual bool IsUacIconVisible
         {
             get
             {
                 return false;
-            }
-        }
-
-        public virtual bool IsUacShieldVisible
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public virtual ICommand AdditionalCommand
-        {
-            get
-            {
-                return null;
             }
         }
 

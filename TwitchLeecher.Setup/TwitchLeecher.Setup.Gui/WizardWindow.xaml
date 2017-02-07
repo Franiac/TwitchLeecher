@@ -68,25 +68,16 @@
             <Border.Background>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
             </Border.Background>
-            <Grid Margin="15,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" FlowDirection="LeftToRight" Orientation="Horizontal">
-                    <Button Content="{Binding AdditionalButtonText, FallbackValue='Refresh'}" Visibility="{Binding IsAdditionalButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding AdditionalCommand}" />
-                </StackPanel>
-                <StackPanel Grid.Column="1" FlowDirection="RightToLeft" Orientation="Horizontal">
-                    <Button Content="Cancel" IsEnabled="{Binding IsCancelButtonEnabled}" Command="{Binding CancelCommand}" IsCancel="True" />
-                    <Button IsEnabled="{Binding IsNextButtonEnabled}" Margin="15,0,0,0" Command="{Binding NextCommand}" IsDefault="True">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding NextButtonText, FallbackValue='Next'}" />
-                            <Image Source="{Binding UacShieldImage}" Visibility="{Binding IsUacShieldVisible, Converter={StaticResource BooleanToVisibilityConverter}}" RenderOptions.BitmapScalingMode="Fant" Margin="3,0,0,0" Height="14" />
-                        </StackPanel>
-                    </Button>
-                    <Button Content="Back" IsEnabled="{Binding IsBackButtonEnabled}" Margin="5,0,0,0" Command="{Binding BackCommand}" />
-                </StackPanel>
-            </Grid>
+            <StackPanel Grid.Column="1" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="15,0">
+                <Button Content="Cancel" IsEnabled="{Binding IsCancelButtonEnabled}" Command="{Binding CancelCommand}" IsCancel="True" />
+                <Button IsEnabled="{Binding IsNextButtonEnabled}" Margin="15,0,0,0" Command="{Binding NextCommand}" IsDefault="True">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding NextButtonText, FallbackValue='Next'}" />
+                        <Image Source="{Binding UacIcon}" Visibility="{Binding IsUacIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}" RenderOptions.BitmapScalingMode="Fant" Margin="3,0,0,0" Height="14" />
+                    </StackPanel>
+                </Button>
+                <Button Content="Back" IsEnabled="{Binding IsBackButtonEnabled}" Margin="5,0,0,0" Command="{Binding BackCommand}" />
+            </StackPanel>
         </Border>
     </Grid>
 </Window>

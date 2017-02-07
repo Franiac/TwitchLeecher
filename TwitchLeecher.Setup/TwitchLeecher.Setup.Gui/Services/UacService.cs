@@ -16,7 +16,8 @@ namespace TwitchLeecher.Setup.Gui.Services
         private bool isUacEnabled;
         private bool isUserAdmin;
 
-        private BitmapImage uacShieldImage;
+        private BitmapImage uacIcon;
+        private object uacIconLock;
 
         #endregion Fields
 
@@ -24,9 +25,9 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         public UacService()
         {
+            this.uacIconLock = new object();
             this.isUacEnabled = this.GetIsUacEnabled();
             this.isUserAdmin = this.GetIsUserAdmin();
-            this.uacShieldImage = this.CreateUacShieldImage();
         }
 
         #endregion Constructors
@@ -49,11 +50,16 @@ namespace TwitchLeecher.Setup.Gui.Services
             }
         }
 
-        public BitmapImage UacShieldImage
+        public BitmapImage UacIcon
         {
             get
             {
-                return this.uacShieldImage;
+                if (this.uacIcon == null)
+                {
+                    this.uacIcon = this.GetUacIcon();
+                }
+
+                return this.uacIcon;
             }
         }
 
@@ -61,7 +67,7 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         #region Methods
 
-        public bool GetIsUacEnabled()
+        private bool GetIsUacEnabled()
         {
             using (RegistryKey localMachineKey = RegistryUtil.GetRegistryHiveOnBit(RegistryHive.LocalMachine))
             {
@@ -86,31 +92,34 @@ namespace TwitchLeecher.Setup.Gui.Services
             return true;
         }
 
-        public bool GetIsUserAdmin()
+        private bool GetIsUserAdmin()
         {
             WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        private BitmapImage CreateUacShieldImage()
+        private BitmapImage GetUacIcon()
         {
-            SHSTOCKICONINFO iconResult = new SHSTOCKICONINFO();
-            iconResult.cbSize = (uint)Marshal.SizeOf(iconResult);
+            lock (this.uacIconLock)
+            {
+                SHSTOCKICONINFO iconResult = new SHSTOCKICONINFO();
+                iconResult.cbSize = (uint)Marshal.SizeOf(iconResult);
 
-            SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref iconResult);
+                NativeMethods.SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref iconResult);
 
-            Bitmap bmp = Bitmap.FromHicon(iconResult.hIcon);
+                Bitmap bmp = Bitmap.FromHicon(iconResult.hIcon);
 
-            BitmapImage bmpImg = new BitmapImage();
+                BitmapImage bmpImg = new BitmapImage();
 
-            MemoryStream ms = new MemoryStream();
-            bmp.Save(ms, ImageFormat.Png);
+                MemoryStream ms = new MemoryStream();
+                bmp.Save(ms, ImageFormat.Png);
 
-            bmpImg.BeginInit();
-            bmpImg.StreamSource = ms;
-            bmpImg.EndInit();
+                bmpImg.BeginInit();
+                bmpImg.StreamSource = ms;
+                bmpImg.EndInit();
 
-            return bmpImg;
+                return bmpImg;
+            }
         }
 
         #endregion Methods

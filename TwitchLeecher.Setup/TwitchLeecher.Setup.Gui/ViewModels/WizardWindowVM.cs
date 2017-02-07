@@ -49,6 +49,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 throw new ArgumentNullException("guiService");
             }
 
+            if (uacService == null)
+            {
+                throw new ArgumentNullException("uacService");
+            }
+
             this.bootstrapper = bootstrapper;
             this.guiService = guiService;
             this.uacService = uacService;
@@ -87,22 +92,6 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public string AdditionalButtonText
-        {
-            get
-            {
-                return this.CurrentViewModel.AdditionalButtonText;
-            }
-        }
-
-        public bool IsAdditionalButtonVisible
-        {
-            get
-            {
-                return this.CurrentViewModel.IsAdditionalButtonVisible;
-            }
-        }
-
         public string NextButtonText
         {
             get
@@ -135,27 +124,19 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public bool IsUacShieldVisible
+        public bool IsUacIconVisible
         {
             get
             {
-                return this.CurrentViewModel.IsUacShieldVisible;
+                return this.CurrentViewModel.IsUacIconVisible;
             }
         }
 
-        public BitmapImage UacShieldImage
+        public BitmapImage UacIcon
         {
             get
             {
-                return this.uacService.UacShieldImage;
-            }
-        }
-
-        public ICommand AdditionalCommand
-        {
-            get
-            {
-                return this.CurrentViewModel.AdditionalCommand;
+                return this.uacService.UacIcon;
             }
         }
 

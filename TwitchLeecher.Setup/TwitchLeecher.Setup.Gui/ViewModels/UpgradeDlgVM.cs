@@ -62,7 +62,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public override bool IsUacShieldVisible
+        public override bool IsUacIconVisible
         {
             get
             {

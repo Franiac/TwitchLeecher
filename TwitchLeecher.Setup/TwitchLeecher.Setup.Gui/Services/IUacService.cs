@@ -8,6 +8,6 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         bool IsUserAdmin { get; }
 
-        BitmapImage UacShieldImage { get; }
+        BitmapImage UacIcon { get; }
     }
 }
