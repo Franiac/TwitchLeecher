@@ -114,10 +114,6 @@
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\IsInstalledColorConverter.cs" />
-    <Compile Include="Converters\IsInstalledOptionalColorConverter.cs" />
-    <Compile Include="Converters\IsInstalledTextConverter.cs" />
-    <Compile Include="Converters\IsInstallingTextConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -4,7 +4,6 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -481,82 +480,6 @@ namespace TwitchLeecher.Setup.Gui
             return regValue;
         }
 
-        public bool IsProcessRunning(string id = null)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return this.runningProcesses.Any();
-            }
-
-            return this.runningProcesses.ContainsKey(id);
-        }
-
-        public void InstallRequirementAsync(string executionId, string description, string path, string filePattern, Action<int, string> exitedAction, string arguments = null)
-        {
-            if (this.IsProcessRunning(executionId))
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                throw new ArgumentNullException("description");
-            }
-
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (string.IsNullOrWhiteSpace(filePattern))
-            {
-                throw new ArgumentNullException("filePattern");
-            }
-
-            if (!Directory.Exists(path))
-            {
-                this.guiService.ShowMessageBox("Directory '" + path + "' does not exist!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (filePattern.Contains("*") || filePattern.Contains("?"))
-            {
-                string[] files = Directory.GetFiles(path, filePattern);
-
-                if (filePattern.Length == 0)
-                {
-                    this.guiService.ShowMessageBox("Could not find installer for '" + description + "' in directory '" + path + "'", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                filePattern = Path.GetFileName(files[0]);
-            }
-
-            string installer = Path.Combine(path, filePattern);
-
-            if (!File.Exists(installer))
-            {
-                this.guiService.ShowMessageBox("Could not find file '" + installer + "'!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            ProcessStartInfo psi = new ProcessStartInfo(installer);
-
-            if (!string.IsNullOrWhiteSpace(arguments))
-            {
-                psi.Arguments = arguments;
-            }
-
-            BootstrapperProcess process = new BootstrapperProcess(executionId, psi, exitedAction);
-
-            process.EnableRaisingEvents = true;
-            process.Exited += installerProcess_Exited;
-
-            if (process.Start())
-            {
-                this.runningProcesses.TryAdd(process.ExecutionId, process);
-            }
-        }
-
         private void Log(string message)
         {
             if (string.IsNullOrWhiteSpace(message))
@@ -601,18 +524,6 @@ namespace TwitchLeecher.Setup.Gui
 
             this.ApplyComplete += SetupApplication_ApplyComplete;
             this.Engine.Apply(wizardWindowHwnd);
-        }
-
-        public void InvokeOnUiThread(Action action)
-        {
-            if (!this.uiThreadDispatcher.CheckAccess())
-            {
-                this.uiThreadDispatcher.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
         }
 
         public TResult InvokeOnUiThread<TResult>(Func<TResult> func)
@@ -722,75 +633,6 @@ namespace TwitchLeecher.Setup.Gui
         #endregion Methods
 
         #region EventHandlers
-
-        private void guiExtensionProcess_Exited(object sender, EventArgs e)
-        {
-            string logName = "EventHandler process_Exited: ";
-
-            BootstrapperProcess process = sender as BootstrapperProcess;
-
-            if (process != null)
-            {
-                process.Exited -= guiExtensionProcess_Exited;
-
-                this.Log(logName + "Removing process '" + process.ExecutionId + "' from running processes dictionary");
-                this.runningProcesses.TryRemove(process.ExecutionId, out process);
-
-                this.Log(logName + "Reading error output");
-                string errOut = process.StandardError.ReadToEnd();
-
-                int exitCode = process.ExitCode;
-
-                this.Log(logName + "Exit code is " + exitCode);
-                if (exitCode == 2)
-                {
-                    this.Log(logName + "GUI extension ended with an exception:" + Environment.NewLine + errOut);
-                    throw new ApplicationException("Function call '" + process.ExecutionId + "' to GUI extension failed! GUI extension exception:" + Environment.NewLine + errOut);
-                }
-                else if (exitCode < 0 || exitCode > 2)
-                {
-                    this.Log(logName + "GUI extension ended with an unknown exit code (" + exitCode + ")");
-                    throw new ApplicationException("Function call '" + process.ExecutionId + "' to GUI extension failed! GUI extension returned an unknown exit code (" + exitCode + ")!");
-                }
-
-                this.Log(logName + "Reading standard output");
-                string stdOut = process.StandardOutput.ReadToEnd();
-
-                if (process.ExitedCallback != null)
-                {
-                    this.Log(logName + "Executing exited callback");
-                    process.ExitedCallback(exitCode, stdOut);
-                }
-
-                process.Dispose();
-            }
-        }
-
-        private void installerProcess_Exited(object sender, EventArgs e)
-        {
-            string logName = "EventHandler installerProcess_Exited: ";
-
-            BootstrapperProcess process = sender as BootstrapperProcess;
-
-            if (process != null)
-            {
-                process.Exited -= installerProcess_Exited;
-
-                this.Log(logName + "Removing process '" + process.ExecutionId + "' from running processes dictionary");
-                this.runningProcesses.TryRemove(process.ExecutionId, out process);
-
-                int exitCode = process.ExitCode;
-                this.Log(logName + "Exit code is " + exitCode);
-
-                if (process.ExitedCallback != null)
-                {
-                    this.Log(logName + "Executing exited callback");
-                    process.ExitedCallback(exitCode, null);
-                }
-
-                process.Dispose();
-            }
-        }
 
         #region Burn Engine
 
