@@ -1,7 +1,7 @@
 ﻿<Window x:Class="TwitchLeecher.Setup.Gui.WizardWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ui="clr-namespace:TwitchLeecher.Setup.Gui.Views"
+        xmlns:v="clr-namespace:TwitchLeecher.Setup.Gui.Views"
         xmlns:vm="clr-namespace:TwitchLeecher.Setup.Gui.ViewModels"
         xmlns:b="clr-namespace:TwitchLeecher.Setup.Gui.Behaviors"
         b:RequestClosingBehavior.RequestClosing="{Binding ExitCommand}"
@@ -16,40 +16,40 @@
                 <ResourceDictionary Source="Theme/Styles.xaml" />
                 <ResourceDictionary>
                     <DataTemplate DataType="{x:Type vm:WelcomeDlgVM}">
-                        <ui:MessageDlg />
+                        <v:MessageDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:BitErrorDlgVM}">
-                        <ui:WarningDlg />
+                        <v:WarningDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:UpgradeDlgVM}">
-                        <ui:MessageDlg />
+                        <v:MessageDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:DowngradeDlgVM}">
-                        <ui:WarningDlg />
+                        <v:WarningDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:UninstallDlgVM}">
-                        <ui:UninstallDlg />
+                        <v:UninstallDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:LicenseDlgVM}">
-                        <ui:LicenseDlg />
+                        <v:LicenseDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:CustomizeDlgVM}">
-                        <ui:CustomizeDlg />
+                        <v:CustomizeDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:ReadyDlgVM}">
-                        <ui:ReadyDlg />
+                        <v:ReadyDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:ProgressDlgVM}">
-                        <ui:ProgressDlg />
+                        <v:ProgressDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:FinishedDlgVM}">
-                        <ui:MessageDlg />
+                        <v:MessageDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:UserCancelDlgVM}">
-                        <ui:MessageDlg />
+                        <v:MessageDlg />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:ErrorDlgVM}">
-                        <ui:MessageDlg />
+                        <v:MessageDlg />
                     </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
