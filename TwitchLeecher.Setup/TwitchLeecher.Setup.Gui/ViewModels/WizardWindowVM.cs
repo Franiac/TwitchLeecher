@@ -28,10 +28,10 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         private ErrorDlgVM errorDlgVM;
         private FinishedDlgVM finishedDlgVM;
 
-        private DelegateCommand backCommand;
-        private DelegateCommand nextCommand;
-        private DelegateCommand cancelCommand;
-        private DelegateCommand exitCommand;
+        private ICommand backCommand;
+        private ICommand nextCommand;
+        private ICommand cancelCommand;
+        private ICommand exitCommand;
 
         private volatile bool cancelConfirmed;
 

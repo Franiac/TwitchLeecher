@@ -11,8 +11,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         private IList<string> files;
 
-        private DelegateCommand retryCommand;
-        private DelegateCommand cancelCommand;
+        private ICommand retryCommand;
+        private ICommand cancelCommand;
 
         private Action windowCloseAction;
         private Action<bool?> setDialogResultAction;
