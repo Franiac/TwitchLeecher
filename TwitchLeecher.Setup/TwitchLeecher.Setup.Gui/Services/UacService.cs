@@ -110,6 +110,7 @@ namespace TwitchLeecher.Setup.Gui.Services
                     SHGetStockIconInfo(SHSTOCKICONID.SIID_SHIELD, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref iconResult);
 
                     Bitmap bmp = Bitmap.FromHicon(iconResult.hIcon);
+                    bmp.MakeTransparent();
 
                     BitmapImage bmpImg = new BitmapImage();
 
