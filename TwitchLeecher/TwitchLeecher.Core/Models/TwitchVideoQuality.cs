@@ -64,12 +64,14 @@ namespace TwitchLeecher.Core.Models
 
         private void Initialize()
         {
-            this.InitializeQuality(this.QualityId);
+            this.InitializeQuality();
+            this.InitializeResolution();
 
+            string quality = this.QualityId;
             string resolution = this.Resolution;
             string fps = this.Fps;
 
-            if (this.QualityId.EndsWith("p", StringComparison.OrdinalIgnoreCase))
+            if (quality.EndsWith("p", StringComparison.OrdinalIgnoreCase))
             {
                 if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
                 {
@@ -88,7 +90,7 @@ namespace TwitchLeecher.Core.Models
             }
             else
             {
-                if (this.QualityId == "audio_only")
+                if (quality == "audio_only")
                 {
                     this.DisplayStringShort = this.QualityFormatted;
                     this.DisplayStringLong = this.QualityFormatted;
@@ -111,8 +113,10 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void InitializeQuality(string qualityId)
+        public void InitializeQuality()
         {
+            string qualityId = this.QualityId;
+
             this.QualityFormatted = GetQualityFormatted(qualityId);
 
             switch (qualityId.ToLowerInvariant())
@@ -168,6 +172,38 @@ namespace TwitchLeecher.Core.Models
                 default:
                     this.QualityPriority = 100;
                     break;
+            }
+        }
+
+        private void InitializeResolution()
+        {
+            string qualityId = this.QualityId;
+            string resolution = this.Resolution;
+
+            if (!string.IsNullOrWhiteSpace(resolution) && resolution.Equals("0x0", StringComparison.OrdinalIgnoreCase))
+            {
+                switch (qualityId)
+                {
+                    case QUALITY_HIGH:
+                        this.Resolution = "1280x720";
+                        break;
+
+                    case QUALITY_MEDIUM:
+                        this.Resolution = "852x480";
+                        break;
+
+                    case QUALITY_LOW:
+                        this.Resolution = "640x360";
+                        break;
+
+                    case QUALITY_MOBILE:
+                        this.Resolution = "400x226";
+                        break;
+
+                    default:
+                        this.Resolution = null;
+                        break;
+                }
             }
         }
 

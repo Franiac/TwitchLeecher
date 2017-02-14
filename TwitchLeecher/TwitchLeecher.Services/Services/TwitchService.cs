@@ -1267,14 +1267,11 @@ namespace TwitchLeecher.Services.Services
                 foreach (JProperty resolution in resolutionsJson.Values<JProperty>())
                 {
                     string value = resolution.Value.Value<string>();
+                    string qualityId = resolution.Name;
+                    string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
+                    
 
-                    if (!value.Equals("0x0", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string qualityId = resolution.Name;
-                        string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
-
-                        resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
-                    }
+                    resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
                 }
             }
 
