@@ -41,6 +41,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
     <Compile Include="Enums\DownloadStatus.cs" />
     <Compile Include="Enums\SearchType.cs" />

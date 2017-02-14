@@ -22,6 +22,8 @@ namespace TwitchLeecher.Core.Models
 
         #region Fields
 
+        private Version version;
+
         private bool appCheckForUpdates;
 
         private string searchChannelName;
@@ -45,6 +47,18 @@ namespace TwitchLeecher.Core.Models
         #endregion Fields
 
         #region Properties
+
+        public Version Version
+        {
+            get
+            {
+                return this.version;
+            }
+            set
+            {
+                this.SetProperty(ref this.version, value);
+            }
+        }
 
         public bool AppCheckForUpdates
         {
@@ -268,6 +282,7 @@ namespace TwitchLeecher.Core.Models
         {
             Preferences clone = new Preferences()
             {
+                Version = this.Version,
                 AppCheckForUpdates = this.AppCheckForUpdates,
                 SearchChannelName = this.SearchChannelName,
                 SearchVideoType = this.SearchVideoType,

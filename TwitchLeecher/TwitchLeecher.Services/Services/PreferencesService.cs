@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Linq;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
@@ -7,6 +8,7 @@ using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;
+using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Services.Services
 {
@@ -17,6 +19,7 @@ namespace TwitchLeecher.Services.Services
         private const string CONFIG_FILE = "config.xml";
 
         private const string PREFERENCES_EL = "Preferences";
+        private const string PREFERENCES_VERSION_ATTR = "Version";
 
         private const string APP_EL = "Application";
         private const string APP_CHECKFORUPDATES_EL = "CheckForUpdates";
@@ -42,6 +45,7 @@ namespace TwitchLeecher.Services.Services
         private IEventAggregator eventAggregator;
 
         private Preferences currentPreferences;
+        private Version tlVersion;
 
         private readonly object commandLockObject;
 
@@ -54,6 +58,7 @@ namespace TwitchLeecher.Services.Services
             this.folderService = folderService;
             this.eventAggregator = eventAggregator;
 
+            this.tlVersion = AssemblyUtil.Get.GetAssemblyVersion().Trim();
             this.commandLockObject = new object();
         }
 
@@ -85,6 +90,7 @@ namespace TwitchLeecher.Services.Services
                 XDocument doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
                 XElement preferencesEl = new XElement(PREFERENCES_EL);
+                preferencesEl.Add(new XAttribute(PREFERENCES_VERSION_ATTR, this.tlVersion));
                 doc.Add(preferencesEl);
 
                 XElement appEl = new XElement(APP_EL);
@@ -181,6 +187,19 @@ namespace TwitchLeecher.Services.Services
 
                     if (preferencesEl != null)
                     {
+                        XAttribute prefVersionAttr = preferencesEl.Attribute(PREFERENCES_VERSION_ATTR);
+
+                        Version prefVersion = null;
+
+                        if (prefVersionAttr != null && Version.TryParse(prefVersionAttr.Value, out prefVersion))
+                        {
+                            preferences.Version = prefVersion;
+                        }
+                        else
+                        {
+                            preferences.Version = new Version(1, 0);
+                        }
+
                         XElement appEl = preferencesEl.Element(APP_EL);
 
                         if (appEl != null)
@@ -355,6 +374,7 @@ namespace TwitchLeecher.Services.Services
         {
             Preferences preferences = new Preferences()
             {
+                Version = this.tlVersion,
                 AppCheckForUpdates = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
