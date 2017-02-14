@@ -38,7 +38,7 @@ namespace TwitchLeecher.Services.Services
         private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
 
         private const string TEMP_PREFIX = "TL_";
-        private const string FFMPEG_PART_LIST = "parts.txt";
+        private const string PLAYLIST_NAME = "vod.m3u8";
         private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
         private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
@@ -687,7 +687,7 @@ namespace TwitchLeecher.Services.Services
                         string downloadId = download.Id;
                         string urlIdTrimmed = downloadParams.Video.IdTrimmed;
                         string tempDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
-                        string partList = Path.Combine(tempDir, FFMPEG_PART_LIST);
+                        string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
                         string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
 
@@ -735,11 +735,11 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.WriteNewPlaylist(log, vodPlaylist, partList);
+                            this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, partList, outputFile, cropInfo);
+                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -1062,27 +1062,27 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string partList)
+        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string playlistFile)
         {
-            log(Environment.NewLine + Environment.NewLine + "Creating local file list for FFMPEG...");
+            log(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG...");
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (VodPlaylistPartExt part in vodPlaylist.Where(p => p is VodPlaylistPartExt))
+            vodPlaylist.ForEach(part =>
             {
-                sb.AppendLine("file '" + part.LocalFile + "'");
-            };
+                sb.AppendLine(part.GetOutput());
+            });
 
             log(" done!");
 
-            log(Environment.NewLine + "Writing file list to '" + partList + "'...");
-            FileSystem.DeleteFile(partList);
-            File.WriteAllText(partList, sb.ToString());
+            log(Environment.NewLine + "Writing playlist to '" + playlistFile + "'...");
+            FileSystem.DeleteFile(playlistFile);
+            File.WriteAllText(playlistFile, sb.ToString());
             log(" done!");
         }
 
         private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            Action<bool> setIsEncoding, string ffmpegFile, string partList, string outputFile, CropInfo cropInfo)
+            Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Processing");
             setIsEncoding(true);
@@ -1090,7 +1090,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y -f concat -safe 0 -i \"" + partList + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
+            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.StandardErrorEncoding = Encoding.UTF8;
