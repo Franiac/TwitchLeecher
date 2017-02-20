@@ -17,6 +17,7 @@ namespace TwitchLeecher.Services.Modules
             this.Bind<IRuntimeDataService>().To<RuntimeDataService>().InSingletonScope();
             this.Bind<ITwitchService>().To<TwitchService>().InSingletonScope();
             this.Bind<IFilenameService>().To<FilenameService>().InSingletonScope();
+            this.Bind<IDownloadService>().To<DownloadService>().InSingletonScope();
         }
 
         #endregion Methods

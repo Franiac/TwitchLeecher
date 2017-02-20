@@ -7,7 +7,7 @@ using TwitchLeecher.Services.Interfaces;
 
 namespace TwitchLeecher.Services.Services
 {
-    public class FilenameService : IFilenameService
+    internal class FilenameService : IFilenameService
     {
         #region Methods
 
