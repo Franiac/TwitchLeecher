@@ -42,7 +42,7 @@ namespace TwitchLeecher.Core.Models
 
             this.index = index;
             this.downloadUrl = urlPrefix + remoteFile;
-            this.length = double.Parse(extinf.Substring(extinf.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+            this.length = Math.Max(double.Parse(extinf.Substring(extinf.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.Any, CultureInfo.InvariantCulture), 0);
             this.urlPrefix = urlPrefix;
             this.localFile = localFile;
 
