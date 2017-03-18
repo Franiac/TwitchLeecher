@@ -7,12 +7,12 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private int index;
-        private string output;
-        private string urlPrefix;
-        private string localFile;
-        private string downloadUrl;
-        private double length;
+        private int _index;
+        private string _output;
+        private string _urlPrefix;
+        private string _localFile;
+        private string _downloadUrl;
+        private double _length;
 
         #endregion Fields
 
@@ -40,13 +40,13 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(localFile));
             }
 
-            this.index = index;
-            this.downloadUrl = urlPrefix + remoteFile;
-            this.length = Math.Max(double.Parse(extinf.Substring(extinf.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.Any, CultureInfo.InvariantCulture), 0);
-            this.urlPrefix = urlPrefix;
-            this.localFile = localFile;
+            _index = index;
+            _downloadUrl = urlPrefix + remoteFile;
+            _length = Math.Max(double.Parse(extinf.Substring(extinf.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.Any, CultureInfo.InvariantCulture), 0);
+            _urlPrefix = urlPrefix;
+            _localFile = localFile;
 
-            this.output = extinf + "\n" + localFile;
+            _output = extinf + "\n" + localFile;
         }
 
         #endregion Constructors
@@ -57,7 +57,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.index;
+                return _index;
             }
         }
 
@@ -65,7 +65,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadUrl;
+                return _downloadUrl;
             }
         }
 
@@ -73,7 +73,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.localFile;
+                return _localFile;
             }
         }
 
@@ -81,7 +81,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.length;
+                return _length;
             }
         }
 
@@ -91,7 +91,7 @@ namespace TwitchLeecher.Core.Models
 
         public string GetOutput()
         {
-            return this.output;
+            return _output;
         }
 
         #endregion Methods

@@ -18,10 +18,10 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(signature));
             }
 
-            this.Token = token;
-            this.Signature = signature;
-            this.Privileged = privileged;
-            this.SubOnly = subOnly;
+            Token = token;
+            Signature = signature;
+            Privileged = privileged;
+            SubOnly = subOnly;
         }
 
         #endregion Constructors

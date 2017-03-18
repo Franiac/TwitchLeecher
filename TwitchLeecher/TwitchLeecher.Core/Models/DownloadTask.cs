@@ -8,23 +8,9 @@ namespace TwitchLeecher.Core.Models
     {
         public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
         {
-            if (task == null)
-            {
-                throw new ArgumentNullException(nameof(task));
-            }
-
-            if (continueTask == null)
-            {
-                throw new ArgumentNullException(nameof(continueTask));
-            }
-            if (cancellationTokenSource == null)
-            {
-                throw new ArgumentNullException(nameof(cancellationTokenSource));
-            }
-
-            this.Task = task;
-            this.ContinueTask = continueTask;
-            this.CancellationTokenSource = cancellationTokenSource;
+            Task = task ?? throw new ArgumentNullException(nameof(task));
+            ContinueTask = continueTask ?? throw new ArgumentNullException(nameof(continueTask));
+            CancellationTokenSource = cancellationTokenSource ?? throw new ArgumentNullException(nameof(cancellationTokenSource));
         }
 
         public Task Task { get; private set; }

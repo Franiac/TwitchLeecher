@@ -6,11 +6,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected string productName;
-        protected string oldVersion;
-        protected string newVersion;
+        protected string _productName;
+        protected string _oldVersion;
+        protected string _newVersion;
 
-        protected IUacService uacService;
+        protected IUacService _uacService;
 
         #endregion Fields
 
@@ -19,11 +19,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public UpgradeDlgVM(SetupApplication bootstrapper, IGuiService guiService, IUacService uacService)
             : base(bootstrapper, guiService)
         {
-            this.uacService = uacService;
+            _uacService = uacService;
 
-            this.productName = this.bootstrapper.ProductName;
-            this.oldVersion = this.bootstrapper.RelatedBundleVersion.ToString();
-            this.newVersion = this.bootstrapper.ProductVersionTrimmed.ToString();
+            _productName = _bootstrapper.ProductName;
+            _oldVersion = _bootstrapper.RelatedBundleVersion.ToString();
+            _newVersion = _bootstrapper.ProductVersionTrimmed.ToString();
         }
 
         #endregion Constructors
@@ -50,7 +50,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "Upgrade " + this.productName + " " + this.oldVersion + " to version " + this.newVersion;
+                return "Upgrade " + _productName + " " + _oldVersion + " to version " + _newVersion;
             }
         }
 
@@ -58,7 +58,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "The Setup Wizard will upgrade your current installation of " + this.productName + " " + this.oldVersion + " to version " + this.newVersion + ". Click \"Upgrade\" to continue or \"Cancel\" to exit the Setup Wizard.";
+                return "The Setup Wizard will upgrade your current installation of " + _productName + " " + _oldVersion + " to version " + _newVersion + ". Click \"Upgrade\" to continue or \"Cancel\" to exit the Setup Wizard.";
             }
         }
 
@@ -66,7 +66,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.uacService.IsUacEnabled && !this.uacService.IsUserAdmin;
+                return _uacService.IsUacEnabled && !_uacService.IsUserAdmin;
             }
         }
 

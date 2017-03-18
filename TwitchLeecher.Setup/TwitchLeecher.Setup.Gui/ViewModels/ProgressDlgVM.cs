@@ -8,9 +8,9 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private string headerText;
-        private string descText;
-        private string statusText;
+        private string _headerText;
+        private string _descText;
+        private string _statusText;
 
         private int progressValue;
 
@@ -21,30 +21,30 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public ProgressDlgVM(SetupApplication bootstrapper, IGuiService guiService)
             : base(bootstrapper, guiService)
         {
-            if (this.bootstrapper.IsUpgrade)
+            if (_bootstrapper.IsUpgrade)
             {
-                this.headerText = "Upgrading";
-                this.descText = "Please wait while the Setup Wizard upgrades " + this.bootstrapper.ProductName + " to version " + this.bootstrapper.ProductVersionTrimmed.ToString();
-                this.statusText = "Upgrading...";
+                _headerText = "Upgrading";
+                _descText = "Please wait while the Setup Wizard upgrades " + _bootstrapper.ProductName + " to version " + _bootstrapper.ProductVersionTrimmed.ToString();
+                _statusText = "Upgrading...";
             }
             else
             {
-                switch (this.bootstrapper.LaunchAction)
+                switch (_bootstrapper.LaunchAction)
                 {
                     case LaunchAction.Install:
-                        this.headerText = "Installing " + this.ProductNameVersionDisplay;
-                        this.descText = "Please wait while the Setup Wizard installs " + this.ProductNameVersionDisplay;
-                        this.statusText = "Installing...";
+                        _headerText = "Installing " + ProductNameVersionDisplay;
+                        _descText = "Please wait while the Setup Wizard installs " + ProductNameVersionDisplay;
+                        _statusText = "Installing...";
                         break;
 
                     case LaunchAction.Uninstall:
-                        this.headerText = "Uninstalling " + this.ProductNameVersionDisplay;
-                        this.descText = "Please wait while the Setup Wizard uninstalls " + this.ProductNameVersionDisplay;
-                        this.statusText = "Uninstalling...";
+                        _headerText = "Uninstalling " + ProductNameVersionDisplay;
+                        _descText = "Please wait while the Setup Wizard uninstalls " + ProductNameVersionDisplay;
+                        _statusText = "Uninstalling...";
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + this.bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
                 }
             }
 
@@ -75,7 +75,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.headerText;
+                return _headerText;
             }
         }
 
@@ -83,7 +83,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.descText;
+                return _descText;
             }
         }
 
@@ -91,12 +91,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.statusText;
+                return _statusText;
             }
             set
             {
-                this.statusText = value;
-                this.FirePropertyChanged("StatusText");
+                _statusText = value;
+                FirePropertyChanged("StatusText");
             }
         }
 
@@ -104,12 +104,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.progressValue;
+                return progressValue;
             }
             set
             {
-                this.progressValue = value;
-                this.FirePropertyChanged("ProgressValue");
+                progressValue = value;
+                FirePropertyChanged("ProgressValue");
             }
         }
 

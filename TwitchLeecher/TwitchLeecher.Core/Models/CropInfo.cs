@@ -4,10 +4,10 @@
     {
         public CropInfo(bool cropStart, bool cropEnd, double start, double length)
         {
-            this.CropStart = cropStart;
-            this.CropEnd = cropEnd;
-            this.Start = start;
-            this.Length = length;
+            CropStart = cropStart;
+            CropEnd = cropEnd;
+            Start = start;
+            Length = length;
         }
 
         public bool CropStart { get; private set; }

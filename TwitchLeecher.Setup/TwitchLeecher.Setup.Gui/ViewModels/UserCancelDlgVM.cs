@@ -8,7 +8,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected string headline;
+        protected string _headline;
 
         #endregion Fields
 
@@ -17,28 +17,28 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public UserCancelDlgVM(SetupApplication bootstrapper, IGuiService guiService)
             : base(bootstrapper, guiService)
         {
-            if (this.bootstrapper.IsUpgrade)
+            if (_bootstrapper.IsUpgrade)
             {
-                this.headline = "Upgrade";
+                _headline = "Upgrade";
             }
             else
             {
-                switch (this.bootstrapper.LaunchAction)
+                switch (_bootstrapper.LaunchAction)
                 {
                     case LaunchAction.Install:
-                        this.headline = "Installation";
+                        _headline = "Installation";
                         break;
 
                     case LaunchAction.Uninstall:
-                        this.headline = "Uninstallation";
+                        _headline = "Uninstallation";
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + this.bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
                 }
             }
 
-            headline += " has been cancelled";
+            _headline += " has been cancelled";
         }
 
         #endregion Constructors
@@ -73,7 +73,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.headline;
+                return _headline;
             }
         }
 

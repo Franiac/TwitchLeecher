@@ -15,21 +15,21 @@ namespace TwitchLeecher.Core.Models
 
         #region Fields
 
-        private string channel;
-        private string title;
-        private string id;
-        private string game;
+        private string _channel;
+        private string _title;
+        private string _id;
+        private string _game;
 
-        private int views;
+        private int _views;
 
-        private TimeSpan length;
+        private TimeSpan _length;
 
-        private List<TwitchVideoQuality> resolutions;
+        private List<TwitchVideoQuality> _resolutions;
 
-        private DateTime recordedDate;
+        private DateTime _recordedDate;
 
-        private Uri thumbnail;
-        private Uri url;
+        private Uri _thumbnail;
+        private Uri _url;
 
         #endregion Fields
 
@@ -53,40 +53,30 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(resolutions));
             }
 
-            if (thumbnail == null)
-            {
-                throw new ArgumentNullException(nameof(thumbnail));
-            }
-
-            if (url == null)
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
-
             if (string.IsNullOrWhiteSpace(title))
             {
                 title = UNTITLED_BROADCAST;
             }
 
-            this.channel = channel;
-            this.title = title;
-            this.id = id;
+            _channel = channel;
+            _title = title;
+            _id = id;
 
             if (string.IsNullOrWhiteSpace(game))
             {
-                this.game = UNKNOWN_GAME;
+                _game = UNKNOWN_GAME;
             }
             else
             {
-                this.game = game;
+                _game = game;
             }
 
-            this.views = views;
-            this.length = length;
-            this.resolutions = resolutions;
-            this.recordedDate = recordedDate;
-            this.thumbnail = thumbnail;
-            this.url = url;
+            _views = views;
+            _length = length;
+            _resolutions = resolutions;
+            _recordedDate = recordedDate;
+            _thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
+            _url = url ?? throw new ArgumentNullException(nameof(url));
         }
 
         #endregion Constructors
@@ -97,7 +87,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.channel;
+                return _channel;
             }
         }
 
@@ -105,7 +95,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.title;
+                return _title;
             }
         }
 
@@ -113,7 +103,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.id;
+                return _id;
             }
         }
 
@@ -121,7 +111,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.id.Substring(1);
+                return _id.Substring(1);
             }
         }
 
@@ -129,7 +119,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.game;
+                return _game;
             }
         }
 
@@ -137,7 +127,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.length;
+                return _length;
             }
         }
 
@@ -145,7 +135,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.views;
+                return _views;
             }
         }
 
@@ -153,7 +143,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.resolutions;
+                return _resolutions;
             }
         }
 
@@ -161,12 +151,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (this.resolutions == null || this.resolutions.Count == 0)
+                if (_resolutions == null || _resolutions.Count == 0)
                 {
                     return TwitchVideoQuality.UNKNOWN;
                 }
 
-                return this.resolutions.First().DisplayStringShort;
+                return _resolutions.First().DisplayStringShort;
             }
         }
 
@@ -174,7 +164,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.recordedDate;
+                return _recordedDate;
             }
         }
 
@@ -182,7 +172,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.thumbnail;
+                return _thumbnail;
             }
         }
 
@@ -190,7 +180,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.url;
+                return _url;
             }
         }
 

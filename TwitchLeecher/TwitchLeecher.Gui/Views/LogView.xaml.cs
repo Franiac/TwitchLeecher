@@ -11,7 +11,7 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.IsVisibleChanged += this.SearchView_IsVisibleChanged;
+            IsVisibleChanged += SearchView_IsVisibleChanged;
         }
 
         private void SearchView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -20,8 +20,8 @@ namespace TwitchLeecher.Gui.Views
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
                 {
-                    this.txtLog.CaretIndex = this.txtLog.Text.Length;
-                    this.txtLog.ScrollToEnd();
+                    txtLog.CaretIndex = txtLog.Text.Length;
+                    txtLog.ScrollToEnd();
                 }));
             }
         }

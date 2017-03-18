@@ -6,10 +6,10 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private Version newVersion;
-        private DateTime releaseDate;
-        private string downloadUrl;
-        private string releaseNotes;
+        private Version _newVersion;
+        private DateTime _releaseDate;
+        private string _downloadUrl;
+        private string _releaseNotes;
 
         #endregion Fields
 
@@ -17,11 +17,6 @@ namespace TwitchLeecher.Core.Models
 
         public UpdateInfo(Version newVersion, DateTime releaseDate, string downloadUrl, string releaseNotes)
         {
-            if (newVersion == null)
-            {
-                throw new ArgumentNullException(nameof(newVersion));
-            }
-
             if (string.IsNullOrWhiteSpace(downloadUrl))
             {
                 throw new ArgumentNullException(nameof(downloadUrl));
@@ -32,10 +27,10 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(releaseNotes));
             }
 
-            this.newVersion = newVersion;
-            this.releaseDate = releaseDate;
-            this.downloadUrl = downloadUrl;
-            this.releaseNotes = releaseNotes;
+            _newVersion = newVersion ?? throw new ArgumentNullException(nameof(newVersion));
+            _releaseDate = releaseDate;
+            _downloadUrl = downloadUrl;
+            _releaseNotes = releaseNotes;
         }
 
         #endregion Constructors
@@ -46,7 +41,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.newVersion;
+                return _newVersion;
             }
         }
 
@@ -54,7 +49,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.releaseDate;
+                return _releaseDate;
             }
         }
 
@@ -62,7 +57,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadUrl;
+                return _downloadUrl;
             }
         }
 
@@ -70,7 +65,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.releaseNotes;
+                return _releaseNotes;
             }
         }
 

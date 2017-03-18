@@ -13,20 +13,20 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService dialogService;
-        private INotificationService notificationService;
-        private IPreferencesService preferencesService;
+        private IDialogService _dialogService;
+        private INotificationService _notificationService;
+        private IPreferencesService _preferencesService;
 
-        private Preferences currentPreferences;
-        private IEnumerable<string> videoQualityList;
+        private Preferences _currentPreferences;
+        private IEnumerable<string> _videoQualityList;
 
-        private ICommand chooseDownloadTempFolderCommand;
-        private ICommand chooseDownloadFolderCommand;
-        private ICommand saveCommand;
-        private ICommand undoCommand;
-        private ICommand defaultsCommand;
+        private ICommand _chooseDownloadTempFolderCommand;
+        private ICommand _chooseDownloadFolderCommand;
+        private ICommand _saveCommand;
+        private ICommand _undoCommand;
+        private ICommand _defaultsCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -37,11 +37,11 @@ namespace TwitchLeecher.Gui.ViewModels
             INotificationService notificationService,
             IPreferencesService preferencesService)
         {
-            this.dialogService = dialogService;
-            this.notificationService = notificationService;
-            this.preferencesService = preferencesService;
+            _dialogService = dialogService;
+            _notificationService = notificationService;
+            _preferencesService = preferencesService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -52,17 +52,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.currentPreferences == null)
+                if (_currentPreferences == null)
                 {
-                    this.currentPreferences = this.preferencesService.CurrentPreferences.Clone();
+                    _currentPreferences = _preferencesService.CurrentPreferences.Clone();
                 }
 
-                return this.currentPreferences;
+                return _currentPreferences;
             }
 
             private set
             {
-                this.SetProperty(ref this.currentPreferences, value);
+                SetProperty(ref _currentPreferences, value);
             }
         }
 
@@ -70,9 +70,9 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.videoQualityList == null)
+                if (_videoQualityList == null)
                 {
-                    this.videoQualityList = new List<string>()
+                    _videoQualityList = new List<string>()
                     {
                         TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_SOURCE),
                         TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_HIGH),
@@ -83,7 +83,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     };
                 }
 
-                return this.videoQualityList;
+                return _videoQualityList;
             }
         }
 
@@ -91,12 +91,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.chooseDownloadTempFolderCommand == null)
+                if (_chooseDownloadTempFolderCommand == null)
                 {
-                    this.chooseDownloadTempFolderCommand = new DelegateCommand(this.ChooseDownloadTempFolder);
+                    _chooseDownloadTempFolderCommand = new DelegateCommand(ChooseDownloadTempFolder);
                 }
 
-                return this.chooseDownloadTempFolderCommand;
+                return _chooseDownloadTempFolderCommand;
             }
         }
 
@@ -104,12 +104,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.chooseDownloadFolderCommand == null)
+                if (_chooseDownloadFolderCommand == null)
                 {
-                    this.chooseDownloadFolderCommand = new DelegateCommand(this.ChooseDownloadFolder);
+                    _chooseDownloadFolderCommand = new DelegateCommand(ChooseDownloadFolder);
                 }
 
-                return this.chooseDownloadFolderCommand;
+                return _chooseDownloadFolderCommand;
             }
         }
 
@@ -117,12 +117,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.saveCommand == null)
+                if (_saveCommand == null)
                 {
-                    this.saveCommand = new DelegateCommand(this.Save);
+                    _saveCommand = new DelegateCommand(Save);
                 }
 
-                return this.saveCommand;
+                return _saveCommand;
             }
         }
 
@@ -130,12 +130,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.undoCommand == null)
+                if (_undoCommand == null)
                 {
-                    this.undoCommand = new DelegateCommand(this.Undo);
+                    _undoCommand = new DelegateCommand(Undo);
                 }
 
-                return this.undoCommand;
+                return _undoCommand;
             }
         }
 
@@ -143,12 +143,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.defaultsCommand == null)
+                if (_defaultsCommand == null)
                 {
-                    this.defaultsCommand = new DelegateCommand(this.Defaults);
+                    _defaultsCommand = new DelegateCommand(Defaults);
                 }
 
-                return this.defaultsCommand;
+                return _defaultsCommand;
             }
         }
 
@@ -160,14 +160,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadTempFolder, this.ChooseDownloadTempFolderCallback);
+                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadTempFolder, ChooseDownloadTempFolderCallback);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -177,12 +177,12 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    this.CurrentPreferences.DownloadTempFolder = folder;
+                    CurrentPreferences.DownloadTempFolder = folder;
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -190,14 +190,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.dialogService.ShowFolderBrowserDialog(this.CurrentPreferences.DownloadFolder, this.ChooseDownloadFolderCallback);
+                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadFolder, ChooseDownloadFolderCallback);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -207,12 +207,12 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    this.CurrentPreferences.DownloadFolder = folder;
+                    CurrentPreferences.DownloadFolder = folder;
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -220,22 +220,22 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.dialogService.SetBusy();
-                    this.Validate();
+                    _dialogService.SetBusy();
+                    Validate();
 
-                    if (!this.HasErrors)
+                    if (!HasErrors)
                     {
-                        this.preferencesService.Save(this.currentPreferences);
-                        this.CurrentPreferences = null;
-                        this.notificationService.ShowNotification("Preferences saved");
+                        _preferencesService.Save(_currentPreferences);
+                        CurrentPreferences = null;
+                        _notificationService.ShowNotification("Preferences saved");
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -243,20 +243,20 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    MessageBoxResult result = this.dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = _dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        this.dialogService.SetBusy();
-                        this.CurrentPreferences = null;
+                        _dialogService.SetBusy();
+                        CurrentPreferences = null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -264,21 +264,21 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    MessageBoxResult result = this.dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = _dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        this.dialogService.SetBusy();
-                        this.preferencesService.Save(this.preferencesService.CreateDefault());
-                        this.CurrentPreferences = null;
+                        _dialogService.SetBusy();
+                        _preferencesService.Save(_preferencesService.CreateDefault());
+                        CurrentPreferences = null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -286,15 +286,15 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.CurrentPreferences);
+            string currentProperty = nameof(CurrentPreferences);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                this.CurrentPreferences?.Validate();
+                CurrentPreferences?.Validate();
 
-                if (this.CurrentPreferences.HasErrors)
+                if (CurrentPreferences.HasErrors)
                 {
-                    this.AddError(currentProperty, "Invalid Preferences!");
+                    AddError(currentProperty, "Invalid Preferences!");
                 }
             }
         }
@@ -303,11 +303,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.CurrentPreferences = null;
+                CurrentPreferences = null;
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -320,9 +320,9 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.SaveCommand, "Save", "Save"));
-            menuCommands.Add(new MenuCommand(this.UndoCommand, "Undo", "Undo"));
-            menuCommands.Add(new MenuCommand(this.DefaultsCommand, "Default", "Wrench"));
+            menuCommands.Add(new MenuCommand(SaveCommand, "Save", "Save"));
+            menuCommands.Add(new MenuCommand(UndoCommand, "Undo", "Undo"));
+            menuCommands.Add(new MenuCommand(DefaultsCommand, "Default", "Wrench"));
 
             return menuCommands;
         }

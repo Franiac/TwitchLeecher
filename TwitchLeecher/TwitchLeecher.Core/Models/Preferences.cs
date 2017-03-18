@@ -22,27 +22,27 @@ namespace TwitchLeecher.Core.Models
 
         #region Fields
 
-        private Version version;
+        private Version _version;
 
-        private bool appCheckForUpdates;
+        private bool _appCheckForUpdates;
 
-        private string searchChannelName;
+        private string _searchChannelName;
 
-        private VideoType searchVideoType;
+        private VideoType _searchVideoType;
 
-        private int searchLoadLimit;
+        private int _searchLoadLimit;
 
-        private bool searchOnStartup;
+        private bool _searchOnStartup;
 
-        private string downloadTempFolder;
+        private string _downloadTempFolder;
 
-        private string downloadFolder;
+        private string _downloadFolder;
 
-        private string downloadFileName;
+        private string _downloadFileName;
 
-        private string downloadVideoQuality;
+        private string _downloadVideoQuality;
 
-        private bool downloadRemoveCompleted;
+        private bool _downloadRemoveCompleted;
 
         #endregion Fields
 
@@ -52,11 +52,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.version;
+                return _version;
             }
             set
             {
-                this.SetProperty(ref this.version, value);
+                SetProperty(ref _version, value);
             }
         }
 
@@ -64,11 +64,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.appCheckForUpdates;
+                return _appCheckForUpdates;
             }
             set
             {
-                this.SetProperty(ref this.appCheckForUpdates, value);
+                SetProperty(ref _appCheckForUpdates, value);
             }
         }
 
@@ -76,11 +76,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.searchChannelName;
+                return _searchChannelName;
             }
             set
             {
-                this.SetProperty(ref this.searchChannelName, value);
+                SetProperty(ref _searchChannelName, value);
             }
         }
 
@@ -88,11 +88,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.searchVideoType;
+                return _searchVideoType;
             }
             set
             {
-                this.SetProperty(ref this.searchVideoType, value);
+                SetProperty(ref _searchVideoType, value);
             }
         }
 
@@ -100,11 +100,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.searchLoadLimit;
+                return _searchLoadLimit;
             }
             set
             {
-                this.SetProperty(ref this.searchLoadLimit, value);
+                SetProperty(ref _searchLoadLimit, value);
             }
         }
 
@@ -112,11 +112,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.searchOnStartup;
+                return _searchOnStartup;
             }
             set
             {
-                this.SetProperty(ref this.searchOnStartup, value);
+                SetProperty(ref _searchOnStartup, value);
             }
         }
 
@@ -124,11 +124,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadTempFolder;
+                return _downloadTempFolder;
             }
             set
             {
-                this.SetProperty(ref this.downloadTempFolder, value);
+                SetProperty(ref _downloadTempFolder, value);
             }
         }
 
@@ -136,11 +136,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadFolder;
+                return _downloadFolder;
             }
             set
             {
-                this.SetProperty(ref this.downloadFolder, value);
+                SetProperty(ref _downloadFolder, value);
             }
         }
 
@@ -148,11 +148,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadFileName;
+                return _downloadFileName;
             }
             set
             {
-                this.SetProperty(ref this.downloadFileName, value);
+                SetProperty(ref _downloadFileName, value);
             }
         }
 
@@ -160,11 +160,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadVideoQuality;
+                return _downloadVideoQuality;
             }
             set
             {
-                this.SetProperty(ref this.downloadVideoQuality, value);
+                SetProperty(ref _downloadVideoQuality, value);
             }
         }
 
@@ -172,11 +172,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadRemoveCompleted;
+                return _downloadRemoveCompleted;
             }
             set
             {
-                this.SetProperty(ref this.downloadRemoveCompleted, value);
+                SetProperty(ref _downloadRemoveCompleted, value);
             }
         }
 
@@ -188,14 +188,16 @@ namespace TwitchLeecher.Core.Models
         {
             if (LOAD_LIMITS == null)
             {
-                LOAD_LIMITS = new List<int>();
-                LOAD_LIMITS.Add(10);
-                LOAD_LIMITS.Add(25);
-                LOAD_LIMITS.Add(50);
-                LOAD_LIMITS.Add(100);
-                LOAD_LIMITS.Add(250);
-                LOAD_LIMITS.Add(500);
-                LOAD_LIMITS.Add(1000);
+                LOAD_LIMITS = new List<int>
+                {
+                    10,
+                    25,
+                    50,
+                    100,
+                    250,
+                    500,
+                    1000
+                };
             }
 
             return LOAD_LIMITS;
@@ -209,71 +211,71 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.SearchChannelName);
+            string currentProperty = nameof(SearchChannelName);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchOnStartup && string.IsNullOrWhiteSpace(this.searchChannelName))
+                if (_searchOnStartup && string.IsNullOrWhiteSpace(_searchChannelName))
                 {
-                    this.AddError(currentProperty, "If 'Search on Startup' is enabled, you need to specify a default channel name!");
+                    AddError(currentProperty, "If 'Search on Startup' is enabled, you need to specify a default channel name!");
                 }
             }
 
-            currentProperty = nameof(this.SearchLoadLimit);
+            currentProperty = nameof(SearchLoadLimit);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
                 List<int> loadLimits = GetLoadLimits();
 
-                if (!loadLimits.Contains(this.searchLoadLimit))
+                if (!loadLimits.Contains(_searchLoadLimit))
                 {
-                    this.AddError(currentProperty, "Load limit has to be in '" + string.Join(", ", loadLimits) + "'!");
+                    AddError(currentProperty, "Load limit has to be in '" + string.Join(", ", loadLimits) + "'!");
                 }
             }
 
-            currentProperty = nameof(this.DownloadTempFolder);
+            currentProperty = nameof(DownloadTempFolder);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.DownloadTempFolder))
+                if (string.IsNullOrWhiteSpace(DownloadTempFolder))
                 {
-                    this.AddError(currentProperty, "Please specify a temporary download folder!");
+                    AddError(currentProperty, "Please specify a temporary download folder!");
                 }
-                else if (!FileSystem.HasWritePermission(this.downloadTempFolder))
+                else if (!FileSystem.HasWritePermission(_downloadTempFolder))
                 {
-                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
                 }
             }
 
-            currentProperty = nameof(this.DownloadFolder);
+            currentProperty = nameof(DownloadFolder);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.downloadFolder))
+                if (string.IsNullOrWhiteSpace(_downloadFolder))
                 {
-                    this.AddError(currentProperty, "Please specify a default download folder!");
+                    AddError(currentProperty, "Please specify a default download folder!");
                 }
-                else if (!FileSystem.HasWritePermission(this.downloadFolder))
+                else if (!FileSystem.HasWritePermission(_downloadFolder))
                 {
-                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
                 }
             }
 
-            currentProperty = nameof(this.DownloadFileName);
+            currentProperty = nameof(DownloadFileName);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.downloadFileName))
+                if (string.IsNullOrWhiteSpace(_downloadFileName))
                 {
-                    this.AddError(currentProperty, "Please specify a default download filename!");
+                    AddError(currentProperty, "Please specify a default download filename!");
                 }
-                else if (!this.downloadFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                else if (!_downloadFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                 {
-                    this.AddError(currentProperty, "Filename must end with '.mp4'!");
+                    AddError(currentProperty, "Filename must end with '.mp4'!");
                 }
-                else if (FileSystem.FilenameContainsInvalidChars(this.downloadFileName))
+                else if (FileSystem.FilenameContainsInvalidChars(_downloadFileName))
                 {
-                    this.AddError(currentProperty, "Filename contains invalid characters!");
+                    AddError(currentProperty, "Filename contains invalid characters!");
                 }
             }
         }
@@ -282,17 +284,17 @@ namespace TwitchLeecher.Core.Models
         {
             Preferences clone = new Preferences()
             {
-                Version = this.Version,
-                AppCheckForUpdates = this.AppCheckForUpdates,
-                SearchChannelName = this.SearchChannelName,
-                SearchVideoType = this.SearchVideoType,
-                SearchLoadLimit = this.SearchLoadLimit,
-                SearchOnStartup = this.SearchOnStartup,
-                DownloadTempFolder = this.DownloadTempFolder,
-                DownloadFolder = this.DownloadFolder,
-                DownloadFileName = this.DownloadFileName,
-                DownloadVideoQuality = this.DownloadVideoQuality,
-                DownloadRemoveCompleted = this.DownloadRemoveCompleted
+                Version = Version,
+                AppCheckForUpdates = AppCheckForUpdates,
+                SearchChannelName = SearchChannelName,
+                SearchVideoType = SearchVideoType,
+                SearchLoadLimit = SearchLoadLimit,
+                SearchOnStartup = SearchOnStartup,
+                DownloadTempFolder = DownloadTempFolder,
+                DownloadFolder = DownloadFolder,
+                DownloadFileName = DownloadFileName,
+                DownloadVideoQuality = DownloadVideoQuality,
+                DownloadRemoveCompleted = DownloadRemoveCompleted
             };
 
             return clone;

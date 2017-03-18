@@ -7,7 +7,7 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext _syncContext;
 
         #endregion Fields
 
@@ -16,7 +16,7 @@ namespace TwitchLeecher.Shared.Events
         public DispatcherEventSubscription(IDelegateReference actionReference, IDelegateReference filterReference, SynchronizationContext syncContext)
              : base(actionReference, filterReference)
         {
-            this.syncContext = syncContext;
+            _syncContext = syncContext;
         }
 
         #endregion Constructors
@@ -25,7 +25,7 @@ namespace TwitchLeecher.Shared.Events
 
         public override void InvokeAction(Action<TPayload> action, TPayload argument)
         {
-            syncContext.Post((o) => action((TPayload)o), argument);
+            _syncContext.Post((o) => action((TPayload)o), argument);
         }
 
         #endregion Methods

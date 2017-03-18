@@ -9,24 +9,24 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private string id;
+        private string _id;
 
-        private DownloadParameters downloadParams;
+        private DownloadParameters _downloadParams;
 
-        private DownloadStatus downloadStatus;
-        private object downloadStatusLockObject;
+        private DownloadStatus _downloadStatus;
+        private object _downloadStatusLockObject;
 
-        private StringBuilder log;
-        private object logLockObject;
+        private StringBuilder _log;
+        private object _logLockObject;
 
-        private int progress;
-        private object progressLockObject;
+        private int _progress;
+        private object _progressLockObject;
 
-        private string status;
-        private object statusLockObject;
+        private string _status;
+        private object _statusLockObject;
 
-        private bool isEncoding;
-        private object isEncodingLockObject;
+        private bool _isEncoding;
+        private object _isEncodingLockObject;
 
         #endregion Fields
 
@@ -34,21 +34,16 @@ namespace TwitchLeecher.Core.Models
 
         public TwitchVideoDownload(DownloadParameters downloadParams)
         {
-            if (downloadParams == null)
-            {
-                throw new ArgumentNullException(nameof(downloadParams));
-            }
+            _id = Guid.NewGuid().ToString();
+            _downloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
 
-            this.id = Guid.NewGuid().ToString();
-            this.downloadParams = downloadParams;
+            _log = new StringBuilder();
 
-            this.log = new StringBuilder();
-
-            this.downloadStatusLockObject = new object();
-            this.logLockObject = new object();
-            this.progressLockObject = new object();
-            this.statusLockObject = new object();
-            this.isEncodingLockObject = new object();
+            _downloadStatusLockObject = new object();
+            _logLockObject = new object();
+            _progressLockObject = new object();
+            _statusLockObject = new object();
+            _isEncodingLockObject = new object();
         }
 
         #endregion Constructors
@@ -59,7 +54,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.id;
+                return _id;
             }
         }
 
@@ -67,7 +62,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadParams;
+                return _downloadParams;
             }
         }
 
@@ -75,13 +70,13 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.downloadStatus;
+                return _downloadStatus;
             }
             private set
             {
-                this.downloadStatus = value;
-                this.FirePropertyChanged(nameof(this.DownloadStatus));
-                this.FirePropertyChanged(nameof(this.Status));
+                _downloadStatus = value;
+                FirePropertyChanged(nameof(DownloadStatus));
+                FirePropertyChanged(nameof(Status));
             }
         }
 
@@ -89,9 +84,9 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                lock (logLockObject)
+                lock (_logLockObject)
                 {
-                    return this.log.ToString();
+                    return _log.ToString();
                 }
             }
         }
@@ -100,11 +95,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.progress;
+                return _progress;
             }
             private set
             {
-                this.SetProperty(ref this.progress, value);
+                SetProperty(ref _progress, value);
             }
         }
 
@@ -112,16 +107,16 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (this.downloadStatus != DownloadStatus.Active)
+                if (_downloadStatus != DownloadStatus.Active)
                 {
-                    return this.downloadStatus.ToString();
+                    return _downloadStatus.ToString();
                 }
 
-                return this.status;
+                return _status;
             }
             private set
             {
-                this.SetProperty(ref this.status, value);
+                SetProperty(ref _status, value);
             }
         }
 
@@ -129,11 +124,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.isEncoding;
+                return _isEncoding;
             }
             private set
             {
-                this.SetProperty(ref this.isEncoding, value);
+                SetProperty(ref _isEncoding, value);
             }
         }
 
@@ -143,51 +138,51 @@ namespace TwitchLeecher.Core.Models
 
         public void SetDownloadStatus(DownloadStatus downloadStatus)
         {
-            lock (this.downloadStatusLockObject)
+            lock (_downloadStatusLockObject)
             {
-                this.DownloadStatus = downloadStatus;
+                DownloadStatus = downloadStatus;
             }
         }
 
         public void AppendLog(string text)
         {
-            lock (this.logLockObject)
+            lock (_logLockObject)
             {
-                this.log.Append(text);
-                this.FirePropertyChanged(nameof(this.Log));
+                _log.Append(text);
+                FirePropertyChanged(nameof(Log));
             }
         }
 
         public void ResetLog()
         {
-            lock (logLockObject)
+            lock (_logLockObject)
             {
-                this.log.Clear();
-                this.FirePropertyChanged(nameof(this.Log));
+                _log.Clear();
+                FirePropertyChanged(nameof(Log));
             }
         }
 
         public void SetProgress(int progress)
         {
-            lock (this.progressLockObject)
+            lock (_progressLockObject)
             {
-                this.Progress = progress;
+                Progress = progress;
             }
         }
 
         public void SetStatus(string status)
         {
-            lock (this.statusLockObject)
+            lock (_statusLockObject)
             {
-                this.Status = status;
+                Status = status;
             }
         }
 
         public void SetIsEncoding(bool isEncoding)
         {
-            lock (this.isEncodingLockObject)
+            lock (_isEncodingLockObject)
             {
-                this.IsEncoding = isEncoding;
+                IsEncoding = isEncoding;
             }
         }
 

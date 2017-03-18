@@ -9,7 +9,7 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
+            cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
         }
     }
 }

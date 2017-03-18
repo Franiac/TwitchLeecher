@@ -7,8 +7,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected string installerBit;
-        protected string osBit;
+        protected string _installerBit;
+        protected string _osBit;
 
         #endregion Fields
 
@@ -17,8 +17,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public BitErrorDlgVM(SetupApplication bootstrapper, IGuiService guiService)
             : base(bootstrapper, guiService)
         {
-            this.installerBit = this.bootstrapper.IsBundle64Bit ? "64" : "32";
-            this.osBit = Environment.Is64BitOperatingSystem ? "64" : "32";
+            _installerBit = _bootstrapper.IsBundle64Bit ? "64" : "32";
+            _osBit = Environment.Is64BitOperatingSystem ? "64" : "32";
         }
 
         #endregion Constructors
@@ -61,7 +61,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "The " + this.installerBit + " Bit installer cannot be used on a " + osBit + " Bit operating system. Please use the " + osBit + " Bit installer instead.";
+                return "The " + _installerBit + " Bit installer cannot be used on a " + _osBit + " Bit operating system. Please use the " + _osBit + " Bit installer instead.";
             }
         }
 

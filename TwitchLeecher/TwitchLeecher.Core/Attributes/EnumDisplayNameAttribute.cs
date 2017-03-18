@@ -11,7 +11,7 @@ namespace TwitchLeecher.Core.Attributes
                 throw new ArgumentNullException(nameof(name));
             }
 
-            this.Name = name;
+            Name = name;
         }
 
         public string Name { get; private set; }

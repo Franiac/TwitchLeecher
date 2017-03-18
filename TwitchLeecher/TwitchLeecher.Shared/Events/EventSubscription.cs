@@ -7,8 +7,8 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly IDelegateReference actionReference;
-        private readonly IDelegateReference filterReference;
+        private readonly IDelegateReference _actionReference;
+        private readonly IDelegateReference _filterReference;
 
         #endregion Fields
 
@@ -23,7 +23,7 @@ namespace TwitchLeecher.Shared.Events
 
             if (!(actionReference.Target is Action<TPayload>))
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Invalid Delegate Reference Type Exception", typeof(Action<TPayload>).FullName), nameof(actionReference));
+                throw new ArgumentException("Invalid action reference target type", nameof(actionReference));
             }
 
             if (filterReference == null)
@@ -33,11 +33,11 @@ namespace TwitchLeecher.Shared.Events
 
             if (!(filterReference.Target is Predicate<TPayload>))
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Invalid Delegate Reference Type Exception", typeof(Predicate<TPayload>).FullName), nameof(filterReference));
+                throw new ArgumentException("Invalid filter reference target type", nameof(filterReference));
             }
 
-            this.actionReference = actionReference;
-            this.filterReference = filterReference;
+            _actionReference = actionReference;
+            _filterReference = filterReference;
         }
 
         #endregion Constructors
@@ -48,7 +48,7 @@ namespace TwitchLeecher.Shared.Events
         {
             get
             {
-                return (Action<TPayload>)actionReference.Target;
+                return (Action<TPayload>)_actionReference.Target;
             }
         }
 
@@ -56,7 +56,7 @@ namespace TwitchLeecher.Shared.Events
         {
             get
             {
-                return (Predicate<TPayload>)filterReference.Target;
+                return (Predicate<TPayload>)_filterReference.Target;
             }
         }
 
@@ -68,8 +68,8 @@ namespace TwitchLeecher.Shared.Events
 
         public virtual Action<object[]> GetExecutionStrategy()
         {
-            Action<TPayload> action = this.Action;
-            Predicate<TPayload> filter = this.Filter;
+            Action<TPayload> action = Action;
+            Predicate<TPayload> filter = Filter;
 
             if (action != null && filter != null)
             {

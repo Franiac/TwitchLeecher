@@ -2,12 +2,12 @@ using System;
 
 namespace TwitchLeecher.Shared.Events
 {
-    public class SubscriptionToken : IEquatable<SubscriptionToken>, IDisposable
+    public sealed class SubscriptionToken : IEquatable<SubscriptionToken>, IDisposable
     {
         #region Fields
 
-        private readonly Guid token;
-        private Action<SubscriptionToken> unsubscribeAction;
+        private readonly Guid _token;
+        private Action<SubscriptionToken> _unsubscribeAction;
 
         #endregion Fields
 
@@ -15,22 +15,22 @@ namespace TwitchLeecher.Shared.Events
 
         public SubscriptionToken(Action<SubscriptionToken> unsubscribeAction)
         {
-            this.unsubscribeAction = unsubscribeAction;
-            token = Guid.NewGuid();
+            _unsubscribeAction = unsubscribeAction;
+            _token = Guid.NewGuid();
         }
 
         #endregion Constructors
 
         #region Methods
-
-        public virtual void Dispose()
+        
+        public void Dispose()
         {
-            if (this.unsubscribeAction != null)
+            if (_unsubscribeAction != null)
             {
-                this.unsubscribeAction(this);
-                this.unsubscribeAction = null;
+                _unsubscribeAction(this);
+                _unsubscribeAction = null;
             }
-
+            
             GC.SuppressFinalize(this);
         }
 
@@ -41,7 +41,7 @@ namespace TwitchLeecher.Shared.Events
                 return false;
             }
 
-            return Equals(token, other.token);
+            return Equals(_token, other._token);
         }
 
         public override bool Equals(object obj)
@@ -56,7 +56,7 @@ namespace TwitchLeecher.Shared.Events
 
         public override int GetHashCode()
         {
-            return token.GetHashCode();
+            return _token.GetHashCode();
         }
 
         #endregion Methods

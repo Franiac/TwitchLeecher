@@ -13,11 +13,11 @@ namespace TwitchLeecher.Setup.Gui.Services
     {
         #region Fields
 
-        private bool isUacEnabled;
-        private bool isUserAdmin;
+        private bool _isUacEnabled;
+        private bool _isUserAdmin;
 
-        private BitmapImage uacIcon;
-        private object uacIconLock;
+        private BitmapImage _uacIcon;
+        private object _uacIconLock;
 
         #endregion Fields
 
@@ -25,9 +25,9 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         public UacService()
         {
-            this.uacIconLock = new object();
-            this.isUacEnabled = this.GetIsUacEnabled();
-            this.isUserAdmin = this.GetIsUserAdmin();
+            _uacIconLock = new object();
+            _isUacEnabled = GetIsUacEnabled();
+            _isUserAdmin = GetIsUserAdmin();
         }
 
         #endregion Constructors
@@ -38,7 +38,7 @@ namespace TwitchLeecher.Setup.Gui.Services
         {
             get
             {
-                return this.isUacEnabled;
+                return _isUacEnabled;
             }
         }
 
@@ -46,7 +46,7 @@ namespace TwitchLeecher.Setup.Gui.Services
         {
             get
             {
-                return this.isUserAdmin;
+                return _isUserAdmin;
             }
         }
 
@@ -54,12 +54,12 @@ namespace TwitchLeecher.Setup.Gui.Services
         {
             get
             {
-                if (this.uacIcon == null)
+                if (_uacIcon == null)
                 {
-                    this.CreateUacIcon();
+                    CreateUacIcon();
                 }
 
-                return this.uacIcon;
+                return _uacIcon;
             }
         }
 
@@ -100,9 +100,9 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         private void CreateUacIcon()
         {
-            lock (this.uacIconLock)
+            lock (_uacIconLock)
             {
-                if (this.uacIcon == null)
+                if (_uacIcon == null)
                 {
                     SHSTOCKICONINFO iconResult = new SHSTOCKICONINFO();
                     iconResult.cbSize = (uint)Marshal.SizeOf(iconResult);
@@ -121,7 +121,7 @@ namespace TwitchLeecher.Setup.Gui.Services
                     bmpImg.StreamSource = ms;
                     bmpImg.EndInit();
 
-                    this.uacIcon = bmpImg;
+                    _uacIcon = bmpImg;
                 }
             }
         }

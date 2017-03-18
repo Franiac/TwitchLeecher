@@ -16,15 +16,15 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService dialogService;
-        private ITwitchService twitchService;
-        private INavigationService navigationService;
-        private INotificationService notificationService;
+        private IDialogService _dialogService;
+        private ITwitchService _twitchService;
+        private INavigationService _navigationService;
+        private INotificationService _notificationService;
 
-        private ICommand navigatingCommand;
-        private ICommand cancelCommand;
+        private ICommand _navigatingCommand;
+        private ICommand _cancelCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -36,12 +36,12 @@ namespace TwitchLeecher.Gui.ViewModels
             INavigationService navigationService,
             INotificationService notificationService)
         {
-            this.dialogService = dialogService;
-            this.twitchService = twitchService;
-            this.navigationService = navigationService;
-            this.notificationService = notificationService;
+            _dialogService = dialogService;
+            _twitchService = twitchService;
+            _navigationService = navigationService;
+            _notificationService = notificationService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructor
@@ -52,12 +52,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.navigatingCommand == null)
+                if (_navigatingCommand == null)
                 {
-                    this.navigatingCommand = new DelegateCommand<Uri>(this.Navigating);
+                    _navigatingCommand = new DelegateCommand<Uri>(Navigating);
                 }
 
-                return this.navigatingCommand;
+                return _navigatingCommand;
             }
         }
 
@@ -65,12 +65,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.cancelCommand == null)
+                if (_cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand(this.Cancel);
+                    _cancelCommand = new DelegateCommand(Cancel);
                 }
 
-                return this.cancelCommand;
+                return _cancelCommand;
             }
         }
 
@@ -82,7 +82,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     string urlStr = url?.OriginalString;
 
@@ -111,20 +111,20 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             if (string.IsNullOrWhiteSpace(accessToken))
                             {
-                                this.dialogService.ShowMessageBox("Twitch did not respond with an access token! Authorization aborted!", "Error", MessageBoxButton.OK);
-                                this.navigationService.NavigateBack();
+                                _dialogService.ShowMessageBox("Twitch did not respond with an access token! Authorization aborted!", "Error", MessageBoxButton.OK);
+                                _navigationService.NavigateBack();
                             }
                             else
                             {
-                                if (this.twitchService.Authorize(accessToken))
+                                if (_twitchService.Authorize(accessToken))
                                 {
-                                    this.navigationService.ShowRevokeAuthorization();
-                                    this.notificationService.ShowNotification("Twitch authorization successful!");
+                                    _navigationService.ShowRevokeAuthorization();
+                                    _notificationService.ShowNotification("Twitch authorization successful!");
                                 }
                                 else
                                 {
-                                    this.dialogService.ShowMessageBox("Access Token '" + accessToken + "' could not be verified! Authorization aborted!", "Error", MessageBoxButton.OK);
-                                    this.navigationService.NavigateBack();
+                                    _dialogService.ShowMessageBox("Access Token '" + accessToken + "' could not be verified! Authorization aborted!", "Error", MessageBoxButton.OK);
+                                    _navigationService.NavigateBack();
                                 }
                             }
                         }
@@ -134,15 +134,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             if (!string.IsNullOrWhiteSpace(error) && error.Equals("access_denied", StringComparison.OrdinalIgnoreCase))
                             {
-                                this.navigationService.NavigateBack();
-                                this.notificationService.ShowNotification("Twitch authorization has been canceled!");
+                                _navigationService.NavigateBack();
+                                _notificationService.ShowNotification("Twitch authorization has been canceled!");
                             }
                             else
                             {
                                 Action unspecifiedError = () =>
                                 {
-                                    this.dialogService.ShowMessageBox("Twitch responded with an unspecified error! Authorization aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    this.navigationService.NavigateBack();
+                                    _dialogService.ShowMessageBox("Twitch responded with an unspecified error! Authorization aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    _navigationService.NavigateBack();
                                 };
 
                                 if (urlParams.ContainsKey("error_description"))
@@ -155,13 +155,13 @@ namespace TwitchLeecher.Gui.ViewModels
                                     }
                                     else
                                     {
-                                        this.dialogService.ShowMessageBox(
+                                        _dialogService.ShowMessageBox(
                                             "Twitch responded with an error:" +
                                             Environment.NewLine + Environment.NewLine +
                                             "\"" + errorDesc + "\"" +
                                             Environment.NewLine + Environment.NewLine +
                                             "Authorization aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                        this.navigationService.NavigateBack();
+                                        _navigationService.NavigateBack();
                                     }
                                 }
                                 else
@@ -172,15 +172,15 @@ namespace TwitchLeecher.Gui.ViewModels
                         }
                         else
                         {
-                            this.dialogService.ShowMessageBox("Twitch responded neither with an access token nor an error! Authorization aborted!", "Error", MessageBoxButton.OK);
-                            this.navigationService.NavigateBack();
+                            _dialogService.ShowMessageBox("Twitch responded neither with an access token nor an error! Authorization aborted!", "Error", MessageBoxButton.OK);
+                            _navigationService.NavigateBack();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -188,14 +188,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.NavigateBack();
+                    _navigationService.NavigateBack();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -208,7 +208,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.CancelCommand, "Cancel", "Times"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Times"));
 
             return menuCommands;
         }

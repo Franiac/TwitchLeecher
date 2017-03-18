@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>IDE0017</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -65,13 +66,16 @@
     <Compile Include="Extensions\NameValueCollection.cs" />
     <Compile Include="Extensions\Xml.cs" />
     <Compile Include="Helpers\FixedSizeQueue.cs" />
+    <Compile Include="Native\NativeDelegates.cs" />
+    <Compile Include="Native\NativeFlags.cs" />
+    <Compile Include="Native\NativeStructs.cs" />
     <Compile Include="Notification\BindableBase.cs" />
     <Compile Include="Reflection\AssemblyUtil.cs" />
     <Compile Include="Extensions\Version.cs" />
-    <Compile Include="Native\Display.cs" />
+    <Compile Include="Native\NativeDisplay.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Native\Api.cs" />
+    <Compile Include="Native\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

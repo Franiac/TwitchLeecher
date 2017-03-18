@@ -13,19 +13,19 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private SearchParameters searchParams;
+        private SearchParameters _searchParams;
 
-        private ICommand clearUrlsCommand;
-        private ICommand clearIdsCommand;
-        private ICommand searchCommand;
-        private ICommand cancelCommand;
+        private ICommand _clearUrlsCommand;
+        private ICommand _clearIdsCommand;
+        private ICommand _searchCommand;
+        private ICommand _cancelCommand;
 
-        private ITwitchService twitchService;
-        private ISearchService searchService;
-        private IDialogService dialogService;
-        private INavigationService navigationService;
+        private ITwitchService _twitchService;
+        private ISearchService _searchService;
+        private IDialogService _dialogService;
+        private INavigationService _navigationService;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -37,12 +37,12 @@ namespace TwitchLeecher.Gui.ViewModels
             IDialogService dialogService,
             INavigationService navigationService)
         {
-            this.twitchService = twitchService;
-            this.searchService = searchService;
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
+            _twitchService = twitchService;
+            _searchService = searchService;
+            _dialogService = dialogService;
+            _navigationService = navigationService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -53,16 +53,16 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.searchParams == null)
+                if (_searchParams == null)
                 {
-                    this.searchParams = this.searchService.LastSearchParams.Clone();
+                    _searchParams = _searchService.LastSearchParams.Clone();
                 }
 
-                return this.searchParams;
+                return _searchParams;
             }
             set
             {
-                this.SetProperty(ref this.searchParams, value, nameof(this.SearchParams));
+                SetProperty(ref _searchParams, value, nameof(SearchParams));
             }
         }
 
@@ -70,12 +70,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.clearUrlsCommand == null)
+                if (_clearUrlsCommand == null)
                 {
-                    this.clearUrlsCommand = new DelegateCommand(this.ClearUrls);
+                    _clearUrlsCommand = new DelegateCommand(ClearUrls);
                 }
 
-                return this.clearUrlsCommand;
+                return _clearUrlsCommand;
             }
         }
 
@@ -83,12 +83,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.clearIdsCommand == null)
+                if (_clearIdsCommand == null)
                 {
-                    this.clearIdsCommand = new DelegateCommand(this.ClearIds);
+                    _clearIdsCommand = new DelegateCommand(ClearIds);
                 }
 
-                return this.clearIdsCommand;
+                return _clearIdsCommand;
             }
         }
 
@@ -96,12 +96,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.searchCommand == null)
+                if (_searchCommand == null)
                 {
-                    this.searchCommand = new DelegateCommand(this.Search);
+                    _searchCommand = new DelegateCommand(Search);
                 }
 
-                return this.searchCommand;
+                return _searchCommand;
             }
         }
 
@@ -109,12 +109,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.cancelCommand == null)
+                if (_cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand(this.Cancel);
+                    _cancelCommand = new DelegateCommand(Cancel);
                 }
 
-                return this.cancelCommand;
+                return _cancelCommand;
             }
         }
 
@@ -126,14 +126,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.SearchParams.Urls = null;
+                    SearchParams.Urls = null;
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -141,14 +141,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.SearchParams.Ids = null;
+                    SearchParams.Ids = null;
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -156,20 +156,20 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.dialogService.SetBusy();
-                    this.Validate();
+                    _dialogService.SetBusy();
+                    Validate();
 
-                    if (!this.HasErrors)
+                    if (!HasErrors)
                     {
-                        this.searchService.PerformSearch(this.SearchParams);
+                        _searchService.PerformSearch(SearchParams);
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -177,14 +177,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.NavigateBack();
+                    _navigationService.NavigateBack();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -192,22 +192,22 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.SearchParams);
+            string currentProperty = nameof(SearchParams);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                this.SearchParams.Validate();
+                SearchParams.Validate();
 
-                if (this.SearchParams.SearchType == SearchType.Channel &&
-                    !string.IsNullOrWhiteSpace(this.SearchParams.Channel) &&
-                    !this.twitchService.ChannelExists(this.SearchParams.Channel))
+                if (SearchParams.SearchType == SearchType.Channel &&
+                    !string.IsNullOrWhiteSpace(SearchParams.Channel) &&
+                    !_twitchService.ChannelExists(SearchParams.Channel))
                 {
-                    this.SearchParams.AddError(nameof(this.SearchParams.Channel), "The specified channel does not exist on Twitch!");
+                    SearchParams.AddError(nameof(SearchParams.Channel), "The specified channel does not exist on Twitch!");
                 }
 
-                if (this.SearchParams.HasErrors)
+                if (SearchParams.HasErrors)
                 {
-                    this.AddError(currentProperty, "Invalid Search Parameters!");
+                    AddError(currentProperty, "Invalid Search Parameters!");
                 }
             }
         }
@@ -221,8 +221,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.SearchCommand, "Search", "Search"));
-            menuCommands.Add(new MenuCommand(this.CancelCommand, "Cancel", "Times"));
+            menuCommands.Add(new MenuCommand(SearchCommand, "Search", "Search"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Times"));
 
             return menuCommands;
         }

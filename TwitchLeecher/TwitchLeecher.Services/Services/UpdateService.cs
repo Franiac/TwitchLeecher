@@ -12,8 +12,14 @@ namespace TwitchLeecher.Services.Services
 {
     internal class UpdateService : IUpdateService
     {
+        #region Constants
+
         private const string latestReleaseUrl = "https://github.com/Franiac/TwitchLeecher/releases/tag/v{0}";
         private const string releasesApiUrl = "https://api.github.com/repos/Franiac/TwitchLeecher/releases";
+
+        #endregion Constants
+
+        #region Methods
 
         public UpdateInfo CheckForUpdate()
         {
@@ -65,5 +71,7 @@ namespace TwitchLeecher.Services.Services
 
             return null;
         }
+
+        #endregion Methods
     }
 }

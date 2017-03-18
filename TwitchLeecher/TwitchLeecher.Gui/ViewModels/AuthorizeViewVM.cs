@@ -11,13 +11,13 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService dialogService;
-        private INavigationService navigationService;
-        private IEventAggregator eventAggregator;
+        private IDialogService _dialogService;
+        private INavigationService _navigationService;
+        private IEventAggregator _eventAggregator;
 
-        private ICommand connectCommand;
+        private ICommand _connectCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -28,13 +28,13 @@ namespace TwitchLeecher.Gui.ViewModels
             INavigationService navigationService,
             IEventAggregator eventAggregator)
         {
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
-            this.eventAggregator = eventAggregator;
+            _dialogService = dialogService;
+            _navigationService = navigationService;
+            _eventAggregator = eventAggregator;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
 
-            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(this.IsAuthorizedChanged);
+            _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(IsAuthorizedChanged);
         }
 
         #endregion Constructor
@@ -45,12 +45,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.connectCommand == null)
+                if (_connectCommand == null)
                 {
-                    this.connectCommand = new DelegateCommand(this.Connect);
+                    _connectCommand = new DelegateCommand(Connect);
                 }
 
-                return this.connectCommand;
+                return _connectCommand;
             }
         }
 
@@ -62,14 +62,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.ShowTwitchConnect();
+                    _navigationService.ShowTwitchConnect();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -77,7 +77,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             if (isAuthorized)
             {
-                this.navigationService.ShowRevokeAuthorization();
+                _navigationService.ShowRevokeAuthorization();
             }
         }
 

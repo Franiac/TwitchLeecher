@@ -7,10 +7,10 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly Delegate @delegate;
-        private readonly Type delegateType;
-        private readonly MethodInfo method;
-        private readonly WeakReference weakReference;
+        private readonly Delegate _delegate;
+        private readonly Type _delegateType;
+        private readonly MethodInfo _method;
+        private readonly WeakReference _weakReference;
 
         #endregion Fields
 
@@ -25,13 +25,13 @@ namespace TwitchLeecher.Shared.Events
 
             if (keepReferenceAlive)
             {
-                this.@delegate = @delegate;
+                _delegate = @delegate;
             }
             else
             {
-                weakReference = new WeakReference(@delegate.Target);
-                method = @delegate.GetMethodInfo();
-                delegateType = @delegate.GetType();
+                _weakReference = new WeakReference(@delegate.Target);
+                _method = @delegate.GetMethodInfo();
+                _delegateType = @delegate.GetType();
             }
         }
 
@@ -43,9 +43,9 @@ namespace TwitchLeecher.Shared.Events
         {
             get
             {
-                if (@delegate != null)
+                if (_delegate != null)
                 {
-                    return @delegate;
+                    return _delegate;
                 }
                 else
                 {
@@ -60,16 +60,16 @@ namespace TwitchLeecher.Shared.Events
 
         private Delegate TryGetDelegate()
         {
-            if (method.IsStatic)
+            if (_method.IsStatic)
             {
-                return method.CreateDelegate(delegateType, null);
+                return _method.CreateDelegate(_delegateType, null);
             }
 
-            object target = weakReference.Target;
+            object target = _weakReference.Target;
 
             if (target != null)
             {
-                return method.CreateDelegate(delegateType, target);
+                return _method.CreateDelegate(_delegateType, target);
             }
             return null;
         }

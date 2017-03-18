@@ -15,33 +15,39 @@ namespace TwitchLeecher
 {
     public partial class App : Application
     {
-        private IKernel kernel;
+        #region Fields
+
+        private IKernel _kernel;
+
+        #endregion Fields
+
+        #region Methods
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            this.kernel = this.CreateKernel();
+            _kernel = CreateKernel();
 
-            this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; };
             ServicePointManager.DefaultConnectionLimit = 10;
 
-            this.MainWindow = this.kernel.Get<MainWindow>();
-            this.MainWindow.Show();
+            MainWindow = _kernel.Get<MainWindow>();
+            MainWindow.Show();
         }
 
         private IKernel CreateKernel()
         {
             IKernel kernel = new StandardKernel();
 
-            this.RegisterTypes(kernel);
-            this.LoadModules(kernel);
+            RegisterTypes(kernel);
+            LoadModules(kernel);
 
             return kernel;
         }
@@ -59,13 +65,17 @@ namespace TwitchLeecher
             kernel.Load<ServiceModule>();
         }
 
+        #endregion Methods
+
+        #region EventHandler
+
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             try
             {
                 Exception ex = e.Exception;
 
-                ILogService logService = this.kernel.Get<ILogService>();
+                ILogService logService = _kernel.Get<ILogService>();
                 string logFile = logService.LogException(ex);
 
                 MessageBox.Show("An unhandled UI exception occured and was written to log file"
@@ -96,7 +106,7 @@ namespace TwitchLeecher
             {
                 Exception ex = (Exception)e.ExceptionObject;
 
-                ILogService logService = this.kernel.Get<ILogService>();
+                ILogService logService = _kernel.Get<ILogService>();
                 string logFile = logService.LogException(ex);
 
                 MessageBox.Show("An unhandled exception occured and was written to a log file!"
@@ -120,5 +130,7 @@ namespace TwitchLeecher
                 }
             }
         }
+
+        #endregion EventHandler
     }
 }

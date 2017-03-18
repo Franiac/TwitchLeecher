@@ -13,14 +13,14 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.Loaded += this.TwitchConnectView_Loaded;
-            this.webBrowser.Navigating += WebBrowser_Navigating;
+            Loaded += TwitchConnectView_Loaded;
+            webBrowser.Navigating += WebBrowser_Navigating;
         }
 
         private void TwitchConnectView_Loaded(object sender, RoutedEventArgs e)
         {
-            this.HideScriptErrors(this.webBrowser);
-            this.webBrowser.Navigate("https://api.twitch.tv/kraken/oauth2/authorize?response_type=token&client_id=37v97169hnj8kaoq8fs3hzz8v6jezdj&redirect_uri=http://www.tl.com&scope=user_subscriptions&force_verify=true");
+            HideScriptErrors(webBrowser);
+            webBrowser.Navigate("https://api.twitch.tv/kraken/oauth2/authorize?response_type=token&client_id=37v97169hnj8kaoq8fs3hzz8v6jezdj&redirect_uri=http://www.tl.com&scope=user_subscriptions&force_verify=true");
         }
 
         private void WebBrowser_Navigating(object sender, NavigatingCancelEventArgs e)
@@ -29,7 +29,7 @@ namespace TwitchLeecher.Gui.Views
 
             if (!string.IsNullOrWhiteSpace(urlStr) && urlStr.StartsWith("http://www.tl.com", StringComparison.OrdinalIgnoreCase))
             {
-                TwitchConnectViewVM vm = this.DataContext as TwitchConnectViewVM;
+                TwitchConnectViewVM vm = DataContext as TwitchConnectViewVM;
                 vm?.NavigatingCommand.Execute(e.Uri);
                 e.Cancel = true;
             }

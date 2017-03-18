@@ -9,7 +9,7 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly List<IEventSubscription> subscriptions = new List<IEventSubscription>();
+        private readonly List<IEventSubscription> _subscriptions = new List<IEventSubscription>();
 
         #endregion Fields
 
@@ -21,7 +21,7 @@ namespace TwitchLeecher.Shared.Events
         {
             get
             {
-                return subscriptions;
+                return _subscriptions;
             }
         }
 
@@ -85,11 +85,11 @@ namespace TwitchLeecher.Shared.Events
             {
                 for (int i = Subscriptions.Count - 1; i >= 0; i--)
                 {
-                    Action<object[]> listItem = subscriptions[i].GetExecutionStrategy();
+                    Action<object[]> listItem = _subscriptions[i].GetExecutionStrategy();
 
                     if (listItem == null)
                     {
-                        subscriptions.RemoveAt(i);
+                        _subscriptions.RemoveAt(i);
                     }
                     else
                     {

@@ -15,11 +15,11 @@ namespace TwitchLeecher.Setup.Gui.Views
             InitializeComponent();
         }
 
-        private void btnBrowse_Click(object sender, RoutedEventArgs e)
+        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                CustomizeDlgVM installFolderDlgVM = this.DataContext as CustomizeDlgVM;
+                CustomizeDlgVM installFolderDlgVM = DataContext as CustomizeDlgVM;
 
                 if (installFolderDlgVM == null)
                 {
@@ -35,7 +35,7 @@ namespace TwitchLeecher.Setup.Gui.Views
 
                     if (dlgRes == DialogResult.OK)
                     {
-                        this.txtInstallDir.Text = Path.Combine(folderDlg.SelectedPath, installFolderDlgVM.Bootstrapper.ProductName);
+                        txtInstallDir.Text = Path.Combine(folderDlg.SelectedPath, installFolderDlgVM.Bootstrapper.ProductName);
                     }
                 }
             }

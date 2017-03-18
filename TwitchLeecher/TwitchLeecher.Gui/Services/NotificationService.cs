@@ -8,7 +8,7 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel kernel;
+        private IKernel _kernel;
 
         #endregion Fields
 
@@ -16,7 +16,7 @@ namespace TwitchLeecher.Gui.Services
 
         public NotificationService(IKernel kernel)
         {
-            this.kernel = kernel;
+            _kernel = kernel;
         }
 
         #endregion Constructor
@@ -25,7 +25,7 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowNotification(string text)
         {
-            this.kernel.Get<MainWindow>().ShowNotification(text);
+            _kernel.Get<MainWindow>().ShowNotification(text);
         }
 
         #endregion Methods

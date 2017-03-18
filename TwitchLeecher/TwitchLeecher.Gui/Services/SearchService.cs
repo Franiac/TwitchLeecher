@@ -13,11 +13,11 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IEventAggregator eventAggregator;
-        private IDialogService dialogService;
-        private ITwitchService twitchService;
-        private INavigationService navigationService;
-        private IPreferencesService preferencesService;
+        private IEventAggregator _eventAggregator;
+        private IDialogService _dialogService;
+        private ITwitchService _twitchService;
+        private INavigationService _navigationService;
+        private IPreferencesService _preferencesService;
 
         private SearchParameters lastSearchParams;
 
@@ -32,13 +32,13 @@ namespace TwitchLeecher.Gui.Services
             INavigationService navigationService,
             IPreferencesService preferencesService)
         {
-            this.eventAggregator = eventAggregator;
-            this.dialogService = dialogService;
-            this.twitchService = twitchService;
-            this.navigationService = navigationService;
-            this.preferencesService = preferencesService;
+            _eventAggregator = eventAggregator;
+            _dialogService = dialogService;
+            _twitchService = twitchService;
+            _navigationService = navigationService;
+            _preferencesService = preferencesService;
 
-            this.eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(this.PreferencesSaved);
+            _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
         }
 
         #endregion Constructors
@@ -49,9 +49,9 @@ namespace TwitchLeecher.Gui.Services
         {
             get
             {
-                if (this.lastSearchParams == null)
+                if (lastSearchParams == null)
                 {
-                    Preferences currentPrefs = this.preferencesService.CurrentPreferences;
+                    Preferences currentPrefs = _preferencesService.CurrentPreferences;
 
                     SearchParameters defaultParams = new SearchParameters(SearchType.Channel)
                     {
@@ -60,10 +60,10 @@ namespace TwitchLeecher.Gui.Services
                         LoadLimit = currentPrefs.SearchLoadLimit
                     };
 
-                    this.lastSearchParams = defaultParams;
+                    lastSearchParams = defaultParams;
                 }
 
-                return this.lastSearchParams;
+                return lastSearchParams;
             }
         }
 
@@ -73,20 +73,20 @@ namespace TwitchLeecher.Gui.Services
 
         public void PerformSearch(SearchParameters searchParams)
         {
-            this.lastSearchParams = searchParams;
+            lastSearchParams = searchParams;
 
-            this.navigationService.ShowLoading();
+            _navigationService.ShowLoading();
 
-            Task searchTask = new Task(() => this.twitchService.Search(searchParams));
+            Task searchTask = new Task(() => _twitchService.Search(searchParams));
 
             searchTask.ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
-                    this.dialogService.ShowAndLogException(task.Exception);
+                    _dialogService.ShowAndLogException(task.Exception);
                 }
 
-                this.navigationService.ShowSearchResults();
+                _navigationService.ShowSearchResults();
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             searchTask.Start();
@@ -96,11 +96,11 @@ namespace TwitchLeecher.Gui.Services
         {
             try
             {
-                this.lastSearchParams = null;
+                lastSearchParams = null;
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 

@@ -23,8 +23,11 @@
 
         public static MessageBoxResult Show(Window owner, string messageBoxText)
         {
-            MessageBoxWindow msg = new MessageBoxWindow(messageBoxText);
-            msg.Owner = owner;
+            MessageBoxWindow msg = new MessageBoxWindow(messageBoxText)
+            {
+                Owner = owner
+            };
+
             msg.ShowDialog();
 
             return msg.Result;
@@ -32,8 +35,11 @@
 
         public static MessageBoxResult Show(Window owner, string messageBoxText, string caption)
         {
-            MessageBoxWindow msg = new MessageBoxWindow(messageBoxText, caption);
-            msg.Owner = owner;
+            MessageBoxWindow msg = new MessageBoxWindow(messageBoxText, caption)
+            {
+                Owner = owner
+            };
+
             msg.ShowDialog();
 
             return msg.Result;

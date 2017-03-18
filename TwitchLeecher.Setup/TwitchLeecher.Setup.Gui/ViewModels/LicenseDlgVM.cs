@@ -18,12 +18,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.bootstrapper.LicenseAccepted;
+                return _bootstrapper.LicenseAccepted;
             }
             set
             {
-                this.bootstrapper.LicenseAccepted = value;
-                this.FirePropertyChanged("LicenseAccepted");
+                _bootstrapper.LicenseAccepted = value;
+                FirePropertyChanged("LicenseAccepted");
             }
         }
 
@@ -39,9 +39,9 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (!this.bootstrapper.LicenseAccepted)
+                if (!_bootstrapper.LicenseAccepted)
                 {
-                    this.AddError(currentProperty, "Please accept the license agreement!");
+                    AddError(currentProperty, "Please accept the license agreement!");
                 }
             }
         }

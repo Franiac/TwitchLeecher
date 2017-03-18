@@ -9,18 +9,18 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private TwitchVideo video;
-        private TwitchVideoQuality resolution;
-        private VodAuthInfo vodAuthInfo;
+        private TwitchVideo _video;
+        private TwitchVideoQuality _resolution;
+        private VodAuthInfo _vodAuthInfo;
 
-        private string folder;
-        private string filename;
+        private string _folder;
+        private string _filename;
 
-        private bool cropStart;
-        private bool cropEnd;
+        private bool _cropStart;
+        private bool _cropEnd;
 
-        private TimeSpan cropStartTime;
-        private TimeSpan cropEndTime;
+        private TimeSpan _cropStartTime;
+        private TimeSpan _cropEndTime;
 
         #endregion Fields
 
@@ -28,21 +28,6 @@ namespace TwitchLeecher.Core.Models
 
         public DownloadParameters(TwitchVideo video, TwitchVideoQuality resolution, VodAuthInfo vodAuthInfo, string folder, string filename)
         {
-            if (video == null)
-            {
-                throw new ArgumentNullException(nameof(video));
-            }
-
-            if (resolution == null)
-            {
-                throw new ArgumentNullException(nameof(resolution));
-            }
-
-            if (vodAuthInfo == null)
-            {
-                throw new ArgumentNullException(nameof(vodAuthInfo));
-            }
-
             if (string.IsNullOrWhiteSpace(folder))
             {
                 throw new ArgumentNullException(nameof(folder));
@@ -53,13 +38,14 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(filename));
             }
 
-            this.video = video;
-            this.resolution = resolution;
-            this.vodAuthInfo = vodAuthInfo;
-            this.folder = folder;
-            this.filename = filename;
+            _video = video ?? throw new ArgumentNullException(nameof(video));
+            _resolution = resolution ?? throw new ArgumentNullException(nameof(resolution));
+            _vodAuthInfo = vodAuthInfo ?? throw new ArgumentNullException(nameof(vodAuthInfo));
 
-            this.CropEndTime = video.Length;
+            _folder = folder;
+            _filename = filename;
+
+            _cropEndTime = video.Length;
         }
 
         #endregion Constructors
@@ -70,7 +56,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.video;
+                return _video;
             }
         }
 
@@ -78,11 +64,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.resolution;
+                return _resolution;
             }
             set
             {
-                this.SetProperty(ref this.resolution, value, nameof(this.Resolution));
+                SetProperty(ref _resolution, value, nameof(Resolution));
             }
         }
 
@@ -90,7 +76,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.vodAuthInfo;
+                return _vodAuthInfo;
             }
         }
 
@@ -98,12 +84,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.folder;
+                return _folder;
             }
             set
             {
-                this.SetProperty(ref this.folder, value, nameof(this.Folder));
-                this.FirePropertyChanged(nameof(this.FullPath));
+                SetProperty(ref _folder, value, nameof(Folder));
+                FirePropertyChanged(nameof(FullPath));
             }
         }
 
@@ -111,12 +97,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.filename;
+                return _filename;
             }
             set
             {
-                this.SetProperty(ref this.filename, value, nameof(this.Filename));
-                this.FirePropertyChanged(nameof(this.FullPath));
+                SetProperty(ref _filename, value, nameof(Filename));
+                FirePropertyChanged(nameof(FullPath));
             }
         }
 
@@ -124,7 +110,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return Path.Combine(this.folder, this.filename);
+                return Path.Combine(_folder, _filename);
             }
         }
 
@@ -132,12 +118,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.cropStart;
+                return _cropStart;
             }
             set
             {
-                this.SetProperty(ref this.cropStart, value, nameof(this.CropStart));
-                this.FirePropertyChanged(nameof(this.CroppedLength));
+                SetProperty(ref _cropStart, value, nameof(CropStart));
+                FirePropertyChanged(nameof(CroppedLength));
             }
         }
 
@@ -145,12 +131,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.cropStartTime;
+                return _cropStartTime;
             }
             set
             {
-                this.SetProperty(ref this.cropStartTime, value, nameof(this.CropStartTime));
-                this.FirePropertyChanged(nameof(this.CroppedLength));
+                SetProperty(ref _cropStartTime, value, nameof(CropStartTime));
+                FirePropertyChanged(nameof(CroppedLength));
             }
         }
 
@@ -158,12 +144,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.cropEnd;
+                return _cropEnd;
             }
             set
             {
-                this.SetProperty(ref this.cropEnd, value, nameof(this.CropEnd));
-                this.FirePropertyChanged(nameof(this.CroppedLength));
+                SetProperty(ref _cropEnd, value, nameof(CropEnd));
+                FirePropertyChanged(nameof(CroppedLength));
             }
         }
 
@@ -171,12 +157,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.cropEndTime;
+                return _cropEndTime;
             }
             set
             {
-                this.SetProperty(ref this.cropEndTime, value, nameof(this.CropEndTime));
-                this.FirePropertyChanged(nameof(this.CroppedLength));
+                SetProperty(ref _cropEndTime, value, nameof(CropEndTime));
+                FirePropertyChanged(nameof(CroppedLength));
             }
         }
 
@@ -184,21 +170,21 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (!this.cropStart && !this.cropEnd)
+                if (!_cropStart && !_cropEnd)
                 {
-                    return this.video.Length;
+                    return _video.Length;
                 }
-                else if (!this.cropStart && this.cropEnd)
+                else if (!_cropStart && _cropEnd)
                 {
-                    return this.cropEndTime;
+                    return _cropEndTime;
                 }
-                else if (this.cropStart && !this.cropEnd)
+                else if (_cropStart && !_cropEnd)
                 {
-                    return this.video.Length - this.cropStartTime;
+                    return _video.Length - _cropStartTime;
                 }
                 else
                 {
-                    return this.cropEndTime - this.cropStartTime;
+                    return _cropEndTime - _cropStartTime;
                 }
             }
         }
@@ -211,90 +197,90 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.Resolution);
+            string currentProperty = nameof(Resolution);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.resolution == null)
+                if (_resolution == null)
                 {
-                    this.AddError(currentProperty, "Please select a quality!");
+                    AddError(currentProperty, "Please select a quality!");
                 }
             }
 
-            currentProperty = nameof(this.Folder);
+            currentProperty = nameof(Folder);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.folder))
+                if (string.IsNullOrWhiteSpace(_folder))
                 {
-                    this.AddError(currentProperty, "Please specify a folder!");
+                    AddError(currentProperty, "Please specify a folder!");
                 }
-                else if (!Directory.Exists(this.folder))
+                else if (!Directory.Exists(_folder))
                 {
-                    this.AddError(currentProperty, "The specified folder does not exist!");
+                    AddError(currentProperty, "The specified folder does not exist!");
                 }
-                else if (!FileSystem.HasWritePermission(this.folder))
+                else if (!FileSystem.HasWritePermission(_folder))
                 {
-                    this.AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
+                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
                 }
             }
 
-            currentProperty = nameof(this.Filename);
+            currentProperty = nameof(Filename);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (string.IsNullOrWhiteSpace(this.filename))
+                if (string.IsNullOrWhiteSpace(_filename))
                 {
-                    this.AddError(currentProperty, "Please specify a filename!");
+                    AddError(currentProperty, "Please specify a filename!");
                 }
-                else if (!this.filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                else if (!_filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                 {
-                    this.AddError(currentProperty, "Filename must end with '.mp4'!");
+                    AddError(currentProperty, "Filename must end with '.mp4'!");
                 }
-                else if (FileSystem.FilenameContainsInvalidChars(this.filename))
+                else if (FileSystem.FilenameContainsInvalidChars(_filename))
                 {
-                    this.AddError(currentProperty, "Filename contains invalid characters!");
+                    AddError(currentProperty, "Filename contains invalid characters!");
                 }
             }
 
-            currentProperty = nameof(this.CropStartTime);
+            currentProperty = nameof(CropStartTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.cropStart)
+                if (_cropStart)
                 {
-                    TimeSpan videoLength = this.video.Length;
+                    TimeSpan videoLength = _video.Length;
 
-                    if (this.cropStartTime < TimeSpan.Zero || this.cropStartTime > videoLength)
+                    if (_cropStartTime < TimeSpan.Zero || _cropStartTime > videoLength)
                     {
-                        this.AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
+                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
                     }
-                    else if (this.CroppedLength.TotalSeconds < 5)
+                    else if (CroppedLength.TotalSeconds < 5)
                     {
-                        this.AddError(currentProperty, "The cropped video has to be at least 5s long!");
+                        AddError(currentProperty, "The cropped video has to be at least 5s long!");
                     }
                 }
             }
 
-            currentProperty = nameof(this.CropEndTime);
+            currentProperty = nameof(CropEndTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.cropEnd)
+                if (_cropEnd)
                 {
-                    TimeSpan videoLength = this.video.Length;
+                    TimeSpan videoLength = _video.Length;
 
-                    if (this.cropEndTime < TimeSpan.Zero || this.cropEndTime > videoLength)
+                    if (_cropEndTime < TimeSpan.Zero || _cropEndTime > videoLength)
                     {
-                        this.AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
+                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
                     }
-                    else if (this.cropStart && (this.cropEndTime <= this.cropStartTime))
+                    else if (_cropStart && (_cropEndTime <= _cropStartTime))
                     {
-                        this.AddError(currentProperty, "End time has to be greater than start time!");
+                        AddError(currentProperty, "End time has to be greater than start time!");
                     }
-                    else if (this.CroppedLength.TotalSeconds < 5)
+                    else if (CroppedLength.TotalSeconds < 5)
                     {
-                        this.AddError(currentProperty, "The cropped video has to be at least 5s long!");
+                        AddError(currentProperty, "The cropped video has to be at least 5s long!");
                     }
                 }
             }

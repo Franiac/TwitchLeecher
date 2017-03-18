@@ -10,31 +10,29 @@ namespace TwitchLeecher.Setup.Gui
         {
             InitializeComponent();
 
-            this.DataContextChanged += WizardWindow_DataContextChanged;
+            DataContextChanged += WizardWindow_DataContextChanged;
         }
 
         private void WizardWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            WizardWindowVM oldWizardWindowVM = e.OldValue as WizardWindowVM;
 
-            if (oldWizardWindowVM != null)
+            if (e.OldValue is WizardWindowVM oldWizardWindowVM)
             {
-                oldWizardWindowVM.WiazrdFinished -= wizardWindowVM_WiazrdFinished;
+                oldWizardWindowVM.WiazrdFinished -= WizardWindowVM_WiazrdFinished;
             }
 
-            WizardWindowVM newWizardWindowVM = e.NewValue as WizardWindowVM;
 
-            if (newWizardWindowVM != null)
+            if (e.NewValue is WizardWindowVM newWizardWindowVM)
             {
-                newWizardWindowVM.WiazrdFinished += wizardWindowVM_WiazrdFinished;
+                newWizardWindowVM.WiazrdFinished += WizardWindowVM_WiazrdFinished;
             }
         }
 
-        private void wizardWindowVM_WiazrdFinished(object sender, EventArgs e)
+        private void WizardWindowVM_WiazrdFinished(object sender, EventArgs e)
         {
             try
             {
-                this.Close();
+                Close();
             }
             catch (Exception ex)
             {

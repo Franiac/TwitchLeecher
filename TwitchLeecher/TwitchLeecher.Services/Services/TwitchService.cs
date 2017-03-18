@@ -26,7 +26,7 @@ using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Services.Services
 {
-    internal class TwitchService : BindableBase, ITwitchService
+    internal class TwitchService : BindableBase, ITwitchService, IDisposable
     {
         #region Constants
 
@@ -60,23 +60,25 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private IPreferencesService preferencesService;
-        private IRuntimeDataService runtimeDataService;
-        private IEventAggregator eventAggregator;
+        private bool disposedValue = false;
 
-        private Timer downloadTimer;
+        private IPreferencesService _preferencesService;
+        private IRuntimeDataService _runtimeDataService;
+        private IEventAggregator _eventAggregator;
 
-        private ObservableCollection<TwitchVideo> videos;
-        private ObservableCollection<TwitchVideoDownload> downloads;
+        private Timer _downloadTimer;
 
-        private ConcurrentDictionary<string, DownloadTask> downloadTasks;
-        private TwitchAuthInfo twitchAuthInfo;
+        private ObservableCollection<TwitchVideo> _videos;
+        private ObservableCollection<TwitchVideoDownload> _downloads;
 
-        private string appDir;
+        private ConcurrentDictionary<string, DownloadTask> _downloadTasks;
+        private TwitchAuthInfo _twitchAuthInfo;
 
-        private object changeDownloadLockObject;
+        private string _appDir;
 
-        private volatile bool paused;
+        private object _changeDownloadLockObject;
+
+        private volatile bool _paused;
 
         #endregion Fields
 
@@ -87,22 +89,25 @@ namespace TwitchLeecher.Services.Services
             IRuntimeDataService runtimeDataService,
             IEventAggregator eventAggregator)
         {
-            this.preferencesService = preferencesService;
-            this.runtimeDataService = runtimeDataService;
-            this.eventAggregator = eventAggregator;
+            _preferencesService = preferencesService;
+            _runtimeDataService = runtimeDataService;
+            _eventAggregator = eventAggregator;
 
-            this.Videos = new ObservableCollection<TwitchVideo>();
-            this.Downloads = new ObservableCollection<TwitchVideoDownload>();
+            _videos = new ObservableCollection<TwitchVideo>();
+            _videos.CollectionChanged += Videos_CollectionChanged;
 
-            this.downloadTasks = new ConcurrentDictionary<string, DownloadTask>();
+            _downloads = new ObservableCollection<TwitchVideoDownload>();
+            _downloads.CollectionChanged += Downloads_CollectionChanged;
 
-            this.appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _downloadTasks = new ConcurrentDictionary<string, DownloadTask>();
 
-            this.changeDownloadLockObject = new object();
+            _appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            this.downloadTimer = new Timer(this.DownloadTimerCallback, null, 0, TIMER_INTERVALL);
+            _changeDownloadLockObject = new object();
 
-            this.eventAggregator.GetEvent<RemoveDownloadEvent>().Subscribe(this.Remove, ThreadOption.UIThread);
+            _downloadTimer = new Timer(DownloadTimerCallback, null, 0, TIMER_INTERVALL);
+
+            _eventAggregator.GetEvent<RemoveDownloadEvent>().Subscribe(Remove, ThreadOption.UIThread);
         }
 
         #endregion Constructors
@@ -113,7 +118,7 @@ namespace TwitchLeecher.Services.Services
         {
             get
             {
-                return this.twitchAuthInfo != null;
+                return _twitchAuthInfo != null;
             }
         }
 
@@ -121,23 +126,23 @@ namespace TwitchLeecher.Services.Services
         {
             get
             {
-                return this.videos;
+                return _videos;
             }
             private set
             {
-                if (this.videos != null)
+                if (_videos != null)
                 {
-                    this.videos.CollectionChanged -= Videos_CollectionChanged;
+                    _videos.CollectionChanged -= Videos_CollectionChanged;
                 }
 
-                this.SetProperty(ref this.videos, value, nameof(this.Videos));
+                SetProperty(ref _videos, value, nameof(Videos));
 
-                if (this.videos != null)
+                if (_videos != null)
                 {
-                    this.videos.CollectionChanged += Videos_CollectionChanged;
+                    _videos.CollectionChanged += Videos_CollectionChanged;
                 }
 
-                this.FireVideosCountChanged();
+                FireVideosCountChanged();
             }
         }
 
@@ -145,23 +150,23 @@ namespace TwitchLeecher.Services.Services
         {
             get
             {
-                return this.downloads;
+                return _downloads;
             }
             private set
             {
-                if (this.downloads != null)
+                if (_downloads != null)
                 {
-                    this.downloads.CollectionChanged -= Downloads_CollectionChanged;
+                    _downloads.CollectionChanged -= Downloads_CollectionChanged;
                 }
 
-                this.SetProperty(ref this.downloads, value, nameof(this.Downloads));
+                SetProperty(ref _downloads, value, nameof(Downloads));
 
-                if (this.downloads != null)
+                if (_downloads != null)
                 {
-                    this.downloads.CollectionChanged += Downloads_CollectionChanged;
+                    _downloads.CollectionChanged += Downloads_CollectionChanged;
                 }
 
-                this.FireDownloadsCountChanged();
+                FireDownloadsCountChanged();
             }
         }
 
@@ -175,9 +180,9 @@ namespace TwitchLeecher.Services.Services
             wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
             wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
 
-            if (this.IsAuthorized)
+            if (IsAuthorized)
             {
-                wc.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + this.twitchAuthInfo.AccessToken);
+                wc.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + _twitchAuthInfo.AccessToken);
             }
 
             wc.Encoding = Encoding.UTF8;
@@ -191,7 +196,7 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(idTrimmed));
             }
 
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            using (WebClient webClient = CreateTwitchWebClient())
             {
                 string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, idTrimmed));
 
@@ -259,7 +264,7 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(channel));
             }
 
-            return this.GetChannelIdByName(channel) != null;
+            return GetChannelIdByName(channel) != null;
         }
 
         public string GetChannelIdByName(string channel)
@@ -271,12 +276,12 @@ namespace TwitchLeecher.Services.Services
 
             Func<string> searchForChannel = () =>
             {
-                using (WebClient webClient = this.CreateTwitchWebClient())
+                using (WebClient webClient = CreateTwitchWebClient())
                 {
                     webClient.QueryString.Add("query", channel);
                     webClient.QueryString.Add("limit", "1");
 
-                    string result = webClient.DownloadString(string.Format(CHANNEL_SEARCH_URL, channel));
+                    string result = webClient.DownloadString(CHANNEL_SEARCH_URL);
 
                     JObject searchResultJson = JObject.Parse(result);
 
@@ -317,7 +322,7 @@ namespace TwitchLeecher.Services.Services
         {
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
-                using (WebClient webClient = this.CreateTwitchWebClient())
+                using (WebClient webClient = CreateTwitchWebClient())
                 {
                     webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + accessToken);
 
@@ -342,8 +347,8 @@ namespace TwitchLeecher.Services.Services
                                     !string.IsNullOrWhiteSpace(clientId) &&
                                     clientId.Equals(TWITCH_CLIENT_ID, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    this.twitchAuthInfo = new TwitchAuthInfo(accessToken, username);
-                                    this.FireIsAuthorizedChanged();
+                                    _twitchAuthInfo = new TwitchAuthInfo(accessToken, username);
+                                    FireIsAuthorizedChanged();
                                     return true;
                                 }
                             }
@@ -352,14 +357,14 @@ namespace TwitchLeecher.Services.Services
                 }
             }
 
-            this.RevokeAuthorization();
+            RevokeAuthorization();
             return false;
         }
 
         public void RevokeAuthorization()
         {
-            this.twitchAuthInfo = null;
-            this.FireIsAuthorizedChanged();
+            _twitchAuthInfo = null;
+            FireIsAuthorizedChanged();
         }
 
         public void Search(SearchParameters searchParams)
@@ -372,15 +377,15 @@ namespace TwitchLeecher.Services.Services
             switch (searchParams.SearchType)
             {
                 case SearchType.Channel:
-                    this.SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimit);
+                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimit);
                     break;
 
                 case SearchType.Urls:
-                    this.SearchUrls(searchParams.Urls);
+                    SearchUrls(searchParams.Urls);
                     break;
 
                 case SearchType.Ids:
-                    this.SearchIds(searchParams.Ids);
+                    SearchIds(searchParams.Ids);
                     break;
             }
         }
@@ -392,9 +397,9 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(channel));
             }
 
-            string channelId = this.GetChannelIdByName(channel);
+            string channelId = GetChannelIdByName(channel);
 
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            using (WebClient webClient = CreateTwitchWebClient())
             {
                 ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
 
@@ -447,7 +452,7 @@ namespace TwitchLeecher.Services.Services
 
                         actualLoadLimit = Math.Min(TWITCH_MAX_LOAD_LIMIT, loadLimit - sum);
 
-                        using (WebClient webClientReload = this.CreateTwitchWebClient())
+                        using (WebClient webClientReload = CreateTwitchWebClient())
                         {
                             webClientReload.QueryString.Add("broadcast_type", broadcastTypeParam);
                             webClientReload.QueryString.Add("limit", actualLoadLimit.ToString());
@@ -474,13 +479,13 @@ namespace TwitchLeecher.Services.Services
                         {
                             if (videoJson.Value<string>("_id").StartsWith("v"))
                             {
-                                videos.Add(this.ParseVideo(videoJson));
+                                videos.Add(ParseVideo(videoJson));
                             }
                         }
                     }
                 }
 
-                this.Videos = videos;
+                Videos = videos;
             }
         }
 
@@ -501,11 +506,11 @@ namespace TwitchLeecher.Services.Services
 
                 foreach (string url in urlArr)
                 {
-                    int? id = this.GetVideoIdFromUrl(url);
+                    int? id = GetVideoIdFromUrl(url);
 
                     if (id.HasValue && !addedIds.Contains(id.Value))
                     {
-                        TwitchVideo video = this.GetTwitchVideoFromId(id.Value);
+                        TwitchVideo video = GetTwitchVideoFromId(id.Value);
 
                         if (video != null)
                         {
@@ -516,7 +521,7 @@ namespace TwitchLeecher.Services.Services
                 }
             }
 
-            this.Videos = videos;
+            Videos = videos;
         }
 
         private void SearchIds(string ids)
@@ -536,11 +541,9 @@ namespace TwitchLeecher.Services.Services
 
                 foreach (string id in idsArr)
                 {
-                    int idInt;
-
-                    if (int.TryParse(id, out idInt) && !addedIds.Contains(idInt))
+                    if (int.TryParse(id, out int idInt) && !addedIds.Contains(idInt))
                     {
-                        TwitchVideo video = this.GetTwitchVideoFromId(idInt);
+                        TwitchVideo video = GetTwitchVideoFromId(idInt);
 
                         if (video != null)
                         {
@@ -551,7 +554,7 @@ namespace TwitchLeecher.Services.Services
                 }
             }
 
-            this.Videos = videos;
+            Videos = videos;
         }
 
         private int? GetVideoIdFromUrl(string url)
@@ -561,9 +564,7 @@ namespace TwitchLeecher.Services.Services
                 return null;
             }
 
-            Uri validUrl;
-
-            if (!Uri.TryCreate(url, UriKind.Absolute, out validUrl))
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
             {
                 return null;
             }
@@ -587,9 +588,7 @@ namespace TwitchLeecher.Services.Services
                         {
                             idStr = idStr.Trim(new char[] { '/' });
 
-                            int idInt;
-
-                            if (int.TryParse(idStr, out idInt) && idInt > 0)
+                            if (int.TryParse(idStr, out int idInt) && idInt > 0)
                             {
                                 return idInt;
                             }
@@ -605,7 +604,7 @@ namespace TwitchLeecher.Services.Services
 
         private TwitchVideo GetTwitchVideoFromId(int id)
         {
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            using (WebClient webClient = CreateTwitchWebClient())
             {
                 try
                 {
@@ -615,14 +614,12 @@ namespace TwitchLeecher.Services.Services
 
                     if (videoJson != null)
                     {
-                        return this.ParseVideo(videoJson);
+                        return ParseVideo(videoJson);
                     }
                 }
                 catch (WebException ex)
                 {
-                    HttpWebResponse resp = ex.Response as HttpWebResponse;
-
-                    if (resp != null && resp.StatusCode == HttpStatusCode.NotFound)
+                    if (ex.Response is HttpWebResponse resp && resp.StatusCode == HttpStatusCode.NotFound)
                     {
                         return null;
                     }
@@ -638,41 +635,41 @@ namespace TwitchLeecher.Services.Services
 
         public void Enqueue(DownloadParameters downloadParams)
         {
-            if (this.paused)
+            if (_paused)
             {
                 return;
             }
 
-            lock (this.changeDownloadLockObject)
+            lock (_changeDownloadLockObject)
             {
-                this.downloads.Add(new TwitchVideoDownload(downloadParams));
+                _downloads.Add(new TwitchVideoDownload(downloadParams));
             }
         }
 
         private void DownloadTimerCallback(object state)
         {
-            if (this.paused)
+            if (_paused)
             {
                 return;
             }
 
-            this.StartQueuedDownloadIfExists();
+            StartQueuedDownloadIfExists();
         }
 
         private void StartQueuedDownloadIfExists()
         {
-            if (this.paused)
+            if (_paused)
             {
                 return;
             }
 
-            if (Monitor.TryEnter(this.changeDownloadLockObject))
+            if (Monitor.TryEnter(_changeDownloadLockObject))
             {
                 try
                 {
-                    if (!this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active).Any())
+                    if (!_downloads.Where(d => d.DownloadStatus == DownloadStatus.Active).Any())
                     {
-                        TwitchVideoDownload download = this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
+                        TwitchVideoDownload download = _downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
 
                         if (download == null)
                         {
@@ -686,9 +683,9 @@ namespace TwitchLeecher.Services.Services
 
                         string downloadId = download.Id;
                         string urlIdTrimmed = downloadParams.Video.IdTrimmed;
-                        string tempDir = Path.Combine(this.preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
+                        string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
                         string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
-                        string ffmpegFile = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
+                        string ffmpegFile = Path.Combine(_appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
 
                         bool cropStart = downloadParams.CropStart;
@@ -713,39 +710,39 @@ namespace TwitchLeecher.Services.Services
 
                             log("Download task has been started!");
 
-                            this.WriteDownloadInfo(log, downloadParams, ffmpegFile, tempDir);
+                            WriteDownloadInfo(log, downloadParams, ffmpegFile, tempDir);
 
-                            this.CheckTempDirectory(log, tempDir);
-
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            string playlistUrl = this.RetrievePlaylistUrlForQuality(log, resolution, urlIdTrimmed, vodAuthInfo);
+                            CheckTempDirectory(log, tempDir);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            VodPlaylist vodPlaylist = this.RetrieveVodPlaylist(log, tempDir, playlistUrl);
+                            string playlistUrl = RetrievePlaylistUrlForQuality(log, resolution, urlIdTrimmed, vodAuthInfo);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            CropInfo cropInfo = this.CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
+                            VodPlaylist vodPlaylist = RetrieveVodPlaylist(log, tempDir, playlistUrl);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
+                            CropInfo cropInfo = CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.WriteNewPlaylist(log, vodPlaylist, playlistFile);
+                            DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            this.EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
+                            WriteNewPlaylist(log, vodPlaylist, playlistFile);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
                         {
                             log(Environment.NewLine + Environment.NewLine + "Starting temporary download folder cleanup!");
-                            this.CleanUp(tempDir, log);
+                            CleanUp(tempDir, log);
 
                             setProgress(100);
                             setIsEncoding(false);
@@ -774,20 +771,18 @@ namespace TwitchLeecher.Services.Services
                                 log(Environment.NewLine + Environment.NewLine + "Download task ended successfully!");
                             }
 
-                            DownloadTask downloadTask;
-
-                            if (!this.downloadTasks.TryRemove(downloadId, out downloadTask))
+                            if (!_downloadTasks.TryRemove(downloadId, out DownloadTask downloadTask))
                             {
                                 throw new ApplicationException("Could not remove download task with ID '" + downloadId + "' from download task collection!");
                             }
 
-                            if (success && this.preferencesService.CurrentPreferences.DownloadRemoveCompleted)
+                            if (success && _preferencesService.CurrentPreferences.DownloadRemoveCompleted)
                             {
-                                this.eventAggregator.GetEvent<RemoveDownloadEvent>().Publish(downloadId);
+                                _eventAggregator.GetEvent<RemoveDownloadEvent>().Publish(downloadId);
                             }
                         });
 
-                        if (this.downloadTasks.TryAdd(downloadId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
+                        if (_downloadTasks.TryAdd(downloadId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
                         {
                             downloadVideoTask.Start();
                             setDownloadStatus(DownloadStatus.Active);
@@ -796,7 +791,7 @@ namespace TwitchLeecher.Services.Services
                 }
                 finally
                 {
-                    Monitor.Exit(this.changeDownloadLockObject);
+                    Monitor.Exit(_changeDownloadLockObject);
                 }
             }
         }
@@ -848,7 +843,7 @@ namespace TwitchLeecher.Services.Services
 
         private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
-            using (WebClient webClient = this.CreateTwitchWebClient())
+            using (WebClient webClient = CreateTwitchWebClient())
             {
                 log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
                 string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
@@ -1089,14 +1084,16 @@ namespace TwitchLeecher.Services.Services
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
-            ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile);
-            psi.Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"";
-            psi.RedirectStandardError = true;
-            psi.RedirectStandardOutput = true;
-            psi.StandardErrorEncoding = Encoding.UTF8;
-            psi.StandardOutputEncoding = Encoding.UTF8;
-            psi.UseShellExecute = false;
-            psi.CreateNoWindow = true;
+            ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile)
+            {
+                Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                StandardErrorEncoding = Encoding.UTF8,
+                StandardOutputEncoding = Encoding.UTF8,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
 
             log(Environment.NewLine + "Command line arguments: " + psi.Arguments + Environment.NewLine);
 
@@ -1118,9 +1115,7 @@ namespace TwitchLeecher.Services.Services
                                 timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
                                 timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
 
-                                TimeSpan current;
-
-                                if (TimeSpan.TryParse(timeStr, out current))
+                                if (TimeSpan.TryParse(timeStr, out TimeSpan current))
                                 {
                                     setIsEncoding(false);
                                     setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
@@ -1172,11 +1167,9 @@ namespace TwitchLeecher.Services.Services
 
         public void Cancel(string id)
         {
-            lock (this.changeDownloadLockObject)
+            lock (_changeDownloadLockObject)
             {
-                DownloadTask downloadTask;
-
-                if (this.downloadTasks.TryGetValue(id, out downloadTask))
+                if (_downloadTasks.TryGetValue(id, out DownloadTask downloadTask))
                 {
                     downloadTask.CancellationTokenSource.Cancel();
                 }
@@ -1185,18 +1178,16 @@ namespace TwitchLeecher.Services.Services
 
         public void Retry(string id)
         {
-            if (this.paused)
+            if (_paused)
             {
                 return;
             }
 
-            lock (this.changeDownloadLockObject)
+            lock (_changeDownloadLockObject)
             {
-                DownloadTask downloadTask;
-
-                if (!this.downloadTasks.TryGetValue(id, out downloadTask))
+                if (!_downloadTasks.TryGetValue(id, out DownloadTask downloadTask))
                 {
-                    TwitchVideoDownload download = this.downloads.Where(d => d.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = _downloads.Where(d => d.Id == id).FirstOrDefault();
 
                     if (download != null && (download.DownloadStatus == DownloadStatus.Canceled || download.DownloadStatus == DownloadStatus.Error))
                     {
@@ -1211,17 +1202,15 @@ namespace TwitchLeecher.Services.Services
 
         public void Remove(string id)
         {
-            lock (this.changeDownloadLockObject)
+            lock (_changeDownloadLockObject)
             {
-                DownloadTask downloadTask;
-
-                if (!this.downloadTasks.TryGetValue(id, out downloadTask))
+                if (!_downloadTasks.TryGetValue(id, out DownloadTask downloadTask))
                 {
-                    TwitchVideoDownload download = this.downloads.Where(d => d.Id == id).FirstOrDefault();
+                    TwitchVideoDownload download = _downloads.Where(d => d.Id == id).FirstOrDefault();
 
                     if (download != null)
                     {
-                        this.downloads.Remove(download);
+                        _downloads.Remove(download);
                     }
                 }
             }
@@ -1235,7 +1224,7 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoQuality> resolutions = this.ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
+            List<TwitchVideoQuality> resolutions = ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("published_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             Uri url = new Uri(videoJson.Value<string>("url"));
 
@@ -1269,7 +1258,6 @@ namespace TwitchLeecher.Services.Services
                     string value = resolution.Value.Value<string>();
                     string qualityId = resolution.Name;
                     string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
-                    
 
                     resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
                 }
@@ -1292,41 +1280,41 @@ namespace TwitchLeecher.Services.Services
 
         public void Pause()
         {
-            this.paused = true;
-            this.downloadTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            _paused = true;
+            _downloadTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         public void Resume()
         {
-            this.paused = false;
-            this.downloadTimer.Change(0, TIMER_INTERVALL);
+            _paused = false;
+            _downloadTimer.Change(0, TIMER_INTERVALL);
         }
 
         public bool CanShutdown()
         {
-            Monitor.Enter(this.changeDownloadLockObject);
+            Monitor.Enter(_changeDownloadLockObject);
 
             try
             {
-                return !this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
+                return !_downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
             }
             finally
             {
-                Monitor.Exit(this.changeDownloadLockObject);
+                Monitor.Exit(_changeDownloadLockObject);
             }
         }
 
         public void Shutdown()
         {
-            this.Pause();
+            Pause();
 
-            foreach (DownloadTask downloadTask in this.downloadTasks.Values)
+            foreach (DownloadTask downloadTask in _downloadTasks.Values)
             {
                 downloadTask.CancellationTokenSource.Cancel();
             }
 
-            List<Task> tasks = this.downloadTasks.Values.Select(v => v.Task).ToList();
-            tasks.AddRange(this.downloadTasks.Values.Select(v => v.ContinueTask).ToList());
+            List<Task> tasks = _downloadTasks.Values.Select(v => v.Task).ToList();
+            tasks.AddRange(_downloadTasks.Values.Select(v => v.ContinueTask).ToList());
 
             try
             {
@@ -1337,17 +1325,17 @@ namespace TwitchLeecher.Services.Services
                 // Don't care about aborted tasks
             }
 
-            List<string> toRemove = this.downloads.Select(d => d.Id).ToList();
+            List<string> toRemove = _downloads.Select(d => d.Id).ToList();
 
             foreach (string id in toRemove)
             {
-                this.Remove(id);
+                Remove(id);
             }
         }
 
         public bool IsFileNameUsed(string fullPath)
         {
-            IEnumerable<TwitchVideoDownload> downloads = this.downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued);
+            IEnumerable<TwitchVideoDownload> downloads = _downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued);
 
             foreach (TwitchVideoDownload download in downloads)
             {
@@ -1362,21 +1350,43 @@ namespace TwitchLeecher.Services.Services
 
         private void FireIsAuthorizedChanged()
         {
-            this.runtimeDataService.RuntimeData.AccessToken = this.twitchAuthInfo != null ? this.twitchAuthInfo.AccessToken : null;
-            this.runtimeDataService.Save();
+            _runtimeDataService.RuntimeData.AccessToken = _twitchAuthInfo?.AccessToken;
+            _runtimeDataService.Save();
 
-            this.FirePropertyChanged(nameof(this.IsAuthorized));
-            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Publish(this.IsAuthorized);
+            FirePropertyChanged(nameof(IsAuthorized));
+            _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Publish(IsAuthorized);
         }
 
         private void FireVideosCountChanged()
         {
-            this.eventAggregator.GetEvent<VideosCountChangedEvent>().Publish(this.videos != null ? this.videos.Count : 0);
+            _eventAggregator.GetEvent<VideosCountChangedEvent>().Publish(_videos != null ? _videos.Count : 0);
         }
 
         private void FireDownloadsCountChanged()
         {
-            this.eventAggregator.GetEvent<DownloadsCountChangedEvent>().Publish(this.downloads != null ? this.downloads.Count : 0);
+            _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Publish(_downloads != null ? _downloads.Count : 0);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _downloadTimer.Dispose();
+                }
+
+                _videos = null;
+                _downloads = null;
+                _downloadTasks = null;
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         #endregion Methods
@@ -1385,12 +1395,12 @@ namespace TwitchLeecher.Services.Services
 
         private void Videos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.FireVideosCountChanged();
+            FireVideosCountChanged();
         }
 
         private void Downloads_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.FireDownloadsCountChanged();
+            FireDownloadsCountChanged();
         }
 
         #endregion EventHandlers

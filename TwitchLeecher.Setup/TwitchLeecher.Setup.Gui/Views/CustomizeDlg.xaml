@@ -70,7 +70,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Name="txtInstallDir" Text="{Binding InstallDir, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-                    <Button Grid.Column="2" Name="btnBrowse" Content="Browse" Click="btnBrowse_Click" />
+                    <Button Grid.Column="2" Name="btnBrowse" Content="Browse" Click="BtnBrowse_Click" />
                 </Grid>
                 <TextBlock Grid.Row="4" Style="{StaticResource FeatureInfoText}" Text="{Binding FeatureTLSize, Mode=OneWay, StringFormat='Required disk space: \{0\} MB', FallbackValue='Required disk space: 77.7 MB'}" />
             </Grid>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "TwitchLeecher.Setup.Bootstrapper.x64", "TwitchLeecher.Setup.Bootstrapper.x64\TwitchLeecher.Setup.Bootstrapper.x64.wixproj", "{53EEFB53-FB8D-4017-B23F-CDC4E13215AC}"
 EndProject

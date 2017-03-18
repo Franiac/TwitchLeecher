@@ -3,8 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              Style="{DynamicResource thisStyle}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -43,11 +41,7 @@
         <ItemsControl ItemsSource="{Binding Videos, UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ctrl:SpacedUniformGrid Margin="20" Spacing="20" IsItemsHost="True">
-                        <i:Interaction.Behaviors>
-                            <ei:FluidMoveBehavior AppliesTo="Children" Duration="0:0:0.1" />
-                        </i:Interaction.Behaviors>
-                    </ctrl:SpacedUniformGrid>
+                    <ctrl:SpacedUniformGrid Margin="20" Spacing="20" IsItemsHost="True" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

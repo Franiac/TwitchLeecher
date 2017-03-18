@@ -19,33 +19,33 @@ namespace TwitchLeecher.Services.Services
 
         public string GetAppDataFolder()
         {
-            if (string.IsNullOrWhiteSpace(this.appDataFolder))
+            if (string.IsNullOrWhiteSpace(appDataFolder))
             {
                 string productName = AssemblyUtil.Get.GetProductName();
-                this.appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), productName);
+                appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), productName);
             }
 
-            return this.appDataFolder;
+            return appDataFolder;
         }
 
         public string GetTempFolder()
         {
-            if (string.IsNullOrWhiteSpace(this.downloadsTempFolder))
+            if (string.IsNullOrWhiteSpace(downloadsTempFolder))
             {
-                this.downloadsTempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp");
+                downloadsTempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp");
             }
 
-            return this.downloadsTempFolder;
+            return downloadsTempFolder;
         }
 
         public string GetDownloadFolder()
         {
-            if (string.IsNullOrWhiteSpace(this.downloadsFolder))
+            if (string.IsNullOrWhiteSpace(downloadsFolder))
             {
-                this.downloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                downloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             }
 
-            return this.downloadsFolder;
+            return downloadsFolder;
         }
 
         #endregion Methods

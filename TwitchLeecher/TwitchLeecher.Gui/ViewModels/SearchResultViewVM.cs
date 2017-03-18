@@ -18,19 +18,19 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private ITwitchService twitchService;
-        private IDialogService dialogService;
-        private INavigationService navigationService;
-        private INotificationService notificationService;
-        private IEventAggregator eventAggregator;
-        private IPreferencesService preferencesService;
-        private IFilenameService filenameService;
+        private ITwitchService _twitchService;
+        private IDialogService _dialogService;
+        private INavigationService _navigationService;
+        private INotificationService _notificationsService;
+        private IEventAggregator _eventAggregator;
+        private IPreferencesService _preferencesService;
+        private IFilenameService _filenameService;
 
-        private ICommand viewCommand;
-        private ICommand downloadCommand;
-        private ICommand seachCommand;
+        private ICommand _viewCommand;
+        private ICommand _downloadCommand;
+        private ICommand _seachCommand;
 
-        private object commandLockObject;
+        private object _commandLockObject;
 
         #endregion Fields
 
@@ -45,17 +45,17 @@ namespace TwitchLeecher.Gui.ViewModels
             IPreferencesService preferencesService,
             IFilenameService filenameService)
         {
-            this.twitchService = twitchService;
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
-            this.notificationService = notificationService;
-            this.eventAggregator = eventAggregator;
-            this.preferencesService = preferencesService;
-            this.filenameService = filenameService;
+            _twitchService = twitchService;
+            _dialogService = dialogService;
+            _navigationService = navigationService;
+            _notificationsService = notificationService;
+            _eventAggregator = eventAggregator;
+            _preferencesService = preferencesService;
+            _filenameService = filenameService;
 
-            this.twitchService.PropertyChanged += TwitchService_PropertyChanged;
+            _twitchService.PropertyChanged += TwitchService_PropertyChanged;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -68,7 +68,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.twitchService.Videos;
+                return _twitchService.Videos;
             }
         }
 
@@ -76,12 +76,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.viewCommand == null)
+                if (ViewCommand1 == null)
                 {
-                    this.viewCommand = new DelegateCommand<string>(this.ViewVideo);
+                    ViewCommand1 = new DelegateCommand<string>(ViewVideo);
                 }
 
-                return this.viewCommand;
+                return ViewCommand1;
             }
         }
 
@@ -89,12 +89,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.downloadCommand == null)
+                if (_downloadCommand == null)
                 {
-                    this.downloadCommand = new DelegateCommand<string>(this.DownloadVideo);
+                    _downloadCommand = new DelegateCommand<string>(DownloadVideo);
                 }
 
-                return this.downloadCommand;
+                return _downloadCommand;
             }
         }
 
@@ -102,14 +102,16 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.seachCommand == null)
+                if (_seachCommand == null)
                 {
-                    this.seachCommand = new DelegateCommand(this.ShowSearch);
+                    _seachCommand = new DelegateCommand(ShowSearch);
                 }
 
-                return this.seachCommand;
+                return _seachCommand;
             }
         }
+
+        public ICommand ViewCommand1 { get => _viewCommand; set => _viewCommand = value; }
 
         #endregion Properties
 
@@ -119,11 +121,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
+                        TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
 
                         if (video != null && video.Url != null && video.Url.IsAbsoluteUri)
                         {
@@ -134,7 +136,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -142,31 +144,31 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideo video = this.Videos.Where(v => v.Id == id).FirstOrDefault();
+                        TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
 
                         if (video != null)
                         {
-                            VodAuthInfo vodAuthInfo = this.twitchService.RetrieveVodAuthInfo(video.IdTrimmed);
+                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.IdTrimmed);
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
-                                if (!this.twitchService.IsAuthorized)
+                                if (!_twitchService.IsAuthorized)
                                 {
-                                    this.dialogService.ShowMessageBox("This video is sub-only! Please authorize your Twitch account by clicking the Twitch button in the menu.", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                    _dialogService.ShowMessageBox("This video is sub-only! Please authorize your Twitch account by clicking the Twitch button in the menu.", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                                 }
                                 else
                                 {
-                                    this.dialogService.ShowMessageBox("This video is sub-only but you are not subscribed to '" + video.Channel + "'!", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                    _dialogService.ShowMessageBox("This video is sub-only but you are not subscribed to '" + video.Channel + "'!", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                                 }
 
                                 return;
                             }
 
-                            Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
+                            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
                             TwitchVideoQuality resolution = video.Resolutions.Where(r => r.QualityFormatted == currentPrefs.DownloadVideoQuality).FirstOrDefault();
 
@@ -175,18 +177,18 @@ namespace TwitchLeecher.Gui.ViewModels
                                 resolution = video.Resolutions.First();
                             }
 
-                            string filename = this.filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
+                            string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
                             DownloadParameters downloadParams = new DownloadParameters(video, resolution, vodAuthInfo, currentPrefs.DownloadFolder, filename);
 
-                            this.navigationService.ShowDownload(downloadParams);
+                            _navigationService.ShowDownload(downloadParams);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -194,14 +196,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.ShowSearch();
+                    _navigationService.ShowSearch();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -214,7 +216,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.SeachCommnad, "New Search", "Search"));
+            menuCommands.Add(new MenuCommand(SeachCommnad, "New Search", "Search"));
 
             return menuCommands;
         }
@@ -227,11 +229,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             string propertyName = e.PropertyName;
 
-            this.FirePropertyChanged(propertyName);
+            FirePropertyChanged(propertyName);
 
-            if (propertyName.Equals(nameof(this.Videos)))
+            if (propertyName.Equals(nameof(Videos)))
             {
-                this.ScrollPosition = 0;
+                ScrollPosition = 0;
             }
         }
 

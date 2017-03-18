@@ -12,15 +12,15 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService dialogService;
-        private ITwitchService twitchService;
-        private INavigationService navigationService;
-        private INotificationService notificationService;
-        private IEventAggregator eventAggregator;
+        private IDialogService _dialogService;
+        private ITwitchService _twitchService;
+        private INavigationService _navigationService;
+        private INotificationService _notificationService;
+        private IEventAggregator _eventAggregator;
 
-        private ICommand revokeCommand;
+        private ICommand _revokeCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -33,15 +33,15 @@ namespace TwitchLeecher.Gui.ViewModels
             INotificationService notificationService,
             IEventAggregator eventAggregator)
         {
-            this.dialogService = dialogService;
-            this.twitchService = twitchService;
-            this.navigationService = navigationService;
-            this.notificationService = notificationService;
-            this.eventAggregator = eventAggregator;
+            _dialogService = dialogService;
+            _twitchService = twitchService;
+            _navigationService = navigationService;
+            _notificationService = notificationService;
+            _eventAggregator = eventAggregator;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
 
-            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(this.IsAuthorizedChanged);
+            _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(IsAuthorizedChanged);
         }
 
         #endregion Constructor
@@ -52,12 +52,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.revokeCommand == null)
+                if (_revokeCommand == null)
                 {
-                    this.revokeCommand = new DelegateCommand(this.Revoke);
+                    _revokeCommand = new DelegateCommand(Revoke);
                 }
 
-                return this.revokeCommand;
+                return _revokeCommand;
             }
         }
 
@@ -69,16 +69,16 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.twitchService.RevokeAuthorization();
-                    this.navigationService.ShowAuthorize();
-                    this.notificationService.ShowNotification("Twitch authorization has been revoked!");
+                    _twitchService.RevokeAuthorization();
+                    _navigationService.ShowAuthorize();
+                    _notificationService.ShowNotification("Twitch authorization has been revoked!");
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -86,7 +86,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             if (!isAuthorized)
             {
-                this.navigationService.ShowAuthorize();
+                _navigationService.ShowAuthorize();
             }
         }
 

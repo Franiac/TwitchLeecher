@@ -20,12 +20,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.bootstrapper.InstallDir;
+                return _bootstrapper.InstallDir;
             }
             set
             {
-                this.bootstrapper.InstallDir = value;
-                this.FirePropertyChanged("InstallDir");
+                _bootstrapper.InstallDir = value;
+                FirePropertyChanged("InstallDir");
             }
         }
 
@@ -33,7 +33,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.bootstrapper.FeatureTLSize;
+                return _bootstrapper.FeatureTLSize;
             }
         }
 
@@ -49,7 +49,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                string installDir = this.bootstrapper.InstallDir;
+                string installDir = _bootstrapper.InstallDir;
 
                 bool pathOk = false;
                 bool pathEmpty = false;
@@ -82,12 +82,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
                 if (!pathOk)
                 {
-                    this.AddError(currentProperty, "Please provide a valid path!");
+                    AddError(currentProperty, "Please provide a valid path!");
                 }
 
                 if (!pathEmpty)
                 {
-                    this.AddError(currentProperty, "The specified folder is not empty!");
+                    AddError(currentProperty, "The specified folder is not empty!");
                 }
             }
         }

@@ -20,36 +20,36 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private string title;
+        private string _title;
 
-        private bool isAuthorized;
+        private bool _isAuthorized;
 
-        private int videosCount;
-        private int downloadsCount;
+        private int _videosCount;
+        private int _downloadsCount;
 
-        private ViewModelBase mainView;
+        private ViewModelBase _mainView;
 
-        private IKernel kernel;
-        private IEventAggregator eventAggregator;
-        private ITwitchService twitchService;
-        private IDialogService dialogService;
-        private INavigationService navigationService;
-        private ISearchService searchService;
-        private IPreferencesService preferencesService;
-        private IRuntimeDataService runtimeDataService;
-        private IUpdateService updateService;
+        private IKernel _kernel;
+        private IEventAggregator _eventAggregator;
+        private ITwitchService _twitchService;
+        private IDialogService _dialogService;
+        private INavigationService _navigationService;
+        private ISearchService _searchService;
+        private IPreferencesService _preferencesService;
+        private IRuntimeDataService _runtimeDataService;
+        private IUpdateService _updateService;
 
-        private ICommand showSearchCommand;
-        private ICommand showDownloadsCommand;
-        private ICommand showAuthorizeCommand;
-        private ICommand showPreferencesCommand;
-        private ICommand showInfoCommand;
-        private ICommand doMinimizeCommand;
-        private ICommand doMmaximizeRestoreCommand;
-        private ICommand doCloseCommand;
-        private ICommand requestCloseCommand;
+        private ICommand _showSearchCommand;
+        private ICommand _showDownloadsCommand;
+        private ICommand _showAuthorizeCommand;
+        private ICommand _showPreferencesCommand;
+        private ICommand _showInfoCommand;
+        private ICommand _doMinimizeCommand;
+        private ICommand _doMmaximizeRestoreCommand;
+        private ICommand _doCloseCommand;
+        private ICommand _requestCloseCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -67,24 +67,24 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
-            this.title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
+            _title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
-            this.kernel = kernel;
-            this.eventAggregator = eventAggregator;
-            this.twitchService = twitchService;
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
-            this.searchService = searchService;
-            this.preferencesService = preferencesService;
-            this.runtimeDataService = runtimeDataService;
-            this.updateService = updateService;
+            _kernel = kernel;
+            _eventAggregator = eventAggregator;
+            _twitchService = twitchService;
+            _dialogService = dialogService;
+            _navigationService = navigationService;
+            _searchService = searchService;
+            _preferencesService = preferencesService;
+            _runtimeDataService = runtimeDataService;
+            _updateService = updateService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
 
-            this.eventAggregator.GetEvent<ShowViewEvent>().Subscribe(this.ShowView);
-            this.eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(this.IsAuthorizedChanged);
-            this.eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(this.VideosCountChanged);
-            this.eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(this.DownloadsCountChanged);
+            _eventAggregator.GetEvent<ShowViewEvent>().Subscribe(ShowView);
+            _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(IsAuthorizedChanged);
+            _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
+            _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
         }
 
         #endregion Constructors
@@ -95,11 +95,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.isAuthorized;
+                return _isAuthorized;
             }
             private set
             {
-                this.SetProperty(ref this.isAuthorized, value, nameof(this.IsAuthorized));
+                SetProperty(ref _isAuthorized, value, nameof(IsAuthorized));
             }
         }
 
@@ -107,11 +107,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.videosCount;
+                return _videosCount;
             }
             private set
             {
-                this.SetProperty(ref this.videosCount, value, nameof(this.VideosCount));
+                SetProperty(ref _videosCount, value, nameof(VideosCount));
             }
         }
 
@@ -119,11 +119,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.downloadsCount;
+                return _downloadsCount;
             }
             private set
             {
-                this.SetProperty(ref this.downloadsCount, value, nameof(this.DownloadsCount));
+                SetProperty(ref _downloadsCount, value, nameof(DownloadsCount));
             }
         }
 
@@ -131,7 +131,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.title;
+                return _title;
             }
         }
 
@@ -139,11 +139,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.mainView;
+                return _mainView;
             }
             set
             {
-                this.SetProperty(ref this.mainView, value, nameof(this.MainView));
+                SetProperty(ref _mainView, value, nameof(MainView));
             }
         }
 
@@ -151,12 +151,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.showSearchCommand == null)
+                if (_showSearchCommand == null)
                 {
-                    this.showSearchCommand = new DelegateCommand(this.ShowSearch);
+                    _showSearchCommand = new DelegateCommand(ShowSearch);
                 }
 
-                return this.showSearchCommand;
+                return _showSearchCommand;
             }
         }
 
@@ -164,12 +164,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.showDownloadsCommand == null)
+                if (_showDownloadsCommand == null)
                 {
-                    this.showDownloadsCommand = new DelegateCommand(this.ShowDownloads);
+                    _showDownloadsCommand = new DelegateCommand(ShowDownloads);
                 }
 
-                return this.showDownloadsCommand;
+                return _showDownloadsCommand;
             }
         }
 
@@ -177,12 +177,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.showAuthorizeCommand == null)
+                if (_showAuthorizeCommand == null)
                 {
-                    this.showAuthorizeCommand = new DelegateCommand(this.ShowAuthorize);
+                    _showAuthorizeCommand = new DelegateCommand(ShowAuthorize);
                 }
 
-                return this.showAuthorizeCommand;
+                return _showAuthorizeCommand;
             }
         }
 
@@ -190,12 +190,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.showPreferencesCommand == null)
+                if (_showPreferencesCommand == null)
                 {
-                    this.showPreferencesCommand = new DelegateCommand(this.ShowPreferences);
+                    _showPreferencesCommand = new DelegateCommand(ShowPreferences);
                 }
 
-                return this.showPreferencesCommand;
+                return _showPreferencesCommand;
             }
         }
 
@@ -203,12 +203,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.showInfoCommand == null)
+                if (_showInfoCommand == null)
                 {
-                    this.showInfoCommand = new DelegateCommand(this.ShowInfo);
+                    _showInfoCommand = new DelegateCommand(ShowInfo);
                 }
 
-                return this.showInfoCommand;
+                return _showInfoCommand;
             }
         }
 
@@ -216,12 +216,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.doMinimizeCommand == null)
+                if (_doMinimizeCommand == null)
                 {
-                    this.doMinimizeCommand = new DelegateCommand<Window>(this.DoMinimize);
+                    _doMinimizeCommand = new DelegateCommand<Window>(DoMinimize);
                 }
 
-                return this.doMinimizeCommand;
+                return _doMinimizeCommand;
             }
         }
 
@@ -229,12 +229,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.doMmaximizeRestoreCommand == null)
+                if (_doMmaximizeRestoreCommand == null)
                 {
-                    this.doMmaximizeRestoreCommand = new DelegateCommand<Window>(this.DoMaximizeRestore);
+                    _doMmaximizeRestoreCommand = new DelegateCommand<Window>(DoMaximizeRestore);
                 }
 
-                return this.doMmaximizeRestoreCommand;
+                return _doMmaximizeRestoreCommand;
             }
         }
 
@@ -242,12 +242,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.doCloseCommand == null)
+                if (_doCloseCommand == null)
                 {
-                    this.doCloseCommand = new DelegateCommand<Window>(this.DoClose);
+                    _doCloseCommand = new DelegateCommand<Window>(DoClose);
                 }
 
-                return this.doCloseCommand;
+                return _doCloseCommand;
             }
         }
 
@@ -255,12 +255,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.requestCloseCommand == null)
+                if (_requestCloseCommand == null)
                 {
-                    this.requestCloseCommand = new DelegateCommand(() => { }, this.CloseApplication);
+                    _requestCloseCommand = new DelegateCommand(() => { }, CloseApplication);
                 }
 
-                return this.requestCloseCommand;
+                return _requestCloseCommand;
             }
         }
 
@@ -272,21 +272,21 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    if (this.videosCount > 0)
+                    if (_videosCount > 0)
                     {
-                        this.navigationService.ShowSearchResults();
+                        _navigationService.ShowSearchResults();
                     }
                     else
                     {
-                        this.navigationService.ShowSearch();
+                        _navigationService.ShowSearch();
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -294,14 +294,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.ShowDownloads();
+                    _navigationService.ShowDownloads();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -309,21 +309,21 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    if (this.twitchService.IsAuthorized)
+                    if (_twitchService.IsAuthorized)
                     {
-                        this.navigationService.ShowRevokeAuthorization();
+                        _navigationService.ShowRevokeAuthorization();
                     }
                     else
                     {
-                        this.navigationService.ShowAuthorize();
+                        _navigationService.ShowAuthorize();
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -331,14 +331,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.ShowPreferences();
+                    _navigationService.ShowPreferences();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -346,14 +346,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.ShowInfo();
+                    _navigationService.ShowInfo();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -361,7 +361,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     if (window == null)
                     {
@@ -373,7 +373,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -381,7 +381,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     if (window == null)
                     {
@@ -393,7 +393,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -401,7 +401,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
                     if (window == null)
                     {
@@ -413,7 +413,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -421,41 +421,41 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             if (contentVM != null)
             {
-                this.MainView = contentVM;
+                MainView = contentVM;
             }
         }
 
         private void IsAuthorizedChanged(bool isAuthorized)
         {
-            this.IsAuthorized = isAuthorized;
+            IsAuthorized = isAuthorized;
         }
 
         private void VideosCountChanged(int count)
         {
-            this.VideosCount = count;
+            VideosCount = count;
         }
 
         private void DownloadsCountChanged(int count)
         {
-            this.DownloadsCount = count;
+            DownloadsCount = count;
         }
 
         public void Loaded()
         {
             try
             {
-                Preferences currentPrefs = this.preferencesService.CurrentPreferences.Clone();
+                Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
                 bool updateAvailable = false;
 
                 if (currentPrefs.AppCheckForUpdates)
                 {
-                    UpdateInfo updateInfo = this.updateService.CheckForUpdate();
+                    UpdateInfo updateInfo = _updateService.CheckForUpdate();
 
                     if (updateInfo != null)
                     {
                         updateAvailable = true;
-                        this.navigationService.ShowUpdateInfo(updateInfo);
+                        _navigationService.ShowUpdateInfo(updateInfo);
                     }
                 }
 
@@ -476,20 +476,20 @@ namespace TwitchLeecher.Gui.ViewModels
                             LoadLimit = currentPrefs.SearchLoadLimit
                         };
 
-                        this.searchService.PerformSearch(searchParams);
+                        _searchService.PerformSearch(searchParams);
                     }
                 }
 
                 if (!updateAvailable && !searchOnStartup)
                 {
-                    this.navigationService.ShowWelcome();
+                    _navigationService.ShowWelcome();
                 }
 
-                this.twitchService.Authorize(this.runtimeDataService.RuntimeData.AccessToken);
+                _twitchService.Authorize(_runtimeDataService.RuntimeData.AccessToken);
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -497,24 +497,24 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                this.twitchService.Pause();
+                _twitchService.Pause();
 
-                if (!this.twitchService.CanShutdown())
+                if (!_twitchService.CanShutdown())
                 {
-                    MessageBoxResult result = this.dialogService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    MessageBoxResult result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                     if (result == MessageBoxResult.No)
                     {
-                        this.twitchService.Resume();
+                        _twitchService.Resume();
                         return false;
                     }
                 }
 
-                this.twitchService.Shutdown();
+                _twitchService.Shutdown();
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
 
             return true;

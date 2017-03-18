@@ -11,7 +11,7 @@ namespace TwitchLeecher.Shared.Notification
     {
         #region Fields
 
-        protected Dictionary<string, string> currentErrors;
+        protected Dictionary<string, string> _currentErrors;
 
         #endregion Fields
 
@@ -19,7 +19,7 @@ namespace TwitchLeecher.Shared.Notification
 
         public BindableBase()
         {
-            this.currentErrors = new Dictionary<string, string>();
+            _currentErrors = new Dictionary<string, string>();
         }
 
         #endregion Constructors
@@ -30,7 +30,7 @@ namespace TwitchLeecher.Shared.Notification
         {
             get
             {
-                return this.currentErrors.Count > 0;
+                return _currentErrors.Count > 0;
             }
         }
 
@@ -42,11 +42,11 @@ namespace TwitchLeecher.Shared.Notification
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                return this.currentErrors.Values.ToList();
+                return _currentErrors.Values.ToList();
             }
-            else if (this.currentErrors.ContainsKey(propertyName))
+            else if (_currentErrors.ContainsKey(propertyName))
             {
-                return new List<string>() { this.currentErrors[propertyName] };
+                return new List<string>() { _currentErrors[propertyName] };
             }
 
             return null;
@@ -64,12 +64,12 @@ namespace TwitchLeecher.Shared.Notification
                 throw new ArgumentNullException("error");
             }
 
-            if (!this.currentErrors.ContainsKey(propertyName))
+            if (!_currentErrors.ContainsKey(propertyName))
             {
-                this.currentErrors.Add(propertyName, error);
+                _currentErrors.Add(propertyName, error);
             }
 
-            this.FireErrorsChanged(propertyName);
+            FireErrorsChanged(propertyName);
         }
 
         protected void RemoveError(string propertyName)
@@ -79,19 +79,19 @@ namespace TwitchLeecher.Shared.Notification
                 throw new ArgumentNullException("propertyName");
             }
 
-            this.currentErrors.Remove(propertyName);
+            _currentErrors.Remove(propertyName);
 
-            this.FireErrorsChanged(propertyName);
+            FireErrorsChanged(propertyName);
         }
 
         protected void ClearErrors()
         {
-            List<string> errorKeys = this.currentErrors.Keys.ToList();
+            List<string> errorKeys = _currentErrors.Keys.ToList();
 
             foreach (string propertyName in errorKeys)
             {
-                this.currentErrors.Remove(propertyName);
-                this.FireErrorsChanged(propertyName);
+                _currentErrors.Remove(propertyName);
+                FireErrorsChanged(propertyName);
             }
         }
 
@@ -99,11 +99,11 @@ namespace TwitchLeecher.Shared.Notification
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                this.ClearErrors();
+                ClearErrors();
             }
             else
             {
-                this.RemoveError(propertyName);
+                RemoveError(propertyName);
             }
         }
 
@@ -117,12 +117,12 @@ namespace TwitchLeecher.Shared.Notification
 
         protected virtual void OnErrorsChanged(string propertyName)
         {
-            this.ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         protected void FireErrorsChanged(string propertyName)
         {
-            this.OnErrorsChanged(propertyName);
+            OnErrorsChanged(propertyName);
         }
 
         #endregion ErrorsChanged
@@ -140,14 +140,14 @@ namespace TwitchLeecher.Shared.Notification
 
             storage = value;
 
-            this.FirePropertyChanged(propertyName);
+            FirePropertyChanged(propertyName);
 
             return true;
         }
 
         protected virtual void FirePropertyChanged([CallerMemberName]string propertyName = null)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion PropertyChanged
