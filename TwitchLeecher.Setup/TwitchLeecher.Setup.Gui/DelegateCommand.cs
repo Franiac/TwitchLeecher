@@ -7,11 +7,11 @@ namespace TwitchLeecher.Setup.Gui.Command
     {
         #region Fields
 
-        private readonly Action action;
-        private readonly Func<bool> canExecute;
+        private readonly Action _action;
+        private readonly Func<bool> _canExecute;
 
-        private readonly Action<object> actionPar;
-        private readonly Func<object, bool> canExecutePar;
+        private readonly Action<object> _actionPar;
+        private readonly Func<object, bool> _canExecutePar;
 
         #endregion Fields
 
@@ -24,13 +24,8 @@ namespace TwitchLeecher.Setup.Gui.Command
 
         public DelegateCommand(Action action, Func<bool> canExecute)
         {
-            if (action == null)
-            {
-                throw new ArgumentNullException("action");
-            }
-
-            this.action = action;
-            this.canExecute = canExecute;
+            _action = action ?? throw new ArgumentNullException("action");
+            _canExecute = canExecute;
         }
 
         public DelegateCommand(Action<object> action)
@@ -40,13 +35,8 @@ namespace TwitchLeecher.Setup.Gui.Command
 
         public DelegateCommand(Action<object> actionPar, Func<object, bool> canExecute)
         {
-            if (actionPar == null)
-            {
-                throw new ArgumentNullException("actionPar");
-            }
-
-            this.actionPar = actionPar;
-            this.canExecutePar = canExecute;
+            _actionPar = actionPar ?? throw new ArgumentNullException("actionPar");
+            _canExecutePar = canExecute;
         }
 
         #endregion Constructors
@@ -55,13 +45,13 @@ namespace TwitchLeecher.Setup.Gui.Command
 
         public bool CanExecute(object parameter)
         {
-            if (this.canExecutePar == null)
+            if (_canExecutePar == null)
             {
-                return this.canExecute == null ? true : this.canExecute();
+                return _canExecute == null ? true : _canExecute();
             }
             else
             {
-                return this.canExecutePar == null ? true : this.canExecutePar(parameter);
+                return _canExecutePar == null ? true : _canExecutePar(parameter);
             }
         }
 
@@ -69,14 +59,14 @@ namespace TwitchLeecher.Setup.Gui.Command
         {
             add
             {
-                if (this.canExecute != null || this.canExecutePar != null)
+                if (_canExecute != null || _canExecutePar != null)
                 {
                     CommandManager.RequerySuggested += value;
                 }
             }
             remove
             {
-                if (this.canExecute != null || canExecutePar != null)
+                if (_canExecute != null || _canExecutePar != null)
                 {
                     CommandManager.RequerySuggested -= value;
                 }
@@ -85,13 +75,13 @@ namespace TwitchLeecher.Setup.Gui.Command
 
         public void Execute(object parameter)
         {
-            if (this.action != null)
+            if (_action != null)
             {
-                this.action();
+                _action();
             }
             else
             {
-                this.actionPar(parameter);
+                _actionPar(parameter);
             }
         }
 

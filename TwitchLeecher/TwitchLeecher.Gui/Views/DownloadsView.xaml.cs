@@ -8,7 +8,7 @@ namespace TwitchLeecher.Gui.Views
     {
         #region Fields
 
-        private INavigationState state;
+        private INavigationState _state;
 
         #endregion Fields
 
@@ -18,8 +18,8 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.scroller.ScrollChanged += this.Scroller_ScrollChanged;
-            this.Loaded += this.SearchResultView_Loaded;
+            scroller.ScrollChanged += Scroller_ScrollChanged;
+            Loaded += SearchResultView_Loaded;
         }
 
         #endregion Constructors
@@ -28,19 +28,19 @@ namespace TwitchLeecher.Gui.Views
 
         private void Scroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (this.state != null)
+            if (_state != null)
             {
-                state.ScrollPosition = e.VerticalOffset;
+                _state.ScrollPosition = e.VerticalOffset;
             }
         }
 
         private void SearchResultView_Loaded(object sender, RoutedEventArgs e)
         {
-            this.state = this.DataContext as INavigationState;
+            _state = DataContext as INavigationState;
 
-            if (state != null)
+            if (_state != null)
             {
-                this.scroller.ScrollToVerticalOffset(state.ScrollPosition);
+                scroller.ScrollToVerticalOffset(_state.ScrollPosition);
             }
         }
 

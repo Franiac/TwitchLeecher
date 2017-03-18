@@ -15,7 +15,7 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private string logDir;
+        private string _logDir;
 
         #endregion Fields
 
@@ -28,7 +28,7 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(folderService));
             }
 
-            this.logDir = Path.Combine(folderService.GetAppDataFolder(), LOGS_FOLDER_NAME);
+            _logDir = Path.Combine(folderService.GetAppDataFolder(), LOGS_FOLDER_NAME);
         }
 
         #endregion Constructors
@@ -39,9 +39,9 @@ namespace TwitchLeecher.Services.Services
         {
             try
             {
-                FileSystem.CreateDirectory(this.logDir);
+                FileSystem.CreateDirectory(_logDir);
 
-                string logFile = Path.Combine(this.logDir, DateTime.UtcNow.ToString("MMddyyyy_hhmmss_fff_tt") + "_error.log");
+                string logFile = Path.Combine(_logDir, DateTime.UtcNow.ToString("MMddyyyy_hhmmss_fff_tt") + "_error.log");
 
                 File.WriteAllText(logFile, ex.ToString());
 

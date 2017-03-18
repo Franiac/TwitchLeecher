@@ -14,11 +14,11 @@ namespace TwitchLeecher.Gui.Controls
     {
         #region Fields
 
-        private Shape paintArea;
-        private ContentControl mainContent;
+        private Shape _paintArea;
+        private ContentControl _mainContent;
 
-        private DoubleAnimation fadeInAnim;
-        private DoubleAnimation fadeOutAnim;
+        private DoubleAnimation _fadeInAnim;
+        private DoubleAnimation _fadeOutAnim;
 
         #endregion Fields
 
@@ -26,10 +26,10 @@ namespace TwitchLeecher.Gui.Controls
 
         public FadeContentControl()
         {
-            this.fadeInAnim = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
-            this.fadeOutAnim = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(200));
+            _fadeInAnim = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
+            _fadeOutAnim = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(200));
 
-            this.fadeOutAnim.Completed += FadeOutAnim_Completed;
+            _fadeOutAnim.Completed += FadeOutAnim_Completed;
         }
 
         #endregion Constructors
@@ -38,18 +38,18 @@ namespace TwitchLeecher.Gui.Controls
 
         public override void OnApplyTemplate()
         {
-            this.paintArea = Template.FindName("Tpl_Part_PaintArea", this) as Shape;
-            this.mainContent = Template.FindName("Tpl_Part_MainContent", this) as ContentControl;
+            _paintArea = Template.FindName("Tpl_Part_PaintArea", this) as Shape;
+            _mainContent = Template.FindName("Tpl_Part_MainContent", this) as ContentControl;
 
             base.OnApplyTemplate();
         }
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            if (this.paintArea != null && this.mainContent != null)
+            if (_paintArea != null && _mainContent != null)
             {
-                this.paintArea.Fill = this.CreateBrushFromVisual(this.mainContent);
-                this.BeginAnimateContentReplacement();
+                _paintArea.Fill = CreateBrushFromVisual(_mainContent);
+                BeginAnimateContentReplacement();
             }
 
             base.OnContentChanged(oldContent, newContent);
@@ -57,9 +57,9 @@ namespace TwitchLeecher.Gui.Controls
 
         private void BeginAnimateContentReplacement()
         {
-            this.paintArea.Visibility = Visibility.Visible;
-            this.mainContent.Visibility = Visibility.Hidden;
-            this.paintArea.BeginAnimation(OpacityProperty, this.fadeOutAnim);
+            _paintArea.Visibility = Visibility.Visible;
+            _mainContent.Visibility = Visibility.Hidden;
+            _paintArea.BeginAnimation(OpacityProperty, _fadeOutAnim);
         }
 
         private Brush CreateBrushFromVisual(Visual visual)
@@ -69,7 +69,7 @@ namespace TwitchLeecher.Gui.Controls
                 throw new ArgumentNullException(nameof(visual));
             }
 
-            RenderTargetBitmap target = new RenderTargetBitmap((int)this.ActualWidth, (int)this.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            RenderTargetBitmap target = new RenderTargetBitmap((int)ActualWidth, (int)ActualHeight, 96, 96, PixelFormats.Pbgra32);
             target.Render(visual);
 
             ImageBrush brush = new ImageBrush(target);
@@ -84,9 +84,9 @@ namespace TwitchLeecher.Gui.Controls
 
         private void FadeOutAnim_Completed(object sender, EventArgs e)
         {
-            this.paintArea.Visibility = Visibility.Hidden;
-            this.mainContent.Visibility = Visibility.Visible;
-            this.mainContent.BeginAnimation(OpacityProperty, this.fadeInAnim);
+            _paintArea.Visibility = Visibility.Hidden;
+            _mainContent.Visibility = Visibility.Visible;
+            _mainContent.BeginAnimation(OpacityProperty, _fadeInAnim);
         }
 
         #endregion EventHandlers

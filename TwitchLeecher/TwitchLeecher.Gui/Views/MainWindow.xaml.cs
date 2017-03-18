@@ -13,7 +13,8 @@ using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Native;
-using static TwitchLeecher.Shared.Native.Api;
+using static TwitchLeecher.Shared.Native.NativeMethods;
+using static TwitchLeecher.Shared.Native.NativeStructs;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -21,9 +22,9 @@ namespace TwitchLeecher.Gui.Views
     {
         #region Fields
 
-        private IEventAggregator eventAggregator;
-        private IDialogService dialogService;
-        private IRuntimeDataService runtimeDataService;
+        private IEventAggregator _eventAggregator;
+        private IDialogService _dialogService;
+        private IRuntimeDataService _runtimeDataService;
 
         #endregion Fields
 
@@ -34,9 +35,9 @@ namespace TwitchLeecher.Gui.Views
             IDialogService dialogService,
             IRuntimeDataService runtimeDataService)
         {
-            this.eventAggregator = eventAggregator;
-            this.dialogService = dialogService;
-            this.runtimeDataService = runtimeDataService;
+            _eventAggregator = eventAggregator;
+            _dialogService = dialogService;
+            _runtimeDataService = runtimeDataService;
 
             InitializeComponent();
 
@@ -55,41 +56,41 @@ namespace TwitchLeecher.Gui.Views
             // Hold reference to FontAwesome library
             ImageAwesome.CreateImageSource(FontAwesomeIcon.Times, Brushes.Black);
 
-            this.SizeChanged += (s, e) =>
+            SizeChanged += (s, e) =>
             {
-                if (this.WindowState == WindowState.Normal)
+                if (WindowState == WindowState.Normal)
                 {
-                    this.WidthNormal = this.Width;
-                    this.HeightNormal = this.Height;
+                    WidthNormal = Width;
+                    HeightNormal = Height;
                 }
             };
 
-            this.LocationChanged += (s, e) =>
+            LocationChanged += (s, e) =>
             {
-                if (this.WindowState == WindowState.Normal)
+                if (WindowState == WindowState.Normal)
                 {
-                    this.TopNormal = this.Top;
-                    this.LeftNormal = this.Left;
+                    TopNormal = Top;
+                    LeftNormal = Left;
                 }
             };
 
-            this.Loaded += (s, e) =>
+            Loaded += (s, e) =>
             {
                 HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(WindowProc));
 
-                this.DataContext = viewModel;
+                DataContext = viewModel;
 
                 if (viewModel != null)
                 {
                     viewModel.Loaded();
                 }
 
-                this.LoadWindowState();
+                LoadWindowState();
             };
 
-            this.Closed += (s, e) =>
+            Closed += (s, e) =>
             {
-                this.SaveWindowState();
+                SaveWindowState();
             };
         }
 
@@ -113,25 +114,25 @@ namespace TwitchLeecher.Gui.Views
         {
             try
             {
-                MainWindowInfo mainWindowInfo = this.runtimeDataService.RuntimeData.MainWindowInfo;
+                MainWindowInfo mainWindowInfo = _runtimeDataService.RuntimeData.MainWindowInfo;
 
                 if (mainWindowInfo != null)
                 {
-                    this.Width = mainWindowInfo.Width;
-                    this.Height = mainWindowInfo.Height;
-                    this.Top = mainWindowInfo.Top;
-                    this.Left = mainWindowInfo.Left;
-                    this.WindowState = mainWindowInfo.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-                    this.ValidateWindowState(false);
+                    Width = mainWindowInfo.Width;
+                    Height = mainWindowInfo.Height;
+                    Top = mainWindowInfo.Top;
+                    Left = mainWindowInfo.Left;
+                    WindowState = mainWindowInfo.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+                    ValidateWindowState(false);
                 }
                 else
                 {
-                    this.ValidateWindowState(true);
+                    ValidateWindowState(true);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -141,19 +142,19 @@ namespace TwitchLeecher.Gui.Views
             {
                 MainWindowInfo mainWindowInfo = new MainWindowInfo()
                 {
-                    Width = this.WidthNormal,
-                    Height = this.HeightNormal,
-                    Top = this.TopNormal,
-                    Left = this.LeftNormal,
-                    IsMaximized = this.WindowState == WindowState.Maximized
+                    Width = WidthNormal,
+                    Height = HeightNormal,
+                    Top = TopNormal,
+                    Left = LeftNormal,
+                    IsMaximized = WindowState == WindowState.Maximized
                 };
 
-                this.runtimeDataService.RuntimeData.MainWindowInfo = mainWindowInfo;
-                this.runtimeDataService.Save();
+                _runtimeDataService.RuntimeData.MainWindowInfo = mainWindowInfo;
+                _runtimeDataService.Save();
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -165,43 +166,43 @@ namespace TwitchLeecher.Gui.Views
 
                 double availableHeight = screen.WorkingArea.Height;
 
-                if (this.Height > availableHeight)
+                if (Height > availableHeight)
                 {
-                    this.Height = Math.Max(this.MinHeight, availableHeight);
+                    Height = Math.Max(MinHeight, availableHeight);
 
-                    if (this.Height > availableHeight)
+                    if (Height > availableHeight)
                     {
-                        this.Top = 0;
+                        Top = 0;
                     }
                     else
                     {
-                        this.Top = (availableHeight / 2) - (this.Height / 2);
+                        Top = (availableHeight / 2) - (Height / 2);
                     }
                 }
             }
             else
             {
-                Screen currentScreen = Screen.FromRectangle(new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height));
+                Screen currentScreen = Screen.FromRectangle(new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height));
                 Screen mostRightScreen = Screen.AllScreens.Aggregate((s1, s2) => s1.Bounds.Right > s2.Bounds.Right ? s1 : s2);
 
-                if (this.Top < 0)
+                if (Top < 0)
                 {
-                    this.Top = 0;
+                    Top = 0;
                 }
 
-                if (this.Top > currentScreen.WorkingArea.Height)
+                if (Top > currentScreen.WorkingArea.Height)
                 {
-                    this.Top = Math.Max(0, currentScreen.WorkingArea.Height - this.Height);
+                    Top = Math.Max(0, currentScreen.WorkingArea.Height - Height);
                 }
 
-                if (this.Left < 0)
+                if (Left < 0)
                 {
-                    this.Left = 0;
+                    Left = 0;
                 }
 
-                if (this.Left > mostRightScreen.Bounds.Right)
+                if (Left > mostRightScreen.Bounds.Right)
                 {
-                    this.Left = Math.Max(mostRightScreen.Bounds.Left, mostRightScreen.Bounds.Right - this.Width);
+                    Left = Math.Max(mostRightScreen.Bounds.Left, mostRightScreen.Bounds.Right - Width);
                 }
             }
         }
@@ -210,12 +211,12 @@ namespace TwitchLeecher.Gui.Views
         {
             switch (msg)
             {
-                case WM_GETMINMAXINFO:
+                case NativeFlags.WM_GETMINMAXINFO:
                     WmGetMinMaxInfo(hwnd, lParam);
                     handeled = true;
                     break;
 
-                case WM_WINDOWPOSCHANGING:
+                case NativeFlags.WM_WINDOWPOSCHANGING:
                     WINDOWPOS pos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
 
                     if ((pos.flags & 0x0002) != 0)
@@ -244,7 +245,7 @@ namespace TwitchLeecher.Gui.Views
                         dpiY = wpfDpi * source.CompositionTarget.TransformToDevice.M22;
                     }
 
-                    int minWidth = (int)Math.Round(this.MinWidth / 96 * dpiX, 0);
+                    int minWidth = (int)Math.Round(MinWidth / 96 * dpiX, 0);
 
                     if (pos.cx < minWidth)
                     {
@@ -252,7 +253,7 @@ namespace TwitchLeecher.Gui.Views
                         changedPos = true;
                     }
 
-                    int minHeight = (int)Math.Round(this.MinHeight / 96 * dpiY, 0);
+                    int minHeight = (int)Math.Round(MinHeight / 96 * dpiY, 0);
 
                     if (pos.cy < minHeight)
                     {
@@ -277,13 +278,13 @@ namespace TwitchLeecher.Gui.Views
         {
             MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
 
-            IntPtr hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            IntPtr hMonitor = MonitorFromWindowNative(hwnd, NativeFlags.MONITOR_DEFAULTTONEAREST);
 
             MonitorInfoEx info = new MonitorInfoEx();
-            GetMonitorInfo(new HandleRef(null, hMonitor), info);
+            GetMonitorInfoNative(new HandleRef(null, hMonitor), info);
 
-            Api.Rect rcWorkArea = info.rcWork;
-            Api.Rect rcMonitorArea = info.rcMonitor;
+            NativeStructs.Rect rcWorkArea = info.rcWork;
+            NativeStructs.Rect rcMonitorArea = info.rcMonitor;
 
             mmi.ptMaxPosition.x = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
             mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
@@ -295,7 +296,7 @@ namespace TwitchLeecher.Gui.Views
 
         public void ShowNotification(string text)
         {
-            this.notificationStrip.ShowNotification(text);
+            notificationStrip.ShowNotification(text);
         }
 
         #endregion Methods

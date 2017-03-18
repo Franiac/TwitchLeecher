@@ -13,13 +13,13 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel kernel;
-        private IEventAggregator eventAggregator;
+        private IKernel _kernel;
+        private IEventAggregator _eventAggregator;
 
-        private ViewModelBase lastView;
-        private ViewModelBase currentView;
+        private ViewModelBase _lastView;
+        private ViewModelBase _currentView;
 
-        private Dictionary<Type, ViewModelBase> persistentViews;
+        private Dictionary<Type, ViewModelBase> _persistentViews;
 
         #endregion Fields
 
@@ -27,10 +27,10 @@ namespace TwitchLeecher.Gui.Services
 
         public NavigationService(IKernel kernel, IEventAggregator eventAggregator)
         {
-            this.kernel = kernel;
-            this.eventAggregator = eventAggregator;
+            _kernel = kernel;
+            _eventAggregator = eventAggregator;
 
-            this.persistentViews = new Dictionary<Type, ViewModelBase>();
+            _persistentViews = new Dictionary<Type, ViewModelBase>();
         }
 
         #endregion Constructor
@@ -39,133 +39,116 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowWelcome()
         {
-            this.Navigate(this.kernel.Get<WelcomeViewVM>());
+            Navigate(_kernel.Get<WelcomeViewVM>());
         }
 
         public void ShowLoading()
         {
-            this.Navigate(this.kernel.Get<LoadingViewVM>());
+            Navigate(_kernel.Get<LoadingViewVM>());
         }
 
         public void ShowSearch()
         {
-            this.Navigate(this.kernel.Get<SearchViewVM>());
+            Navigate(_kernel.Get<SearchViewVM>());
         }
 
         public void ShowSearchResults()
         {
-            ViewModelBase vm;
 
-            if (!this.persistentViews.TryGetValue(typeof(SearchResultViewVM), out vm))
+            if (!_persistentViews.TryGetValue(typeof(SearchResultViewVM), out ViewModelBase vm))
             {
-                vm = this.kernel.Get<SearchResultViewVM>();
-                this.persistentViews.Add(typeof(SearchResultViewVM), vm);
+                vm = _kernel.Get<SearchResultViewVM>();
+                _persistentViews.Add(typeof(SearchResultViewVM), vm);
             }
 
-            this.Navigate(vm);
+            Navigate(vm);
         }
 
         public void ShowDownload(DownloadParameters downloadParams)
         {
-            if (downloadParams == null)
-            {
-                throw new ArgumentNullException(nameof(downloadParams));
-            }
+            DownloadViewVM vm = _kernel.Get<DownloadViewVM>();
+            vm.DownloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
 
-            DownloadViewVM vm = this.kernel.Get<DownloadViewVM>();
-            vm.DownloadParams = downloadParams;
-
-            this.Navigate(vm);
+            Navigate(vm);
         }
 
         public void ShowDownloads()
         {
-            ViewModelBase vm;
 
-            if (!this.persistentViews.TryGetValue(typeof(DownloadsViewVM), out vm))
+            if (!_persistentViews.TryGetValue(typeof(DownloadsViewVM), out ViewModelBase vm))
             {
-                vm = this.kernel.Get<DownloadsViewVM>();
-                this.persistentViews.Add(typeof(DownloadsViewVM), vm);
+                vm = _kernel.Get<DownloadsViewVM>();
+                _persistentViews.Add(typeof(DownloadsViewVM), vm);
             }
 
-            this.Navigate(vm);
+            Navigate(vm);
         }
 
         public void ShowAuthorize()
         {
-            this.Navigate(this.kernel.Get<AuthorizeViewVM>());
+            Navigate(_kernel.Get<AuthorizeViewVM>());
         }
 
         public void ShowRevokeAuthorization()
         {
-            this.Navigate(this.kernel.Get<RevokeAuthorizationViewVM>());
+            Navigate(_kernel.Get<RevokeAuthorizationViewVM>());
         }
 
         public void ShowTwitchConnect()
         {
-            this.Navigate(this.kernel.Get<TwitchConnectViewVM>());
+            Navigate(_kernel.Get<TwitchConnectViewVM>());
         }
 
         public void ShowPreferences()
         {
-            this.Navigate(this.kernel.Get<PreferencesViewVM>());
+            Navigate(_kernel.Get<PreferencesViewVM>());
         }
 
         public void ShowInfo()
         {
-            this.Navigate(this.kernel.Get<InfoViewVM>());
+            Navigate(_kernel.Get<InfoViewVM>());
         }
 
         public void ShowLog(TwitchVideoDownload download)
         {
-            if (download == null)
-            {
-                throw new ArgumentNullException(nameof(download));
-            }
+            LogViewVM vm = _kernel.Get<LogViewVM>();
+            vm.Download = download ?? throw new ArgumentNullException(nameof(download));
 
-            LogViewVM vm = this.kernel.Get<LogViewVM>();
-            vm.Download = download;
-
-            this.Navigate(vm);
+            Navigate(vm);
         }
 
         public void ShowUpdateInfo(UpdateInfo updateInfo)
         {
-            if (updateInfo == null)
-            {
-                throw new ArgumentNullException(nameof(updateInfo));
-            }
+            UpdateInfoViewVM vm = _kernel.Get<UpdateInfoViewVM>();
+            vm.UpdateInfo = updateInfo ?? throw new ArgumentNullException(nameof(updateInfo));
 
-            UpdateInfoViewVM vm = this.kernel.Get<UpdateInfoViewVM>();
-            vm.UpdateInfo = updateInfo;
-
-            this.Navigate(vm);
+            Navigate(vm);
         }
 
         public void NavigateBack()
         {
-            if (this.lastView != null)
+            if (_lastView != null)
             {
-                this.Navigate(this.lastView);
+                Navigate(_lastView);
             }
         }
 
         private void Navigate(ViewModelBase nextView)
         {
-            if (nextView == null || (this.currentView != null && this.currentView.GetType() == nextView.GetType()))
+            if (nextView == null || (_currentView != null && _currentView.GetType() == nextView.GetType()))
             {
                 return;
             }
 
-            this.currentView?.OnBeforeHidden();
+            _currentView?.OnBeforeHidden();
 
             nextView.OnBeforeShown();
 
-            this.lastView = this.currentView;
+            _lastView = _currentView;
 
-            this.currentView = nextView;
+            _currentView = nextView;
 
-            this.eventAggregator.GetEvent<ShowViewEvent>().Publish(nextView);
+            _eventAggregator.GetEvent<ShowViewEvent>().Publish(nextView);
         }
 
         #endregion Methods

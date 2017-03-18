@@ -39,7 +39,7 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.RES, resolution.Resolution);
             result = result.Replace(FilenameWildcards.FPS, resolution.Fps);
 
-            result = this.SubstituteInvalidChars(result, "_");
+            result = SubstituteInvalidChars(result, "_");
 
             return result;
         }

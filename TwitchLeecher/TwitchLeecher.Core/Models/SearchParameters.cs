@@ -8,14 +8,14 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private SearchType searchType;
-        private VideoType videoType;
+        private SearchType _searchType;
+        private VideoType _videoType;
 
-        private string channel;
-        private string urls;
-        private string ids;
+        private string _channel;
+        private string _urls;
+        private string _ids;
 
-        private int loadLimit;
+        private int _loadLimit;
 
         #endregion Fields
 
@@ -23,7 +23,7 @@ namespace TwitchLeecher.Core.Models
 
         public SearchParameters(SearchType searchType)
         {
-            this.searchType = searchType;
+            _searchType = searchType;
         }
 
         #endregion Constructors
@@ -34,11 +34,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.searchType;
+                return _searchType;
             }
             set
             {
-                this.SetProperty(ref this.searchType, value, nameof(this.SearchType));
+                SetProperty(ref _searchType, value, nameof(SearchType));
             }
         }
 
@@ -46,11 +46,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.videoType;
+                return _videoType;
             }
             set
             {
-                this.SetProperty(ref this.videoType, value, nameof(this.VideoType));
+                SetProperty(ref _videoType, value, nameof(VideoType));
             }
         }
 
@@ -58,11 +58,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.channel;
+                return _channel;
             }
             set
             {
-                this.SetProperty(ref this.channel, value, nameof(this.Channel));
+                SetProperty(ref _channel, value, nameof(Channel));
             }
         }
 
@@ -70,11 +70,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.urls;
+                return _urls;
             }
             set
             {
-                this.SetProperty(ref this.urls, value, nameof(this.Urls));
+                SetProperty(ref _urls, value, nameof(Urls));
             }
         }
 
@@ -82,11 +82,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.ids;
+                return _ids;
             }
             set
             {
-                this.SetProperty(ref this.ids, value, nameof(this.Ids));
+                SetProperty(ref _ids, value, nameof(Ids));
             }
         }
 
@@ -94,11 +94,11 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return this.loadLimit;
+                return _loadLimit;
             }
             set
             {
-                this.SetProperty(ref this.loadLimit, value, nameof(this.LoadLimit));
+                SetProperty(ref _loadLimit, value, nameof(LoadLimit));
             }
         }
 
@@ -110,42 +110,41 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.Channel);
+            string currentProperty = nameof(Channel);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchType == SearchType.Channel && string.IsNullOrWhiteSpace(this.channel))
+                if (_searchType == SearchType.Channel && string.IsNullOrWhiteSpace(_channel))
                 {
-                    this.AddError(currentProperty, "Please specify a channel name!");
+                    AddError(currentProperty, "Please specify a channel name!");
                 }
             }
 
-            currentProperty = nameof(this.Urls);
+            currentProperty = nameof(Urls);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchType == SearchType.Urls)
+                if (_searchType == SearchType.Urls)
                 {
-                    if (string.IsNullOrWhiteSpace(this.urls))
+                    if (string.IsNullOrWhiteSpace(_urls))
                     {
-                        this.AddError(currentProperty, "Please specify one or more Twitch video urls!");
+                        AddError(currentProperty, "Please specify one or more Twitch video urls!");
                     }
                     else
                     {
                         Action addError = () =>
                         {
-                            this.AddError(currentProperty, "One or more urls are invalid!");
+                            AddError(currentProperty, "One or more urls are invalid!");
                         };
 
-                        string[] urls = this.urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] urls = _urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (urls.Length > 0)
                         {
                             foreach (string url in urls)
                             {
-                                Uri validUrl;
 
-                                if (!Uri.TryCreate(url, UriKind.Absolute, out validUrl))
+                                if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
                                 {
                                     addError();
                                     break;
@@ -173,9 +172,8 @@ namespace TwitchLeecher.Core.Models
                                             {
                                                 idStr = idStr.Trim(new char[] { '/' });
 
-                                                int idInt;
 
-                                                if (int.TryParse(idStr, out idInt) && idInt > 0)
+                                                if (int.TryParse(idStr, out int idInt) && idInt > 0)
                                                 {
                                                     validId = true;
                                                     break;
@@ -198,29 +196,28 @@ namespace TwitchLeecher.Core.Models
                 }
             }
 
-            currentProperty = nameof(this.Ids);
+            currentProperty = nameof(Ids);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (this.searchType == SearchType.Ids)
+                if (_searchType == SearchType.Ids)
                 {
-                    if (string.IsNullOrWhiteSpace(this.ids))
+                    if (string.IsNullOrWhiteSpace(_ids))
                     {
-                        this.AddError(currentProperty, "Please specify one or more Twitch video IDs!");
+                        AddError(currentProperty, "Please specify one or more Twitch video IDs!");
                     }
                     else
                     {
-                        string[] ids = this.ids.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] ids = _ids.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (ids.Length > 0)
                         {
                             foreach (string id in ids)
                             {
-                                int idInt;
 
-                                if (!int.TryParse(id, out idInt) || idInt <= 0)
+                                if (!int.TryParse(id, out int idInt) || idInt <= 0)
                                 {
-                                    this.AddError(currentProperty, "One or more IDs are invalid!");
+                                    AddError(currentProperty, "One or more IDs are invalid!");
                                     break;
                                 }
                             }
@@ -232,13 +229,13 @@ namespace TwitchLeecher.Core.Models
 
         public SearchParameters Clone()
         {
-            return new SearchParameters(this.searchType)
+            return new SearchParameters(_searchType)
             {
-                VideoType = this.videoType,
-                Channel = this.channel,
-                Urls = this.urls,
-                Ids = this.ids,
-                LoadLimit = this.loadLimit
+                VideoType = _videoType,
+                Channel = _channel,
+                Urls = _urls,
+                Ids = _ids,
+                LoadLimit = _loadLimit
             };
         }
 

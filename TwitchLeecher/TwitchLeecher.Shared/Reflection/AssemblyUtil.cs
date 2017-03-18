@@ -7,10 +7,10 @@ namespace TwitchLeecher.Shared.Reflection
     {
         #region Fields
 
-        private static AssemblyUtil instance;
+        private static AssemblyUtil _instance;
 
-        private string product;
-        private Version version;
+        private string _product;
+        private Version _version;
 
         #endregion Fields
 
@@ -20,12 +20,12 @@ namespace TwitchLeecher.Shared.Reflection
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new AssemblyUtil();
+                    _instance = new AssemblyUtil();
                 }
 
-                return instance;
+                return _instance;
             }
         }
 
@@ -35,7 +35,7 @@ namespace TwitchLeecher.Shared.Reflection
 
         public Version GetAssemblyVersion()
         {
-            if (this.version == null)
+            if (_version == null)
             {
                 Assembly a = Assembly.GetExecutingAssembly();
 
@@ -51,18 +51,18 @@ namespace TwitchLeecher.Shared.Reflection
                     throw new ApplicationException("Could not find attribute of type '" + typeof(AssemblyFileVersionAttribute).FullName + "'!");
                 }
 
-                if (!Version.TryParse(att.Version, out this.version))
+                if (!Version.TryParse(att.Version, out _version))
                 {
                     throw new ApplicationException("Error while parsing assembly file version!");
                 }
             }
 
-            return this.version;
+            return _version;
         }
 
         public string GetProductName()
         {
-            if (string.IsNullOrEmpty(this.product))
+            if (string.IsNullOrEmpty(_product))
             {
                 Assembly a = Assembly.GetExecutingAssembly();
 
@@ -78,10 +78,10 @@ namespace TwitchLeecher.Shared.Reflection
                     throw new ApplicationException("Could not find attribute of type '" + typeof(AssemblyProductAttribute).FullName + "'!");
                 }
 
-                this.product = att.Product;
+                _product = att.Product;
             }
 
-            return this.product;
+            return _product;
         }
 
         #endregion Methods

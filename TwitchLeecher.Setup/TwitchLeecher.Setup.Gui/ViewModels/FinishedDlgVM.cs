@@ -8,7 +8,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected string headline;
+        protected string _headline;
 
         #endregion Fields
 
@@ -17,24 +17,24 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public FinishedDlgVM(SetupApplication bootstrapper, IGuiService guiService)
             : base(bootstrapper, guiService)
         {
-            if (this.bootstrapper.IsUpgrade)
+            if (_bootstrapper.IsUpgrade)
             {
-                this.headline = "Successfully upgraded " + this.bootstrapper.ProductName + " " + this.bootstrapper.RelatedBundleVersion.ToString() + " to version " + this.bootstrapper.ProductVersionTrimmed.ToString();
+                _headline = "Successfully upgraded " + _bootstrapper.ProductName + " " + _bootstrapper.RelatedBundleVersion.ToString() + " to version " + _bootstrapper.ProductVersionTrimmed.ToString();
             }
             else
             {
-                switch (this.bootstrapper.LaunchAction)
+                switch (_bootstrapper.LaunchAction)
                 {
                     case LaunchAction.Install:
-                        this.headline = "Successfully installed " + this.ProductNameVersionDisplay;
+                        _headline = "Successfully installed " + ProductNameVersionDisplay;
                         break;
 
                     case LaunchAction.Uninstall:
-                        this.headline = "Successfully uninstalled " + this.ProductNameVersionDisplay;
+                        _headline = "Successfully uninstalled " + ProductNameVersionDisplay;
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + this.bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.headline;
+                return _headline;
             }
         }
 

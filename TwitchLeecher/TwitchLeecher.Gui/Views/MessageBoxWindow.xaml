@@ -1,11 +1,10 @@
 ﻿<Window x:Class="TwitchLeecher.Gui.Views.MessageBoxWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         Style="{DynamicResource PopupWindow}"
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
-        MinWidth="300">
+        MinWidth="300"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,9 +15,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <i:Interaction.Behaviors>
-        <b:CenterWindowBehavior />
-    </i:Interaction.Behaviors>
     <Border Padding="20" BorderThickness="1">
         <Border.BorderBrush>
             <SolidColorBrush Color="{StaticResource MainColor}" />
@@ -61,16 +57,16 @@
                     <SolidColorBrush Color="{StaticResource OutlineColor}" />
                 </Border.BorderBrush>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="btnYes" Margin="0,0,3,0" Click="btnYes_Click">
+                    <Button Name="btnYes" Margin="0,0,3,0" Click="BtnYes_Click">
                         <TextBlock Name="btnYesContent" Text="Yes" />
                     </Button>
-                    <Button Name="btnNo" Margin="3,0,3,0" Click="btnNo_Click">
+                    <Button Name="btnNo" Margin="3,0,3,0" Click="BtnNo_Click">
                         <TextBlock Name="btnNoContent" Text="No" />
                     </Button>
-                    <Button Name="btnOk" Margin="3,0,3,0" Click="btnOk_Click">
+                    <Button Name="btnOk" Margin="3,0,3,0" Click="BtnOk_Click">
                         <TextBlock Name="btnOkContent" Text="Ok" />
                     </Button>
-                    <Button Name="btnCancel" Margin="3,0,0,0" Click="btnCancel_Click">
+                    <Button Name="btnCancel" Margin="3,0,0,0" Click="BtnCancel_Click">
                         <TextBlock Name="btnCancelContent" Text="Cancel" />
                     </Button>
                 </StackPanel>

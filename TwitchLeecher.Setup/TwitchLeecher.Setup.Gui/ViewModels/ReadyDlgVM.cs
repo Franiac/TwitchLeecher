@@ -6,7 +6,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected IUacService uacService;
+        protected IUacService _uacService;
 
         #endregion Fields
 
@@ -15,7 +15,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public ReadyDlgVM(SetupApplication bootstrapper, IGuiService guiService, IUacService uacService)
             : base(bootstrapper, guiService)
         {
-            this.uacService = uacService;
+            _uacService = uacService;
         }
 
         #endregion Constructors
@@ -34,7 +34,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.uacService.IsUacEnabled && !this.uacService.IsUserAdmin;
+                return _uacService.IsUacEnabled && !_uacService.IsUserAdmin;
             }
         }
 

@@ -12,15 +12,15 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private TwitchVideoDownload download;
+        private TwitchVideoDownload _download;
 
-        private ICommand copyCommand;
-        private ICommand closeCommand;
+        private ICommand _copyCommand;
+        private ICommand _closeCommand;
 
-        private IDialogService dialogService;
-        private INavigationService navigationService;
+        private IDialogService _dialogService;
+        private INavigationService _navigationService;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -30,10 +30,10 @@ namespace TwitchLeecher.Gui.ViewModels
             IDialogService dialogService,
             INavigationService navigationService)
         {
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
+            _dialogService = dialogService;
+            _navigationService = navigationService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -44,11 +44,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.download;
+                return _download;
             }
             set
             {
-                this.SetProperty(ref this.download, value, nameof(this.Download));
+                SetProperty(ref _download, value, nameof(Download));
             }
         }
 
@@ -56,12 +56,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.copyCommand == null)
+                if (_copyCommand == null)
                 {
-                    this.copyCommand = new DelegateCommand(this.Copy);
+                    _copyCommand = new DelegateCommand(Copy);
                 }
 
-                return this.copyCommand;
+                return _copyCommand;
             }
         }
 
@@ -69,12 +69,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.closeCommand == null)
+                if (_closeCommand == null)
                 {
-                    this.closeCommand = new DelegateCommand(this.Close);
+                    _closeCommand = new DelegateCommand(Close);
                 }
 
-                return this.closeCommand;
+                return _closeCommand;
             }
         }
 
@@ -86,14 +86,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    Clipboard.SetDataObject(this.download?.Log);
+                    Clipboard.SetDataObject(_download?.Log);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -101,14 +101,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.NavigateBack();
+                    _navigationService.NavigateBack();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -121,8 +121,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.CopyCommand, "Copy", "Copy"));
-            menuCommands.Add(new MenuCommand(this.CloseCommand, "Back", "ArrowLeft"));
+            menuCommands.Add(new MenuCommand(CopyCommand, "Copy", "Copy"));
+            menuCommands.Add(new MenuCommand(CloseCommand, "Back", "ArrowLeft"));
 
             return menuCommands;
         }

@@ -12,7 +12,7 @@ namespace TwitchLeecher.Shared.Commands
 
         public CompositeCommand()
         {
-            this.onRegisteredCommandCanExecuteChangedHandler = new EventHandler(this.OnRegisteredCommandCanExecuteChanged);
+            onRegisteredCommandCanExecuteChangedHandler = new EventHandler(OnRegisteredCommandCanExecuteChanged);
         }
 
         public virtual void RegisterCommand(ICommand command)
@@ -24,17 +24,17 @@ namespace TwitchLeecher.Shared.Commands
                 throw new ArgumentException("Cannot register a CompositeCommand in itself");
             }
 
-            lock (this.registeredCommands)
+            lock (registeredCommands)
             {
-                if (this.registeredCommands.Contains(command))
+                if (registeredCommands.Contains(command))
                 {
                     throw new InvalidOperationException("Cannot register the same command twice in the same CompositeCommand");
                 }
-                this.registeredCommands.Add(command);
+                registeredCommands.Add(command);
             }
 
-            command.CanExecuteChanged += this.onRegisteredCommandCanExecuteChangedHandler;
-            this.OnCanExecuteChanged();
+            command.CanExecuteChanged += onRegisteredCommandCanExecuteChangedHandler;
+            OnCanExecuteChanged();
         }
 
         public virtual void UnregisterCommand(ICommand command)
@@ -42,21 +42,21 @@ namespace TwitchLeecher.Shared.Commands
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
             bool removed;
-            lock (this.registeredCommands)
+            lock (registeredCommands)
             {
-                removed = this.registeredCommands.Remove(command);
+                removed = registeredCommands.Remove(command);
             }
 
             if (removed)
             {
-                command.CanExecuteChanged -= this.onRegisteredCommandCanExecuteChangedHandler;
-                this.OnCanExecuteChanged();
+                command.CanExecuteChanged -= onRegisteredCommandCanExecuteChangedHandler;
+                OnCanExecuteChanged();
             }
         }
 
         private void OnRegisteredCommandCanExecuteChanged(object sender, EventArgs e)
         {
-            this.OnCanExecuteChanged();
+            OnCanExecuteChanged();
         }
 
         public virtual bool CanExecute(object parameter)
@@ -64,13 +64,13 @@ namespace TwitchLeecher.Shared.Commands
             bool hasEnabledCommandsThatShouldBeExecuted = false;
 
             ICommand[] commandList;
-            lock (this.registeredCommands)
+            lock (registeredCommands)
             {
-                commandList = this.registeredCommands.ToArray();
+                commandList = registeredCommands.ToArray();
             }
             foreach (ICommand command in commandList)
             {
-                if (this.ShouldExecute(command))
+                if (ShouldExecute(command))
                 {
                     if (!command.CanExecute(parameter))
                     {
@@ -89,9 +89,9 @@ namespace TwitchLeecher.Shared.Commands
         public virtual void Execute(object parameter)
         {
             Queue<ICommand> commands;
-            lock (this.registeredCommands)
+            lock (registeredCommands)
             {
-                commands = new Queue<ICommand>(this.registeredCommands.Where(this.ShouldExecute).ToList());
+                commands = new Queue<ICommand>(registeredCommands.Where(ShouldExecute).ToList());
             }
 
             while (commands.Count > 0)
@@ -111,9 +111,9 @@ namespace TwitchLeecher.Shared.Commands
             get
             {
                 IList<ICommand> commandList;
-                lock (this.registeredCommands)
+                lock (registeredCommands)
                 {
-                    commandList = this.registeredCommands.ToList();
+                    commandList = registeredCommands.ToList();
                 }
 
                 return commandList;
@@ -131,7 +131,7 @@ namespace TwitchLeecher.Shared.Commands
 
         private void Command_IsActiveChanged(object sender, EventArgs e)
         {
-            this.OnCanExecuteChanged();
+            OnCanExecuteChanged();
         }
     }
 }

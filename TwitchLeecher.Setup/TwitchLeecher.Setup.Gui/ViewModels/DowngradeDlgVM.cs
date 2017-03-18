@@ -6,8 +6,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected string productName;
-        protected string installedVersion;
+        protected string _productName;
+        protected string _installedVersion;
 
         #endregion Fields
 
@@ -16,8 +16,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         public DowngradeDlgVM(SetupApplication bootstrapper, IGuiService guiService)
             : base(bootstrapper, guiService)
         {
-            this.productName = this.bootstrapper.ProductName;
-            this.installedVersion = this.bootstrapper.RelatedBundleVersion.ToString();
+            _productName = _bootstrapper.ProductName;
+            _installedVersion = _bootstrapper.RelatedBundleVersion.ToString();
         }
 
         #endregion Constructors
@@ -52,7 +52,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "Installation of " + this.productName + " " + this.installedVersion + " detected";
+                return "Installation of " + _productName + " " + _installedVersion + " detected";
             }
         }
 
@@ -60,7 +60,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "The Setup Wizard has detected a newer version of " + this.productName + " on your computer. Please uninstall this version first.";
+                return "The Setup Wizard has detected a newer version of " + _productName + " on your computer. Please uninstall this version first.";
             }
         }
 

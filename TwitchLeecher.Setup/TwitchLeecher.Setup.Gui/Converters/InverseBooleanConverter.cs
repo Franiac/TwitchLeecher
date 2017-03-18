@@ -8,12 +8,12 @@ namespace TwitchLeecher.Setup.Gui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.Invert((bool)value);
+            return Invert((bool)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.Invert((bool)value);
+            return Invert((bool)value);
         }
 
         private bool Invert(bool value)

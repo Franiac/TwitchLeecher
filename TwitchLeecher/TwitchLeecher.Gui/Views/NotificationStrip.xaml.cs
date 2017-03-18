@@ -14,9 +14,9 @@ namespace TwitchLeecher.Gui.Views
         {
             if (!string.IsNullOrWhiteSpace(text))
             {
-                this.txtNotification.Text = text;
-                Storyboard storyBoard = (Storyboard)this.FindResource("NotificationStoryboard");
-                this.BeginStoryboard(storyBoard);
+                txtNotification.Text = text;
+                Storyboard storyBoard = (Storyboard)FindResource("NotificationStoryboard");
+                BeginStoryboard(storyBoard);
             }
         }
     }

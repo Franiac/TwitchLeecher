@@ -20,7 +20,7 @@ using TwitchLeecher.Setup.Gui.Views;
 
 namespace TwitchLeecher.Setup.Gui
 {
-    internal class SetupApplication : BootstrapperApplication
+    internal class SetupApplication : BootstrapperApplication, IDisposable
     {
         #region Constants
 
@@ -32,34 +32,35 @@ namespace TwitchLeecher.Setup.Gui
 
         #region Fields
 
-        private ConcurrentDictionary<string, BootstrapperProcess> runningProcesses = new ConcurrentDictionary<string, BootstrapperProcess>();
+        private ConcurrentDictionary<string, BootstrapperProcess> _runningProcesses;
 
-        private WizardWindow wizardWindow;
-        private WizardWindowVM wizardWindowVM;
-        private Dispatcher uiThreadDispatcher;
-        private IGuiService guiService;
-        private IUacService uacService;
+        private WizardWindow _wizardWindow;
+        private WizardWindowVM _wizardWindowVM;
+        private Dispatcher _uiThreadDispatcher;
+        private IGuiService _guiService;
+        private IUacService _uacService;
 
-        private AutoResetEvent detectCompleteHandle;
-        private AutoResetEvent applyCompleteHandle;
+        private AutoResetEvent _detectCompleteHandle;
+        private AutoResetEvent _applyCompleteHandle;
 
-        private volatile bool cancelProgressRequested;
+        private volatile bool _cancelProgressRequested;
 
-        private LaunchAction launchAction;
-        private ActionResult exitAction;
+        private LaunchAction _launchAction;
+        private ActionResult _exitAction;
 
-        private Version relatedBundleVersion;
-        private Version productVersionPadded;
-        private Version productVersionTrimmed;
+        private Version _relatedBundleVersion;
+        private Version _productVersionPadded;
+        private Version _productVersionTrimmed;
 
-        private string architecture;
-        private string manufacturer;
-        private string productName;
-        private string featureTLSize;
+        private string _architecture;
+        private string _manufacturer;
+        private string _productName;
+        private string _featureTLSize;
 
-        private bool filesInUseActive;
-        private bool cancelledByUser;
-        private bool licenseAccepted;
+        private bool _filesInUseActive;
+        private bool _cancelledByUser;
+        private bool _licenseAccepted;
+        private bool _disposedValue;
 
         #region Passed to MSI
 
@@ -73,13 +74,25 @@ namespace TwitchLeecher.Setup.Gui
 
         #endregion Fields
 
+        #region Constructors
+
+        public SetupApplication()
+        {
+            _runningProcesses = new ConcurrentDictionary<string, BootstrapperProcess>();
+
+            _detectCompleteHandle = new AutoResetEvent(false);
+            _applyCompleteHandle = new AutoResetEvent(false);
+        }
+
+        #endregion Constructors
+
         #region Properties
 
         public LaunchAction LaunchAction
         {
             get
             {
-                return this.launchAction;
+                return _launchAction;
             }
         }
 
@@ -87,12 +100,12 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                if (this.cancelledByUser)
+                if (_cancelledByUser)
                 {
                     return ActionResult.UserExit;
                 }
 
-                return this.exitAction;
+                return _exitAction;
             }
         }
 
@@ -100,7 +113,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.relatedBundleVersion;
+                return _relatedBundleVersion;
             }
         }
 
@@ -108,7 +121,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.productVersionPadded;
+                return _productVersionPadded;
             }
         }
 
@@ -116,7 +129,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.productVersionTrimmed;
+                return _productVersionTrimmed;
             }
         }
 
@@ -124,7 +137,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.architecture == "x64";
+                return _architecture == "x64";
             }
         }
 
@@ -132,7 +145,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return (this.IsBundle64Bit && Environment.Is64BitOperatingSystem) || (!this.IsBundle64Bit && !Environment.Is64BitOperatingSystem);
+                return (IsBundle64Bit && Environment.Is64BitOperatingSystem) || (!IsBundle64Bit && !Environment.Is64BitOperatingSystem);
             }
         }
 
@@ -140,7 +153,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.manufacturer;
+                return _manufacturer;
             }
         }
 
@@ -148,7 +161,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.productName;
+                return _productName;
             }
         }
 
@@ -156,7 +169,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.featureTLSize;
+                return _featureTLSize;
             }
         }
 
@@ -164,7 +177,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.Command.Resume == ResumeType.Arp;
+                return Command.Resume == ResumeType.Arp;
             }
         }
 
@@ -172,7 +185,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.relatedBundleVersion != null && this.relatedBundleVersion < this.productVersionTrimmed;
+                return _relatedBundleVersion != null && _relatedBundleVersion < _productVersionTrimmed;
             }
         }
 
@@ -180,7 +193,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.relatedBundleVersion != null;
+                return _relatedBundleVersion != null;
             }
         }
 
@@ -188,7 +201,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.Command.Action == LaunchAction.Uninstall && (this.Command.Display == Display.None || this.Command.Display == Display.Embedded);
+                return Command.Action == LaunchAction.Uninstall && (Command.Display == Display.None || Command.Display == Display.Embedded);
             }
         }
 
@@ -196,7 +209,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.Command.Display == Display.Full;
+                return Command.Display == Display.Full;
             }
         }
 
@@ -204,7 +217,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.cancelledByUser;
+                return _cancelledByUser;
             }
         }
 
@@ -212,12 +225,12 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.cancelProgressRequested;
+                return _cancelProgressRequested;
             }
             protected set
             {
-                this.cancelProgressRequested = value;
-                this.FireCancelProgressRequestedChanged();
+                _cancelProgressRequested = value;
+                FireCancelProgressRequestedChanged();
             }
         }
 
@@ -225,11 +238,11 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.licenseAccepted;
+                return _licenseAccepted;
             }
             set
             {
-                this.licenseAccepted = value;
+                _licenseAccepted = value;
             }
         }
 
@@ -239,11 +252,11 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.installDir;
+                return installDir;
             }
             set
             {
-                this.installDir = value;
+                installDir = value;
             }
         }
 
@@ -251,7 +264,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.installDirPersisted;
+                return installDirPersisted;
             }
         }
 
@@ -259,11 +272,11 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.deleteUserData;
+                return deleteUserData;
             }
             set
             {
-                this.deleteUserData = value;
+                deleteUserData = value;
             }
         }
 
@@ -277,152 +290,149 @@ namespace TwitchLeecher.Setup.Gui
         {
             try
             {
-                this.launchAction = this.Command.Action;
+                _launchAction = Command.Action;
 
-                if (this.launchAction != LaunchAction.Install &&
-                    this.launchAction != LaunchAction.Uninstall)
+                if (_launchAction != LaunchAction.Install &&
+                    _launchAction != LaunchAction.Uninstall)
                 {
-                    this.Log("This installer can only run in install or uninstall mode!");
-                    this.Engine.Quit((int)ActionResult.NotExecuted);
+                    Log("This installer can only run in install or uninstall mode!");
+                    Engine.Quit((int)ActionResult.NotExecuted);
                     return;
                 }
 
-                if (!this.IsFullUiMode && !this.IsQuietUninstall)
+                if (!IsFullUiMode && !IsQuietUninstall)
                 {
-                    this.Log("This installer can only run in full UI mode!");
-                    this.Engine.Quit((int)ActionResult.NotExecuted);
+                    Log("This installer can only run in full UI mode!");
+                    Engine.Quit((int)ActionResult.NotExecuted);
                     return;
                 }
 
-                this.Initialize();
+                Initialize();
 
-                this.detectCompleteHandle = new AutoResetEvent(false);
-                this.applyCompleteHandle = new AutoResetEvent(false);
+                InvokeDetect();
 
-                this.InvokeDetect();
-
-                if (this.IsQuietUninstall)
+                if (IsQuietUninstall)
                 {
-                    this.Log("Installer is running in quiet uninstall mode");
+                    Log("Installer is running in quiet uninstall mode");
 
-                    this.Log("Waiting for detection to complete");
-                    detectCompleteHandle.WaitOne();
+                    Log("Waiting for detection to complete");
+                    _detectCompleteHandle.WaitOne();
 
-                    this.InvokePlan();
+                    InvokePlan();
 
-                    this.Log("Waiting for execution to complete");
-                    applyCompleteHandle.WaitOne();
+                    Log("Waiting for execution to complete");
+                    _applyCompleteHandle.WaitOne();
                 }
                 else
                 {
-                    this.Log("Installer is running in full UI mode");
+                    Log("Installer is running in full UI mode");
 
-                    this.Log("Waiting for detection to complete");
-                    detectCompleteHandle.WaitOne();
-                    this.Log("Detection complete, ready to start UI");
+                    Log("Waiting for detection to complete");
+                    _detectCompleteHandle.WaitOne();
+                    Log("Detection complete, ready to start UI");
 
-                    this.uiThreadDispatcher = Dispatcher.CurrentDispatcher;
+                    _uiThreadDispatcher = Dispatcher.CurrentDispatcher;
 
-                    this.Log("Setting SynchronizationContext");
-                    SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(this.uiThreadDispatcher));
+                    Log("Setting SynchronizationContext");
+                    SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(_uiThreadDispatcher));
 
-                    this.guiService = new GuiService(this, this.uiThreadDispatcher);
-                    this.uacService = new UacService();
+                    _guiService = new GuiService(this, _uiThreadDispatcher);
+                    _uacService = new UacService();
 
-                    this.Log("Initializing view model for main application window");
-                    this.wizardWindowVM = new WizardWindowVM(this, this.guiService, this.uacService);
+                    Log("Initializing view model for main application window");
+                    _wizardWindowVM = new WizardWindowVM(this, _guiService, _uacService);
 
-                    this.Log("Initializing main application window");
-                    this.wizardWindow = new WizardWindow() { DataContext = this.wizardWindowVM };
+                    Log("Initializing main application window");
+                    _wizardWindow = new WizardWindow() { DataContext = _wizardWindowVM };
 
-                    this.wizardWindow.Closed += (a, b) => this.uiThreadDispatcher.InvokeShutdown();
+                    _wizardWindow.Closed += (a, b) => _uiThreadDispatcher.InvokeShutdown();
 
-                    this.Log("Showing main application window");
-                    this.wizardWindow.Show();
+                    Log("Showing main application window");
+                    _wizardWindow.Show();
 
-                    this.Log("Running Dispatcher");
+                    Log("Running Dispatcher");
                     Dispatcher.Run();
                 }
 
-                this.Engine.Quit((int)this.ExitAction);
+                Engine.Quit((int)ExitAction);
             }
             catch (Exception ex)
             {
-                this.Log("An error occured while executing the Bootstrapper Application!" + Environment.NewLine + ex.ToString());
-                this.Engine.Quit((int)ActionResult.Failure);
+                Log("An error occured while executing the Bootstrapper Application!" + Environment.NewLine + ex.ToString());
+                Engine.Quit((int)ActionResult.Failure);
             }
         }
 
         private void Initialize()
         {
-            this.Log("Starting Initialization of Custom Bootstrapper Application");
+            Log("Starting Initialization of Custom Bootstrapper Application");
 
-            this.InitializeBundleProperties();
-            this.InitializeMsiProperties();
-            this.InitializeFeatureSizes();
+            InitializeBundleProperties();
+            InitializeMsiProperties();
+            InitializeFeatureSizes();
         }
 
         private void InitializeBundleProperties()
         {
             string logName = "Action InitializeBundleProperties: ";
 
-            this.Log(logName + "Retrieving architecture");
-            this.architecture = this.Engine.StringVariables["BUNDLE_ARCHITECTURE"];
-            this.Log(logName + "Architecture is '" + this.architecture + "'");
+            Log(logName + "Retrieving architecture");
+            _architecture = Engine.StringVariables["BUNDLE_ARCHITECTURE"];
+            Log(logName + "Architecture is '" + _architecture + "'");
 
-            this.Log(logName + "Retrieving manufacturer");
-            this.manufacturer = this.Engine.StringVariables["BUNDLE_MANUFACTURER"];
-            this.Log(logName + "Manufacturer is '" + this.manufacturer + "'");
+            Log(logName + "Retrieving manufacturer");
+            _manufacturer = Engine.StringVariables["BUNDLE_MANUFACTURER"];
+            Log(logName + "Manufacturer is '" + _manufacturer + "'");
 
-            this.Log(logName + "Retrieving product name");
-            this.productName = this.Engine.StringVariables["BUNDLE_PRODUCT_NAME"];
-            this.Log(logName + "Product name is '" + this.productName + "'");
+            Log(logName + "Retrieving product name");
+            _productName = Engine.StringVariables["BUNDLE_PRODUCT_NAME"];
+            Log(logName + "Product name is '" + _productName + "'");
 
-            this.Log(logName + "Retrieving product version in padded format");
-            this.productVersionPadded = Version.Parse(this.Engine.StringVariables["BUNDLE_PRODUCT_VERSION_PADDED"]);
-            this.Log(logName + "Product version in padded format is '" + this.productVersionPadded.ToString() + "'");
+            Log(logName + "Retrieving product version in padded format");
+            _productVersionPadded = Version.Parse(Engine.StringVariables["BUNDLE_PRODUCT_VERSION_PADDED"]);
+            Log(logName + "Product version in padded format is '" + _productVersionPadded.ToString() + "'");
 
-            this.Log(logName + "Retrieving product version in trimmed format");
-            this.productVersionTrimmed = Version.Parse(this.Engine.StringVariables["BUNDLE_PRODUCT_VERSION_TRIMMED"]);
-            this.Log(logName + "Product version in trimmed format is '" + this.productVersionTrimmed.ToString() + "'");
+            Log(logName + "Retrieving product version in trimmed format");
+            _productVersionTrimmed = Version.Parse(Engine.StringVariables["BUNDLE_PRODUCT_VERSION_TRIMMED"]);
+            Log(logName + "Product version in trimmed format is '" + _productVersionTrimmed.ToString() + "'");
         }
 
         private void InitializeMsiProperties()
         {
             string logName = "Action InitializeMsiProperties: ";
 
-            this.Log(logName + "Retrieving registry values of previous installation");
+            Log(logName + "Retrieving registry values of previous installation");
 
             using (RegistryKey localMachineKey = RegistryUtil.GetRegistryHiveOnBit(RegistryHive.LocalMachine))
             {
-                string baseKeyStr = @"SOFTWARE\" + this.ProductName;
+                string baseKeyStr = @"SOFTWARE\" + ProductName;
 
-                this.Log(logName + @"Opening registry key 'HKEY_LOCAL_MACHINE\" + baseKeyStr);
+                Log(logName + @"Opening registry key 'HKEY_LOCAL_MACHINE\" + baseKeyStr);
                 using (RegistryKey baseKey = localMachineKey.OpenSubKey(baseKeyStr))
                 {
                     if (baseKey != null)
                     {
-                        this.Log(logName + "Key exists");
+                        Log(logName + "Key exists");
 
-                        this.installDirPersisted = this.GetRegistryValue(baseKey, installDirRegValueName);
+                        installDirPersisted = GetRegistryValue(baseKey, installDirRegValueName);
                     }
                     else
                     {
-                        this.Log(logName + "Key does not exist");
+                        Log(logName + "Key does not exist");
                     }
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(this.installDirPersisted))
+            if (!string.IsNullOrWhiteSpace(installDirPersisted))
             {
-                this.Log(logName + "Setting install directory to value of previous installation ('" + this.installDirPersisted + "')");
-                this.installDir = this.installDirPersisted;
+                Log(logName + "Setting install directory to value of previous installation ('" + installDirPersisted + "')");
+                installDir = installDirPersisted;
             }
             else
             {
-                this.Log(logName + "Setting default install directory");
-                this.installDir = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Program Files", this.ProductName);
-                this.Log(logName + "Default install directory is '" + this.installDir + "'");
+                Log(logName + "Setting default install directory");
+                installDir = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "Program Files", ProductName);
+                Log(logName + "Default install directory is '" + installDir + "'");
             }
         }
 
@@ -430,24 +440,24 @@ namespace TwitchLeecher.Setup.Gui
         {
             string logName = "Action InitializeFeatureSizes: ";
 
-            this.Log(logName + "Retrieving feature sizes from '" + BA_XML + "'");
+            Log(logName + "Retrieving feature sizes from '" + BA_XML + "'");
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), BA_XML);
-            this.Log(logName + "Path of '" + BA_XML + "' is '" + path + "'");
+            Log(logName + "Path of '" + BA_XML + "' is '" + path + "'");
 
-            this.Log(logName + "Opening '" + path + "'");
+            Log(logName + "Opening '" + path + "'");
             XDocument baDoc = XDocument.Load(path);
 
             XNamespace ns = "http://schemas.microsoft.com/wix/2010/BootstrapperApplicationData";
 
-            this.Log(logName + "Retrieving size for package '" + TL_PACKAGE_ID + "'");
+            Log(logName + "Retrieving size for package '" + TL_PACKAGE_ID + "'");
             string fsSizeStr = baDoc.Descendants(ns + "WixPackageProperties")
                 .Where(e => e.Attribute("Package").Value == TL_PACKAGE_ID)
                 .First().Attribute("InstalledSize").Value;
-            this.Log(logName + "Size for package '" + TL_PACKAGE_ID + "' is " + fsSizeStr + " bytes");
+            Log(logName + "Size for package '" + TL_PACKAGE_ID + "' is " + fsSizeStr + " bytes");
 
-            this.Log(logName + "Converting size to MB value");
-            this.featureTLSize = Math.Round(double.Parse(fsSizeStr) / 1000 / 1000, 2).ToString(CultureInfo.GetCultureInfo("en-US"));
-            this.Log(logName + "Size of package '" + TL_PACKAGE_ID + "' in MB is '" + this.featureTLSize + "'");
+            Log(logName + "Converting size to MB value");
+            _featureTLSize = Math.Round(double.Parse(fsSizeStr) / 1000 / 1000, 2).ToString(CultureInfo.GetCultureInfo("en-US"));
+            Log(logName + "Size of package '" + TL_PACKAGE_ID + "' in MB is '" + _featureTLSize + "'");
         }
 
         private string GetRegistryValue(RegistryKey key, string regValueName)
@@ -458,23 +468,23 @@ namespace TwitchLeecher.Setup.Gui
 
             if (key == null)
             {
-                this.Log(logName + "Registry key is null!");
+                Log(logName + "Registry key is null!");
             }
 
             if (string.IsNullOrWhiteSpace(regValueName))
             {
-                this.Log(logName + "Argument 'regValueName' is null or empty!");
+                Log(logName + "Argument 'regValueName' is null or empty!");
             }
 
             try
             {
-                this.Log(logName + "Trying to get value '" + regValueName + "' from registry key");
+                Log(logName + "Trying to get value '" + regValueName + "' from registry key");
                 regValue = key.GetValue(regValueName).ToString();
-                this.Log(logName + "Value '" + regValueName + "' from registry key is '" + regValue + "'");
+                Log(logName + "Value '" + regValueName + "' from registry key is '" + regValue + "'");
             }
             catch
             {
-                this.Log(logName + "Error while retrieving value '" + regValue + "' from registry key '" + key.Name + "'!");
+                Log(logName + "Error while retrieving value '" + regValue + "' from registry key '" + key.Name + "'!");
             }
 
             return regValue;
@@ -487,50 +497,50 @@ namespace TwitchLeecher.Setup.Gui
                 return;
             }
 
-            this.Engine.Log(LogLevel.Standard, message);
+            Engine.Log(LogLevel.Standard, message);
         }
 
         private void InvokeDetect()
         {
-            this.DetectRelatedBundle += SetupApplication_DetectRelatedBundle;
-            this.DetectComplete += SetupApplication_DetectComplete;
-            this.Engine.Detect();
+            DetectRelatedBundle += SetupApplication_DetectRelatedBundle;
+            DetectComplete += SetupApplication_DetectComplete;
+            Engine.Detect();
         }
 
         public void InvokePlan()
         {
-            this.PlanBegin += SetupApplication_PlanBegin;
-            this.PlanComplete += SetupApplication_PlanComplete;
-            this.Engine.Plan(this.launchAction);
+            PlanBegin += SetupApplication_PlanBegin;
+            PlanComplete += SetupApplication_PlanComplete;
+            Engine.Plan(_launchAction);
         }
 
         public void InvokeApply()
         {
             IntPtr wizardWindowHwnd = IntPtr.Zero;
 
-            if (!this.IsQuietUninstall)
+            if (!IsQuietUninstall)
             {
-                wizardWindowHwnd = this.InvokeOnUiThread<IntPtr>(() => { return new WindowInteropHelper(this.wizardWindow).Handle; });
+                wizardWindowHwnd = InvokeOnUiThread(() => { return new WindowInteropHelper(_wizardWindow).Handle; });
             }
 
-            this.Error += SetupApplication_Error;
-            this.ExecuteFilesInUse += SetupApplication_ExecuteFilesInUse;
+            Error += SetupApplication_Error;
+            ExecuteFilesInUse += SetupApplication_ExecuteFilesInUse;
 
-            if (!this.IsQuietUninstall)
+            if (!IsQuietUninstall)
             {
-                this.ExecuteProgress += SetupApplication_ExecuteProgress;
-                this.ExecuteMsiMessage += SetupApplication_ExecuteMsiMessage;
+                ExecuteProgress += SetupApplication_ExecuteProgress;
+                ExecuteMsiMessage += SetupApplication_ExecuteMsiMessage;
             }
 
-            this.ApplyComplete += SetupApplication_ApplyComplete;
-            this.Engine.Apply(wizardWindowHwnd);
+            ApplyComplete += SetupApplication_ApplyComplete;
+            Engine.Apply(wizardWindowHwnd);
         }
 
         public TResult InvokeOnUiThread<TResult>(Func<TResult> func)
         {
-            if (!this.uiThreadDispatcher.CheckAccess())
+            if (!_uiThreadDispatcher.CheckAccess())
             {
-                return this.uiThreadDispatcher.Invoke<TResult>(func);
+                return _uiThreadDispatcher.Invoke<TResult>(func);
             }
             else
             {
@@ -540,7 +550,7 @@ namespace TwitchLeecher.Setup.Gui
 
         public void SetCancelledByUser()
         {
-            this.cancelledByUser = true;
+            _cancelledByUser = true;
         }
 
         /// <summary>
@@ -584,10 +594,8 @@ namespace TwitchLeecher.Setup.Gui
 
             if (files != null || files.Count > 0)
             {
-                int tryInt;
-
                 // Format 1
-                if (int.TryParse(files[0], out tryInt))
+                if (int.TryParse(files[0], out int tryInt))
                 {
                     for (int i = 0; i < files.Count; i += 2)
                     {
@@ -622,12 +630,31 @@ namespace TwitchLeecher.Setup.Gui
 
         public MessageBoxResult ShowCloseMessageMox()
         {
-            return this.guiService.ShowMessageBox("Cancel Installation?", "Cancel", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            return _guiService.ShowMessageBox("Cancel Installation?", "Cancel", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
         }
 
         public void RequestCancelProgress()
         {
-            this.CancelProgressRequested = true;
+            CancelProgressRequested = true;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _detectCompleteHandle.Dispose();
+                    _applyCompleteHandle.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         #endregion Methods
@@ -643,25 +670,25 @@ namespace TwitchLeecher.Setup.Gui
             string logName = "Engine hook SetupApplication_DetectRelatedBundle: ";
 
             Version relatedVersion = e.Version.Trim();
-            this.Log(logName + "Found a related bundle with version '" + relatedVersion + "'");
-            this.relatedBundleVersion = relatedVersion;
+            Log(logName + "Found a related bundle with version '" + relatedVersion + "'");
+            _relatedBundleVersion = relatedVersion;
         }
 
         private void SetupApplication_DetectComplete(object sender, DetectCompleteEventArgs e)
         {
             string logName = "Engine hook SetupApplication_DetectComplete: ";
 
-            this.DetectRelatedBundle -= SetupApplication_DetectRelatedBundle;
-            this.DetectComplete -= SetupApplication_DetectComplete;
+            DetectRelatedBundle -= SetupApplication_DetectRelatedBundle;
+            DetectComplete -= SetupApplication_DetectComplete;
 
-            if (this.IsInstalled && !this.HasRelatedBundle)
+            if (IsInstalled && !HasRelatedBundle)
             {
-                this.Log(logName + "Current bundle is already installed and no related bundle was found. Setting launch action to '" + LaunchAction.Uninstall.ToString() + "'");
-                this.launchAction = LaunchAction.Uninstall;
+                Log(logName + "Current bundle is already installed and no related bundle was found. Setting launch action to '" + LaunchAction.Uninstall.ToString() + "'");
+                _launchAction = LaunchAction.Uninstall;
             }
 
-            this.Log(logName + "Set DetectComplete WaitHandle");
-            this.detectCompleteHandle.Set();
+            Log(logName + "Set DetectComplete WaitHandle");
+            _detectCompleteHandle.Set();
         }
 
         #endregion Detection
@@ -670,19 +697,19 @@ namespace TwitchLeecher.Setup.Gui
 
         private void SetupApplication_PlanBegin(object sender, PlanBeginEventArgs e)
         {
-            this.Engine.StringVariables["TL_INSTALLDIR_REGVALUENAME"] = installDirRegValueName;
-            this.Engine.StringVariables["TL_INSTALLDIR"] = this.InstallDir;
-            this.Engine.StringVariables["TL_INSTALLDIR_PERSISTED"] = this.InstallDirPersisted;
+            Engine.StringVariables["TL_INSTALLDIR_REGVALUENAME"] = installDirRegValueName;
+            Engine.StringVariables["TL_INSTALLDIR"] = InstallDir;
+            Engine.StringVariables["TL_INSTALLDIR_PERSISTED"] = InstallDirPersisted;
 
-            this.Engine.StringVariables["TL_DELETE_USER_DATA"] = this.DeleteUserData ? "1" : "0";
+            Engine.StringVariables["TL_DELETE_USER_DATA"] = DeleteUserData ? "1" : "0";
         }
 
         private void SetupApplication_PlanComplete(object sender, PlanCompleteEventArgs e)
         {
-            this.PlanBegin -= SetupApplication_PlanBegin;
-            this.PlanComplete -= SetupApplication_PlanComplete;
+            PlanBegin -= SetupApplication_PlanBegin;
+            PlanComplete -= SetupApplication_PlanComplete;
 
-            this.InvokeApply();
+            InvokeApply();
         }
 
         #endregion Plan
@@ -717,11 +744,11 @@ namespace TwitchLeecher.Setup.Gui
                     }
                 }
 
-                this.Log(sb.ToString());
+                Log(sb.ToString());
             }
             catch (Exception ex)
             {
-                this.Log(logName + "Exception occured!" + Environment.NewLine + ex.ToString());
+                Log(logName + "Exception occured!" + Environment.NewLine + ex.ToString());
             }
         }
 
@@ -731,16 +758,16 @@ namespace TwitchLeecher.Setup.Gui
 
             try
             {
-                this.filesInUseActive = !this.filesInUseActive;
+                _filesInUseActive = !_filesInUseActive;
 
                 // It seems that MSI has some weird behavior. Only every 2nd call does really have
                 // valuable information. The calls in between can even contain processes that do actually
                 // NOT use any of the files to be changed by the installer. So you get false information.
                 // In order to prevent this, we're scipping every odd call (1st, 3rd, 5th, ...) and calling
                 // "Retry" again.
-                if (this.filesInUseActive)
+                if (_filesInUseActive)
                 {
-                    this.Log(logName + "Scipping unnecessary MSI callback 'ExecuteFilesInUse'");
+                    Log(logName + "Scipping unnecessary MSI callback 'ExecuteFilesInUse'");
                     e.Result = Result.Retry;
                     return;
                 }
@@ -753,7 +780,7 @@ namespace TwitchLeecher.Setup.Gui
                     return;
                 }
 
-                IList<string> filesFormated = this.FormatFileInUseList(files);
+                IList<string> filesFormated = FormatFileInUseList(files);
 
                 Func<bool?> showFilesInUseWindow = () =>
                 {
@@ -762,7 +789,7 @@ namespace TwitchLeecher.Setup.Gui
                     return filesInUseWindow.ShowDialog();
                 };
 
-                bool? dlgRes = this.InvokeOnUiThread<bool?>(showFilesInUseWindow);
+                bool? dlgRes = InvokeOnUiThread(showFilesInUseWindow);
 
                 if (dlgRes == true)
                 {
@@ -770,7 +797,7 @@ namespace TwitchLeecher.Setup.Gui
                 }
                 else
                 {
-                    this.SetCancelledByUser();
+                    SetCancelledByUser();
                     e.Result = Result.Cancel;
                 }
             }
@@ -785,20 +812,20 @@ namespace TwitchLeecher.Setup.Gui
         {
             string logName = "Engine hook SetupApplication_ExecuteProgress: ";
 
-            if (this.cancelProgressRequested)
+            if (_cancelProgressRequested)
             {
-                this.Log(logName + "Cancellation of running progress was requested!");
+                Log(logName + "Cancellation of running progress was requested!");
 
-                if (this.ShowCloseMessageMox() == MessageBoxResult.OK)
+                if (ShowCloseMessageMox() == MessageBoxResult.OK)
                 {
-                    this.SetCancelledByUser();
+                    SetCancelledByUser();
                     e.Result = Result.Cancel;
                 }
 
-                this.CancelProgressRequested = false;
+                CancelProgressRequested = false;
             }
 
-            this.wizardWindowVM.SetProgressValue(e.OverallPercentage);
+            _wizardWindowVM.SetProgressValue(e.OverallPercentage);
         }
 
         private void SetupApplication_ExecuteMsiMessage(object sender, ExecuteMsiMessageEventArgs e)
@@ -807,7 +834,7 @@ namespace TwitchLeecher.Setup.Gui
                     && !string.IsNullOrWhiteSpace(e.Message)
                     && e.Data.Count > 1)
             {
-                this.wizardWindowVM.SetProgressStatus(e.Data[1]);
+                _wizardWindowVM.SetProgressStatus(e.Data[1]);
             }
         }
 
@@ -815,42 +842,42 @@ namespace TwitchLeecher.Setup.Gui
         {
             string logName = "Engine hook SetupApplication_ApplyComplete: ";
 
-            this.Error -= SetupApplication_Error;
-            this.ExecuteFilesInUse -= SetupApplication_ExecuteFilesInUse;
-            this.ExecuteProgress -= SetupApplication_ExecuteProgress;
-            this.ExecuteMsiMessage -= SetupApplication_ExecuteMsiMessage;
-            this.ApplyComplete -= SetupApplication_ApplyComplete;
+            Error -= SetupApplication_Error;
+            ExecuteFilesInUse -= SetupApplication_ExecuteFilesInUse;
+            ExecuteProgress -= SetupApplication_ExecuteProgress;
+            ExecuteMsiMessage -= SetupApplication_ExecuteMsiMessage;
+            ApplyComplete -= SetupApplication_ApplyComplete;
 
             if (e.Status >= 0)
             {
-                if (!this.IsQuietUninstall)
+                if (!IsQuietUninstall)
                 {
-                    this.wizardWindowVM.ShowFinishedDialog();
+                    _wizardWindowVM.ShowFinishedDialog();
                 }
 
-                this.Log(logName + "Execution phase ended successfully. Setting exit action to '" + ActionResult.Success.ToString() + "'");
-                this.exitAction = ActionResult.Success;
+                Log(logName + "Execution phase ended successfully. Setting exit action to '" + ActionResult.Success.ToString() + "'");
+                _exitAction = ActionResult.Success;
             }
             else
             {
-                if (!this.IsQuietUninstall)
+                if (!IsQuietUninstall)
                 {
-                    if (this.CancelledByUser)
+                    if (CancelledByUser)
                     {
-                        this.wizardWindowVM.ShowUserCancelDialog();
+                        _wizardWindowVM.ShowUserCancelDialog();
                     }
                     else
                     {
-                        this.wizardWindowVM.ShowErrorDialog();
+                        _wizardWindowVM.ShowErrorDialog();
                     }
                 }
 
-                this.Log(logName + "Execution phase failed. Setting exit action to '" + ActionResult.Failure.ToString() + "'");
-                this.exitAction = ActionResult.Failure;
+                Log(logName + "Execution phase failed. Setting exit action to '" + ActionResult.Failure.ToString() + "'");
+                _exitAction = ActionResult.Failure;
             }
 
-            this.Log(logName + "Set ApplyComplete WaitHandle");
-            this.applyCompleteHandle.Set();
+            Log(logName + "Set ApplyComplete WaitHandle");
+            _applyCompleteHandle.Set();
         }
 
         #endregion Apply
@@ -865,15 +892,12 @@ namespace TwitchLeecher.Setup.Gui
 
         protected virtual void OnCancelProgressRequestedChanged(EventArgs e)
         {
-            if (this.CancelProgressRequestedChanged != null)
-            {
-                this.CancelProgressRequestedChanged(this, e);
-            }
+            CancelProgressRequestedChanged?.Invoke(this, e);
         }
 
         private void FireCancelProgressRequestedChanged()
         {
-            this.OnCancelProgressRequestedChanged(EventArgs.Empty);
+            OnCancelProgressRequestedChanged(EventArgs.Empty);
         }
 
         #endregion Events

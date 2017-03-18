@@ -27,12 +27,12 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private IFolderService folderService;
+        private IFolderService _folderService;
 
-        private RuntimeData runtimeData;
-        private Version tlVersion;
+        private RuntimeData _runtimeData;
+        private Version _tlVersion;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -40,9 +40,9 @@ namespace TwitchLeecher.Services.Services
 
         public RuntimeDataService(IFolderService folderService)
         {
-            this.folderService = folderService;
-            this.tlVersion = AssemblyUtil.Get.GetAssemblyVersion().Trim();
-            this.commandLockObject = new object();
+            _folderService = folderService;
+            _tlVersion = AssemblyUtil.Get.GetAssemblyVersion().Trim();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -53,12 +53,12 @@ namespace TwitchLeecher.Services.Services
         {
             get
             {
-                if (this.runtimeData == null)
+                if (_runtimeData == null)
                 {
-                    this.runtimeData = this.Load();
+                    _runtimeData = Load();
                 }
 
-                return this.runtimeData;
+                return _runtimeData;
             }
         }
 
@@ -68,14 +68,14 @@ namespace TwitchLeecher.Services.Services
 
         public void Save()
         {
-            lock (this.commandLockObject)
+            lock (_commandLockObject)
             {
-                RuntimeData runtimeData = this.RuntimeData;
+                RuntimeData runtimeData = RuntimeData;
 
                 XDocument doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
                 XElement runtimeDataEl = new XElement(RUNTIMEDATA_EL);
-                runtimeDataEl.Add(new XAttribute(RUNTIMEDATA_VERSION_ATTR, this.tlVersion));
+                runtimeDataEl.Add(new XAttribute(RUNTIMEDATA_VERSION_ATTR, _tlVersion));
                 doc.Add(runtimeDataEl);
 
                 if (!string.IsNullOrWhiteSpace(runtimeData.AccessToken))
@@ -100,7 +100,7 @@ namespace TwitchLeecher.Services.Services
                     }
                 }
 
-                string appDataFolder = this.folderService.GetAppDataFolder();
+                string appDataFolder = _folderService.GetAppDataFolder();
 
                 FileSystem.CreateDirectory(appDataFolder);
 
@@ -112,13 +112,13 @@ namespace TwitchLeecher.Services.Services
 
         private RuntimeData Load()
         {
-            lock (this.commandLockObject)
+            lock (_commandLockObject)
             {
-                string configFile = Path.Combine(this.folderService.GetAppDataFolder(), RUNTIMEDATA_FILE);
+                string configFile = Path.Combine(_folderService.GetAppDataFolder(), RUNTIMEDATA_FILE);
 
                 RuntimeData runtimeData = new RuntimeData()
                 {
-                    Version = this.tlVersion
+                    Version = _tlVersion
                 };
 
                 if (File.Exists(configFile))
@@ -131,9 +131,8 @@ namespace TwitchLeecher.Services.Services
                     {
                         XAttribute rtVersionAttr = runtimeDataEl.Attribute(RUNTIMEDATA_VERSION_ATTR);
 
-                        Version rtVersion = null;
 
-                        if (rtVersionAttr != null && Version.TryParse(rtVersionAttr.Value, out rtVersion))
+                        if (rtVersionAttr != null && Version.TryParse(rtVersionAttr.Value, out Version rtVersion))
                         {
                             runtimeData.Version = rtVersion;
                         }

@@ -8,24 +8,32 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly Dictionary<Type, EventBase> events = new Dictionary<Type, EventBase>();
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly Dictionary<Type, EventBase> _events;
+        private readonly SynchronizationContext _syncContext;
 
         #endregion Fields
+
+        #region Constructors
+
+        public EventAggregator()
+        {
+            _events = new Dictionary<Type, EventBase>();
+            _syncContext = SynchronizationContext.Current;
+        }
+
+        #endregion Constructors
 
         #region Methods
 
         public TEventType GetEvent<TEventType>() where TEventType : EventBase, new()
         {
-            lock (events)
+            lock (_events)
             {
-                EventBase existingEvent = null;
-
-                if (!events.TryGetValue(typeof(TEventType), out existingEvent))
+                if (!_events.TryGetValue(typeof(TEventType), out EventBase existingEvent))
                 {
                     TEventType newEvent = new TEventType();
-                    newEvent.SynchronizationContext = syncContext;
-                    events[typeof(TEventType)] = newEvent;
+                    newEvent.SynchronizationContext = _syncContext;
+                    _events[typeof(TEventType)] = newEvent;
 
                     return newEvent;
                 }

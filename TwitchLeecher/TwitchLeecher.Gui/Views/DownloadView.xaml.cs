@@ -11,7 +11,7 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.IsVisibleChanged += this.DownloadView_IsVisibleChanged;
+            IsVisibleChanged += DownloadView_IsVisibleChanged;
         }
 
         private void DownloadView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -20,7 +20,7 @@ namespace TwitchLeecher.Gui.Views
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
                 {
-                    this.cmbQuality.Focus();
+                    cmbQuality.Focus();
                 }));
             }
         }

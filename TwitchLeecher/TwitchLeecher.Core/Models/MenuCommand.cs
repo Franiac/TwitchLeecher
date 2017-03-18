@@ -9,11 +9,6 @@ namespace TwitchLeecher.Core.Models
 
         public MenuCommand(ICommand command, string label, string icon)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
             if (string.IsNullOrWhiteSpace(label))
             {
                 throw new ArgumentNullException(nameof(label));
@@ -24,9 +19,9 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(icon));
             }
 
-            this.Command = command;
-            this.Label = label;
-            this.Icon = icon;
+            Command = command ?? throw new ArgumentNullException(nameof(command));
+            Label = label;
+            Icon = icon;
         }
 
         #endregion Constructors

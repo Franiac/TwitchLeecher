@@ -3,39 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using static TwitchLeecher.Shared.Native.Api;
+using static TwitchLeecher.Shared.Native.NativeDelegates;
+using static TwitchLeecher.Shared.Native.NativeMethods;
+using static TwitchLeecher.Shared.Native.NativeStructs;
 
 namespace TwitchLeecher.Shared.Native
 {
-    public class Display
+    public class NativeDisplay
     {
         #region Fields
 
-        private System.Windows.Rect bounds;
-        private IntPtr handle;
-        private bool isPrimary;
-        private string name;
-        private System.Windows.Rect workingArea;
+        private System.Windows.Rect _bounds;
+        private IntPtr _handle;
+        private bool _isPrimary;
+        private string _name;
+        private System.Windows.Rect _workingArea;
 
         #endregion Fields
 
         #region Constructor
 
-        private Display(IntPtr hMonitor, IntPtr hdc)
+        private NativeDisplay(IntPtr hMonitor, IntPtr hdc)
         {
             MonitorInfoEx info = new MonitorInfoEx();
-            GetMonitorInfo(new HandleRef(null, hMonitor), info);
+            GetMonitorInfoNative(new HandleRef(null, hMonitor), info);
 
-            this.isPrimary = ((info.dwFlags & MonitorinfofPrimary) != 0);
-            this.name = new string(info.szDevice).TrimEnd((char)0);
-            this.handle = hMonitor;
+            _isPrimary = ((info.dwFlags & NativeFlags.MonitorinfofPrimary) != 0);
+            _name = new string(info.szDevice).TrimEnd((char)0);
+            _handle = hMonitor;
 
-            this.bounds = new System.Windows.Rect(
+            _bounds = new System.Windows.Rect(
                         info.rcMonitor.left, info.rcMonitor.top,
                         info.rcMonitor.right - info.rcMonitor.left,
                         info.rcMonitor.bottom - info.rcMonitor.top);
 
-            this.workingArea = new System.Windows.Rect(
+            _workingArea = new System.Windows.Rect(
                         info.rcWork.left, info.rcWork.top,
                         info.rcWork.right - info.rcWork.left,
                         info.rcWork.bottom - info.rcWork.top);
@@ -49,7 +51,7 @@ namespace TwitchLeecher.Shared.Native
         {
             get
             {
-                return this.bounds;
+                return _bounds;
             }
         }
 
@@ -57,7 +59,7 @@ namespace TwitchLeecher.Shared.Native
         {
             get
             {
-                return this.handle;
+                return _handle;
             }
         }
 
@@ -66,7 +68,7 @@ namespace TwitchLeecher.Shared.Native
             get
 
             {
-                return this.isPrimary;
+                return _isPrimary;
             }
         }
 
@@ -75,7 +77,7 @@ namespace TwitchLeecher.Shared.Native
         {
             get
             {
-                return this.name;
+                return _name;
             }
         }
 
@@ -83,7 +85,7 @@ namespace TwitchLeecher.Shared.Native
         {
             get
             {
-                return this.workingArea;
+                return _workingArea;
             }
         }
 
@@ -91,17 +93,17 @@ namespace TwitchLeecher.Shared.Native
 
         #region Methods
 
-        public static IEnumerable<Display> GetAllDisplays()
+        public static IEnumerable<NativeDisplay> GetAllDisplays()
         {
             DisplayEnumCallback closure = new DisplayEnumCallback();
             MonitorEnumProc proc = new MonitorEnumProc(closure.Callback);
-            EnumDisplayMonitors(new HandleRef(null, IntPtr.Zero), IntPtr.Zero, proc, IntPtr.Zero);
-            return closure.Displays.Cast<Display>();
+            EnumDisplayMonitorsNative(new HandleRef(null, IntPtr.Zero), IntPtr.Zero, proc, IntPtr.Zero);
+            return closure.Displays.Cast<NativeDisplay>();
         }
 
-        public static Display GetDisplayFromWindow(IntPtr handle)
+        public static NativeDisplay GetDisplayFromWindow(IntPtr handle)
         {
-            IntPtr hMonitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
+            IntPtr hMonitor = MonitorFromWindowNative(handle, NativeFlags.MONITOR_DEFAULTTONEAREST);
 
             return GetAllDisplays().Where(d => d.Handle == hMonitor).First();
         }
@@ -116,7 +118,7 @@ namespace TwitchLeecher.Shared.Native
 
             public DisplayEnumCallback()
             {
-                this.Displays = new ArrayList();
+                Displays = new ArrayList();
             }
 
             #endregion Constructors
@@ -131,7 +133,7 @@ namespace TwitchLeecher.Shared.Native
 
             public bool Callback(IntPtr hMonitor, IntPtr hdcMonitor, IntPtr lprcMonitor, IntPtr dwData)
             {
-                this.Displays.Add(new Display(hMonitor, hdcMonitor));
+                Displays.Add(new NativeDisplay(hMonitor, hdcMonitor));
                 return true;
             }
 

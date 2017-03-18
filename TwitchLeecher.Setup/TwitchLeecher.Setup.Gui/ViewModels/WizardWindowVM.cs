@@ -14,53 +14,38 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private SetupApplication bootstrapper;
+        private SetupApplication _bootstrapper;
 
-        private IGuiService guiService;
-        private IUacService uacService;
+        private IGuiService _guiService;
+        private IUacService _uacService;
 
-        private Dictionary<Type, DlgBaseVM> viewModels;
+        private Dictionary<Type, DlgBaseVM> _viewModels;
 
-        private DlgBaseVM currentViewModel;
+        private DlgBaseVM _currentViewModel;
 
-        private ProgressDlgVM progressDlgVM;
-        private UserCancelDlgVM userCancelDlgVM;
-        private ErrorDlgVM errorDlgVM;
-        private FinishedDlgVM finishedDlgVM;
+        private ProgressDlgVM _progressDlgVM;
+        private UserCancelDlgVM _userCancelDlgVM;
+        private ErrorDlgVM _errorDlgVM;
+        private FinishedDlgVM _finishedDlgVM;
 
-        private ICommand backCommand;
-        private ICommand nextCommand;
-        private ICommand cancelCommand;
-        private ICommand exitCommand;
+        private ICommand _backCommand;
+        private ICommand _nextCommand;
+        private ICommand _cancelCommand;
+        private ICommand _exitCommand;
 
-        private volatile bool cancelConfirmed;
+        private volatile bool _cancelConfirmed;
 
         #endregion Fields
 
         public WizardWindowVM(SetupApplication bootstrapper, IGuiService guiService, IUacService uacService)
         {
-            if (bootstrapper == null)
-            {
-                throw new ArgumentNullException("bootstrapper");
-            }
+            _bootstrapper = bootstrapper ?? throw new ArgumentNullException("bootstrapper");
+            _guiService = guiService ?? throw new ArgumentNullException("guiService");
+            _uacService = uacService ?? throw new ArgumentNullException("uacService");
 
-            if (guiService == null)
-            {
-                throw new ArgumentNullException("guiService");
-            }
+            _bootstrapper.CancelProgressRequestedChanged += Bootstrapper_CancelProgressRequestedChanged;
 
-            if (uacService == null)
-            {
-                throw new ArgumentNullException("uacService");
-            }
-
-            this.bootstrapper = bootstrapper;
-            this.guiService = guiService;
-            this.uacService = uacService;
-
-            this.bootstrapper.CancelProgressRequestedChanged += bootstrapper_CancelProgressRequestedChanged;
-
-            this.CreateViewModels();
+            CreateViewModels();
         }
 
         #region Properties
@@ -69,7 +54,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.currentViewModel;
+                return _currentViewModel;
             }
             set
             {
@@ -78,9 +63,9 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                     return;
                 }
 
-                this.currentViewModel = value;
+                _currentViewModel = value;
 
-                this.FirePropertyChanged(null);
+                FirePropertyChanged(null);
             }
         }
 
@@ -88,7 +73,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.WizardTitle;
+                return CurrentViewModel.WizardTitle;
             }
         }
 
@@ -96,7 +81,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.NextButtonText;
+                return CurrentViewModel.NextButtonText;
             }
         }
 
@@ -104,7 +89,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.IsNextButtonEnabled;
+                return CurrentViewModel.IsNextButtonEnabled;
             }
         }
 
@@ -112,7 +97,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.IsBackButtonEnabled;
+                return CurrentViewModel.IsBackButtonEnabled;
             }
         }
 
@@ -120,7 +105,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.IsCancelButtonEnabled && !this.bootstrapper.CancelProgressRequested;
+                return CurrentViewModel.IsCancelButtonEnabled && !_bootstrapper.CancelProgressRequested;
             }
         }
 
@@ -128,7 +113,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.CurrentViewModel.IsUacIconVisible;
+                return CurrentViewModel.IsUacIconVisible;
             }
         }
 
@@ -136,7 +121,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.uacService.UacIcon;
+                return _uacService.UacIcon;
             }
         }
 
@@ -144,16 +129,16 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.backCommand == null)
+                if (_backCommand == null)
                 {
-                    this.backCommand = new DelegateCommand(() =>
+                    _backCommand = new DelegateCommand(() =>
                     {
-                        this.guiService.SetBusy();
-                        this.ShowPreviousView();
+                        _guiService.SetBusy();
+                        ShowPreviousView();
                     });
                 }
 
-                return this.backCommand;
+                return _backCommand;
             }
         }
 
@@ -161,16 +146,16 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.nextCommand == null)
+                if (_nextCommand == null)
                 {
-                    this.nextCommand = new DelegateCommand(() =>
+                    _nextCommand = new DelegateCommand(() =>
                     {
-                        this.guiService.SetBusy();
-                        this.ShowNextView();
+                        _guiService.SetBusy();
+                        ShowNextView();
                     });
                 }
 
-                return this.nextCommand;
+                return _nextCommand;
             }
         }
 
@@ -178,12 +163,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.cancelCommand == null)
+                if (_cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand(this.CancelWizard);
+                    _cancelCommand = new DelegateCommand(CancelWizard);
                 }
 
-                return this.cancelCommand;
+                return _cancelCommand;
             }
         }
 
@@ -191,12 +176,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.exitCommand == null)
+                if (_exitCommand == null)
                 {
-                    this.exitCommand = new DelegateCommand(() => { }, this.CanExitWizard);
+                    _exitCommand = new DelegateCommand(() => { }, CanExitWizard);
                 }
 
-                return this.exitCommand;
+                return _exitCommand;
             }
         }
 
@@ -206,89 +191,89 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         private void CreateViewModels()
         {
-            this.viewModels = new Dictionary<Type, DlgBaseVM>();
+            _viewModels = new Dictionary<Type, DlgBaseVM>();
 
-            this.progressDlgVM = new ProgressDlgVM(this.bootstrapper, this.guiService);
-            this.userCancelDlgVM = new UserCancelDlgVM(this.bootstrapper, this.guiService);
-            this.errorDlgVM = new ErrorDlgVM(this.bootstrapper, this.guiService);
-            this.finishedDlgVM = new FinishedDlgVM(this.bootstrapper, this.guiService);
+            _progressDlgVM = new ProgressDlgVM(_bootstrapper, _guiService);
+            _userCancelDlgVM = new UserCancelDlgVM(_bootstrapper, _guiService);
+            _errorDlgVM = new ErrorDlgVM(_bootstrapper, _guiService);
+            _finishedDlgVM = new FinishedDlgVM(_bootstrapper, _guiService);
 
-            if (!this.bootstrapper.OSAndBundleBitMatch)
+            if (!_bootstrapper.OSAndBundleBitMatch)
             {
-                BitErrorDlgVM bitErrorDlgVM = new BitErrorDlgVM(this.bootstrapper, this.guiService);
-                this.viewModels.Add(typeof(BitErrorDlgVM), bitErrorDlgVM);
-                this.CurrentViewModel = bitErrorDlgVM;
+                BitErrorDlgVM bitErrorDlgVM = new BitErrorDlgVM(_bootstrapper, _guiService);
+                _viewModels.Add(typeof(BitErrorDlgVM), bitErrorDlgVM);
+                _currentViewModel = bitErrorDlgVM;
             }
-            else if (this.bootstrapper.IsUpgrade)
+            else if (_bootstrapper.IsUpgrade)
             {
-                UpgradeDlgVM upgradeDlgVM = new UpgradeDlgVM(this.bootstrapper, this.guiService, this.uacService);
-                this.viewModels.Add(typeof(UpgradeDlgVM), upgradeDlgVM);
-                this.CurrentViewModel = upgradeDlgVM;
+                UpgradeDlgVM upgradeDlgVM = new UpgradeDlgVM(_bootstrapper, _guiService, _uacService);
+                _viewModels.Add(typeof(UpgradeDlgVM), upgradeDlgVM);
+                _currentViewModel = upgradeDlgVM;
             }
-            else if (this.bootstrapper.HasRelatedBundle)
+            else if (_bootstrapper.HasRelatedBundle)
             {
-                DowngradeDlgVM downgradeDlgVM = new DowngradeDlgVM(this.bootstrapper, this.guiService);
-                this.viewModels.Add(typeof(DowngradeDlgVM), downgradeDlgVM);
-                this.CurrentViewModel = downgradeDlgVM;
+                DowngradeDlgVM downgradeDlgVM = new DowngradeDlgVM(_bootstrapper, _guiService);
+                _viewModels.Add(typeof(DowngradeDlgVM), downgradeDlgVM);
+                _currentViewModel = downgradeDlgVM;
             }
             else
             {
-                LaunchAction launchAction = this.bootstrapper.LaunchAction;
+                LaunchAction launchAction = _bootstrapper.LaunchAction;
 
                 switch (launchAction)
                 {
                     case LaunchAction.Install:
-                        this.viewModels.Add(typeof(WelcomeDlgVM), new WelcomeDlgVM(this.bootstrapper, this.guiService));
-                        this.viewModels.Add(typeof(LicenseDlgVM), new LicenseDlgVM(this.bootstrapper, this.guiService));
-                        this.viewModels.Add(typeof(CustomizeDlgVM), new CustomizeDlgVM(this.bootstrapper, this.guiService));
-                        this.viewModels.Add(typeof(ReadyDlgVM), new ReadyDlgVM(this.bootstrapper, this.guiService, this.uacService));
-                        this.CurrentViewModel = this.viewModels[typeof(WelcomeDlgVM)];
+                        _viewModels.Add(typeof(WelcomeDlgVM), new WelcomeDlgVM(_bootstrapper, _guiService));
+                        _viewModels.Add(typeof(LicenseDlgVM), new LicenseDlgVM(_bootstrapper, _guiService));
+                        _viewModels.Add(typeof(CustomizeDlgVM), new CustomizeDlgVM(_bootstrapper, _guiService));
+                        _viewModels.Add(typeof(ReadyDlgVM), new ReadyDlgVM(_bootstrapper, _guiService, _uacService));
+                        _currentViewModel = _viewModels[typeof(WelcomeDlgVM)];
                         break;
 
                     case LaunchAction.Uninstall:
-                        UninstallDlgVM uninstallDlgVM = new UninstallDlgVM(this.bootstrapper, this.guiService, this.uacService);
-                        this.viewModels.Add(typeof(UninstallDlgVM), uninstallDlgVM);
-                        this.CurrentViewModel = uninstallDlgVM;
+                        UninstallDlgVM uninstallDlgVM = new UninstallDlgVM(_bootstrapper, _guiService, _uacService);
+                        _viewModels.Add(typeof(UninstallDlgVM), uninstallDlgVM);
+                        _currentViewModel = uninstallDlgVM;
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + this.bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
                 }
             }
         }
 
         private void ShowPreviousView()
         {
-            LaunchAction launchAction = this.bootstrapper.LaunchAction;
+            LaunchAction launchAction = _bootstrapper.LaunchAction;
 
-            DlgBaseVM currentVM = this.CurrentViewModel;
+            DlgBaseVM currentVM = CurrentViewModel;
             DlgBaseVM previousVM = null;
 
             if (launchAction == LaunchAction.Install)
             {
                 if (currentVM is LicenseDlgVM)
                 {
-                    previousVM = this.viewModels[typeof(WelcomeDlgVM)];
+                    previousVM = _viewModels[typeof(WelcomeDlgVM)];
                 }
                 else if (currentVM is CustomizeDlgVM)
                 {
-                    previousVM = this.viewModels[typeof(LicenseDlgVM)];
+                    previousVM = _viewModels[typeof(LicenseDlgVM)];
                 }
                 else if (currentVM is ReadyDlgVM)
                 {
-                    previousVM = this.viewModels[typeof(CustomizeDlgVM)];
+                    previousVM = _viewModels[typeof(CustomizeDlgVM)];
                 }
             }
 
             if (previousVM != null)
             {
-                this.CurrentViewModel = previousVM;
+                CurrentViewModel = previousVM;
             }
         }
 
         private void ShowNextView()
         {
-            DlgBaseVM currentVM = this.CurrentViewModel;
+            DlgBaseVM currentVM = CurrentViewModel;
 
             CancelEventArgs cancelArgs = new CancelEventArgs();
 
@@ -299,7 +284,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 return;
             }
 
-            LaunchAction launchAction = this.bootstrapper.LaunchAction;
+            LaunchAction launchAction = _bootstrapper.LaunchAction;
 
             DlgBaseVM nextVM = null;
 
@@ -308,83 +293,83 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 case LaunchAction.Install:
                     if (currentVM is UpgradeDlgVM)
                     {
-                        this.StartExecute();
+                        StartExecute();
                     }
                     else if (currentVM is WelcomeDlgVM)
                     {
-                        nextVM = this.viewModels[typeof(LicenseDlgVM)];
+                        nextVM = _viewModels[typeof(LicenseDlgVM)];
                     }
                     else if (currentVM is LicenseDlgVM)
                     {
-                        nextVM = this.viewModels[typeof(CustomizeDlgVM)];
+                        nextVM = _viewModels[typeof(CustomizeDlgVM)];
                     }
                     else if (currentVM is CustomizeDlgVM)
                     {
-                        nextVM = this.viewModels[typeof(ReadyDlgVM)];
+                        nextVM = _viewModels[typeof(ReadyDlgVM)];
                     }
                     else if (currentVM is ReadyDlgVM)
                     {
-                        this.StartExecute();
+                        StartExecute();
                     }
                     break;
 
                 case LaunchAction.Uninstall:
                     if (currentVM is UninstallDlgVM)
                     {
-                        this.StartExecute();
+                        StartExecute();
                     }
                     break;
             }
 
             if (currentVM is BitErrorDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
 
             if (currentVM is DowngradeDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
 
             if (currentVM is UserCancelDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
 
             if (currentVM is FinishedDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
 
             if (currentVM is ErrorDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
 
             if (nextVM != null)
             {
-                this.CurrentViewModel = nextVM;
+                CurrentViewModel = nextVM;
             }
         }
 
         private void StartExecute()
         {
-            this.CurrentViewModel = this.progressDlgVM;
-            this.bootstrapper.InvokePlan();
+            CurrentViewModel = _progressDlgVM;
+            _bootstrapper.InvokePlan();
         }
 
         public bool CanExitWizard()
         {
-            if (this.cancelConfirmed)
+            if (_cancelConfirmed)
             {
                 return true;
             }
 
-            DlgBaseVM currentVM = this.CurrentViewModel;
+            DlgBaseVM currentVM = CurrentViewModel;
 
-            if (currentViewModel is ProgressDlgVM)
+            if (_currentViewModel is ProgressDlgVM)
             {
-                this.RequestCancelProgress();
+                RequestCancelProgress();
                 return false;
             }
             else if (currentVM is BitErrorDlgVM)
@@ -409,9 +394,9 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
             else
             {
-                if (this.bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
+                if (_bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
                 {
-                    this.bootstrapper.SetCancelledByUser();
+                    _bootstrapper.SetCancelledByUser();
                     return true;
                 }
                 else
@@ -423,80 +408,80 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         public void CancelWizard()
         {
-            DlgBaseVM currentVM = this.CurrentViewModel;
+            DlgBaseVM currentVM = CurrentViewModel;
 
-            if (currentViewModel is ProgressDlgVM)
+            if (_currentViewModel is ProgressDlgVM)
             {
-                this.RequestCancelProgress();
+                RequestCancelProgress();
             }
             else if (currentVM is BitErrorDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
             else if (currentVM is DowngradeDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
             else if (currentVM is FinishedDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
             else if (currentVM is UserCancelDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
             else if (currentVM is ErrorDlgVM)
             {
-                this.FireWiazrdFinished();
+                FireWiazrdFinished();
             }
             else
             {
-                if (this.bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
+                if (_bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
                 {
-                    this.bootstrapper.SetCancelledByUser();
-                    this.FireWiazrdFinished();
+                    _bootstrapper.SetCancelledByUser();
+                    FireWiazrdFinished();
                 }
             }
         }
 
         private void RequestCancelProgress()
         {
-            this.bootstrapper.RequestCancelProgress();
-            this.FirePropertyChanged("IsCancelButtonEnabled");
+            _bootstrapper.RequestCancelProgress();
+            FirePropertyChanged("IsCancelButtonEnabled");
         }
 
         public void SetProgressValue(int value)
         {
-            this.progressDlgVM.ProgressValue = value;
+            _progressDlgVM.ProgressValue = value;
         }
 
         public void SetProgressStatus(string status)
         {
-            this.progressDlgVM.StatusText = status;
+            _progressDlgVM.StatusText = status;
         }
 
         public void ShowErrorDialog()
         {
-            this.CurrentViewModel = this.errorDlgVM;
+            CurrentViewModel = _errorDlgVM;
         }
 
         public void ShowUserCancelDialog()
         {
-            this.CurrentViewModel = this.userCancelDlgVM;
+            CurrentViewModel = _userCancelDlgVM;
         }
 
         public void ShowFinishedDialog()
         {
-            this.CurrentViewModel = this.finishedDlgVM;
+            CurrentViewModel = _finishedDlgVM;
         }
 
         #endregion Methods
 
         #region EventHandler
 
-        private void bootstrapper_CancelProgressRequestedChanged(object sender, EventArgs e)
+        private void Bootstrapper_CancelProgressRequestedChanged(object sender, EventArgs e)
         {
-            this.FirePropertyChanged("IsCancelButtonEnabled");
+            FirePropertyChanged("IsCancelButtonEnabled");
         }
 
         #endregion EventHandler
@@ -509,15 +494,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void FirePropertyChanged(string propertyName)
         {
-            this.OnPropertyChanged(propertyName);
+            OnPropertyChanged(propertyName);
         }
 
         #endregion PropertyChanged
@@ -528,17 +510,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         protected virtual void OnWiazrdFinished()
         {
-            this.cancelConfirmed = true;
+            _cancelConfirmed = true;
 
-            if (this.WiazrdFinished != null)
-            {
-                this.WiazrdFinished(this, EventArgs.Empty);
-            }
+            WiazrdFinished?.Invoke(this, EventArgs.Empty);
         }
 
         protected void FireWiazrdFinished()
         {
-            this.OnWiazrdFinished();
+            OnWiazrdFinished();
         }
 
         #endregion WiazrdFinished

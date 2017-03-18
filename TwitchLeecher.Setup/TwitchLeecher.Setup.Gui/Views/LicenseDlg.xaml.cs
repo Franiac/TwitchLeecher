@@ -9,12 +9,12 @@ namespace TwitchLeecher.Setup.Gui.Views
         {
             InitializeComponent();
 
-            this.Loaded += LicenseDlg_Loaded;
+            Loaded += LicenseDlg_Loaded;
         }
 
         private void LicenseDlg_Loaded(object sender, RoutedEventArgs e)
         {
-            this.txtLicense.Text = Properties.Resources.LICENSE;
+            txtLicense.Text = Properties.Resources.LICENSE;
         }
     }
 }

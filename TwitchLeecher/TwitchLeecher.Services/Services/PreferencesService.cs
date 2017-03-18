@@ -41,13 +41,13 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private IFolderService folderService;
-        private IEventAggregator eventAggregator;
+        private IFolderService _folderService;
+        private IEventAggregator _eventAggregator;
 
-        private Preferences currentPreferences;
-        private Version tlVersion;
+        private Preferences _currentPreferences;
+        private Version _tlVersion;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -55,11 +55,11 @@ namespace TwitchLeecher.Services.Services
 
         public PreferencesService(IFolderService folderService, IEventAggregator eventAggregator)
         {
-            this.folderService = folderService;
-            this.eventAggregator = eventAggregator;
+            _folderService = folderService;
+            _eventAggregator = eventAggregator;
 
-            this.tlVersion = AssemblyUtil.Get.GetAssemblyVersion().Trim();
-            this.commandLockObject = new object();
+            _tlVersion = AssemblyUtil.Get.GetAssemblyVersion().Trim();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -70,12 +70,12 @@ namespace TwitchLeecher.Services.Services
         {
             get
             {
-                if (this.currentPreferences == null)
+                if (_currentPreferences == null)
                 {
-                    this.currentPreferences = this.Load();
+                    _currentPreferences = Load();
                 }
 
-                return this.currentPreferences;
+                return _currentPreferences;
             }
         }
 
@@ -85,12 +85,12 @@ namespace TwitchLeecher.Services.Services
 
         public void Save(Preferences preferences)
         {
-            lock (this.commandLockObject)
+            lock (_commandLockObject)
             {
                 XDocument doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
                 XElement preferencesEl = new XElement(PREFERENCES_EL);
-                preferencesEl.Add(new XAttribute(PREFERENCES_VERSION_ATTR, this.tlVersion));
+                preferencesEl.Add(new XAttribute(PREFERENCES_VERSION_ATTR, _tlVersion));
                 doc.Add(preferencesEl);
 
                 XElement appEl = new XElement(APP_EL);
@@ -157,7 +157,7 @@ namespace TwitchLeecher.Services.Services
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
                 downloadEl.Add(downloadRemoveCompletedEl);
 
-                string appDataFolder = this.folderService.GetAppDataFolder();
+                string appDataFolder = _folderService.GetAppDataFolder();
 
                 FileSystem.CreateDirectory(appDataFolder);
 
@@ -165,19 +165,19 @@ namespace TwitchLeecher.Services.Services
 
                 doc.Save(configFile);
 
-                this.currentPreferences = preferences;
+                _currentPreferences = preferences;
 
-                this.eventAggregator.GetEvent<PreferencesSavedEvent>().Publish();
+                _eventAggregator.GetEvent<PreferencesSavedEvent>().Publish();
             }
         }
 
         private Preferences Load()
         {
-            lock (this.commandLockObject)
+            lock (_commandLockObject)
             {
-                string configFile = Path.Combine(this.folderService.GetAppDataFolder(), CONFIG_FILE);
+                string configFile = Path.Combine(_folderService.GetAppDataFolder(), CONFIG_FILE);
 
-                Preferences preferences = this.CreateDefault();
+                Preferences preferences = CreateDefault();
 
                 if (File.Exists(configFile))
                 {
@@ -189,9 +189,8 @@ namespace TwitchLeecher.Services.Services
                     {
                         XAttribute prefVersionAttr = preferencesEl.Attribute(PREFERENCES_VERSION_ATTR);
 
-                        Version prefVersion = null;
 
-                        if (prefVersionAttr != null && Version.TryParse(prefVersionAttr.Value, out prefVersion))
+                        if (prefVersionAttr != null && Version.TryParse(prefVersionAttr.Value, out Version prefVersion))
                         {
                             preferences.Version = prefVersion;
                         }
@@ -374,14 +373,14 @@ namespace TwitchLeecher.Services.Services
         {
             Preferences preferences = new Preferences()
             {
-                Version = this.tlVersion,
+                Version = _tlVersion,
                 AppCheckForUpdates = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
                 SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,
                 SearchOnStartup = false,
-                DownloadTempFolder = this.folderService.GetTempFolder(),
-                DownloadFolder = this.folderService.GetDownloadFolder(),
+                DownloadTempFolder = _folderService.GetTempFolder(),
+                DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
                 DownloadVideoQuality = TwitchVideoQuality.QUALITY_SOURCE,
                 DownloadRemoveCompleted = false

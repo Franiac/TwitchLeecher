@@ -7,8 +7,8 @@ namespace TwitchLeecher.Setup.Gui
     {
         #region Fields
 
-        private string executionId;
-        private Action<int, string> exitedCallback;
+        private string _executionId;
+        private Action<int, string> _exitedCallback;
 
         #endregion Fields
 
@@ -21,14 +21,10 @@ namespace TwitchLeecher.Setup.Gui
                 throw new ArgumentNullException("executionId");
             }
 
-            if (psi == null)
-            {
-                throw new ArgumentNullException("psi");
-            }
+            StartInfo = psi ?? throw new ArgumentNullException("psi");
 
-            this.executionId = executionId;
-            this.StartInfo = psi;
-            this.exitedCallback = exitedCallback;
+            _executionId = executionId;            
+            _exitedCallback = exitedCallback;
         }
 
         #endregion Constructors
@@ -39,7 +35,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.executionId;
+                return _executionId;
             }
         }
 
@@ -47,7 +43,7 @@ namespace TwitchLeecher.Setup.Gui
         {
             get
             {
-                return this.exitedCallback;
+                return _exitedCallback;
             }
         }
 

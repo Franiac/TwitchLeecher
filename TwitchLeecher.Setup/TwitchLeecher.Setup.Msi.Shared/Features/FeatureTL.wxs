@@ -37,16 +37,10 @@
         <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
-        <File Id="TL_Microsoft.Expression.Interactions.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.Expression.Interactions.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
         <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_Ninject.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Ninject.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_System.Windows.Interactivity.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Windows.Interactivity.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll" />

@@ -38,23 +38,23 @@ namespace TwitchLeecher.Core.Models
             XElement mainWindowInfoEl = new XElement(MAINWINDOW_EL);
 
             XElement widthEl = new XElement(MAINWINDOW_WIDTH_EL);
-            widthEl.SetValue(this.Width);
+            widthEl.SetValue(Width);
             mainWindowInfoEl.Add(widthEl);
 
             XElement heightEl = new XElement(MAINWINDOW_HEIGHT_EL);
-            heightEl.SetValue(this.Height);
+            heightEl.SetValue(Height);
             mainWindowInfoEl.Add(heightEl);
 
             XElement topEl = new XElement(MAINWINDOW_TOP_EL);
-            topEl.SetValue(this.Top);
+            topEl.SetValue(Top);
             mainWindowInfoEl.Add(topEl);
 
             XElement leftEl = new XElement(MAINWINDOW_LEFT_EL);
-            leftEl.SetValue(this.Left);
+            leftEl.SetValue(Left);
             mainWindowInfoEl.Add(leftEl);
 
             XElement isMaximizedEl = new XElement(MAINWINDOW_ISMAXIMIZED_EL);
-            isMaximizedEl.SetValue(this.IsMaximized);
+            isMaximizedEl.SetValue(IsMaximized);
             mainWindowInfoEl.Add(isMaximizedEl);
 
             return mainWindowInfoEl;

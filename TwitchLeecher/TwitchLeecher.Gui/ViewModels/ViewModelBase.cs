@@ -8,7 +8,7 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private List<MenuCommand> menuCommands;
+        private List<MenuCommand> _menuCommands;
 
         #endregion Fields
 
@@ -18,7 +18,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                List<MenuCommand> menuCommands = this.MenuCommands;
+                List<MenuCommand> menuCommands = MenuCommands;
 
                 return menuCommands != null && menuCommands.Count > 0;
             }
@@ -28,19 +28,19 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.menuCommands == null)
+                if (_menuCommands == null)
                 {
-                    List<MenuCommand> menuCommands = this.BuildMenu();
+                    List<MenuCommand> menuCommands = BuildMenu();
 
                     if (menuCommands == null)
                     {
                         menuCommands = new List<MenuCommand>();
                     }
 
-                    this.menuCommands = menuCommands;
+                    _menuCommands = menuCommands;
                 }
 
-                return this.menuCommands;
+                return _menuCommands;
             }
         }
 

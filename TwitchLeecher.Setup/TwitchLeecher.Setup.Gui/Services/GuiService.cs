@@ -9,10 +9,10 @@ namespace TwitchLeecher.Setup.Gui.Services
     {
         #region Fields
 
-        private Dispatcher dispatcher;
-        private SetupApplication bootstrapper;
+        private Dispatcher _dispatcher;
+        private SetupApplication _bootstrapper;
 
-        private bool busy;
+        private bool _busy;
 
         #endregion Fields
 
@@ -20,18 +20,8 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         internal GuiService(SetupApplication bootstrapper, Dispatcher dispatcher)
         {
-            if (bootstrapper == null)
-            {
-                throw new ArgumentNullException("bootstrapper");
-            }
-
-            if (dispatcher == null)
-            {
-                throw new ArgumentNullException("dispatcher");
-            }
-
-            this.bootstrapper = bootstrapper;
-            this.dispatcher = dispatcher;
+            _bootstrapper = bootstrapper ?? throw new ArgumentNullException("bootstrapper");
+            _dispatcher = dispatcher ?? throw new ArgumentNullException("dispatcher");
         }
 
         #endregion Constructors
@@ -40,27 +30,27 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         public void SetBusy()
         {
-            this.SetBusy(true);
+            SetBusy(true);
         }
 
         private void SetBusy(bool busy)
         {
-            if (this.busy != busy)
+            if (_busy != busy)
             {
-                this.busy = busy;
+                _busy = busy;
 
                 Mouse.OverrideCursor = busy ? Cursors.Wait : null;
 
-                if (this.busy)
+                if (_busy)
                 {
-                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, this.dispatcher);
+                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, DispatcherTimer_Tick, _dispatcher);
                 }
             }
         }
 
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton button, MessageBoxImage image)
         {
-            return this.bootstrapper.InvokeOnUiThread<MessageBoxResult>(() =>
+            return _bootstrapper.InvokeOnUiThread<MessageBoxResult>(() =>
             {
                 return MessageBox.Show(message, caption, button, image);
             });
@@ -70,11 +60,9 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         #region EventHandler
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            DispatcherTimer dispatcherTimer = sender as DispatcherTimer;
-
-            if (dispatcherTimer != null)
+            if (sender is DispatcherTimer dispatcherTimer)
             {
                 SetBusy(false);
                 dispatcherTimer.Stop();

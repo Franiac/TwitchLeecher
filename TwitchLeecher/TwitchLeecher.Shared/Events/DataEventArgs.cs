@@ -6,7 +6,7 @@ namespace TwitchLeecher.Shared.Events
     {
         #region Fields
 
-        private readonly TData value;
+        private readonly TData _value;
 
         #endregion Fields
 
@@ -14,7 +14,7 @@ namespace TwitchLeecher.Shared.Events
 
         public DataEventArgs(TData value)
         {
-            this.value = value;
+            _value = value;
         }
 
         #endregion Constructors
@@ -23,7 +23,7 @@ namespace TwitchLeecher.Shared.Events
 
         public TData Value
         {
-            get { return value; }
+            get { return _value; }
         }
 
         #endregion Properties

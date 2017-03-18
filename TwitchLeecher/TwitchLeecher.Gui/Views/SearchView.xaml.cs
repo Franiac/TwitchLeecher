@@ -12,9 +12,9 @@ namespace TwitchLeecher.Gui.Views
         {
             InitializeComponent();
 
-            this.cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
+            cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
 
-            this.IsVisibleChanged += this.SearchView_IsVisibleChanged;
+            IsVisibleChanged += SearchView_IsVisibleChanged;
         }
 
         private void SearchView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -23,8 +23,8 @@ namespace TwitchLeecher.Gui.Views
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
                 {
-                    this.txtChannel.Focus();
-                    this.txtChannel.SelectAll();
+                    txtChannel.Focus();
+                    txtChannel.SelectAll();
                 }));
             }
         }

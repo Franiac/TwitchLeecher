@@ -19,8 +19,8 @@ namespace TwitchLeecher.Gui.Controls
 
         public double Spacing
         {
-            get { return (double)this.GetValue(SpacingProperty); }
-            set { this.SetValue(SpacingProperty, value); }
+            get { return (double)GetValue(SpacingProperty); }
+            set { SetValue(SpacingProperty, value); }
         }
 
         #endregion Spacing
@@ -34,7 +34,7 @@ namespace TwitchLeecher.Gui.Controls
             double maxElementWidth = 0;
             double maxElementHeight = 0;
 
-            foreach (UIElement element in this.InternalChildren)
+            foreach (UIElement element in InternalChildren)
             {
                 element.Measure(availableSize);
 
@@ -54,9 +54,9 @@ namespace TwitchLeecher.Gui.Controls
 
             double availableWidth = availableSize.Width;
 
-            double spacing = this.Spacing;
+            double spacing = Spacing;
 
-            int childCount = this.InternalChildren.Count;
+            int childCount = InternalChildren.Count;
 
             int columnCount = 1;
 
@@ -90,7 +90,7 @@ namespace TwitchLeecher.Gui.Controls
             double maxElementWidth = 0;
             double maxElementHeight = 0;
 
-            foreach (UIElement element in this.InternalChildren)
+            foreach (UIElement element in InternalChildren)
             {
                 double desiredWidth = element.DesiredSize.Width;
                 double desiredHeight = element.DesiredSize.Height;
@@ -109,9 +109,9 @@ namespace TwitchLeecher.Gui.Controls
             double arrangeWidth = arrangeSize.Width;
             double arrangeHeight = arrangeSize.Height;
 
-            double spacing = this.Spacing;
+            double spacing = Spacing;
 
-            int childCount = this.InternalChildren.Count;
+            int childCount = InternalChildren.Count;
 
             int columnCount = 1;
 
@@ -155,7 +155,7 @@ namespace TwitchLeecher.Gui.Controls
 
                 Rect rect = new Rect(curX, curY, newChildWidth, maxElementHeight);
 
-                this.InternalChildren[i].Arrange(rect);
+                InternalChildren[i].Arrange(rect);
 
                 curX += newChildWidth;
             }

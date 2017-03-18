@@ -12,13 +12,13 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private UpdateInfo updateInfo;
+        private UpdateInfo _updateInfo;
 
-        private IDialogService dialogService;
+        private IDialogService _dialogService;
 
-        private ICommand downloadCommand;
+        private ICommand _downloadCommand;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -26,9 +26,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public UpdateInfoViewVM(IDialogService dialogService)
         {
-            this.dialogService = dialogService;
+            _dialogService = dialogService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructor
@@ -39,11 +39,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.updateInfo;
+                return _updateInfo;
             }
             set
             {
-                this.updateInfo = value;
+                _updateInfo = value;
             }
         }
 
@@ -51,12 +51,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.downloadCommand == null)
+                if (_downloadCommand == null)
                 {
-                    this.downloadCommand = new DelegateCommand(this.Download);
+                    _downloadCommand = new DelegateCommand(Download);
                 }
 
-                return this.downloadCommand;
+                return _downloadCommand;
             }
         }
 
@@ -68,14 +68,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    Process.Start(this.updateInfo.DownloadUrl);
+                    Process.Start(_updateInfo.DownloadUrl);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -88,7 +88,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.DownloadCommand, "Download", "Download"));
+            menuCommands.Add(new MenuCommand(DownloadCommand, "Download", "Download"));
 
             return menuCommands;
         }

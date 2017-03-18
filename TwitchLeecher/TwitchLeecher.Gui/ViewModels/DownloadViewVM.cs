@@ -15,18 +15,18 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private DownloadParameters downloadParams;
+        private DownloadParameters _downloadParams;
 
-        private ICommand chooseCommand;
-        private ICommand downloadCommand;
-        private ICommand cancelCommand;
+        private ICommand _chooseCommand;
+        private ICommand _downloadCommand;
+        private ICommand _cancelCommand;
 
-        private IDialogService dialogService;
-        private ITwitchService twitchService;
-        private INavigationService navigationService;
-        private INotificationService notificationService;
+        private IDialogService _dialogService;
+        private ITwitchService _twitchService;
+        private INavigationService _navigationService;
+        private INotificationService _notificationService;
 
-        private readonly object commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 
@@ -38,12 +38,12 @@ namespace TwitchLeecher.Gui.ViewModels
             INavigationService navigationService,
             INotificationService notificationService)
         {
-            this.dialogService = dialogService;
-            this.twitchService = twitchService;
-            this.navigationService = navigationService;
-            this.notificationService = notificationService;
+            _dialogService = dialogService;
+            _twitchService = twitchService;
+            _navigationService = navigationService;
+            _notificationService = notificationService;
 
-            this.commandLockObject = new object();
+            _commandLockObject = new object();
         }
 
         #endregion Constructors
@@ -54,11 +54,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.downloadParams;
+                return _downloadParams;
             }
             set
             {
-                this.SetProperty(ref this.downloadParams, value, nameof(this.DownloadParams));
+                SetProperty(ref _downloadParams, value, nameof(DownloadParams));
             }
         }
 
@@ -66,18 +66,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.downloadParams.CropStartTime.ToString();
+                return _downloadParams.CropStartTime.ToString();
             }
             set
             {
-                TimeSpan ts;
 
-                if (TimeSpan.TryParse(value, out ts))
+                if (TimeSpan.TryParse(value, out TimeSpan ts))
                 {
-                    this.downloadParams.CropStartTime = ts;
+                    _downloadParams.CropStartTime = ts;
                 }
 
-                this.FirePropertyChanged(nameof(this.CropStartTime));
+                FirePropertyChanged(nameof(CropStartTime));
             }
         }
 
@@ -85,18 +84,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.downloadParams.CropEndTime.ToString();
+                return _downloadParams.CropEndTime.ToString();
             }
             set
             {
-                TimeSpan ts;
 
-                if (TimeSpan.TryParse(value, out ts))
+                if (TimeSpan.TryParse(value, out TimeSpan ts))
                 {
-                    this.downloadParams.CropEndTime = ts;
+                    _downloadParams.CropEndTime = ts;
                 }
 
-                this.FirePropertyChanged(nameof(this.CropEndTime));
+                FirePropertyChanged(nameof(CropEndTime));
             }
         }
 
@@ -104,12 +102,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.chooseCommand == null)
+                if (_chooseCommand == null)
                 {
-                    this.chooseCommand = new DelegateCommand(this.Choose);
+                    _chooseCommand = new DelegateCommand(Choose);
                 }
 
-                return this.chooseCommand;
+                return _chooseCommand;
             }
         }
 
@@ -117,12 +115,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.downloadCommand == null)
+                if (_downloadCommand == null)
                 {
-                    this.downloadCommand = new DelegateCommand(this.Download);
+                    _downloadCommand = new DelegateCommand(Download);
                 }
 
-                return this.downloadCommand;
+                return _downloadCommand;
             }
         }
 
@@ -130,12 +128,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (this.cancelCommand == null)
+                if (_cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand(this.Cancel);
+                    _cancelCommand = new DelegateCommand(Cancel);
                 }
 
-                return this.cancelCommand;
+                return _cancelCommand;
             }
         }
 
@@ -147,14 +145,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.dialogService.ShowFolderBrowserDialog(this.downloadParams.Folder, this.ChooseCallback);
+                    _dialogService.ShowFolderBrowserDialog(_downloadParams.Folder, ChooseCallback);
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -164,12 +162,12 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    this.downloadParams.Folder = folder;
+                    _downloadParams.Folder = folder;
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -177,15 +175,15 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.Validate();
+                    Validate();
 
-                    if (!this.HasErrors)
+                    if (!HasErrors)
                     {
-                        if (File.Exists(this.downloadParams.FullPath))
+                        if (File.Exists(_downloadParams.FullPath))
                         {
-                            MessageBoxResult result = this.dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                             if (result != MessageBoxResult.Yes)
                             {
@@ -193,15 +191,15 @@ namespace TwitchLeecher.Gui.ViewModels
                             }
                         }
 
-                        this.twitchService.Enqueue(downloadParams);
-                        this.navigationService.NavigateBack();
-                        this.notificationService.ShowNotification("Download added");
+                        _twitchService.Enqueue(_downloadParams);
+                        _navigationService.NavigateBack();
+                        _notificationService.ShowNotification("Download added");
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -209,14 +207,14 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                lock (this.commandLockObject)
+                lock (_commandLockObject)
                 {
-                    this.navigationService.NavigateBack();
+                    _navigationService.NavigateBack();
                 }
             }
             catch (Exception ex)
             {
-                this.dialogService.ShowAndLogException(ex);
+                _dialogService.ShowAndLogException(ex);
             }
         }
 
@@ -224,53 +222,51 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(this.DownloadParams);
+            string currentProperty = nameof(DownloadParams);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                this.DownloadParams?.Validate();
+                DownloadParams?.Validate();
 
-                if (this.twitchService.IsFileNameUsed(this.downloadParams.FullPath))
+                if (_twitchService.IsFileNameUsed(_downloadParams.FullPath))
                 {
-                    this.DownloadParams.AddError(nameof(this.DownloadParams.Filename), "Another video is already being downloaded to this file!");
+                    DownloadParams.AddError(nameof(DownloadParams.Filename), "Another video is already being downloaded to this file!");
                 }
 
-                if (this.DownloadParams.HasErrors)
+                if (DownloadParams.HasErrors)
                 {
-                    this.AddError(currentProperty, "Invalid Download Parameters!");
+                    AddError(currentProperty, "Invalid Download Parameters!");
                 }
             }
 
-            currentProperty = nameof(this.CropStartTime);
+            currentProperty = nameof(CropStartTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                this.DownloadParams?.Validate(currentProperty);
+                DownloadParams?.Validate(currentProperty);
 
-                if (this.DownloadParams.HasErrors)
+                if (DownloadParams.HasErrors)
                 {
-                    List<string> errors = this.DownloadParams.GetErrors(currentProperty) as List<string>;
 
-                    if (errors != null && errors.Count > 0)
+                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
                     {
-                        this.AddError(currentProperty, errors.First());
+                        AddError(currentProperty, errors.First());
                     }
                 }
             }
 
-            currentProperty = nameof(this.CropEndTime);
+            currentProperty = nameof(CropEndTime);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                this.DownloadParams?.Validate(currentProperty);
+                DownloadParams?.Validate(currentProperty);
 
-                if (this.DownloadParams.HasErrors)
+                if (DownloadParams.HasErrors)
                 {
-                    List<string> errors = this.DownloadParams.GetErrors(currentProperty) as List<string>;
 
-                    if (errors != null && errors.Count > 0)
+                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
                     {
-                        this.AddError(currentProperty, errors.First());
+                        AddError(currentProperty, errors.First());
                     }
                 }
             }
@@ -285,8 +281,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(this.DownloadCommand, "Download", "Download"));
-            menuCommands.Add(new MenuCommand(this.CancelCommand, "Cancel", "Times"));
+            menuCommands.Add(new MenuCommand(DownloadCommand, "Download", "Download"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Times"));
 
             return menuCommands;
         }

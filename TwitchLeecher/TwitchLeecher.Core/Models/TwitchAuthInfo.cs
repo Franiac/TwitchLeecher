@@ -18,8 +18,8 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(username));
             }
 
-            this.AccessToken = accessToken;
-            this.Username = username;
+            AccessToken = accessToken;
+            Username = username;
         }
 
         #endregion Constructors

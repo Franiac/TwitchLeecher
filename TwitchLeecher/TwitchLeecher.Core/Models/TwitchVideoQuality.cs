@@ -33,11 +33,11 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(id));
             }
 
-            this.QualityId = id;
-            this.Resolution = resolution;
-            this.Fps = fps;
+            QualityId = id;
+            Resolution = resolution;
+            Fps = fps;
 
-            this.Initialize();
+            Initialize();
         }
 
         #endregion Constructors
@@ -64,144 +64,144 @@ namespace TwitchLeecher.Core.Models
 
         private void Initialize()
         {
-            this.InitializeQuality();
-            this.InitializeResolution();
+            InitializeQuality();
+            InitializeResolution();
 
-            string quality = this.QualityId;
-            string resolution = this.Resolution;
-            string fps = this.Fps;
+            string quality = QualityId;
+            string resolution = Resolution;
+            string fps = Fps;
 
             if (quality.EndsWith("p", StringComparison.OrdinalIgnoreCase))
             {
                 if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
                 {
-                    this.DisplayStringShort = resolution + "@" + fps + "fps";
+                    DisplayStringShort = resolution + "@" + fps + "fps";
                 }
                 else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
                 {
-                    this.DisplayStringShort = resolution;
+                    DisplayStringShort = resolution;
                 }
                 else
                 {
-                    this.DisplayStringShort = UNKNOWN;
+                    DisplayStringShort = UNKNOWN;
                 }
 
-                this.DisplayStringLong = this.DisplayStringShort;
+                DisplayStringLong = DisplayStringShort;
             }
             else
             {
                 if (quality == "audio_only")
                 {
-                    this.DisplayStringShort = this.QualityFormatted;
-                    this.DisplayStringLong = this.QualityFormatted;
+                    DisplayStringShort = QualityFormatted;
+                    DisplayStringLong = QualityFormatted;
                 }
                 else if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
                 {
-                    this.DisplayStringShort = resolution + "@" + fps + "fps";
-                    this.DisplayStringLong = string.Format("{0} ({1})", this.QualityFormatted, this.DisplayStringShort);
+                    DisplayStringShort = resolution + "@" + fps + "fps";
+                    DisplayStringLong = string.Format("{0} ({1})", QualityFormatted, DisplayStringShort);
                 }
                 else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
                 {
-                    this.DisplayStringShort = resolution;
-                    this.DisplayStringLong = string.Format("{0} ({1})", this.QualityFormatted, this.DisplayStringShort);
+                    DisplayStringShort = resolution;
+                    DisplayStringLong = string.Format("{0} ({1})", QualityFormatted, DisplayStringShort);
                 }
                 else
                 {
-                    this.DisplayStringShort = UNKNOWN;
-                    this.DisplayStringLong = UNKNOWN;
+                    DisplayStringShort = UNKNOWN;
+                    DisplayStringLong = UNKNOWN;
                 }
             }
         }
 
         public void InitializeQuality()
         {
-            string qualityId = this.QualityId;
+            string qualityId = QualityId;
 
-            this.QualityFormatted = GetQualityFormatted(qualityId);
+            QualityFormatted = GetQualityFormatted(qualityId);
 
             switch (qualityId.ToLowerInvariant())
             {
                 case QUALITY_SOURCE:
-                    this.QualityPriority = 0;
+                    QualityPriority = 0;
                     break;
 
                 case QUALITY_HIGH:
-                    this.QualityPriority = 1;
+                    QualityPriority = 1;
                     break;
 
                 case QUALITY_MEDIUM:
-                    this.QualityPriority = 2;
+                    QualityPriority = 2;
                     break;
 
                 case QUALITY_LOW:
-                    this.QualityPriority = 3;
+                    QualityPriority = 3;
                     break;
 
                 case QUALITY_MOBILE:
-                    this.QualityPriority = 4;
+                    QualityPriority = 4;
                     break;
 
                 case QUALITY_AUDIO:
-                    this.QualityPriority = 5;
+                    QualityPriority = 5;
                     break;
 
                 case QUALITY_1080P:
-                    this.QualityPriority = 10;
+                    QualityPriority = 10;
                     break;
 
                 case QUALITY_720P:
-                    this.QualityPriority = 11;
+                    QualityPriority = 11;
                     break;
 
                 case QUALITY_480P:
-                    this.QualityPriority = 12;
+                    QualityPriority = 12;
                     break;
 
                 case QUALITY_360P:
-                    this.QualityPriority = 13;
+                    QualityPriority = 13;
                     break;
 
                 case QUALITY_240P:
-                    this.QualityPriority = 14;
+                    QualityPriority = 14;
                     break;
 
                 case QUALITY_144P:
-                    this.QualityPriority = 15;
+                    QualityPriority = 15;
                     break;
 
                 default:
-                    this.QualityPriority = 100;
+                    QualityPriority = 100;
                     break;
             }
         }
 
         private void InitializeResolution()
         {
-            string qualityId = this.QualityId;
-            string resolution = this.Resolution;
+            string qualityId = QualityId;
+            string resolution = Resolution;
 
             if (!string.IsNullOrWhiteSpace(resolution) && resolution.Equals("0x0", StringComparison.OrdinalIgnoreCase))
             {
                 switch (qualityId)
                 {
                     case QUALITY_HIGH:
-                        this.Resolution = "1280x720";
+                        Resolution = "1280x720";
                         break;
 
                     case QUALITY_MEDIUM:
-                        this.Resolution = "852x480";
+                        Resolution = "852x480";
                         break;
 
                     case QUALITY_LOW:
-                        this.Resolution = "640x360";
+                        Resolution = "640x360";
                         break;
 
                     case QUALITY_MOBILE:
-                        this.Resolution = "400x226";
+                        Resolution = "400x226";
                         break;
 
                     default:
-                        this.Resolution = null;
+                        Resolution = null;
                         break;
                 }
             }
@@ -209,7 +209,7 @@ namespace TwitchLeecher.Core.Models
 
         public override string ToString()
         {
-            return this.DisplayStringLong;
+            return DisplayStringLong;
         }
 
         #endregion Methods

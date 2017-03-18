@@ -7,8 +7,8 @@ namespace TwitchLeecher.Gui.Controls
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
             base.OnTextChanged(e);
-            this.CaretIndex = Text.Length;
-            this.ScrollToEnd();
+            CaretIndex = Text.Length;
+            ScrollToEnd();
         }
     }
 }

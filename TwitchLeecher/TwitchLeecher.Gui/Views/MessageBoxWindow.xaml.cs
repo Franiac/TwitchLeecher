@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,36 +30,36 @@ namespace TwitchLeecher.Gui.Views
 
             WindowChrome.SetWindowChrome(this, windowChrome);
 
-            this.Message = message;
-            this.rowCaption.Visibility = Visibility.Collapsed;
-            this.imgIcon.Visibility = Visibility.Collapsed;
-            this.SetButtons(MessageBoxButton.OK);
+            Message = message;
+            rowCaption.Visibility = Visibility.Collapsed;
+            imgIcon.Visibility = Visibility.Collapsed;
+            SetButtons(MessageBoxButton.OK);
 
-            Display display = Display.GetDisplayFromWindow(new WindowInteropHelper(this).Handle);
+            NativeDisplay display = NativeDisplay.GetDisplayFromWindow(new WindowInteropHelper(this).Handle);
 
-            this.MaxWidth = display.WorkingArea.Width * 0.9;
-            this.MaxHeight = display.WorkingArea.Height * 0.9;
+            MaxWidth = display.WorkingArea.Width * 0.9;
+            MaxHeight = display.WorkingArea.Height * 0.9;
         }
 
         public MessageBoxWindow(string message, string caption) : this(message)
         {
-            this.Caption = caption;
-            this.rowCaption.Visibility = Visibility.Visible;
+            Caption = caption;
+            rowCaption.Visibility = Visibility.Visible;
         }
 
         public MessageBoxWindow(string message, string caption, MessageBoxButton buttons) : this(message, caption)
         {
-            this.SetButtons(buttons);
+            SetButtons(buttons);
         }
 
         public MessageBoxWindow(string message, string caption, MessageBoxImage image) : this(message, caption)
         {
-            this.SetIcon(image);
+            SetIcon(image);
         }
 
         public MessageBoxWindow(string message, string caption, MessageBoxButton buttons, MessageBoxImage image) : this(message, caption, buttons)
         {
-            this.SetIcon(image);
+            SetIcon(image);
         }
 
         #endregion Constructors
@@ -73,12 +74,12 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.txtCaption.Text;
+                return txtCaption.Text;
             }
             set
             {
-                this.txtCaption.Text = value;
-                this.Title = value;
+                txtCaption.Text = value;
+                Title = value;
             }
         }
 
@@ -86,11 +87,11 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.txtMessage.Text;
+                return txtMessage.Text;
             }
             set
             {
-                this.txtMessage.Text = value;
+                txtMessage.Text = value;
             }
         }
 
@@ -98,11 +99,11 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.btnOkContent.Text;
+                return btnOkContent.Text;
             }
             set
             {
-                this.btnOkContent.Text = value;
+                btnOkContent.Text = value;
             }
         }
 
@@ -110,11 +111,11 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.btnCancelContent.Text;
+                return btnCancelContent.Text;
             }
             set
             {
-                this.btnCancelContent.Text = value;
+                btnCancelContent.Text = value;
             }
         }
 
@@ -122,11 +123,11 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.btnYesContent.Text;
+                return btnYesContent.Text;
             }
             set
             {
-                this.btnYesContent.Text = value;
+                btnYesContent.Text = value;
             }
         }
 
@@ -134,11 +135,11 @@ namespace TwitchLeecher.Gui.Views
         {
             get
             {
-                return this.btnNoContent.Text;
+                return btnNoContent.Text;
             }
             set
             {
-                this.btnNoContent.Text = value;
+                btnNoContent.Text = value;
             }
         }
 
@@ -177,13 +178,13 @@ namespace TwitchLeecher.Gui.Views
                     break;
             }
 
-            this.imgIcon.Source = icon.ToImageSource();
-            this.imgIcon.Visibility = Visibility.Visible;
+            imgIcon.Source = icon.ToImageSource();
+            imgIcon.Visibility = Visibility.Visible;
         }
 
         private void SetButtons(MessageBoxButton buttons)
         {
-            List<Button> dialogButtons = new List<Button>() { this.btnYes, this.btnNo, this.btnOk, this.btnCancel };
+            List<Button> dialogButtons = new List<Button>() { btnYes, btnNo, btnOk, btnCancel };
 
             foreach (Button button in dialogButtons)
             {
@@ -196,38 +197,38 @@ namespace TwitchLeecher.Gui.Views
             switch (buttons)
             {
                 case MessageBoxButton.OKCancel:
-                    this.btnOk.Visibility = Visibility.Visible;
-                    this.btnCancel.Visibility = Visibility.Visible;
-                    this.btnOk.Margin = new Thickness(0, 0, 3, 0);
-                    this.btnCancel.Margin = new Thickness(3, 0, 0, 0);
-                    this.btnCancel.IsDefault = true;
-                    this.btnCancel.IsCancel = true;
+                    btnOk.Visibility = Visibility.Visible;
+                    btnCancel.Visibility = Visibility.Visible;
+                    btnOk.Margin = new Thickness(0, 0, 3, 0);
+                    btnCancel.Margin = new Thickness(3, 0, 0, 0);
+                    btnCancel.IsDefault = true;
+                    btnCancel.IsCancel = true;
                     break;
 
                 case MessageBoxButton.YesNo:
-                    this.btnYes.Visibility = Visibility.Visible;
-                    this.btnNo.Visibility = Visibility.Visible;
-                    this.btnYes.Margin = new Thickness(0, 0, 3, 0);
-                    this.btnNo.Margin = new Thickness(3, 0, 0, 0);
-                    this.btnNo.IsDefault = true;
-                    this.btnNo.IsCancel = true;
+                    btnYes.Visibility = Visibility.Visible;
+                    btnNo.Visibility = Visibility.Visible;
+                    btnYes.Margin = new Thickness(0, 0, 3, 0);
+                    btnNo.Margin = new Thickness(3, 0, 0, 0);
+                    btnNo.IsDefault = true;
+                    btnNo.IsCancel = true;
                     break;
 
                 case MessageBoxButton.YesNoCancel:
-                    this.btnYes.Visibility = Visibility.Visible;
-                    this.btnNo.Visibility = Visibility.Visible;
-                    this.btnCancel.Visibility = Visibility.Visible;
-                    this.btnYes.Margin = new Thickness(0, 0, 3, 0);
-                    this.btnNo.Margin = new Thickness(3, 0, 3, 0);
-                    this.btnCancel.Margin = new Thickness(3, 0, 0, 0);
-                    this.btnCancel.IsDefault = true;
-                    this.btnCancel.IsCancel = true;
+                    btnYes.Visibility = Visibility.Visible;
+                    btnNo.Visibility = Visibility.Visible;
+                    btnCancel.Visibility = Visibility.Visible;
+                    btnYes.Margin = new Thickness(0, 0, 3, 0);
+                    btnNo.Margin = new Thickness(3, 0, 3, 0);
+                    btnCancel.Margin = new Thickness(3, 0, 0, 0);
+                    btnCancel.IsDefault = true;
+                    btnCancel.IsCancel = true;
                     break;
 
                 default:
-                    this.btnOk.Visibility = Visibility.Visible;
-                    this.btnOk.IsDefault = true;
-                    this.btnOk.IsCancel = true;
+                    btnOk.Visibility = Visibility.Visible;
+                    btnOk.IsDefault = true;
+                    btnOk.IsCancel = true;
                     break;
             }
         }
@@ -236,30 +237,50 @@ namespace TwitchLeecher.Gui.Views
 
         #region EventHandlers
 
-        private void btnYes_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Result = MessageBoxResult.Yes;
-            this.Close();
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+            else
+            {
+                int x = (int)Math.Round(Left + Width / 2, 0);
+                int y = (int)Math.Round(Top + Height / 2, 0);
+
+                int width = (int)Math.Round(Width, 0);
+                int height = (int)Math.Round(Height, 0);
+
+                Left = x - width / 2;
+                Top = y - height / 2;
+            }
         }
 
-        private void btnNo_Click(object sender, RoutedEventArgs e)
+        private void BtnYes_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = MessageBoxResult.No;
-            this.Close();
+            Result = MessageBoxResult.Yes;
+            Close();
         }
 
-        private void btnOk_Click(object sender, RoutedEventArgs e)
+        private void BtnNo_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = MessageBoxResult.OK;
-            this.Close();
+            Result = MessageBoxResult.No;
+            Close();
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = MessageBoxResult.Cancel;
-            this.Close();
+            Result = MessageBoxResult.OK;
+            Close();
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Result = MessageBoxResult.Cancel;
+            Close();
         }
 
         #endregion EventHandlers
+
     }
 }

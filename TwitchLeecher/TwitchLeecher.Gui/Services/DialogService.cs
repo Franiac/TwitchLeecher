@@ -16,10 +16,10 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel kernel;
-        private ILogService logService;
+        private IKernel _kernel;
+        private ILogService _logService;
 
-        private bool busy;
+        private bool _busy;
 
         #endregion Fields
 
@@ -27,8 +27,8 @@ namespace TwitchLeecher.Gui.Services
 
         public DialogService(IKernel kernel, ILogService logService)
         {
-            this.kernel = kernel;
-            this.logService = logService;
+            _kernel = kernel;
+            _logService = logService;
         }
 
         #endregion Constructor
@@ -74,7 +74,7 @@ namespace TwitchLeecher.Gui.Services
                 return;
             }
 
-            ILogService logService = this.kernel.Get<ILogService>();
+            ILogService logService = _kernel.Get<ILogService>();
             string logFile = logService.LogException(ex);
 
             MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
@@ -102,8 +102,10 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Broadcasts|*.mp4";
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "Broadcasts|*.mp4"
+            };
 
             if (!string.IsNullOrWhiteSpace(filename))
             {
@@ -117,20 +119,20 @@ namespace TwitchLeecher.Gui.Services
 
         public void SetBusy()
         {
-            this.SetBusy(true);
+            SetBusy(true);
         }
 
         private void SetBusy(bool busy)
         {
-            if (this.busy != busy)
+            if (_busy != busy)
             {
-                this.busy = busy;
+                _busy = busy;
 
                 Mouse.OverrideCursor = busy ? Cursors.Wait : null;
 
-                if (this.busy)
+                if (_busy)
                 {
-                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, Dispatcher.CurrentDispatcher);
+                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, DispatcherTimer_Tick, Dispatcher.CurrentDispatcher);
                 }
             }
         }
@@ -139,11 +141,9 @@ namespace TwitchLeecher.Gui.Services
 
         #region EventHandlers
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            DispatcherTimer dispatcherTimer = sender as DispatcherTimer;
-
-            if (dispatcherTimer != null)
+            if (sender is DispatcherTimer dispatcherTimer)
             {
                 SetBusy(false);
                 dispatcherTimer.Stop();

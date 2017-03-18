@@ -24,9 +24,7 @@ namespace TwitchLeecher.Gui.Behaviors
 
         private static void RequestClosingChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
-            Window window = target as Window;
-
-            if (window != null)
+            if (target is Window window)
             {
                 if (e.NewValue != null)
                 {

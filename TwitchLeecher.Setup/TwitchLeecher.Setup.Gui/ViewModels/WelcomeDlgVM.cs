@@ -26,7 +26,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "Welcome to " + this.ProductNameVersionDisplay + " Setup Wizard";
+                return "Welcome to " + ProductNameVersionDisplay + " Setup Wizard";
             }
         }
 
@@ -34,7 +34,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return "The Setup Wizard will install " + this.ProductNameVersionDisplay + " on your computer. Click \"Next\" to continue or \"Cancel\" to exit the Setup Wizard.";
+                return "The Setup Wizard will install " + ProductNameVersionDisplay + " on your computer. Click \"Next\" to continue or \"Cancel\" to exit the Setup Wizard.";
             }
         }
 

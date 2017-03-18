@@ -7,7 +7,7 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private string productName;
+        private string _productName;
 
         #endregion Fields
 
@@ -17,7 +17,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
-            this.productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
+            _productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
         }
 
         #endregion Constructors
@@ -28,7 +28,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return this.productName;
+                return _productName;
             }
         }
 

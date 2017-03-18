@@ -11,13 +11,13 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        protected readonly SetupApplication bootstrapper;
+        protected readonly SetupApplication _bootstrapper;
 
-        protected IGuiService guiService;
+        protected IGuiService _guiService;
 
-        protected Dictionary<string, string> currentErrors;
+        protected Dictionary<string, string> _currentErrors;
 
-        protected string productNameVersionDisplay;
+        protected string _productNameVersionDisplay;
 
         #endregion Fields
 
@@ -25,20 +25,10 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         public DlgBaseVM(SetupApplication bootstrapper, IGuiService guiService)
         {
-            if (bootstrapper == null)
-            {
-                throw new ArgumentNullException("bootstrapper");
-            }
+            _bootstrapper = bootstrapper ?? throw new ArgumentNullException("bootstrapper");
+            _guiService = guiService ?? throw new ArgumentNullException("guiService");
 
-            if (guiService == null)
-            {
-                throw new ArgumentNullException("guiService");
-            }
-
-            this.bootstrapper = bootstrapper;
-            this.guiService = guiService;
-
-            this.currentErrors = new Dictionary<string, string>();
+            _currentErrors = new Dictionary<string, string>();
         }
 
         #endregion Constructors
@@ -49,7 +39,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.bootstrapper;
+                return _bootstrapper;
             }
         }
 
@@ -57,7 +47,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.ProductNameVersionDisplay + " Setup";
+                return ProductNameVersionDisplay + " Setup";
             }
         }
 
@@ -105,7 +95,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.currentErrors.Count > 0;
+                return _currentErrors.Count > 0;
             }
         }
 
@@ -113,12 +103,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.productNameVersionDisplay))
+                if (string.IsNullOrWhiteSpace(_productNameVersionDisplay))
                 {
-                    this.productNameVersionDisplay = this.bootstrapper.ProductName + " " + this.bootstrapper.ProductVersionTrimmed;
+                    _productNameVersionDisplay = _bootstrapper.ProductName + " " + _bootstrapper.ProductVersionTrimmed;
                 }
 
-                return this.productNameVersionDisplay;
+                return _productNameVersionDisplay;
             }
         }
 
@@ -130,11 +120,11 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                return this.currentErrors.Values.ToList();
+                return _currentErrors.Values.ToList();
             }
-            else if (this.currentErrors.ContainsKey(propertyName))
+            else if (_currentErrors.ContainsKey(propertyName))
             {
-                return new List<string>() { this.currentErrors[propertyName] };
+                return new List<string>() { _currentErrors[propertyName] };
             }
 
             return null;
@@ -152,12 +142,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 throw new ArgumentNullException("error");
             }
 
-            if (!this.currentErrors.ContainsKey(propertyName))
+            if (!_currentErrors.ContainsKey(propertyName))
             {
-                this.currentErrors.Add(propertyName, error);
+                _currentErrors.Add(propertyName, error);
             }
 
-            this.FireErrorsChanged(propertyName);
+            FireErrorsChanged(propertyName);
         }
 
         protected void RemoveError(string propertyName)
@@ -167,35 +157,35 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 throw new ArgumentNullException("propertyName");
             }
 
-            this.currentErrors.Remove(propertyName);
+            _currentErrors.Remove(propertyName);
 
-            this.FireErrorsChanged(propertyName);
+            FireErrorsChanged(propertyName);
         }
 
         protected void ClearErrors()
         {
-            this.currentErrors.Clear();
+            _currentErrors.Clear();
 
-            this.FireErrorsChanged();
+            FireErrorsChanged();
         }
 
         protected virtual void Validate(string propertyName = null)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                this.ClearErrors();
+                ClearErrors();
             }
             else
             {
-                this.RemoveError(propertyName);
+                RemoveError(propertyName);
             }
         }
 
         public virtual void OnBeforeNextView(CancelEventArgs e)
         {
-            this.Validate();
+            Validate();
 
-            if (this.HasErrors)
+            if (HasErrors)
             {
                 e.Cancel = true;
             }
@@ -211,17 +201,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            this.Validate(propertyName);
+            Validate(propertyName);
         }
 
         protected void FirePropertyChanged(string propertyName)
         {
-            this.OnPropertyChanged(propertyName);
+            OnPropertyChanged(propertyName);
         }
 
         #endregion INotifyPropertyChanged
@@ -232,15 +219,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         protected virtual void OnErrorsChanged(string propertyName)
         {
-            if (this.ErrorsChanged != null)
-            {
-                this.ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
-            }
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         protected void FireErrorsChanged(string propertyName = null)
         {
-            this.OnErrorsChanged(propertyName);
+            OnErrorsChanged(propertyName);
         }
 
         #endregion ErrorsChanged

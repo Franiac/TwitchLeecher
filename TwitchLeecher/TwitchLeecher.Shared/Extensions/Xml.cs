@@ -147,9 +147,8 @@ namespace TwitchLeecher.Shared.Extensions
                 return null;
             }
 
-            Uri u;
 
-            if (Uri.TryCreate(valueStr, UriKind.Absolute, out u))
+            if (Uri.TryCreate(valueStr, UriKind.Absolute, out Uri u))
             {
                 return u;
             }

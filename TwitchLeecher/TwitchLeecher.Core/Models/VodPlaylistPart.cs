@@ -4,8 +4,8 @@
     {
         #region Fields
 
-        private int index;
-        private string output;
+        private int _index;
+        private string _output;
 
         #endregion Fields
 
@@ -15,14 +15,14 @@
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                this.output = null;
+                _output = null;
             }
             else
             {
-                this.output = input;
+                _output = input;
             }
 
-            this.index = index;
+            _index = index;
         }
 
         #endregion Constructors
@@ -33,7 +33,7 @@
         {
             get
             {
-                return this.index;
+                return _index;
             }
         }
 
@@ -43,7 +43,7 @@
 
         public string GetOutput()
         {
-            return this.output;
+            return _output;
         }
 
         #endregion Methods

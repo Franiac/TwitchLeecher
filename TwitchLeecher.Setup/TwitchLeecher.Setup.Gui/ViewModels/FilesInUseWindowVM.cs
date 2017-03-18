@@ -9,13 +9,13 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private IList<string> files;
+        private IList<string> _files;
 
-        private ICommand retryCommand;
-        private ICommand cancelCommand;
+        private ICommand _retryCommand;
+        private ICommand _cancelCommand;
 
-        private Action windowCloseAction;
-        private Action<bool?> setDialogResultAction;
+        private Action _windowCloseAction;
+        private Action<bool?> _setDialogResultAction;
 
         #endregion Fields
 
@@ -28,7 +28,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 throw new ArgumentNullException("files");
             }
 
-            this.files = files;
+            _files = files;
         }
 
         #endregion Constructors
@@ -39,7 +39,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                return this.files;
+                return _files;
             }
         }
 
@@ -47,12 +47,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.retryCommand == null)
+                if (_retryCommand == null)
                 {
-                    this.retryCommand = new DelegateCommand(this.Retry);
+                    _retryCommand = new DelegateCommand(Retry);
                 }
 
-                return this.retryCommand;
+                return _retryCommand;
             }
         }
 
@@ -60,12 +60,12 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             get
             {
-                if (this.cancelCommand == null)
+                if (_cancelCommand == null)
                 {
-                    this.cancelCommand = new DelegateCommand(this.Cancel);
+                    _cancelCommand = new DelegateCommand(Cancel);
                 }
 
-                return this.cancelCommand;
+                return _cancelCommand;
             }
         }
 
@@ -75,33 +75,23 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
 
         public void SetWindowCloseAction(Action windowCloseAction)
         {
-            if (windowCloseAction == null)
-            {
-                throw new ArgumentNullException("windowCloseAction");
-            }
-
-            this.windowCloseAction = windowCloseAction;
+            _windowCloseAction = windowCloseAction ?? throw new ArgumentNullException("windowCloseAction");
         }
 
         public void SetSetDialogResultAction(Action<bool?> setDialogResultAction)
         {
-            if (setDialogResultAction == null)
-            {
-                throw new ArgumentNullException("setDialogResultAction");
-            }
-
-            this.setDialogResultAction = setDialogResultAction;
+            _setDialogResultAction = setDialogResultAction ?? throw new ArgumentNullException("setDialogResultAction");
         }
 
         private void Retry()
         {
-            this.setDialogResultAction(true);
-            this.windowCloseAction();
+            _setDialogResultAction(true);
+            _windowCloseAction();
         }
 
         private void Cancel()
         {
-            this.windowCloseAction();
+            _windowCloseAction();
         }
 
         #endregion Methods
