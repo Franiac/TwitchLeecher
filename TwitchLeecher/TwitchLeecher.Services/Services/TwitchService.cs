@@ -667,9 +667,9 @@ namespace TwitchLeecher.Services.Services
             {
                 try
                 {
-                    if (!_downloads.Where(d => d.DownloadStatus == DownloadStatus.Active).Any())
+                    if (!_downloads.Where(d => d.DownloadState == DownloadState.Downloading).Any())
                     {
-                        TwitchVideoDownload download = _downloads.Where(d => d.DownloadStatus == DownloadStatus.Queued).FirstOrDefault();
+                        TwitchVideoDownload download = _downloads.Where(d => d.DownloadState == DownloadState.Queued).FirstOrDefault();
 
                         if (download == null)
                         {
@@ -698,7 +698,7 @@ namespace TwitchLeecher.Services.Services
 
                         VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
 
-                        Action<DownloadStatus> setDownloadStatus = download.SetDownloadStatus;
+                        Action<DownloadState> setDownloadState = download.SetDownloadState;
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
                         Action<int> setProgress = download.SetProgress;
@@ -751,7 +751,7 @@ namespace TwitchLeecher.Services.Services
 
                             if (task.IsFaulted)
                             {
-                                setDownloadStatus(DownloadStatus.Error);
+                                setDownloadState(DownloadState.Error);
                                 log(Environment.NewLine + Environment.NewLine + "Download task ended with an error!");
 
                                 if (task.Exception != null)
@@ -761,13 +761,13 @@ namespace TwitchLeecher.Services.Services
                             }
                             else if (task.IsCanceled)
                             {
-                                setDownloadStatus(DownloadStatus.Canceled);
+                                setDownloadState(DownloadState.Canceled);
                                 log(Environment.NewLine + Environment.NewLine + "Download task was canceled!");
                             }
                             else
                             {
                                 success = true;
-                                setDownloadStatus(DownloadStatus.Finished);
+                                setDownloadState(DownloadState.Done);
                                 log(Environment.NewLine + Environment.NewLine + "Download task ended successfully!");
                             }
 
@@ -785,7 +785,7 @@ namespace TwitchLeecher.Services.Services
                         if (_downloadTasks.TryAdd(downloadId, new DownloadTask(downloadVideoTask, continueTask, cancellationTokenSource)))
                         {
                             downloadVideoTask.Start();
-                            setDownloadStatus(DownloadStatus.Active);
+                            setDownloadState(DownloadState.Downloading);
                         }
                     }
                 }
@@ -1189,11 +1189,11 @@ namespace TwitchLeecher.Services.Services
                 {
                     TwitchVideoDownload download = _downloads.Where(d => d.Id == id).FirstOrDefault();
 
-                    if (download != null && (download.DownloadStatus == DownloadStatus.Canceled || download.DownloadStatus == DownloadStatus.Error))
+                    if (download != null && (download.DownloadState == DownloadState.Canceled || download.DownloadState == DownloadState.Error))
                     {
                         download.ResetLog();
                         download.SetProgress(0);
-                        download.SetDownloadStatus(DownloadStatus.Queued);
+                        download.SetDownloadState(DownloadState.Queued);
                         download.SetStatus("Initializing");
                     }
                 }
@@ -1296,7 +1296,7 @@ namespace TwitchLeecher.Services.Services
 
             try
             {
-                return !_downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued).Any();
+                return !_downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.Queued).Any();
             }
             finally
             {
@@ -1335,7 +1335,7 @@ namespace TwitchLeecher.Services.Services
 
         public bool IsFileNameUsed(string fullPath)
         {
-            IEnumerable<TwitchVideoDownload> downloads = _downloads.Where(d => d.DownloadStatus == DownloadStatus.Active || d.DownloadStatus == DownloadStatus.Queued);
+            IEnumerable<TwitchVideoDownload> downloads = _downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.Queued);
 
             foreach (TwitchVideoDownload download in downloads)
             {

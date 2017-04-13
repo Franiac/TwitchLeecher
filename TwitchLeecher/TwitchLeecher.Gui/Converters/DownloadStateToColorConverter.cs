@@ -6,28 +6,28 @@ using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Gui.Converters
 {
-    public class DownloadStatusToColorConverter : IValueConverter
+    public class DownloadStateToColorConverter : IValueConverter
     {
         #region IValueConverter Members
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is DownloadStatus))
+            if (!(value is DownloadState))
             {
-                throw new ApplicationException("Value has to be of type '" + typeof(DownloadStatus).FullName + "'!");
+                throw new ApplicationException("Value has to be of type '" + typeof(DownloadState).FullName + "'!");
             }
 
-            DownloadStatus valueEnum = (DownloadStatus)value;
+            DownloadState valueEnum = (DownloadState)value;
 
             switch (valueEnum)
             {
-                case DownloadStatus.Queued:
+                case DownloadState.Queued:
                     return (Color)ColorConverter.ConvertFromString("#FFFFD400");
 
-                case DownloadStatus.Error:
+                case DownloadState.Error:
                     return (Color)ColorConverter.ConvertFromString("#FFFF1900");
 
-                case DownloadStatus.Canceled:
+                case DownloadState.Canceled:
                     return (Color)ColorConverter.ConvertFromString("#FFFF1900");
 
                 default:

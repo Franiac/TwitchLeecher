@@ -13,8 +13,8 @@ namespace TwitchLeecher.Core.Models
 
         private DownloadParameters _downloadParams;
 
-        private DownloadStatus _downloadStatus;
-        private object _downloadStatusLockObject;
+        private DownloadState _downloadState;
+        private object _downloadStateLockObject;
 
         private StringBuilder _log;
         private object _logLockObject;
@@ -39,7 +39,7 @@ namespace TwitchLeecher.Core.Models
 
             _log = new StringBuilder();
 
-            _downloadStatusLockObject = new object();
+            _downloadStateLockObject = new object();
             _logLockObject = new object();
             _progressLockObject = new object();
             _statusLockObject = new object();
@@ -66,16 +66,16 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public DownloadStatus DownloadStatus
+        public DownloadState DownloadState
         {
             get
             {
-                return _downloadStatus;
+                return _downloadState;
             }
             private set
             {
-                _downloadStatus = value;
-                FirePropertyChanged(nameof(DownloadStatus));
+                _downloadState = value;
+                FirePropertyChanged(nameof(DownloadState));
                 FirePropertyChanged(nameof(Status));
             }
         }
@@ -107,9 +107,9 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (_downloadStatus != DownloadStatus.Active)
+                if (_downloadState != DownloadState.Downloading)
                 {
-                    return _downloadStatus.ToString();
+                    return _downloadState.ToString();
                 }
 
                 return _status;
@@ -136,11 +136,11 @@ namespace TwitchLeecher.Core.Models
 
         #region Methods
 
-        public void SetDownloadStatus(DownloadStatus downloadStatus)
+        public void SetDownloadState(DownloadState downloadState)
         {
-            lock (_downloadStatusLockObject)
+            lock (_downloadStateLockObject)
             {
-                DownloadStatus = downloadStatus;
+                DownloadState = downloadState;
             }
         }
 
