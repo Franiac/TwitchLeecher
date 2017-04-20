@@ -37,7 +37,7 @@
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Methods
 

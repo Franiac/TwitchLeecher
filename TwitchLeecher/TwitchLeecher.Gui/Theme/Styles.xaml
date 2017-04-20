@@ -178,9 +178,9 @@
         <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="800" />
+        <Setter Property="Width" Value="840" />
         <Setter Property="Height" Value="800" />
-        <Setter Property="MinWidth" Value="800" />
+        <Setter Property="MinWidth" Value="840" />
         <Setter Property="MinHeight" Value="570" />
     </Style>
 
@@ -281,7 +281,7 @@
                                                                 </ItemsControl.ItemsPanel>
                                                                 <ItemsControl.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <Button Command="{Binding Command}" FontWeight="Bold" Width="120" Margin="0,0,5,0">
+                                                                        <Button Command="{Binding Command}" FontWeight="Bold" Width="{Binding Width}" Margin="0,0,5,0">
                                                                             <StackPanel Orientation="Horizontal">
                                                                                 <fa:ImageAwesome Icon="{Binding Icon}" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                                                                                 <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />

@@ -23,6 +23,7 @@ namespace TwitchLeecher.Services.Services
 
         private const string APP_EL = "Application";
         private const string APP_CHECKFORUPDATES_EL = "CheckForUpdates";
+        private const string APP_SHOWDONATIONBUTTON_EL = "ShowDonationButton";
 
         private const string SEARCH_EL = "Search";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
@@ -107,6 +108,10 @@ namespace TwitchLeecher.Services.Services
                 appCheckForUpdatesEl.SetValue(preferences.AppCheckForUpdates);
                 appEl.Add(appCheckForUpdatesEl);
 
+                XElement appShowDonationButtonEl = new XElement(APP_SHOWDONATIONBUTTON_EL);
+                appShowDonationButtonEl.SetValue(preferences.AppShowDonationButton);
+                appEl.Add(appShowDonationButtonEl);
+
                 // Search
                 if (!string.IsNullOrWhiteSpace(preferences.SearchChannelName))
                 {
@@ -189,7 +194,6 @@ namespace TwitchLeecher.Services.Services
                     {
                         XAttribute prefVersionAttr = preferencesEl.Attribute(PREFERENCES_VERSION_ATTR);
 
-
                         if (prefVersionAttr != null && Version.TryParse(prefVersionAttr.Value, out Version prefVersion))
                         {
                             preferences.Version = prefVersion;
@@ -210,6 +214,20 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.AppCheckForUpdates = appCheckForUpdatesEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement appShowDonationButtonEl = appEl.Element(APP_SHOWDONATIONBUTTON_EL);
+
+                            if (appShowDonationButtonEl != null)
+                            {
+                                try
+                                {
+                                    preferences.AppShowDonationButton = appShowDonationButtonEl.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -375,6 +393,7 @@ namespace TwitchLeecher.Services.Services
             {
                 Version = _tlVersion,
                 AppCheckForUpdates = true,
+                AppShowDonationButton = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
                 SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,

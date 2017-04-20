@@ -70,7 +70,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             set
             {
-
                 if (TimeSpan.TryParse(value, out TimeSpan ts))
                 {
                     _downloadParams.CropStartTime = ts;
@@ -88,7 +87,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             set
             {
-
                 if (TimeSpan.TryParse(value, out TimeSpan ts))
                 {
                     _downloadParams.CropEndTime = ts;
@@ -247,7 +245,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (DownloadParams.HasErrors)
                 {
-
                     if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
                     {
                         AddError(currentProperty, errors.First());
@@ -263,7 +260,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (DownloadParams.HasErrors)
                 {
-
                     if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
                     {
                         AddError(currentProperty, errors.First());

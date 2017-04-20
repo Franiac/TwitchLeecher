@@ -12,8 +12,6 @@
                 <ResourceDictionary Source="../Theme/Styles.xaml" />
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
-                    <BooleanToVisibilityConverter x:Key="BVConverter" />
-
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
@@ -24,7 +22,6 @@
                             </fa:ImageAwesome>
                         </StackPanel>
                     </DataTemplate>
-
                     <Style x:Key="thisStyle" TargetType="{x:Type UserControl}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path='Videos.Count'}" Value="0">

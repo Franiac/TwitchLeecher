@@ -22,7 +22,7 @@ namespace TwitchLeecher.Shared.Events
         #endregion Constructors
 
         #region Methods
-        
+
         public void Dispose()
         {
             if (_unsubscribeAction != null)
@@ -30,7 +30,7 @@ namespace TwitchLeecher.Shared.Events
                 _unsubscribeAction(this);
                 _unsubscribeAction = null;
             }
-            
+
             GC.SuppressFinalize(this);
         }
 

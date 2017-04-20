@@ -39,6 +39,8 @@
             <Grid Grid.Row="1" Margin="15,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -55,6 +57,20 @@
                                 <TextBlock TextAlignment="Justify">
                                         You will automatically be informed if a new version
                                         of Twitch Leecher is available for download.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button" IsChecked="{Binding Path='CurrentPreferences.AppShowDonationButton'}" VerticalAlignment="Center" />
+                <fa:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource PrefInfo}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Show Donation Button" />
+                                <TextBlock TextAlignment="Justify">
+                                        Show or hide the donation button ($) in the titlebar
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>

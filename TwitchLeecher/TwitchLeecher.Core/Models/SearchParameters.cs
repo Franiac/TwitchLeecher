@@ -143,7 +143,6 @@ namespace TwitchLeecher.Core.Models
                         {
                             foreach (string url in urls)
                             {
-
                                 if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
                                 {
                                     addError();
@@ -171,7 +170,6 @@ namespace TwitchLeecher.Core.Models
                                             if (!string.IsNullOrWhiteSpace(idStr))
                                             {
                                                 idStr = idStr.Trim(new char[] { '/' });
-
 
                                                 if (int.TryParse(idStr, out int idInt) && idInt > 0)
                                                 {
@@ -214,7 +212,6 @@ namespace TwitchLeecher.Core.Models
                         {
                             foreach (string id in ids)
                             {
-
                                 if (!int.TryParse(id, out int idInt) || idInt <= 0)
                                 {
                                     AddError(currentProperty, "One or more IDs are invalid!");

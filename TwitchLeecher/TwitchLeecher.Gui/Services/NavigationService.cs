@@ -54,7 +54,6 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowSearchResults()
         {
-
             if (!_persistentViews.TryGetValue(typeof(SearchResultViewVM), out ViewModelBase vm))
             {
                 vm = _kernel.Get<SearchResultViewVM>();
@@ -74,7 +73,6 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowDownloads()
         {
-
             if (!_persistentViews.TryGetValue(typeof(DownloadsViewVM), out ViewModelBase vm))
             {
                 vm = _kernel.Get<DownloadsViewVM>();

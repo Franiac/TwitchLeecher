@@ -118,8 +118,8 @@ namespace TwitchLeecher.Gui.Views
 
                 if (mainWindowInfo != null)
                 {
-                    Width = mainWindowInfo.Width;
-                    Height = mainWindowInfo.Height;
+                    Width = Math.Max(MinWidth, mainWindowInfo.Width);
+                    Height = Math.Max(MinHeight, mainWindowInfo.Height);
                     Top = mainWindowInfo.Top;
                     Left = mainWindowInfo.Left;
                     WindowState = mainWindowInfo.IsMaximized ? WindowState.Maximized : WindowState.Normal;

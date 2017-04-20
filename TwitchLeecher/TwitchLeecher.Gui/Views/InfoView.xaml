@@ -50,7 +50,7 @@
             </TextBlock>
 
             <TextBlock Grid.Row="5" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="6" Text="If you like the program, please consider making a donation!" Margin="15,5,0,0" />
+            <TextBlock Grid.Row="6" Text="Help me out with a bottle of beer if you like the program :)" Margin="15,5,0,0" />
             <Button Grid.Row="7" Command="{Binding DonateCommand}" Width="120" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">

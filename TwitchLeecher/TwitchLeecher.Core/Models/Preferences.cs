@@ -26,6 +26,8 @@ namespace TwitchLeecher.Core.Models
 
         private bool _appCheckForUpdates;
 
+        private bool _appShowDonationButton;
+
         private string _searchChannelName;
 
         private VideoType _searchVideoType;
@@ -69,6 +71,18 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _appCheckForUpdates, value);
+            }
+        }
+
+        public bool AppShowDonationButton
+        {
+            get
+            {
+                return _appShowDonationButton;
+            }
+            set
+            {
+                SetProperty(ref _appShowDonationButton, value);
             }
         }
 
@@ -286,6 +300,7 @@ namespace TwitchLeecher.Core.Models
             {
                 Version = Version,
                 AppCheckForUpdates = AppCheckForUpdates,
+                AppShowDonationButton = AppShowDonationButton,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
                 SearchLoadLimit = SearchLoadLimit,

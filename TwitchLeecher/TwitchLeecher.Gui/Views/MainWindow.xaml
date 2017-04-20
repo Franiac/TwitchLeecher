@@ -20,6 +20,8 @@
                 <ResourceDictionary Source="/TwitchLeecher.Gui;component/Theme/Styles.xaml" />
                 <ResourceDictionary Source="/TwitchLeecher.Gui;component/Theme/Images.xaml" />
                 <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="BVConverter" />
+
                     <DataTemplate DataType="{x:Type vm:WelcomeViewVM}">
                         <view:WelcomeView />
                     </DataTemplate>
@@ -126,6 +128,9 @@
                     <Button Style="{StaticResource LoginButton}" Command="{Binding ShowAuthorizeCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button Style="{StaticResource MiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
                         <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                    <Button Style="{StaticResource MiniButton}" Command="{Binding DonateCommand}" Visibility="{Binding ShowDonationButton, Converter={StaticResource BVConverter}}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Help me out with a bottle of beer if you like the program :)">
+                        <fa:ImageAwesome Icon="Usd" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource MiniButton}" Command="{Binding ShowInfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="About &amp; Support">
                         <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
