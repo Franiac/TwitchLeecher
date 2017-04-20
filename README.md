@@ -39,12 +39,13 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 
 ## Support & Issues
 
-When creating a new issue please follow the below checklist:
+**IMPORTANT:** Help me beeing efficient, please! I am developing Twitch Leecher in my free time for no money. Contribute to the project by posting complete, structured and helpful issues which I can reproduce quickly without asking for missing information. When creating a new issue please follow the below checklist:
 
 - Provide the version of Twitch Leecher you are using
 - Provide as much information about the VOD as possible (Url, Channel, ID)
 - Provide information about your operating system (e.g. Windows 10 64 Bit)
 - Try to describe the problem as detailed as possible, I cannot read your mind ;)
+- Is there any additional information about the issue that might be interesting for me? Write it down!
 - When you have a problem with a download, provide the download log created by Twitch Leecher (see screenshot below)
 
 ![Twitch Leecher Log Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/TL133Log.jpg)
