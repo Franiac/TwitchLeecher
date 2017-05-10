@@ -42,8 +42,6 @@ namespace TwitchLeecher.Core.Models
 
         private string _downloadFileName;
 
-        private string _downloadVideoQuality;
-
         private bool _downloadRemoveCompleted;
 
         #endregion Fields
@@ -167,18 +165,6 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _downloadFileName, value);
-            }
-        }
-
-        public string DownloadVideoQuality
-        {
-            get
-            {
-                return _downloadVideoQuality;
-            }
-            set
-            {
-                SetProperty(ref _downloadVideoQuality, value);
             }
         }
 
@@ -308,7 +294,6 @@ namespace TwitchLeecher.Core.Models
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
                 DownloadFileName = DownloadFileName,
-                DownloadVideoQuality = DownloadVideoQuality,
                 DownloadRemoveCompleted = DownloadRemoveCompleted
             };
 

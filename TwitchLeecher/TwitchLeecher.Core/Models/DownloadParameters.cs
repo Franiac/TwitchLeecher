@@ -10,7 +10,7 @@ namespace TwitchLeecher.Core.Models
         #region Fields
 
         private TwitchVideo _video;
-        private TwitchVideoQuality _resolution;
+        private TwitchVideoQuality _quality;
         private VodAuthInfo _vodAuthInfo;
 
         private string _folder;
@@ -26,7 +26,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, TwitchVideoQuality resolution, VodAuthInfo vodAuthInfo, string folder, string filename)
+        public DownloadParameters(TwitchVideo video, TwitchVideoQuality quality, VodAuthInfo vodAuthInfo, string folder, string filename)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -39,7 +39,7 @@ namespace TwitchLeecher.Core.Models
             }
 
             _video = video ?? throw new ArgumentNullException(nameof(video));
-            _resolution = resolution ?? throw new ArgumentNullException(nameof(resolution));
+            _quality = quality ?? throw new ArgumentNullException(nameof(quality));
             _vodAuthInfo = vodAuthInfo ?? throw new ArgumentNullException(nameof(vodAuthInfo));
 
             _folder = folder;
@@ -60,15 +60,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public TwitchVideoQuality Resolution
+        public TwitchVideoQuality Quality
         {
             get
             {
-                return _resolution;
+                return _quality;
             }
             set
             {
-                SetProperty(ref _resolution, value, nameof(Resolution));
+                SetProperty(ref _quality, value, nameof(Quality));
             }
         }
 
@@ -197,11 +197,11 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(Resolution);
+            string currentProperty = nameof(Quality);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_resolution == null)
+                if (_quality == null)
                 {
                     AddError(currentProperty, "Please select a quality!");
                 }

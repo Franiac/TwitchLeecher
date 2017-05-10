@@ -35,7 +35,6 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
-        private const string DOWNLOAD_VIDEOQUALITY_EL = "VideoQuality";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
 
         #endregion Constants
@@ -153,10 +152,6 @@ namespace TwitchLeecher.Services.Services
                     downloadFileNameEl.SetValue(preferences.DownloadFileName);
                     downloadEl.Add(downloadFileNameEl);
                 }
-
-                XElement downloadVideoQualityEl = new XElement(DOWNLOAD_VIDEOQUALITY_EL);
-                downloadVideoQualityEl.SetValue(preferences.DownloadVideoQuality);
-                downloadEl.Add(downloadVideoQualityEl);
 
                 XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
@@ -352,20 +347,6 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
-                            XElement downloadVideoQualityEl = downloadEl.Element(DOWNLOAD_VIDEOQUALITY_EL);
-
-                            if (downloadVideoQualityEl != null)
-                            {
-                                try
-                                {
-                                    preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsString();
-                                }
-                                catch
-                                {
-                                    // Value from config file could not be loaded, use default value
-                                }
-                            }
-
                             XElement donwloadRemoveCompletedEl = downloadEl.Element(DOWNLOAD_REMOVECOMPLETED_EL);
 
                             if (donwloadRemoveCompletedEl != null)
@@ -401,7 +382,6 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadVideoQuality = TwitchVideoQuality.QUALITY_SOURCE,
                 DownloadRemoveCompleted = false
             };
 

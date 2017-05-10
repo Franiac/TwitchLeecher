@@ -694,7 +694,7 @@ namespace TwitchLeecher.Services.Services
                         TimeSpan cropStartTime = downloadParams.CropStartTime;
                         TimeSpan cropEndTime = downloadParams.CropEndTime;
 
-                        TwitchVideoQuality resolution = downloadParams.Resolution;
+                        TwitchVideoQuality quality = downloadParams.Quality;
 
                         VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
 
@@ -716,7 +716,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            string playlistUrl = RetrievePlaylistUrlForQuality(log, resolution, urlIdTrimmed, vodAuthInfo);
+                            string playlistUrl = RetrievePlaylistUrlForQuality(log, quality, urlIdTrimmed, vodAuthInfo);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -805,7 +805,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
-            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.DisplayStringShort);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.Quality.DisplayString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
             log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
@@ -841,7 +841,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
             using (WebClient webClient = CreateTwitchWebClient())
             {
@@ -856,9 +856,9 @@ namespace TwitchLeecher.Services.Services
                     log(Environment.NewLine + url);
                 });
 
-                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + resolution.QualityId + "/")).First();
+                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + quality.QualityId + "/")).First();
 
-                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
+                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + quality.DisplayString + " is " + playlistUrl);
 
                 return playlistUrl;
             }
@@ -1224,7 +1224,7 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoQuality> resolutions = ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
+            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("published_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             Uri url = new Uri(videoJson.Value<string>("url"));
 
@@ -1234,12 +1234,12 @@ namespace TwitchLeecher.Services.Services
 
             Uri thumbnail = new Uri(imgUrlTemplate);
 
-            return new TwitchVideo(channel, title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
+            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, url);
         }
 
-        public List<TwitchVideoQuality> ParseResolutions(JObject resolutionsJson, JObject fpsJson)
+        public List<TwitchVideoQuality> ParseQualities(JObject resolutionsJson, JObject fpsJson)
         {
-            List<TwitchVideoQuality> resolutions = new List<TwitchVideoQuality>();
+            List<TwitchVideoQuality> qualities = new List<TwitchVideoQuality>();
 
             Dictionary<string, string> fpsList = new Dictionary<string, string>();
 
@@ -1259,23 +1259,23 @@ namespace TwitchLeecher.Services.Services
                     string qualityId = resolution.Name;
                     string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
 
-                    resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
+                    qualities.Add(new TwitchVideoQuality(qualityId, value, fps));
                 }
             }
 
             if (fpsList.ContainsKey(TwitchVideoQuality.QUALITY_AUDIO))
             {
-                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_AUDIO));
+                qualities.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_AUDIO));
             }
 
-            if (!resolutions.Any())
+            if (!qualities.Any())
             {
-                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_SOURCE));
+                qualities.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_SOURCE));
             }
 
-            resolutions = resolutions.OrderBy(r => r.QualityPriority).ToList();
+            qualities.Sort();
 
-            return resolutions;
+            return qualities;
         }
 
         public void Pause()
