@@ -6,7 +6,7 @@
         xmlns:view="clr-namespace:TwitchLeecher.Gui.Views"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
-        Style="{DynamicResource MainWindow}"
+        Style="{DynamicResource TlMainWindow}"
         WindowStartupLocation="CenterScreen"
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         Name="thisWindow"
@@ -81,12 +81,12 @@
 
         <Border Grid.Row="0" BorderThickness="0,0,0,1">
             <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </Border.BorderBrush>
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="{StaticResource WindowTopColor}" Offset="1" />
-                    <GradientStop Color="{StaticResource WindowBottomColor}" Offset="0" />
+                    <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="1" />
+                    <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="0" />
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
@@ -101,8 +101,8 @@
                 <Image Grid.Column="0" Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Height="40" Margin="10" RenderOptions.BitmapScalingMode="Fant" />
 
                 <StackPanel Grid.Column="1" Margin="0,6,0,0">
-                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding Title, FallbackValue='Twitch Leecher X.Y'}" />
-                    <TextBlock Style="{StaticResource SubTitleTextBlock}" Text="The Broadcast Downloader" Margin="10,0,0,0" />
+                    <TextBlock Style="{StaticResource TlTitleText}" Text="{Binding Title, FallbackValue='Twitch Leecher X.Y'}" />
+                    <TextBlock Style="{StaticResource SubTitleText}" Text="The Broadcast Downloader" Margin="10,0,0,0" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" VerticalAlignment="Center">
@@ -125,26 +125,26 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource LoginButton}" Command="{Binding ShowAuthorizeCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
+                    <Button Style="{StaticResource TlLoginButton}" Command="{Binding ShowAuthorizeCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
                         <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding DonateCommand}" Visibility="{Binding ShowDonationButton, Converter={StaticResource BVConverter}}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Help me out with a bottle of beer if you like the program :)">
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding DonateCommand}" Visibility="{Binding ShowDonationButton, Converter={StaticResource BVConverter}}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Help me out with a bottle of beer if you like the program :)">
                         <fa:ImageAwesome Icon="Usd" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding ShowInfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="About &amp; Support">
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowInfoCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="About &amp; Support">
                         <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoMinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Minimize}" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoMaximizeRestoreCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMaximizeRestoreCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_MaximizeRestore}" />
                     </Button>
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding DoCloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoCloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <Image Style="{StaticResource Img_Close}" />
                     </Button>
                 </StackPanel>
@@ -153,10 +153,10 @@
 
         <view:NotificationStrip x:Name="notificationStrip" Grid.Row="1" VerticalAlignment="Top" Panel.ZIndex="1000">
             <view:NotificationStrip.Background>
-                <SolidColorBrush Color="{StaticResource ControlBackgroundColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </view:NotificationStrip.Background>
         </view:NotificationStrip>
 
-        <ctrl:FadeContentControl Grid.Row="1" Content="{Binding MainView}" Style="{StaticResource FadeContentControlStyle}" />
+        <ctrl:FadeContentControl Grid.Row="1" Content="{Binding MainView}" Style="{StaticResource TlFadeContentControl}" />
     </Grid>
 </Window>

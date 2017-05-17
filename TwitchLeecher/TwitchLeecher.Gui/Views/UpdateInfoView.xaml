@@ -27,7 +27,7 @@
 
             <Border Grid.Row="0" Padding="0,0,0,5" BorderThickness="0,0,0,1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
                 <TextBlock  Text="Update Available" FontSize="21.333" FontWeight="Bold" />
             </Border>
@@ -47,9 +47,9 @@
 
             <Border Grid.Row="6" BorderThickness="1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
-                <ctrl:ScrollingTextBox Style="{StaticResource ScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
+                <ctrl:ScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

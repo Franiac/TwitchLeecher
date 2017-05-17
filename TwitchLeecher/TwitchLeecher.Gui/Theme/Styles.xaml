@@ -1,8 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-                    xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
-                    xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
                     xmlns:fa="http://schemas.fontawesome.io/icons/">
 
     <ResourceDictionary.MergedDictionaries>
@@ -13,42 +10,76 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type ContentPresenter}">
-        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+    <!-- TextBlock -->
+    <Style x:Key="TlDropShadowText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="1" Color="{StaticResource Global.Theme.Color}" BlurRadius="2" RenderingBias="Quality" Opacity="0.5" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
-    <Style x:Key="MiniButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="TlTitleText"  TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style x:Key="SubTitleText"  TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
+        <Setter Property="FontStyle" Value="Italic" />
+    </Style>
+
+    <Style x:Key="TlToolTipHeadlineText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Margin" Value="0,0,0,5" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <SolidColorBrush x:Key="TlTabItemText.Foreground" Color="{StaticResource Text.Foreground.Dark.Color}" />
+
+    <Style x:Key="TlTabItemText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource TlTabItemText.Foreground}" />
+    </Style>
+    <!-- /TextBlock -->
+
+    <!-- Button -->
+    <Style x:Key="TlMiniButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="30" />
     </Style>
 
-    <Style x:Key="ImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="TlImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="Auto" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <!-- /Button -->
 
-    <ToolTip x:Key="AuthorizedToolTip">
+    <!-- LoginButton -->
+    <SolidColorBrush x:Key="TlLoginButton.Authorized.Background" Color="{StaticResource LoginButton.Background.Authorized.Color}" />
+    <SolidColorBrush x:Key="TlLoginButton.Authorized.Border" Color="{StaticResource LoginButton.Background.Authorized.Color}" />
+    <SolidColorBrush x:Key="TlLoginButton.Authorized.MouseOver.Background" Color="{StaticResource LoginButton.Background.Authorized.MouseOver.Color}" />
+    <SolidColorBrush x:Key="TlLoginButton.Authorized.MouseOver.Border" Color="{StaticResource LoginButton.Background.Authorized.MouseOver.Color}" />
+
+    <ToolTip x:Key="TlAuthorizedToolTip">
         <TextBlock Text="Your Twitch account is authorized for sub-only VOD downloads" />
     </ToolTip>
 
-    <ToolTip x:Key="UnauthorizedToolTip">
+    <ToolTip x:Key="TlUnauthorizedToolTip">
         <TextBlock Text="Authorize your Twitch account in order to download sub-only VODs" />
     </ToolTip>
 
-    <Style x:Key="LoginButton" TargetType="Button" BasedOn="{StaticResource MiniButton}">
+    <Style x:Key="TlLoginButton" TargetType="Button" BasedOn="{StaticResource TlMiniButton}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" ToolTip="{StaticResource UnauthorizedToolTip}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" ToolTip="{StaticResource TlUnauthorizedToolTip}">
                         <fa:ImageAwesome x:Name="icon" Icon="Twitch" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsAuthorized}" Value="True">
-                            <Setter Property="Background" TargetName="border" Value="#FF00E600" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FF00E600" />
-                            <Setter Property="ToolTip" TargetName="border" Value="{StaticResource AuthorizedToolTip}" />
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.Border}" />
+                            <Setter Property="ToolTip" TargetName="border" Value="{StaticResource TlAuthorizedToolTip}" />
                             <Setter Property="Icon" TargetName="icon" Value="Check" />
                         </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="true">
@@ -60,8 +91,8 @@
                                 <Condition Binding="{Binding IsAuthorized}" Value="True" />
                                 <Condition Binding="{Binding RelativeSource='{RelativeSource Self}', Path='IsMouseOver'}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="#FFAAFFAA" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FFAAFFAA" />
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.MouseOver.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.MouseOver.Border}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsPressed" Value="true">
                             <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
@@ -72,166 +103,79 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- /LoginButton -->
 
-    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="TextAlignment" Value="Justify" />
-        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#FF6D6D6D" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+    <!-- MultilineTextBox -->
+    <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border" Color="{StaticResource Control.Border.MouseOver.Color}" />
+    <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{StaticResource Control.Border.Focus.Color}" />
 
-    <Style x:Key="ToolTipHeadline" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
-        <Setter Property="Margin" Value="0,0,0,5" />
-        <Setter Property="FontWeight" Value="Bold" />
-    </Style>
+    <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
+        <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Rectangle x:Name="Corner" Grid.Column="1" Fill="Transparent" Grid.Row="1" />
+            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0" />
+            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" />
+            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" />
+        </Grid>
+    </ControlTemplate>
 
-    <Style TargetType="{x:Type Label}">
-        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#FF6D6D6D" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="TextDropShadow" TargetType="{x:Type TextBlock}">
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect ShadowDepth="1" Color="{StaticResource MainColor}" BlurRadius="2" RenderingBias="Quality" Opacity="0.5" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="TextTabItem" TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource ControlForegroundColor}" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="{x:Type Hyperlink}">
-        <Setter Property="Foreground" Value="#FF2994FF" />
-    </Style>
-
-    <Style x:Key="TitleTextBlock" BasedOn="{StaticResource TextDropShadow}" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontSize" Value="20" />
-        <Setter Property="FontWeight" Value="Bold" />
-    </Style>
-
-    <Style x:Key="SubTitleTextBlock" BasedOn="{StaticResource TextDropShadow}" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontStyle" Value="Italic" />
-    </Style>
-
-    <Style x:Key="MultilineTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+    <Style x:Key="TlMultilineTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="Padding" Value="3" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-        <Setter Property="Template" Value="{StaticResource ScrollTextBoxTpl}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" Template="{StaticResource TlScrollViewerTpl}" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="border" Value="0.56" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultilineTextBox.MouseOver.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultilineTextBox.Focus.Border}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
+    <!-- /MultilineTextBox -->
 
-    <Style x:Key="ScrollingTextBox" TargetType="{x:Type TextBox}"  BasedOn="{StaticResource {x:Type TextBox}}">
+    <!-- /ScrollingTextBox -->
+    <SolidColorBrush x:Key="ScrollingTextBox.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="ScrollingTextBox.Border" Color="{StaticResource Global.Theme.Border.Color}" />
+
+    <Style x:Key="TlScrollingTextBox" TargetType="{x:Type TextBox}"  BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="Padding" Value="5" />
+        <Setter Property="Height" Value="Auto" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource OutlineColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainFontColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Height" Value="Auto" />
-    </Style>
-
-    <Style x:Key="MainWindow" TargetType="{x:Type Window}">
-        <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="AllowsTransparency" Value="False" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource OutlineColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainFontColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainWindowBackgroundColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
-        <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="840" />
-        <Setter Property="Height" Value="800" />
-        <Setter Property="MinWidth" Value="840" />
-        <Setter Property="MinHeight" Value="570" />
-    </Style>
-
-    <Style x:Key="PopupWindow" TargetType="{x:Type Window}">
-        <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="AllowsTransparency" Value="True" />
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainFontColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
-        <Setter Property="ResizeMode" Value="NoResize" />
-        <Setter Property="SizeToContent" Value="WidthAndHeight" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Foreground" Value="{StaticResource ScrollingTextBox.Foreground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ScrollingTextBox.Border}" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
+    <!-- /ScrollingTextBox -->
 
-    <Style TargetType="{x:Type ToolTip}">
-        <Setter Property="FontSize" Value="{StaticResource MainFontSize}" />
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource ControlForegroundColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="Black" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Padding" Value="10,5,10,5" />
-    </Style>
+    <!-- FadeContentControl -->
+    <SolidColorBrush x:Key="FadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />
 
-    <Style x:Key="PrefInfo" TargetType="{x:Type fa:ImageAwesome}">
-        <Setter Property="ToolTipService.InitialShowDelay" Value="100" />
-        <Setter Property="Width" Value="14" />
-        <Setter Property="Height" Value="14" />
-        <Setter Property="Icon" Value="QuestionCircle" />
-        <Setter Property="Foreground">
-            <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="FadeContentControlStyle" TargetType="ContentControl">
+    <Style x:Key="TlFadeContentControl" TargetType="ContentControl">
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate />
@@ -256,14 +200,11 @@
                                         <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" Visibility="{Binding HasMenu, Converter={StaticResource BVConverter}}">
                                             <ContentPresenter.ContentTemplate>
                                                 <DataTemplate>
-                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0">
-                                                        <Border.BorderBrush>
-                                                            <SolidColorBrush Color="{StaticResource MainColor}" />
-                                                        </Border.BorderBrush>
+                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0" BorderBrush="{StaticResource FadeContentControl.Border}">
                                                         <Border.Background>
-                                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                                <GradientStop Color="{StaticResource WindowBottomColor}" Offset="1" />
-                                                                <GradientStop Color="{StaticResource WindowTopColor}" Offset="0" />
+                                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="1" />
+                                                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="0" />
                                                             </LinearGradientBrush>
                                                         </Border.Background>
                                                         <Grid>
@@ -304,4 +245,42 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- /FadeContentControl -->
+
+    <!-- Popup -->
+    <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
+
+    <Style x:Key="TlPopupWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Foreground" Value="{StaticResource PopupWindow.Foreground}" />
+        <Setter Property="FontSize" Value="{StaticResource Global.Font.Size}" />
+        <Setter Property="ResizeMode" Value="NoResize" />
+        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <!-- /Popup -->
+
+    <!-- Window -->
+    <SolidColorBrush x:Key="MainWindow.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="MainWindow.Background" Color="{StaticResource Window.Background.Color}" />
+    <SolidColorBrush x:Key="MainWindow.Border" Color="{StaticResource Global.Theme.Border.Color}" />
+
+    <Style x:Key="TlMainWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="AllowsTransparency" Value="False" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource MainWindow.Foreground}" />
+        <Setter Property="Background" Value="{StaticResource MainWindow.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource MainWindow.Border}" />
+        <Setter Property="FontSize" Value="{StaticResource Global.Font.Size}" />
+        <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Width" Value="840" />
+        <Setter Property="Height" Value="800" />
+        <Setter Property="MinWidth" Value="840" />
+        <Setter Property="MinHeight" Value="570" />
+    </Style>
+    <!-- /Window -->
 </ResourceDictionary>

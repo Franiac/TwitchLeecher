@@ -31,7 +31,7 @@
 
             <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
                 <TextBlock  Text="Application" FontSize="21.333" FontWeight="Bold" />
             </Border>
@@ -49,11 +49,11 @@
                 </Grid.ColumnDefinitions>
 
                 <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates" IsChecked="{Binding Path='CurrentPreferences.AppCheckForUpdates'}" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Check for Updates" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Check for Updates" />
                                 <TextBlock TextAlignment="Justify">
                                         You will automatically be informed if a new version
                                         of Twitch Leecher is available for download.
@@ -64,11 +64,11 @@
                 </fa:ImageAwesome>
 
                 <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button" IsChecked="{Binding Path='CurrentPreferences.AppShowDonationButton'}" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Show Donation Button" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Show Donation Button" />
                                 <TextBlock TextAlignment="Justify">
                                         Show or hide the donation button ($) in the titlebar
                                 </TextBlock>
@@ -80,7 +80,7 @@
 
             <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
                 <TextBlock  Text="Search" FontSize="21.333" FontWeight="Bold" />
             </Border>
@@ -105,11 +105,11 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Channel Name:" VerticalAlignment="Center" />
                 <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path='CurrentPreferences.SearchChannelName', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Channel Name" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Channel Name" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a default channel name to use in the search dialog.
                                 </TextBlock>
@@ -124,11 +124,11 @@
                     <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding Path='CurrentPreferences.SearchVideoType', Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                     <RadioButton GroupName="VideoType" Content="Upload" IsChecked="{Binding Path='CurrentPreferences.SearchVideoType', Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                 </StackPanel>
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Video Type" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Type" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a default video type to use in the search dialog.
                                 </TextBlock>
@@ -139,11 +139,11 @@
 
                 <TextBlock Grid.Row="4" Grid.Column="0"  Text="Load Limit:" VerticalAlignment="Center" />
                 <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding Path='CurrentPreferences.SearchLoadLimit'}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
-                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Load Limit" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Load Limit" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a default video load limit to use in the search dialog.
                                 </TextBlock>
@@ -153,11 +153,11 @@
                 </fa:ImageAwesome>
 
                 <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.SearchOnStartup'}" Content="Search on Start" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Search on Start" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Search on Start" />
                                 <TextBlock TextAlignment="Justify">
                                         If enabled, Twitch Leecher performs a search with the above settings on application startup.
                                 </TextBlock>
@@ -169,7 +169,7 @@
 
             <Border Grid.Row="4" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
                 <TextBlock  Text="Download" FontSize="21.333" FontWeight="Bold" />
             </Border>
@@ -200,13 +200,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding Path='CurrentPreferences.DownloadTempFolder', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Temporary Folder" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Temporary Folder" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a temporary download folder. This folder will be used to store temporary files during the download process. You need write permissions on this folder.
                                 </TextBlock>
@@ -223,13 +223,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding Path='CurrentPreferences.DownloadFolder', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                    <Button Style="{StaticResource MiniButton}" Command="{Binding ChooseDownloadFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Download Folder" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download Folder" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a default download folder to use in the download dialog. You need write permissions on this folder.
                                 </TextBlock>
@@ -240,11 +240,11 @@
 
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Filename Template:" VerticalAlignment="Center" />
                 <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Path='CurrentPreferences.DownloadFileName', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="415">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Filename Template" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Filename Template" />
                                 <TextBlock TextAlignment="Justify">
                                         Specify a default filename template for your downloads.
                                 </TextBlock>
@@ -324,11 +324,11 @@
                 </fa:ImageAwesome>
 
                 <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.DownloadRemoveCompleted'}" Content="Remove successful downloads from queue" VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource PrefInfo}">
+                <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ToolTipHeadline}" Text="Remove Successful Downloads" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Remove Successful Downloads" />
                                 <TextBlock TextAlignment="Justify">
                                         If enabled, successfully downloaded VODs get removed from the download queue.
                                 </TextBlock>

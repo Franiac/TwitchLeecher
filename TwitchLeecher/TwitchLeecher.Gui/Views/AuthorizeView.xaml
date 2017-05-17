@@ -22,14 +22,14 @@
 
         <Border Grid.Row="0" Margin="0, 0, 0, 15" Padding="0,0,0,5" BorderThickness="0,0,0,1">
             <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </Border.BorderBrush>
             <TextBlock  Text="Authorize Twitch Account" FontSize="21.333" FontWeight="Bold" />
         </Border>
 
         <TextBlock Grid.Row="1" Text="If you want to download sub-only VODs, you need to authorize your Twitch account. This is the only way Twitch Leecher can verify that you are subscribed to the channel you are trying to download from." />
 
-        <Button Grid.Row="3" Style="{StaticResource ImageButton}" Command="{Binding ConnectCommand}" Cursor="Hand" HorizontalAlignment="Left">
+        <Button Grid.Row="3" Style="{StaticResource TlImageButton}" Command="{Binding ConnectCommand}" Cursor="Hand">
             <Button.Template>
                 <ControlTemplate>
                     <Image Style="{StaticResource Img_Connect}" />
