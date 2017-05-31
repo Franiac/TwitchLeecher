@@ -169,6 +169,7 @@
         <Setter Property="Foreground" Value="{StaticResource ScrollingTextBox.Foreground}" />
         <Setter Property="BorderBrush" Value="{StaticResource ScrollingTextBox.Border}" />
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="Transparent" />
     </Style>
     <!-- /ScrollingTextBox -->
 
