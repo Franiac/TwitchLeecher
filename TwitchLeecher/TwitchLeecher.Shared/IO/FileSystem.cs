@@ -89,7 +89,15 @@ namespace TwitchLeecher.Shared.IO
                     return false;
                 }
 
-                DirectoryInfo dirInfo = new DirectoryInfo(dir);
+                DriveInfo driveInfo = new DriveInfo(Directory.GetDirectoryRoot(dir));
+
+                // Only check local drives
+                if (driveInfo.DriveType != DriveType.Fixed)
+                {
+                    return true;
+                }
+
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);                
 
                 DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
 
