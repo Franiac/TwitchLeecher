@@ -77,6 +77,7 @@
     <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Extensions\Icon.cs" />
+    <Compile Include="Interfaces\IDonationService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\INavigationState.cs" />
     <Compile Include="Interfaces\ISearchService.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Interfaces\IDialogService.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
+    <Compile Include="Services\DonationService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\SearchService.cs" />

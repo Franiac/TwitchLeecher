@@ -18,6 +18,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _donateCommand;
 
         private IDialogService _dialogService;
+        private IDonationService _donationService;
 
         private readonly object _commandLockObject;
 
@@ -25,13 +26,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public InfoViewVM(IDialogService dialogService)
+        public InfoViewVM(IDialogService dialogService, IDonationService donationService)
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
             _productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
             _dialogService = dialogService;
+            _donationService = donationService;
 
             _commandLockObject = new object();
         }
@@ -104,7 +106,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE");
+                    _donationService.OpenDonationPage();
                 }
             }
             catch (Exception ex)

@@ -1,6 +1,5 @@
 ﻿using Ninject;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
@@ -35,6 +34,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private IEventAggregator _eventAggregator;
         private ITwitchService _twitchService;
         private IDialogService _dialogService;
+        private IDonationService _donationService;
         private INavigationService _navigationService;
         private ISearchService _searchService;
         private IPreferencesService _preferencesService;
@@ -62,6 +62,7 @@ namespace TwitchLeecher.Gui.ViewModels
             IEventAggregator eventAggregator,
             ITwitchService twitchService,
             IDialogService dialogService,
+            IDonationService donationService,
             INavigationService navigationService,
             ISearchService searchService,
             IPreferencesService preferencesService,
@@ -76,6 +77,7 @@ namespace TwitchLeecher.Gui.ViewModels
             _eventAggregator = eventAggregator;
             _twitchService = twitchService;
             _dialogService = dialogService;
+            _donationService = donationService;
             _navigationService = navigationService;
             _searchService = searchService;
             _preferencesService = preferencesService;
@@ -380,7 +382,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE");
+                    _donationService.OpenDonationPage();
                 }
             }
             catch (Exception ex)

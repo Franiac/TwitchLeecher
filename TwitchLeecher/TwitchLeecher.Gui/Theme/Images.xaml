@@ -35,6 +35,10 @@
         <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Connect.png" />
     </Style>
 
+    <Style x:Key="Img_Donate" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Donate.png" />
+    </Style>
+
     <Style x:Key="Img_Spinner" TargetType="{x:Type fa:ImageAwesome}">
         <Setter Property="Icon" Value="Spinner" />
         <Setter Property="Spin" Value="True" />
