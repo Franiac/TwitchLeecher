@@ -702,7 +702,7 @@ namespace TwitchLeecher.Services.Services
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
                         Action<int> setProgress = download.SetProgress;
-                        Action<bool> setIsEncoding = download.SetIsEncoding;
+                        Action<bool> setIsProcessing = download.SetIsProcessing;
 
                         Task downloadVideoTask = new Task(() =>
                         {
@@ -736,7 +736,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
+                            ProcessVideo(log, setStatus, setProgress, setIsProcessing, ffmpegFile, playlistFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -745,7 +745,7 @@ namespace TwitchLeecher.Services.Services
                             CleanUp(tempDir, log);
 
                             setProgress(100);
-                            setIsEncoding(false);
+                            setIsProcessing(false);
 
                             bool success = false;
 
@@ -1076,11 +1076,11 @@ namespace TwitchLeecher.Services.Services
             log(" done!");
         }
 
-        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
+        private void ProcessVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            Action<bool> setIsProcessing, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Processing");
-            setIsEncoding(true);
+            setIsProcessing(true);
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
@@ -1117,12 +1117,12 @@ namespace TwitchLeecher.Services.Services
 
                                 if (TimeSpan.TryParse(timeStr, out TimeSpan current))
                                 {
-                                    setIsEncoding(false);
+                                    setIsProcessing(false);
                                     setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
                                 }
                                 else
                                 {
-                                    setIsEncoding(true);
+                                    setIsProcessing(true);
                                 }
                             }
                         }
@@ -1143,11 +1143,11 @@ namespace TwitchLeecher.Services.Services
 
                 if (p.ExitCode == 0)
                 {
-                    log(Environment.NewLine + "Encoding complete!");
+                    log(Environment.NewLine + "Processing complete!");
                 }
                 else
                 {
-                    throw new ApplicationException("An error occured while encoding the video!");
+                    throw new ApplicationException("An error occured while processing the video!");
                 }
             }
         }

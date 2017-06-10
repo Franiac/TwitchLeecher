@@ -16,7 +16,6 @@
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
                     <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
-                    <converters:DownloadStatusToVisConverter x:Key="downloadStatusToVisibilityConverter" />
                     <converters:DownloadStatusToColorConverter x:Key="downloadStatusToColorConverter" />
 
                     <DataTemplate x:Key="emptyView">
@@ -86,7 +85,7 @@
                                                 ToolTip="Retry"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch"
-                                                Visibility="{Binding DownloadStatus, Converter={StaticResource downloadStatusToVisibilityConverter}, ConverterParameter={x:Static enums:DownloadStatus.Canceled}}">
+                                                Visibility="{Binding CanRetry, Converter={StaticResource ResourceKey='BVConverter'}}">
                                             <fa:ImageAwesome Icon="Refresh" Width="16" Height="16" />
                                         </Button>
                                         <Button CommandParameter="{Binding Id}"
@@ -189,8 +188,8 @@
                                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                                 </Border.BorderBrush>
                                 <Grid Height="26">
-                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsEncoding}" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsEncoding, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
+                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsProcessing}" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsProcessing, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="Black" />
                                         </TextBlock.Foreground>

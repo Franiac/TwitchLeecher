@@ -71,7 +71,6 @@
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Controls\SpacedUniformGrid.cs" />
     <Compile Include="Controls\ThemedMessageBox.cs" />
-    <Compile Include="Converters\DownloadStatusToVisConverter.cs" />
     <Compile Include="Converters\DownloadStatusToColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />

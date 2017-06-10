@@ -25,8 +25,8 @@ namespace TwitchLeecher.Core.Models
         private string _status;
         private object _statusLockObject;
 
-        private bool _isEncoding;
-        private object _isEncodingLockObject;
+        private bool _isProcessing;
+        private object _isProcessingLockObject;
 
         #endregion Fields
 
@@ -43,7 +43,7 @@ namespace TwitchLeecher.Core.Models
             _logLockObject = new object();
             _progressLockObject = new object();
             _statusLockObject = new object();
-            _isEncodingLockObject = new object();
+            _isProcessingLockObject = new object();
         }
 
         #endregion Constructors
@@ -76,7 +76,16 @@ namespace TwitchLeecher.Core.Models
             {
                 _downloadStatus = value;
                 FirePropertyChanged(nameof(DownloadStatus));
+                FirePropertyChanged(nameof(CanRetry));
                 FirePropertyChanged(nameof(Status));
+            }
+        }
+
+        public bool CanRetry
+        {
+            get
+            {
+                return DownloadStatus == DownloadStatus.Canceled || DownloadStatus == DownloadStatus.Error;
             }
         }
 
@@ -120,15 +129,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public bool IsEncoding
+        public bool IsProcessing
         {
             get
             {
-                return _isEncoding;
+                return _isProcessing;
             }
             private set
             {
-                SetProperty(ref _isEncoding, value);
+                SetProperty(ref _isProcessing, value);
             }
         }
 
@@ -178,11 +187,11 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void SetIsEncoding(bool isEncoding)
+        public void SetIsProcessing(bool isProcessing)
         {
-            lock (_isEncodingLockObject)
+            lock (_isProcessingLockObject)
             {
-                IsEncoding = isEncoding;
+                IsProcessing = isProcessing;
             }
         }
 
