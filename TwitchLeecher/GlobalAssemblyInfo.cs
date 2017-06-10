@@ -6,5 +6,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Fake Smile Revolution")]
 [assembly: AssemblyCopyright("Copyright © 2016 Dominik Rebitzer")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.3.8.0")]
+[assembly: AssemblyFileVersion("1.3.9.0")]
 [assembly: ComVisible(false)]
