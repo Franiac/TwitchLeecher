@@ -75,6 +75,14 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool IsSource
+        {
+            get
+            {
+                return QualityId == QUALITY_SOURCE;
+            }
+        }
+
         public string GetQualityString(string qualityId)
         {
             switch (qualityId)
@@ -169,48 +177,59 @@ namespace TwitchLeecher.Core.Models
                 return -1;
             }
 
-            int? thisRes = GetVerticalResolution(Resolution);
-            int? otherRes = GetVerticalResolution(other.Resolution);
-
-            if (!thisRes.HasValue && !otherRes.HasValue)
-            {
-                return 0;
-            }
-            else if (!thisRes.HasValue && otherRes.HasValue)
-            {
-                return 1;
-            }
-            else if (thisRes.HasValue && !otherRes.HasValue)
+            if (IsSource && !other.IsSource)
             {
                 return -1;
             }
+            else if (!IsSource && other.IsSource)
+            {
+                return 1;
+            }
             else
             {
-                if (thisRes.Value == otherRes.Value)
-                {
-                    int? thisFps = Fps;
-                    int? otherFps = other.Fps;
+                int? thisRes = GetVerticalResolution(Resolution);
+                int? otherRes = GetVerticalResolution(other.Resolution);
 
-                    if (!thisFps.HasValue && !otherFps.HasValue)
-                    {
-                        return 0;
-                    }
-                    else if (!thisFps.HasValue && otherFps.HasValue)
-                    {
-                        return 1;
-                    }
-                    else if (thisFps.HasValue && !otherFps.HasValue)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return thisFps > otherFps ? -1 : 1;
-                    }
+                if (!thisRes.HasValue && !otherRes.HasValue)
+                {
+                    return 0;
+                }
+                else if (!thisRes.HasValue && otherRes.HasValue)
+                {
+                    return 1;
+                }
+                else if (thisRes.HasValue && !otherRes.HasValue)
+                {
+                    return -1;
                 }
                 else
                 {
-                    return thisRes > otherRes ? -1 : 1;
+                    if (thisRes.Value == otherRes.Value)
+                    {
+                        int? thisFps = Fps;
+                        int? otherFps = other.Fps;
+
+                        if (!thisFps.HasValue && !otherFps.HasValue)
+                        {
+                            return 0;
+                        }
+                        else if (!thisFps.HasValue && otherFps.HasValue)
+                        {
+                            return 1;
+                        }
+                        else if (thisFps.HasValue && !otherFps.HasValue)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return thisFps > otherFps ? -1 : 1;
+                        }
+                    }
+                    else
+                    {
+                        return thisRes > otherRes ? -1 : 1;
+                    }
                 }
             }
         }
