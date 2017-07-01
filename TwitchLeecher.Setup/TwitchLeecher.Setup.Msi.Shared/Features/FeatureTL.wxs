@@ -37,6 +37,12 @@
         <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.WindowsAPICodePack.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Microsoft.WindowsAPICodePack.Shell.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.Shell.dll" />
+      </Component>
+      <Component Directory="INSTALLDIR">
         <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
