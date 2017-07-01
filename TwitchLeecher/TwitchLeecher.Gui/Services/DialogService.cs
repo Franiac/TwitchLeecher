@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using Ninject;
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -87,16 +88,37 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            if (CommonFileDialog.IsPlatformSupported)
             {
-                if (!string.IsNullOrWhiteSpace(folder))
+                using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
                 {
-                    fbd.SelectedPath = folder;
+                    cofd.IsFolderPicker = true;
+
+                    if (!string.IsNullOrWhiteSpace(folder))
+                    {
+                        cofd.InitialDirectory = folder;
+                    }
+
+                    CommonFileDialogResult result = cofd.ShowDialog();
+
+                    bool canceled = result != CommonFileDialogResult.Ok;
+
+                    dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
                 }
+            }
+            else
+            {
+                using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+                {
+                    if (!string.IsNullOrWhiteSpace(folder))
+                    {
+                        fbd.SelectedPath = folder;
+                    }
 
-                DialogResult result = fbd.ShowDialog();
+                    DialogResult result = fbd.ShowDialog();
 
-                dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
+                    dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
+                }
             }
         }
 
