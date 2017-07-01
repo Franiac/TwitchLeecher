@@ -9,6 +9,7 @@ using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using Cursors = System.Windows.Input.Cursors;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace TwitchLeecher.Gui.Services
 {
@@ -87,16 +88,33 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            if (CommonOpenFileDialog.IsPlatformSupported)
             {
+                CommonOpenFileDialog cofd = new CommonOpenFileDialog();
+                cofd.IsFolderPicker = true;
+
                 if (!string.IsNullOrWhiteSpace(folder))
                 {
-                    fbd.SelectedPath = folder;
+                    cofd.InitialDirectory = folder;
                 }
 
-                DialogResult result = fbd.ShowDialog();
+                CommonFileDialogResult result = cofd.ShowDialog();
 
-                dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
+                dialogCompleteCallback(result != CommonFileDialogResult.Ok, cofd.FileName);
+            }
+            else
+            {
+                using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+                {
+                    if (!string.IsNullOrWhiteSpace(folder))
+                    {
+                        fbd.SelectedPath = folder;
+                    }
+
+                    DialogResult result = fbd.ShowDialog();
+
+                    dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
+                }
             }
         }
 
