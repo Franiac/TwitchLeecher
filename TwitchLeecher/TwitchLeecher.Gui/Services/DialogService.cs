@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using Ninject;
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -9,7 +10,6 @@ using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using Cursors = System.Windows.Input.Cursors;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace TwitchLeecher.Gui.Services
 {
@@ -88,19 +88,23 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
-            if (CommonOpenFileDialog.IsPlatformSupported)
+            if (CommonFileDialog.IsPlatformSupported)
             {
-                CommonOpenFileDialog cofd = new CommonOpenFileDialog();
-                cofd.IsFolderPicker = true;
-
-                if (!string.IsNullOrWhiteSpace(folder))
+                using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
                 {
-                    cofd.InitialDirectory = folder;
+                    cofd.IsFolderPicker = true;
+
+                    if (!string.IsNullOrWhiteSpace(folder))
+                    {
+                        cofd.InitialDirectory = folder;
+                    }
+
+                    CommonFileDialogResult result = cofd.ShowDialog();
+
+                    bool canceled = result != CommonFileDialogResult.Ok;
+
+                    dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
                 }
-
-                CommonFileDialogResult result = cofd.ShowDialog();
-
-                dialogCompleteCallback(result != CommonFileDialogResult.Ok, cofd.FileName);
             }
             else
             {
