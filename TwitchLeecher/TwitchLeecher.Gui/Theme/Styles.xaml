@@ -106,8 +106,8 @@
     <!-- /LoginButton -->
 
     <!-- MultilineTextBox -->
-    <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border" Color="{StaticResource Control.Border.MouseOver.Color}" />
-    <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{StaticResource Control.Border.Focus.Color}" />
+    <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
+    <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
 
     <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
         <Grid x:Name="Grid" Background="{TemplateBinding Background}">

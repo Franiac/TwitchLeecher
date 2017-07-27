@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates" IsChecked="{Binding Path='CurrentPreferences.AppCheckForUpdates'}" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates" IsChecked="{Binding Path='CurrentPreferences.AppCheckForUpdates'}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
@@ -63,7 +63,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button" IsChecked="{Binding Path='CurrentPreferences.AppShowDonationButton'}" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button" IsChecked="{Binding Path='CurrentPreferences.AppShowDonationButton'}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
@@ -152,7 +152,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.SearchOnStartup'}" Content="Search on Start" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.SearchOnStartup'}" Content="Search on Start" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
@@ -323,7 +323,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.DownloadRemoveCompleted'}" Content="Remove successful downloads from queue" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path='CurrentPreferences.DownloadRemoveCompleted'}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
