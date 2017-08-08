@@ -36,6 +36,7 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 
 **IMPORTANT:** Help me beeing efficient, please! I am developing Twitch Leecher in my free time for no money. Contribute to the project by posting complete, structured and helpful issues which I can reproduce quickly without asking for missing information. When creating a new issue please follow the below checklist:
 
+- Windows Insider Builds are NOT supported!
 - Take a look at the latest closed issues [HERE](https://github.com/Franiac/TwitchLeecher/issues?q=is%3Aissue+is%3Aclosed). Maybe your problem has already been resolved
 - Provide the version of Twitch Leecher you are using
 - Provide as much information about the VOD as possible (Url, Channel, ID)
