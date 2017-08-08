@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Core.Models
 {
@@ -128,6 +129,14 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return _length;
+            }
+        }
+
+        public string LengthStr
+        {
+            get
+            {
+                return _length.ToDaylessString();
             }
         }
 

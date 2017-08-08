@@ -8,6 +8,7 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -62,37 +63,105 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public string CropStartTime
+        public int CropStartHours
         {
             get
             {
-                return _downloadParams.CropStartTime.ToString();
+                return _downloadParams.CropStartTime.GetDaysInHours();
             }
             set
             {
-                if (TimeSpan.TryParse(value, out TimeSpan ts))
-                {
-                    _downloadParams.CropStartTime = ts;
-                }
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(value, current.Minutes, current.Seconds);
 
-                FirePropertyChanged(nameof(CropStartTime));
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
             }
         }
 
-        public string CropEndTime
+        public int CropStartMinutes
         {
             get
             {
-                return _downloadParams.CropEndTime.ToString();
+                return _downloadParams.CropStartTime.Minutes;
             }
             set
             {
-                if (TimeSpan.TryParse(value, out TimeSpan ts))
-                {
-                    _downloadParams.CropEndTime = ts;
-                }
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
 
-                FirePropertyChanged(nameof(CropEndTime));
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
+            }
+        }
+
+        public int CropStartSeconds
+        {
+            get
+            {
+                return _downloadParams.CropStartTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
+            }
+        }
+
+        public int CropEndHours
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.GetDaysInHours();
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(value, current.Minutes, current.Seconds);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
+            }
+        }
+
+        public int CropEndMinutes
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.Minutes;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
+            }
+        }
+
+        public int CropEndSeconds
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
             }
         }
 
@@ -234,35 +303,21 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (DownloadParams.HasErrors)
                 {
                     AddError(currentProperty, "Invalid Download Parameters!");
-                }
-            }
 
-            currentProperty = nameof(CropStartTime);
-
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
-            {
-                DownloadParams?.Validate(currentProperty);
-
-                if (DownloadParams.HasErrors)
-                {
-                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropStartTime)) is List<string> cropStartErrors && cropStartErrors.Count > 0)
                     {
-                        AddError(currentProperty, errors.First());
+                        string firstError = cropStartErrors.First();
+                        AddError(nameof(CropStartHours), firstError);
+                        AddError(nameof(CropStartMinutes), firstError);
+                        AddError(nameof(CropStartSeconds), firstError);
                     }
-                }
-            }
 
-            currentProperty = nameof(CropEndTime);
-
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
-            {
-                DownloadParams?.Validate(currentProperty);
-
-                if (DownloadParams.HasErrors)
-                {
-                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropEndTime)) is List<string> cropEndErrors && cropEndErrors.Count > 0)
                     {
-                        AddError(currentProperty, errors.First());
+                        string firstError = cropEndErrors.First();
+                        AddError(nameof(CropEndHours), firstError);
+                        AddError(nameof(CropEndMinutes), firstError);
+                        AddError(nameof(CropEndSeconds), firstError);
                     }
                 }
             }

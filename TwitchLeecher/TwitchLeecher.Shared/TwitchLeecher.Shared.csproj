@@ -61,6 +61,7 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\DelegateCommandBase.cs" />
     <Compile Include="Commands\PropertySupport.cs" />
+    <Compile Include="Extensions\TimeSpan.cs" />
     <Compile Include="Extensions\DateTime.cs" />
     <Compile Include="Extensions\Guid.cs" />
     <Compile Include="Extensions\NameValueCollection.cs" />
