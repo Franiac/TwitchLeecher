@@ -23,6 +23,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private string _title;
 
         private bool _isAuthorized;
+        private bool _showDonationButton;
 
         private int _videosCount;
         private int _downloadsCount;
@@ -33,6 +34,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private IEventAggregator _eventAggregator;
         private ITwitchService _twitchService;
         private IDialogService _dialogService;
+        private IDonationService _donationService;
         private INavigationService _navigationService;
         private ISearchService _searchService;
         private IPreferencesService _preferencesService;
@@ -43,6 +45,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _showDownloadsCommand;
         private ICommand _showAuthorizeCommand;
         private ICommand _showPreferencesCommand;
+        private ICommand _donateCommand;
         private ICommand _showInfoCommand;
         private ICommand _doMinimizeCommand;
         private ICommand _doMmaximizeRestoreCommand;
@@ -59,6 +62,7 @@ namespace TwitchLeecher.Gui.ViewModels
             IEventAggregator eventAggregator,
             ITwitchService twitchService,
             IDialogService dialogService,
+            IDonationService donationService,
             INavigationService navigationService,
             ISearchService searchService,
             IPreferencesService preferencesService,
@@ -73,6 +77,7 @@ namespace TwitchLeecher.Gui.ViewModels
             _eventAggregator = eventAggregator;
             _twitchService = twitchService;
             _dialogService = dialogService;
+            _donationService = donationService;
             _navigationService = navigationService;
             _searchService = searchService;
             _preferencesService = preferencesService;
@@ -83,8 +88,11 @@ namespace TwitchLeecher.Gui.ViewModels
 
             _eventAggregator.GetEvent<ShowViewEvent>().Subscribe(ShowView);
             _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(IsAuthorizedChanged);
+            _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
             _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
             _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
+
+            _showDonationButton = _preferencesService.CurrentPreferences.AppShowDonationButton;
         }
 
         #endregion Constructors
@@ -132,6 +140,19 @@ namespace TwitchLeecher.Gui.ViewModels
             get
             {
                 return _title;
+            }
+        }
+
+        public bool ShowDonationButton
+        {
+            get
+            {
+                return _showDonationButton;
+            }
+
+            private set
+            {
+                SetProperty(ref _showDonationButton, value, nameof(ShowDonationButton));
             }
         }
 
@@ -196,6 +217,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showPreferencesCommand;
+            }
+        }
+
+        public ICommand DonateCommand
+        {
+            get
+            {
+                if (_donateCommand == null)
+                {
+                    _donateCommand = new DelegateCommand(Donate);
+                }
+
+                return _donateCommand;
             }
         }
 
@@ -342,6 +376,21 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void Donate()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    _donationService.OpenDonationPage();
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
         private void ShowInfo()
         {
             try
@@ -428,6 +477,18 @@ namespace TwitchLeecher.Gui.ViewModels
         private void IsAuthorizedChanged(bool isAuthorized)
         {
             IsAuthorized = isAuthorized;
+        }
+
+        private void PreferencesSaved()
+        {
+            try
+            {
+                ShowDonationButton = _preferencesService.CurrentPreferences.AppShowDonationButton;
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
         }
 
         private void VideosCountChanged(int count)

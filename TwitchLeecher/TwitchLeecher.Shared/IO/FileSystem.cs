@@ -82,29 +82,44 @@ namespace TwitchLeecher.Shared.IO
 
         public static bool HasWritePermission(string dir)
         {
-            if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
+            try
             {
-                return false;
-            }
-
-            DirectoryInfo dirInfo = new DirectoryInfo(dir);
-
-            DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
-
-            WindowsIdentity userIdentity = WindowsIdentity.GetCurrent();
-
-            AuthorizationRuleCollection rules = dirSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
-
-            foreach (FileSystemAccessRule rule in rules)
-            {
-                if (rule.FileSystemRights.HasFlag(FileSystemRights.Write))
+                if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
                 {
-                    if (userIdentity.User == rule.IdentityReference ||
-                        userIdentity.Groups.Any(g => g == rule.IdentityReference))
+                    return false;
+                }
+
+                DriveInfo driveInfo = new DriveInfo(Directory.GetDirectoryRoot(dir));
+
+                // Only check local drives
+                if (driveInfo.DriveType != DriveType.Fixed)
+                {
+                    return true;
+                }
+
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);                
+
+                DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+
+                WindowsIdentity userIdentity = WindowsIdentity.GetCurrent();
+
+                AuthorizationRuleCollection rules = dirSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                foreach (FileSystemAccessRule rule in rules)
+                {
+                    if (rule.FileSystemRights.HasFlag(FileSystemRights.WriteData & FileSystemRights.Delete))
                     {
-                        return true;
+                        if (userIdentity.User == rule.IdentityReference ||
+                            userIdentity.Groups.Any(g => g == rule.IdentityReference))
+                        {
+                            return true;
+                        }
                     }
                 }
+            }
+            catch
+            {
+                // In case of an error -> Access denied
             }
 
             return false;

@@ -27,7 +27,7 @@ namespace TwitchLeecher.Services.Services
 
             DateTime recorded = video.RecordedDate;
 
-            TwitchVideoQuality resolution = video.Resolutions.First();
+            TwitchVideoQuality quality = video.Qualities.First();
 
             result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.GAME, video.Game);
@@ -36,8 +36,8 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.ID, video.IdTrimmed);
             result = result.Replace(FilenameWildcards.TITLE, video.Title);
-            result = result.Replace(FilenameWildcards.RES, resolution.Resolution);
-            result = result.Replace(FilenameWildcards.FPS, resolution.Fps);
+            result = result.Replace(FilenameWildcards.RES, !string.IsNullOrWhiteSpace(quality.Resolution) ? quality.Resolution : TwitchVideoQuality.UNKNOWN);
+            result = result.Replace(FilenameWildcards.FPS, quality.Fps.HasValue ? quality.Fps.ToString() : TwitchVideoQuality.UNKNOWN);
 
             result = SubstituteInvalidChars(result, "_");
 

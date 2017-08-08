@@ -7,7 +7,7 @@ namespace TwitchLeecher.Core.Models
     {
         #region Constructors
 
-        public MenuCommand(ICommand command, string label, string icon)
+        public MenuCommand(ICommand command, string label, string icon, int width = 120)
         {
             if (string.IsNullOrWhiteSpace(label))
             {
@@ -22,6 +22,7 @@ namespace TwitchLeecher.Core.Models
             Command = command ?? throw new ArgumentNullException(nameof(command));
             Label = label;
             Icon = icon;
+            Width = width;
         }
 
         #endregion Constructors
@@ -33,6 +34,8 @@ namespace TwitchLeecher.Core.Models
         public string Label { get; private set; }
 
         public string Icon { get; private set; }
+
+        public double Width { get; private set; }
 
         #endregion Properties
     }

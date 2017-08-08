@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -21,12 +22,13 @@ namespace TwitchLeecher.Gui.ViewModels
         private IDialogService _dialogService;
         private INavigationService _navigationService;
         private IEventAggregator _eventAggregator;
+        private IPreferencesService _preferencesService;
 
         private ICommand _retryDownloadCommand;
         private ICommand _cancelDownloadCommand;
         private ICommand _removeDownloadCommand;
-        private ICommand _viewCommand;
         private ICommand _showLogCommand;
+        private ICommand _openDownloadFolderCommand;
 
         private object _commandLockObject;
 
@@ -38,12 +40,14 @@ namespace TwitchLeecher.Gui.ViewModels
             ITwitchService twitchService,
             IDialogService dialogService,
             INavigationService navigationService,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IPreferencesService preferencesService)
         {
             _twitchService = twitchService;
             _dialogService = dialogService;
             _navigationService = navigationService;
             _eventAggregator = eventAggregator;
+            _preferencesService = preferencesService;
 
             _twitchService.PropertyChanged += TwitchService_PropertyChanged;
 
@@ -103,19 +107,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand ViewCommand
-        {
-            get
-            {
-                if (_viewCommand == null)
-                {
-                    _viewCommand = new DelegateCommand<string>(ViewVideo);
-                }
-
-                return _viewCommand;
-            }
-        }
-
         public ICommand ShowLogCommand
         {
             get
@@ -126,6 +117,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showLogCommand;
+            }
+        }
+
+        public ICommand OpenDownloadFolderCommand
+        {
+            get
+            {
+                if (_openDownloadFolderCommand == null)
+                {
+                    _openDownloadFolderCommand = new DelegateCommand(OpenDownloadFolder);
+                }
+
+                return _openDownloadFolderCommand;
             }
         }
 
@@ -236,6 +240,40 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private void OpenDownloadFolder()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    string folder = _preferencesService.CurrentPreferences.DownloadFolder;
+
+                    if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder))
+                    {
+                        Process.Start(folder);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        protected override List<MenuCommand> BuildMenu()
+        {
+            List<MenuCommand> menuCommands = base.BuildMenu();
+
+            if (menuCommands == null)
+            {
+                menuCommands = new List<MenuCommand>();
+            }
+
+            menuCommands.Add(new MenuCommand(OpenDownloadFolderCommand, "Open Download Folder", "FolderOpen", 230));
+
+            return menuCommands;
         }
 
         #endregion Methods

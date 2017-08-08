@@ -16,7 +16,7 @@
         <fa:ImageAwesome Style="{StaticResource Img_Spinner}" Opacity="0.5" Width="150" />
         <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5">
             <TextBlock.Foreground>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </TextBlock.Foreground>
         </TextBlock>
     </Grid>

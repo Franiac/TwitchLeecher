@@ -24,7 +24,7 @@ namespace TwitchLeecher.Core.Models
 
         private TimeSpan _length;
 
-        private List<TwitchVideoQuality> _resolutions;
+        private List<TwitchVideoQuality> _qualities;
 
         private DateTime _recordedDate;
 
@@ -36,7 +36,7 @@ namespace TwitchLeecher.Core.Models
         #region Constructors
 
         public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
-            List<TwitchVideoQuality> resolutions, DateTime recordedDate, Uri thumbnail, Uri url)
+            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri url)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -48,9 +48,9 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(id));
             }
 
-            if (resolutions == null || resolutions.Count == 0)
+            if (qualities == null || qualities.Count == 0)
             {
-                throw new ArgumentNullException(nameof(resolutions));
+                throw new ArgumentNullException(nameof(qualities));
             }
 
             if (string.IsNullOrWhiteSpace(title))
@@ -73,7 +73,7 @@ namespace TwitchLeecher.Core.Models
 
             _views = views;
             _length = length;
-            _resolutions = resolutions;
+            _qualities = qualities;
             _recordedDate = recordedDate;
             _thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
             _url = url ?? throw new ArgumentNullException(nameof(url));
@@ -139,24 +139,24 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public List<TwitchVideoQuality> Resolutions
+        public List<TwitchVideoQuality> Qualities
         {
             get
             {
-                return _resolutions;
+                return _qualities;
             }
         }
 
-        public string BestResolutionFps
+        public string BestQuality
         {
             get
             {
-                if (_resolutions == null || _resolutions.Count == 0)
+                if (_qualities == null || _qualities.Count == 0)
                 {
                     return TwitchVideoQuality.UNKNOWN;
                 }
 
-                return _resolutions.First().DisplayStringShort;
+                return _qualities.First().DisplayString;
             }
         }
 

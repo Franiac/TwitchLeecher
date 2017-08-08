@@ -22,16 +22,16 @@
 
             <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
                 <TextBlock  Text="Download Log" FontSize="21.333" FontWeight="Bold" />
             </Border>
 
             <Border Grid.Row="1" BorderThickness="1">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
-                <ctrl:ScrollingTextBox x:Name="txtLog" Style="{StaticResource ScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" />
+                <ctrl:ScrollingTextBox x:Name="txtLog" Style="{StaticResource TlScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

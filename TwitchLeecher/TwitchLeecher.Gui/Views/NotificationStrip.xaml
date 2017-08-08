@@ -19,7 +19,7 @@
     </UserControl.RenderTransform>
     <TextBlock Name="txtNotification" Text="Test" HorizontalAlignment="Center" Padding="0,10" FontWeight="Bold">
         <TextBlock.Foreground>
-            <SolidColorBrush Color="{StaticResource ControlForegroundColor}" />
+            <SolidColorBrush Color="{StaticResource Text.Foreground.Dark.Color}" />
         </TextBlock.Foreground>
     </TextBlock>
 </UserControl>

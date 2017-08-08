@@ -12,19 +12,16 @@
                 <ResourceDictionary Source="../Theme/Styles.xaml" />
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
-                    <BooleanToVisibilityConverter x:Key="BVConverter" />
-
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
                             <fa:ImageAwesome Icon="VideoCamera" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
                                 <fa:ImageAwesome.Foreground>
-                                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                                 </fa:ImageAwesome.Foreground>
                             </fa:ImageAwesome>
                         </StackPanel>
                     </DataTemplate>
-
                     <Style x:Key="thisStyle" TargetType="{x:Type UserControl}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path='Videos.Count'}" Value="0">
@@ -48,12 +45,12 @@
                 <DataTemplate>
                     <Border Padding="10" BorderThickness="1" CornerRadius="5">
                         <Border.BorderBrush>
-                            <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                            <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                         </Border.BorderBrush>
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{StaticResource WindowTopColor}" Offset="0" />
-                                <GradientStop Color="{StaticResource WindowBottomColor}" Offset="1" />
+                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="0" />
+                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid>
@@ -63,7 +60,7 @@
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
                                 <Border.BorderBrush>
-                                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                                 </Border.BorderBrush>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -73,10 +70,10 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource MiniButton}" Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" Padding="5" ToolTip="Watch in browser" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                        <Button Style="{StaticResource TlMiniButton}" Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" Padding="5" ToolTip="Watch in browser" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <fa:ImageAwesome Icon="Eye" Width="16" Height="16" />
                                         </Button>
-                                        <Button Style="{StaticResource MiniButton}" Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" Margin="5,0,0,0" Padding="5" ToolTip="Download" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                        <Button Style="{StaticResource TlMiniButton}" Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" Margin="5,0,0,0" Padding="5" ToolTip="Download" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <fa:ImageAwesome Icon="Download" Width="16" Height="16" />
                                         </Button>
                                     </StackPanel>
@@ -122,7 +119,7 @@
                                     <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="6" Text="Quality:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding BestResolutionFps}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding BestQuality}" />
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -18,7 +18,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private IPreferencesService _preferencesService;
 
         private Preferences _currentPreferences;
-        private IEnumerable<string> _videoQualityList;
 
         private ICommand _chooseDownloadTempFolderCommand;
         private ICommand _chooseDownloadFolderCommand;
@@ -63,27 +62,6 @@ namespace TwitchLeecher.Gui.ViewModels
             private set
             {
                 SetProperty(ref _currentPreferences, value);
-            }
-        }
-
-        public IEnumerable<string> VideoQualityList
-        {
-            get
-            {
-                if (_videoQualityList == null)
-                {
-                    _videoQualityList = new List<string>()
-                    {
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_SOURCE),
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_HIGH),
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_MEDIUM),
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_LOW),
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_MOBILE),
-                        TwitchVideoQuality.GetQualityFormatted(TwitchVideoQuality.QUALITY_AUDIO)
-                    };
-                }
-
-                return _videoQualityList;
             }
         }
 

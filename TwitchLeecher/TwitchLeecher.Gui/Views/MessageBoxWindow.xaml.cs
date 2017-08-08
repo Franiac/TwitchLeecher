@@ -239,14 +239,18 @@ namespace TwitchLeecher.Gui.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (WindowState == WindowState.Maximized)
+            Window mainWindow = Application.Current.MainWindow;
+
+            WindowState mainWindowState = mainWindow.WindowState;
+
+            if (mainWindowState == WindowState.Maximized)
             {
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
             else
             {
-                int x = (int)Math.Round(Left + Width / 2, 0);
-                int y = (int)Math.Round(Top + Height / 2, 0);
+                int x = (int)Math.Round(mainWindow.Left + mainWindow.Width / 2, 0);
+                int y = (int)Math.Round(mainWindow.Top + mainWindow.Height / 2, 0);
 
                 int width = (int)Math.Round(Width, 0);
                 int height = (int)Math.Round(Height, 0);
@@ -281,6 +285,5 @@ namespace TwitchLeecher.Gui.Views
         }
 
         #endregion EventHandlers
-
     }
 }

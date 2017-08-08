@@ -2,6 +2,8 @@
 
 If you are looking for an extremely fast and easy to use Twitch VOD downloader, this is your tool!
 
+![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/TL13.jpg)
+
 ## Download & Requirements
 
 Twitch Leecher requires .NET Framework 4.5 or higher in order to run!
@@ -30,21 +32,20 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Developed by an experienced Software Engineer
 - Free and Open Source
 
-## LICENSE
-[MIT License](https://github.com/Franiac/TwitchLeecher/blob/master/LICENSE)
-
-## Screenshot
-
-![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/TL13.jpg)
-
 ## Support & Issues
 
-When creating a new issue please follow the below checklist:
+**IMPORTANT:** Help me beeing efficient, please! I am developing Twitch Leecher in my free time for no money. Contribute to the project by posting complete, structured and helpful issues which I can reproduce quickly without asking for missing information. When creating a new issue please follow the below checklist:
 
+- Windows Insider Builds are NOT supported!
+- Take a look at the latest closed issues [HERE](https://github.com/Franiac/TwitchLeecher/issues?q=is%3Aissue+is%3Aclosed). Maybe your problem has already been resolved
 - Provide the version of Twitch Leecher you are using
 - Provide as much information about the VOD as possible (Url, Channel, ID)
 - Provide information about your operating system (e.g. Windows 10 64 Bit)
 - Try to describe the problem as detailed as possible, I cannot read your mind ;)
+- Is there any additional information about the issue that might be interesting for me? Write it down!
 - When you have a problem with a download, provide the download log created by Twitch Leecher (see screenshot below)
 
 ![Twitch Leecher Log Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/TL133Log.jpg)
+
+## LICENSE
+[MIT License](https://github.com/Franiac/TwitchLeecher/blob/master/LICENSE)

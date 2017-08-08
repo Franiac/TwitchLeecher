@@ -131,7 +131,6 @@ namespace TwitchLeecher.Services.Services
                     {
                         XAttribute rtVersionAttr = runtimeDataEl.Attribute(RUNTIMEDATA_VERSION_ATTR);
 
-
                         if (rtVersionAttr != null && Version.TryParse(rtVersionAttr.Value, out Version rtVersion))
                         {
                             runtimeData.Version = rtVersion;

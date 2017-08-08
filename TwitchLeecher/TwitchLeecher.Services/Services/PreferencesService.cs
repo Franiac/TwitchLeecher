@@ -23,6 +23,7 @@ namespace TwitchLeecher.Services.Services
 
         private const string APP_EL = "Application";
         private const string APP_CHECKFORUPDATES_EL = "CheckForUpdates";
+        private const string APP_SHOWDONATIONBUTTON_EL = "ShowDonationButton";
 
         private const string SEARCH_EL = "Search";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
@@ -34,7 +35,6 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
-        private const string DOWNLOAD_VIDEOQUALITY_EL = "VideoQuality";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
 
         #endregion Constants
@@ -107,6 +107,10 @@ namespace TwitchLeecher.Services.Services
                 appCheckForUpdatesEl.SetValue(preferences.AppCheckForUpdates);
                 appEl.Add(appCheckForUpdatesEl);
 
+                XElement appShowDonationButtonEl = new XElement(APP_SHOWDONATIONBUTTON_EL);
+                appShowDonationButtonEl.SetValue(preferences.AppShowDonationButton);
+                appEl.Add(appShowDonationButtonEl);
+
                 // Search
                 if (!string.IsNullOrWhiteSpace(preferences.SearchChannelName))
                 {
@@ -149,10 +153,6 @@ namespace TwitchLeecher.Services.Services
                     downloadEl.Add(downloadFileNameEl);
                 }
 
-                XElement downloadVideoQualityEl = new XElement(DOWNLOAD_VIDEOQUALITY_EL);
-                downloadVideoQualityEl.SetValue(preferences.DownloadVideoQuality);
-                downloadEl.Add(downloadVideoQualityEl);
-
                 XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
                 downloadEl.Add(downloadRemoveCompletedEl);
@@ -189,7 +189,6 @@ namespace TwitchLeecher.Services.Services
                     {
                         XAttribute prefVersionAttr = preferencesEl.Attribute(PREFERENCES_VERSION_ATTR);
 
-
                         if (prefVersionAttr != null && Version.TryParse(prefVersionAttr.Value, out Version prefVersion))
                         {
                             preferences.Version = prefVersion;
@@ -210,6 +209,20 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.AppCheckForUpdates = appCheckForUpdatesEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement appShowDonationButtonEl = appEl.Element(APP_SHOWDONATIONBUTTON_EL);
+
+                            if (appShowDonationButtonEl != null)
+                            {
+                                try
+                                {
+                                    preferences.AppShowDonationButton = appShowDonationButtonEl.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -334,20 +347,6 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
-                            XElement downloadVideoQualityEl = downloadEl.Element(DOWNLOAD_VIDEOQUALITY_EL);
-
-                            if (downloadVideoQualityEl != null)
-                            {
-                                try
-                                {
-                                    preferences.DownloadVideoQuality = downloadVideoQualityEl.GetValueAsString();
-                                }
-                                catch
-                                {
-                                    // Value from config file could not be loaded, use default value
-                                }
-                            }
-
                             XElement donwloadRemoveCompletedEl = downloadEl.Element(DOWNLOAD_REMOVECOMPLETED_EL);
 
                             if (donwloadRemoveCompletedEl != null)
@@ -375,6 +374,7 @@ namespace TwitchLeecher.Services.Services
             {
                 Version = _tlVersion,
                 AppCheckForUpdates = true,
+                AppShowDonationButton = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
                 SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,
@@ -382,7 +382,6 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadVideoQuality = TwitchVideoQuality.QUALITY_SOURCE,
                 DownloadRemoveCompleted = false
             };
 

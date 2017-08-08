@@ -24,7 +24,7 @@
                             <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
                             <fa:ImageAwesome Icon="Download" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
                                 <fa:ImageAwesome.Foreground>
-                                    <SolidColorBrush Color="{StaticResource MainColor}" />
+                                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                                 </fa:ImageAwesome.Foreground>
                             </fa:ImageAwesome>
                         </StackPanel>
@@ -53,12 +53,12 @@
                 <DataTemplate>
                     <Border Padding="10" BorderThickness="1" CornerRadius="5">
                         <Border.BorderBrush>
-                            <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                            <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                         </Border.BorderBrush>
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{StaticResource WindowTopColor}" Offset="0" />
-                                <GradientStop Color="{StaticResource WindowBottomColor}" Offset="1" />
+                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="0" />
+                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid>
@@ -69,7 +69,7 @@
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
                                 <Border.BorderBrush>
-                                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                                 </Border.BorderBrush>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -79,25 +79,14 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding DownloadParams.Video.Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource MiniButton}"
-                                                Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                                                CommandParameter="{Binding Id}"
-                                                Margin="5,0,0,0"
-                                                Padding="5"
-                                                ToolTip="Open output folder in Explorer"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Stretch"
-                                                Visibility="{Binding DownloadState, Converter={StaticResource downloadStateToVisibilityConverter}, ConverterParameter={x:Static enums:DownloadState.Done}}">
-                                            <fa:ImageAwesome Icon="ExternalLink" Width="16" Height="16" />
-                                        </Button>
-                                        <Button Style="{StaticResource MiniButton}"
+                                        <Button Style="{StaticResource TlMiniButton}"
                                                 Command="{Binding Path=DataContext.RetryDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                                                 CommandParameter="{Binding Id}"
                                                 Padding="5"
                                                 ToolTip="Retry"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch"
-                                                Visibility="{Binding DownloadState, Converter={StaticResource downloadStateToVisibilityConverter}, ConverterParameter={x:Static enums:DownloadState.Canceled}}">
+                                                Visibility="{Binding CanRetry, Converter={StaticResource ResourceKey='BVConverter'}}">
                                             <fa:ImageAwesome Icon="Refresh" Width="16" Height="16" />
                                         </Button>
                                         <Button CommandParameter="{Binding Id}"
@@ -106,7 +95,7 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch">
                                             <Button.Style>
-                                                <Style BasedOn="{StaticResource MiniButton}" TargetType="{x:Type Button}">
+                                                <Style BasedOn="{StaticResource TlMiniButton}" TargetType="{x:Type Button}">
                                                     <Setter Property="Command" Value="{Binding Path=DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
                                                     <Setter Property="ToolTip" Value="Remove" />
                                                     <Style.Triggers>
@@ -130,7 +119,7 @@
                                                 </fa:ImageAwesome.Style>
                                             </fa:ImageAwesome>
                                         </Button>
-                                        <Button Style="{StaticResource MiniButton}"
+                                        <Button Style="{StaticResource TlMiniButton}"
                                                 Command="{Binding Path=DataContext.ShowLogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="5,0,0,0"
@@ -192,16 +181,16 @@
                                     <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding DownloadParams.Video.RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="8" Text="Quality:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding DownloadParams.Resolution.DisplayStringShort}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding DownloadParams.Quality.DisplayString}" />
                                 </Grid>
                             </Grid>
                             <Border Grid.Row="2" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,10,0,0">
                                 <Border.BorderBrush>
-                                    <SolidColorBrush Color="{StaticResource OutlineColor}" />
+                                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                                 </Border.BorderBrush>
                                 <Grid Height="26">
-                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsEncoding}" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsEncoding, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
+                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsProcessing}" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsProcessing, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="Black" />
                                         </TextBlock.Foreground>

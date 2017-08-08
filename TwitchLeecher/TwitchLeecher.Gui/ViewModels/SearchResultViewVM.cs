@@ -170,16 +170,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
-                            TwitchVideoQuality resolution = video.Resolutions.Where(r => r.QualityFormatted == currentPrefs.DownloadVideoQuality).FirstOrDefault();
-
-                            if (resolution == null)
-                            {
-                                resolution = video.Resolutions.First();
-                            }
-
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, resolution, vodAuthInfo, currentPrefs.DownloadFolder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, video.Qualities.First(), vodAuthInfo, currentPrefs.DownloadFolder, filename);
 
                             _navigationService.ShowDownload(downloadParams);
                         }

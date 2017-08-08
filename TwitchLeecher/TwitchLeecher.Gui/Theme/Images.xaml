@@ -6,16 +6,16 @@
         <ResourceDictionary Source="Constants.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="NonStretchingImage" TargetType="{x:Type Image}">
+    <Style x:Key="TlNonStretchingImage" TargetType="{x:Type Image}">
         <Setter Property="Stretch" Value="None" />
     </Style>
 
-    <Style x:Key="Img_Minimize" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+    <Style x:Key="Img_Minimize" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Minimize.png" />
         <Setter Property="Margin" Value="0,7,0,0" />
     </Style>
 
-    <Style x:Key="Img_MaximizeRestore" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+    <Style x:Key="Img_MaximizeRestore" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Maximize.png" />
         <Setter Property="Margin" Value="0,1,0,0" />
         <Style.Triggers>
@@ -26,9 +26,17 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="Img_Close" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
+    <Style x:Key="Img_Close" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Close.png" />
         <Setter Property="Margin" Value="0,2,0,0" />
+    </Style>
+
+    <Style x:Key="Img_Connect" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Connect.png" />
+    </Style>
+
+    <Style x:Key="Img_Donate" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Donate.png" />
     </Style>
 
     <Style x:Key="Img_Spinner" TargetType="{x:Type fa:ImageAwesome}">
@@ -37,12 +45,20 @@
         <Setter Property="SpinDuration" Value="3" />
         <Setter Property="Foreground">
             <Setter.Value>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="Img_Connect" BasedOn="{StaticResource NonStretchingImage}" TargetType="{x:Type Image}">
-        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Connect.png" />
+    <Style x:Key="Img_Help" TargetType="{x:Type fa:ImageAwesome}">
+        <Setter Property="ToolTipService.InitialShowDelay" Value="100" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Icon" Value="QuestionCircle" />
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

@@ -23,7 +23,7 @@
 
         <Border Grid.Row="0" Margin="0, 0, 0, 15" Padding="0,0,0,5" BorderThickness="0,0,0,1">
             <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </Border.BorderBrush>
             <TextBlock Text="Revoke Twitch Authorization" FontSize="21.333" FontWeight="Bold" />
         </Border>

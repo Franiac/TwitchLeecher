@@ -27,7 +27,7 @@
 
         <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
             <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource MainColor}" />
+                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
             </Border.BorderBrush>
             <TextBlock  Text="Search" FontSize="21.333" FontWeight="Bold" />
         </Border>
@@ -35,7 +35,7 @@
         <TabControl Grid.Row="1" Height="310">
             <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Channel}}" Width="85">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="Channel" />
+                    <TextBlock Style="{StaticResource TlTabItemText}" FontWeight="Bold" Text="Channel" />
                 </TabItem.Header>
                 <Grid Margin="0,10,0,0" Grid.IsSharedSizeScope="True" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
@@ -71,7 +71,7 @@
             </TabItem>
             <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Urls}}" Width="85">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="Urls" />
+                    <TextBlock Style="{StaticResource TlTabItemText}" FontWeight="Bold" Text="Urls" />
                 </TabItem.Header>
                 <Grid Margin="0,10,0,0" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <Grid.RowDefinitions>
@@ -86,7 +86,7 @@
 
                     <TextBlock Grid.Row="0" Text="Paste one or more Twitch video urls in the textbox below. Make sure that every url is placed in a new line." />
                     <TextBlock Grid.Row="2" Text="Example: https://www.twitch.tv/videos/123456789" />
-                    <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
+                    <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearUrlsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
@@ -97,7 +97,7 @@
             </TabItem>
             <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Ids}}" Width="85">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TextTabItem}" FontWeight="Bold" Text="IDs" />
+                    <TextBlock Style="{StaticResource TlTabItemText}" FontWeight="Bold" Text="IDs" />
                 </TabItem.Header>
                 <Grid Margin="0,10,0,0" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
 
@@ -113,7 +113,7 @@
 
                     <TextBlock Grid.Row="0" Text="Paste one or more Twitch video IDs in the textbox below. Make sure that every ID is placed in a new line." />
                     <TextBlock Grid.Row="2" Text="Example: 123456789" />
-                    <TextBox Grid.Row="4" Style="{StaticResource MultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
+                    <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearIdsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />

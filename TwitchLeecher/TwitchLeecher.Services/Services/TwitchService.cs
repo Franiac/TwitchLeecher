@@ -694,7 +694,7 @@ namespace TwitchLeecher.Services.Services
                         TimeSpan cropStartTime = downloadParams.CropStartTime;
                         TimeSpan cropEndTime = downloadParams.CropEndTime;
 
-                        TwitchVideoQuality resolution = downloadParams.Resolution;
+                        TwitchVideoQuality quality = downloadParams.Quality;
 
                         VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
 
@@ -702,7 +702,7 @@ namespace TwitchLeecher.Services.Services
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
                         Action<int> setProgress = download.SetProgress;
-                        Action<bool> setIsEncoding = download.SetIsEncoding;
+                        Action<bool> setIsProcessing = download.SetIsProcessing;
 
                         Task downloadVideoTask = new Task(() =>
                         {
@@ -716,7 +716,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            string playlistUrl = RetrievePlaylistUrlForQuality(log, resolution, urlIdTrimmed, vodAuthInfo);
+                            string playlistUrl = RetrievePlaylistUrlForQuality(log, quality, urlIdTrimmed, vodAuthInfo);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -736,7 +736,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            EncodeVideo(log, setStatus, setProgress, setIsEncoding, ffmpegFile, playlistFile, outputFile, cropInfo);
+                            ProcessVideo(log, setStatus, setProgress, setIsProcessing, ffmpegFile, playlistFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -745,7 +745,7 @@ namespace TwitchLeecher.Services.Services
                             CleanUp(tempDir, log);
 
                             setProgress(100);
-                            setIsEncoding(false);
+                            setIsProcessing(false);
 
                             bool success = false;
 
@@ -805,7 +805,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
-            log(Environment.NewLine + "Selected Quality: " + downloadParams.Resolution.DisplayStringShort);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.Quality.DisplayString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
             log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
@@ -841,7 +841,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality resolution, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
             using (WebClient webClient = CreateTwitchWebClient())
             {
@@ -856,9 +856,9 @@ namespace TwitchLeecher.Services.Services
                     log(Environment.NewLine + url);
                 });
 
-                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + resolution.QualityId + "/")).First();
+                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + quality.QualityId + "/")).First();
 
-                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + resolution.DisplayStringShort + " is " + playlistUrl);
+                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + quality.DisplayString + " is " + playlistUrl);
 
                 return playlistUrl;
             }
@@ -1076,17 +1076,17 @@ namespace TwitchLeecher.Services.Services
             log(" done!");
         }
 
-        private void EncodeVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            Action<bool> setIsEncoding, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
+        private void ProcessVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            Action<bool> setIsProcessing, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Processing");
-            setIsEncoding(true);
+            setIsProcessing(true);
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile)
             {
-                Arguments = "-y" + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
+                Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 StandardErrorEncoding = Encoding.UTF8,
@@ -1117,12 +1117,12 @@ namespace TwitchLeecher.Services.Services
 
                                 if (TimeSpan.TryParse(timeStr, out TimeSpan current))
                                 {
-                                    setIsEncoding(false);
+                                    setIsProcessing(false);
                                     setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
                                 }
                                 else
                                 {
-                                    setIsEncoding(true);
+                                    setIsProcessing(true);
                                 }
                             }
                         }
@@ -1143,11 +1143,11 @@ namespace TwitchLeecher.Services.Services
 
                 if (p.ExitCode == 0)
                 {
-                    log(Environment.NewLine + "Encoding complete!");
+                    log(Environment.NewLine + "Processing complete!");
                 }
                 else
                 {
-                    throw new ApplicationException("An error occured while encoding the video!");
+                    throw new ApplicationException("An error occured while processing the video!");
                 }
             }
         }
@@ -1224,7 +1224,7 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoQuality> resolutions = ParseResolutions(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
+            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("published_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             Uri url = new Uri(videoJson.Value<string>("url"));
 
@@ -1234,12 +1234,12 @@ namespace TwitchLeecher.Services.Services
 
             Uri thumbnail = new Uri(imgUrlTemplate);
 
-            return new TwitchVideo(channel, title, id, game, views, length, resolutions, recordedDate, thumbnail, url);
+            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, url);
         }
 
-        public List<TwitchVideoQuality> ParseResolutions(JObject resolutionsJson, JObject fpsJson)
+        public List<TwitchVideoQuality> ParseQualities(JObject resolutionsJson, JObject fpsJson)
         {
-            List<TwitchVideoQuality> resolutions = new List<TwitchVideoQuality>();
+            List<TwitchVideoQuality> qualities = new List<TwitchVideoQuality>();
 
             Dictionary<string, string> fpsList = new Dictionary<string, string>();
 
@@ -1259,23 +1259,23 @@ namespace TwitchLeecher.Services.Services
                     string qualityId = resolution.Name;
                     string fps = fpsList.ContainsKey(qualityId) ? fpsList[qualityId] : null;
 
-                    resolutions.Add(new TwitchVideoQuality(qualityId, value, fps));
+                    qualities.Add(new TwitchVideoQuality(qualityId, value, fps));
                 }
             }
 
             if (fpsList.ContainsKey(TwitchVideoQuality.QUALITY_AUDIO))
             {
-                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_AUDIO));
+                qualities.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_AUDIO));
             }
 
-            if (!resolutions.Any())
+            if (!qualities.Any())
             {
-                resolutions.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_SOURCE));
+                qualities.Add(new TwitchVideoQuality(TwitchVideoQuality.QUALITY_SOURCE));
             }
 
-            resolutions = resolutions.OrderBy(r => r.QualityPriority).ToList();
+            qualities.Sort();
 
-            return resolutions;
+            return qualities;
         }
 
         public void Pause()

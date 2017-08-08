@@ -2,9 +2,11 @@
 
 namespace TwitchLeecher.Core.Models
 {
-    public class TwitchVideoQuality
+    public class TwitchVideoQuality : IComparable<TwitchVideoQuality>
     {
         #region Constants
+
+        public const string UNKNOWN = "Unknown";
 
         public const string QUALITY_SOURCE = "chunked";
         public const string QUALITY_HIGH = "high";
@@ -13,31 +15,18 @@ namespace TwitchLeecher.Core.Models
         public const string QUALITY_MOBILE = "mobile";
         public const string QUALITY_AUDIO = "audio_only";
 
-        public const string QUALITY_1080P = "1080p";
-        public const string QUALITY_720P = "720p";
-        public const string QUALITY_480P = "480p";
-        public const string QUALITY_360P = "360p";
-        public const string QUALITY_240P = "240p";
-        public const string QUALITY_144P = "144p";
-
-        public const string UNKNOWN = "Unknown";
-
         #endregion Constants
 
         #region Constructors
 
-        public TwitchVideoQuality(string id, string resolution = null, string fps = null)
+        public TwitchVideoQuality(string qualityId, string resolution = null, string fps = null)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(qualityId))
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentNullException(nameof(qualityId));
             }
 
-            QualityId = id;
-            Resolution = resolution;
-            Fps = fps;
-
-            Initialize();
+            Initialize(qualityId, resolution, fps);
         }
 
         #endregion Constructors
@@ -46,179 +35,57 @@ namespace TwitchLeecher.Core.Models
 
         public string QualityId { get; private set; }
 
-        public string QualityFormatted { get; private set; }
+        public string QualityString { get; private set; }
 
-        public int QualityPriority { get; private set; }
+        public string DisplayString { get; private set; }
 
         public string Resolution { get; private set; }
 
-        public string Fps { get; private set; }
-
-        public string DisplayStringShort { get; private set; }
-
-        public string DisplayStringLong { get; private set; }
+        public int? Fps { get; private set; }
 
         #endregion Properties
 
         #region Methods
 
-        private void Initialize()
+        private void Initialize(string qualityId, string resolution, string fps)
         {
-            InitializeQuality();
-            InitializeResolution();
+            QualityId = qualityId;
+            QualityString = GetQualityString(qualityId);
+            Resolution = GetResolution(qualityId, resolution);
+            Fps = GetFps(qualityId, fps);
 
-            string quality = QualityId;
-            string resolution = Resolution;
-            string fps = Fps;
-
-            if (quality.EndsWith("p", StringComparison.OrdinalIgnoreCase))
+            if (qualityId == QUALITY_AUDIO)
             {
-                if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
-                {
-                    DisplayStringShort = resolution + "@" + fps + "fps";
-                }
-                else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
-                {
-                    DisplayStringShort = resolution;
-                }
-                else
-                {
-                    DisplayStringShort = UNKNOWN;
-                }
-
-                DisplayStringLong = DisplayStringShort;
+                DisplayString = QualityString;
             }
             else
             {
-                if (quality == "audio_only")
+                if (!string.IsNullOrWhiteSpace(Resolution) && Fps.HasValue)
                 {
-                    DisplayStringShort = QualityFormatted;
-                    DisplayStringLong = QualityFormatted;
+                    DisplayString = Resolution + "@" + Fps + "fps" + (!string.IsNullOrWhiteSpace(QualityString) ? " (" + QualityString + ")" : null);
                 }
-                else if (!string.IsNullOrWhiteSpace(resolution) && !string.IsNullOrWhiteSpace(fps))
+                else if (!string.IsNullOrWhiteSpace(Resolution) && !Fps.HasValue)
                 {
-                    DisplayStringShort = resolution + "@" + fps + "fps";
-                    DisplayStringLong = string.Format("{0} ({1})", QualityFormatted, DisplayStringShort);
-                }
-                else if (!string.IsNullOrWhiteSpace(resolution) && string.IsNullOrWhiteSpace(fps))
-                {
-                    DisplayStringShort = resolution;
-                    DisplayStringLong = string.Format("{0} ({1})", QualityFormatted, DisplayStringShort);
+                    DisplayString = Resolution + (!string.IsNullOrWhiteSpace(QualityString) ? " (" + QualityString + ")" : null);
                 }
                 else
                 {
-                    DisplayStringShort = UNKNOWN;
-                    DisplayStringLong = UNKNOWN;
+                    DisplayString = UNKNOWN;
                 }
             }
         }
 
-        public void InitializeQuality()
+        public bool IsSource
         {
-            string qualityId = QualityId;
-
-            QualityFormatted = GetQualityFormatted(qualityId);
-
-            switch (qualityId.ToLowerInvariant())
+            get
             {
-                case QUALITY_SOURCE:
-                    QualityPriority = 0;
-                    break;
-
-                case QUALITY_HIGH:
-                    QualityPriority = 1;
-                    break;
-
-                case QUALITY_MEDIUM:
-                    QualityPriority = 2;
-                    break;
-
-                case QUALITY_LOW:
-                    QualityPriority = 3;
-                    break;
-
-                case QUALITY_MOBILE:
-                    QualityPriority = 4;
-                    break;
-
-                case QUALITY_AUDIO:
-                    QualityPriority = 5;
-                    break;
-
-                case QUALITY_1080P:
-                    QualityPriority = 10;
-                    break;
-
-                case QUALITY_720P:
-                    QualityPriority = 11;
-                    break;
-
-                case QUALITY_480P:
-                    QualityPriority = 12;
-                    break;
-
-                case QUALITY_360P:
-                    QualityPriority = 13;
-                    break;
-
-                case QUALITY_240P:
-                    QualityPriority = 14;
-                    break;
-
-                case QUALITY_144P:
-                    QualityPriority = 15;
-                    break;
-
-                default:
-                    QualityPriority = 100;
-                    break;
+                return QualityId == QUALITY_SOURCE;
             }
         }
 
-        private void InitializeResolution()
+        public string GetQualityString(string qualityId)
         {
-            string qualityId = QualityId;
-            string resolution = Resolution;
-
-            if (!string.IsNullOrWhiteSpace(resolution) && resolution.Equals("0x0", StringComparison.OrdinalIgnoreCase))
-            {
-                switch (qualityId)
-                {
-                    case QUALITY_HIGH:
-                        Resolution = "1280x720";
-                        break;
-
-                    case QUALITY_MEDIUM:
-                        Resolution = "852x480";
-                        break;
-
-                    case QUALITY_LOW:
-                        Resolution = "640x360";
-                        break;
-
-                    case QUALITY_MOBILE:
-                        Resolution = "400x226";
-                        break;
-
-                    default:
-                        Resolution = null;
-                        break;
-                }
-            }
-        }
-
-        public override string ToString()
-        {
-            return DisplayStringLong;
-        }
-
-        #endregion Methods
-
-        #region Static Methods
-
-        public static string GetQualityFormatted(string qualityId)
-        {
-            switch (qualityId.ToLowerInvariant())
+            switch (qualityId)
             {
                 case QUALITY_SOURCE:
                     return "Source";
@@ -239,10 +106,139 @@ namespace TwitchLeecher.Core.Models
                     return "Audio Only";
 
                 default:
-                    return qualityId;
+                    return null;
             }
         }
 
-        #endregion Static Methods
+        private string GetResolution(string qualityId, string resolution)
+        {
+            if (!string.IsNullOrWhiteSpace(resolution))
+            {
+                if (resolution.Equals("0x0", StringComparison.OrdinalIgnoreCase))
+                {
+                    switch (qualityId)
+                    {
+                        case QUALITY_HIGH:
+                            return "1280x720";
+
+                        case QUALITY_MEDIUM:
+                            return "852x480";
+
+                        case QUALITY_LOW:
+                            return "640x360";
+
+                        case QUALITY_MOBILE:
+                            return "284x160";
+                    }
+                }
+                else
+                {
+                    return resolution;
+                }
+            }
+
+            return null;
+        }
+
+        private int? GetFps(string qualityId, string fps)
+        {
+            int start = qualityId.IndexOf("p") + 1;
+
+            if (start > 0 && start < qualityId.Length)
+            {
+                int? qualityFps = decimal.TryParse(qualityId.Substring(start, qualityId.Length - start), out decimal qualityFpsDec) ? (int?)Math.Round(qualityFpsDec, 0) : null;
+
+                if (qualityFps.HasValue)
+                {
+                    return qualityFps;
+                }
+            }
+
+            return decimal.TryParse(fps, out decimal fpsDec) ? (int?)Math.Round(fpsDec, 0) : null;
+        }
+
+        private int? GetVerticalResolution(string resolution)
+        {
+            if (string.IsNullOrWhiteSpace(resolution) || !resolution.Contains("x") || resolution.IndexOf("x") >= resolution.Length - 1)
+            {
+                return null;
+            }
+            else
+            {
+                int start = resolution.IndexOf("x") + 1;
+                return int.Parse(resolution.Substring(start, resolution.Length - start));
+            }
+        }
+
+        public int CompareTo(TwitchVideoQuality other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+
+            if (IsSource && !other.IsSource)
+            {
+                return -1;
+            }
+            else if (!IsSource && other.IsSource)
+            {
+                return 1;
+            }
+            else
+            {
+                int? thisRes = GetVerticalResolution(Resolution);
+                int? otherRes = GetVerticalResolution(other.Resolution);
+
+                if (!thisRes.HasValue && !otherRes.HasValue)
+                {
+                    return 0;
+                }
+                else if (!thisRes.HasValue && otherRes.HasValue)
+                {
+                    return 1;
+                }
+                else if (thisRes.HasValue && !otherRes.HasValue)
+                {
+                    return -1;
+                }
+                else
+                {
+                    if (thisRes.Value == otherRes.Value)
+                    {
+                        int? thisFps = Fps;
+                        int? otherFps = other.Fps;
+
+                        if (!thisFps.HasValue && !otherFps.HasValue)
+                        {
+                            return 0;
+                        }
+                        else if (!thisFps.HasValue && otherFps.HasValue)
+                        {
+                            return 1;
+                        }
+                        else if (thisFps.HasValue && !otherFps.HasValue)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return thisFps > otherFps ? -1 : 1;
+                        }
+                    }
+                    else
+                    {
+                        return thisRes > otherRes ? -1 : 1;
+                    }
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            return DisplayString;
+        }
+
+        #endregion Methods
     }
 }

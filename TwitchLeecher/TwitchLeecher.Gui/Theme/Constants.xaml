@@ -3,24 +3,53 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- Sizes -->
-    <sys:Double x:Key="MainFontSize">14.667</sys:Double>
+    <sys:Double x:Key="Global.Font.Size">14.667</sys:Double>
+    <!-- /sizes -->
 
     <!-- Colors -->
-    <Color x:Key="MainColor">#FFFFC864</Color>
-    <Color x:Key="MainFontColor">#FFFFFFFF</Color>
+    <Color x:Key="Global.Theme.Color">#FFFFC864</Color>
+    <Color x:Key="Global.Theme.Border.Color">#FF787878</Color>
 
-    <Color x:Key="MainWindowBackgroundColor">#FF4B4B4B</Color>
+    <Color x:Key="Window.Background.Color">#FF4B4B4B</Color>
+    <Color x:Key="Window.Background.Gradient.Top.Color">#FF2E2E2E</Color>
+    <Color x:Key="Window.Background.Gradient.Bottom.Color">#FF5B5B5B</Color>
 
-    <Color x:Key="WindowTopColor">#FF2E2E2E</Color>
-    <Color x:Key="WindowBottomColor">#FF5B5B5B</Color>
+    <Color x:Key="Text.Foreground.Light.Color">#FFFFFFFF</Color>
+    <Color x:Key="Text.Foreground.Light.Disabled.Color">#FF757575</Color>
+    <Color x:Key="Text.Foreground.Dark.Color">#FF000000</Color>
+    <Color x:Key="Text.Foreground.Dark.Disabled.Color">#FF757575</Color>
+    <Color x:Key="Text.Foreground.Watermark.Color">#FFCCCCCC</Color>
 
-    <Color x:Key="OutlineColor">#FF787878</Color>
+    <Color x:Key="Hyperlink.Foreground.Color">#FF2994FF</Color>
 
-    <Color x:Key="ControlForegroundColor">#FF000000</Color>
-    <Color x:Key="ControlForegroundDisabledColor">#FF8C8C8C</Color>
-    <Color x:Key="ControlBackgroundColor">#FFFFC864</Color>
-    <Color x:Key="ControlBackgroundHoverColor">#FFFFE1AA</Color>
-    <Color x:Key="ControlBackgroundUnselectedColor">#FFFFE1AA</Color>
-    <Color x:Key="ControlBackgroundPressedColor">#FFFFFFFF</Color>
-    <Color x:Key="ControlBackgroundDisabledColor">#FFFFE1AA</Color>
+    <Color x:Key="TextControl.Background.Color">#FFFFFFFF</Color>
+    <Color x:Key="TextControl.Background.Disabled.Color">#FFE6E6E6</Color>
+    <Color x:Key="TextControl.Background.MouseOver.Color">#FFF3F9FF</Color>
+    <Color x:Key="TextControl.Background.Pressed.Color">#FFD9ECFF</Color>
+    <Color x:Key="TextControl.Background.Focus.Color">#FFFFF8ED</Color>
+    <Color x:Key="TextControl.Background.Error.Color">#FFFF8080</Color>
+    <Color x:Key="TextControl.Border.Color">#FFABADB3</Color>
+    <Color x:Key="TextControl.Border.Disabled.Color">#FFBCBCBC</Color>
+    <Color x:Key="TextControl.Border.MouseOver.Color">#FF75A7FF</Color>
+    <Color x:Key="TextControl.Border.Pressed.Color">#FF3A81FF</Color>
+    <Color x:Key="TextControl.Border.Focus.Color">#FF5693FF</Color>
+
+    <Color x:Key="Button.Background.Disabled.Color">#FFFFE1AA</Color>
+    <Color x:Key="Button.Background.MouseOver.Color">#FFFFE1AA</Color>
+    <Color x:Key="Button.Background.Pressed.Color">#FFFFFFFF</Color>
+    <Color x:Key="Button.FocusVisual.Border.Color">#FF000000</Color>
+
+    <Color x:Key="LoginButton.Background.Authorized.Color">#FF00E600</Color>
+    <Color x:Key="LoginButton.Background.Authorized.MouseOver.Color">#FFAAFFAA</Color>
+
+    <Color x:Key="TextBox.Background.Inactive.Selected.Color">#FFF0F0F0</Color>
+
+    <Color x:Key="Scrollbar.Background.MouseOver.Color">#FFFFE1AA</Color>
+    <Color x:Key="Scrollbar.Background.Pressed.Color">#FFFFE1AA</Color>
+
+    <Color x:Key="ToolTip.Border.Color">#FF000000</Color>
+
+    <Color x:Key="ProgressBar.Progress.Color">#FF06B025</Color>
+    <Color x:Key="ProgressBar.Background.Color">#FFE6E6E6</Color>
+    <!-- /Colors -->
 </ResourceDictionary>
