@@ -97,7 +97,7 @@ namespace TwitchLeecher.Shared.IO
                     return true;
                 }
 
-                DirectoryInfo dirInfo = new DirectoryInfo(dir);                
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);
 
                 DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
 

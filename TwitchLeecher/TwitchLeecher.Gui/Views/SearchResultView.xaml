@@ -113,7 +113,7 @@
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Game}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Length:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding Length}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding LengthStr}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Recorded:" FontWeight="Bold" />
                                     <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />

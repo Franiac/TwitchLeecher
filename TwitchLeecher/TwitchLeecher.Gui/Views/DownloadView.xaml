@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.DownloadView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:fa="http://schemas.fontawesome.io/icons/">
+            xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -87,7 +87,7 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Crop Video" FontWeight="Bold" />
-                        <TextBlock Grid.Column="1" Text="{Binding DownloadParams.Video.Length, StringFormat='Total Length: {0}', FallbackValue='Total Length: 00:00:00'}" HorizontalAlignment="Right" FontSize="12" VerticalAlignment="Bottom" />
+                        <TextBlock Grid.Column="1" Text="{Binding DownloadParams.Video.LengthStr, StringFormat='Total Length: {0}', FallbackValue='Total Length: 00:00:00'}" HorizontalAlignment="Right" FontSize="12" VerticalAlignment="Bottom" />
                     </Grid>
                 </Border>
 
@@ -99,14 +99,31 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding DownloadParams.CropStart}" Content="Start" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="2"  Text="{Binding  CropStartTime, FallbackValue='00:00:00'}" IsEnabled="{Binding DownloadParams.CropStart}" HorizontalContentAlignment="Center" Width="90" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartHours}" IsEnabled="{Binding DownloadParams.CropStart}" Maximum="99" />
+                    <TextBlock Grid.Row="0" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartMinutes}" IsEnabled="{Binding DownloadParams.CropStart}" />
+                    <TextBlock Grid.Row="0" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartSeconds}" IsEnabled="{Binding DownloadParams.CropStart}" />
+
                     <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding  DownloadParams.CropEnd}" Content="End" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="2" Grid.Column="2"  Text="{Binding CropEndTime, FallbackValue='00:00:00'}" IsEnabled="{Binding DownloadParams.CropEnd}" Width="90" HorizontalContentAlignment="Center" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndHours}" IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" />
+                    <TextBlock Grid.Row="2" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                 </Grid>
             </Grid>
         </Grid>

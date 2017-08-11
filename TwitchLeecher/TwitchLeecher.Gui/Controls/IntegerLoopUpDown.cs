@@ -19,9 +19,9 @@ namespace TwitchLeecher.Gui.Controls
 
         protected override void OnInitialized(EventArgs e)
         {
-            base.OnInitialized(e);
-
             maxLength = Maximum.HasValue ? Maximum.ToString().Length : int.MaxValue;
+
+            base.OnInitialized(e);
 
             DataObject.AddPastingHandler(this, (s, args) => { args.CancelCommand(); });
         }

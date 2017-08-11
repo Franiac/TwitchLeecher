@@ -807,8 +807,8 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
             log(Environment.NewLine + "Selected Quality: " + downloadParams.Quality.DisplayString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
-            log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime + ")" : "No"));
-            log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime + ")" : "No"));
+            log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime.ToDaylessString() + ")" : "No"));
+            log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime.ToDaylessString() + ")" : "No"));
 
             log(Environment.NewLine + Environment.NewLine + "OUTPUT INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
