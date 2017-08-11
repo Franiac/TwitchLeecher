@@ -45,7 +45,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
-    <Compile Include="Enums\DownloadStatus.cs" />
+    <Compile Include="Enums\DownloadState.cs" />
     <Compile Include="Enums\SearchType.cs" />
     <Compile Include="Enums\VideoType.cs" />
     <Compile Include="Events\DownloadsCountChangedEvent.cs" />

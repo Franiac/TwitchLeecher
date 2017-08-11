@@ -16,7 +16,8 @@
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
                     <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
-                    <converters:DownloadStatusToColorConverter x:Key="downloadStatusToColorConverter" />
+                    <converters:DownloadStateToVisibilityConverter x:Key="downloadStateToVisibilityConverter" />
+                    <converters:DownloadStateToColorConverter x:Key="downloadStateToColorConverter" />
 
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -98,7 +99,7 @@
                                                     <Setter Property="Command" Value="{Binding Path=DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
                                                     <Setter Property="ToolTip" Value="Remove" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding DownloadStatus}" Value="{x:Static enums:DownloadStatus.Active}">
+                                                        <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
                                                             <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
                                                             <Setter Property="ToolTip" Value="Cancel" />
                                                         </DataTrigger>
@@ -110,7 +111,7 @@
                                                     <Style TargetType="{x:Type fa:ImageAwesome}">
                                                         <Setter Property="Icon" Value="Times" />
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding DownloadStatus}" Value="{x:Static enums:DownloadStatus.Active}">
+                                                            <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
                                                                 <Setter Property="Icon" Value="Ban" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
@@ -166,7 +167,7 @@
                                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Status:" FontWeight="Bold" />
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Status}" FontWeight="Bold">
                                         <TextBlock.Foreground>
-                                            <SolidColorBrush Color="{Binding DownloadStatus, Converter={StaticResource downloadStatusToColorConverter}}" />
+                                            <SolidColorBrush Color="{Binding DownloadState, Converter={StaticResource downloadStateToColorConverter}}" />
                                         </TextBlock.Foreground>
                                     </TextBlock>
 
