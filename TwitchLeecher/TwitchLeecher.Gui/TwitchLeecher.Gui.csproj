@@ -78,6 +78,8 @@
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Controls\SpacedUniformGrid.cs" />
     <Compile Include="Controls\ThemedMessageBox.cs" />
+    <Compile Include="Controls\TlTimePicker.cs" />
+    <Compile Include="Controls\TlDateTimePicker.cs" />
     <Compile Include="Converters\DownloadStateToVisibilityConverter.cs" />
     <Compile Include="Converters\DownloadStateToColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />

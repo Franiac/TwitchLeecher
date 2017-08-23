@@ -14,13 +14,7 @@ namespace TwitchLeecher.Services.Services.Download
 
         private DownloadState _state;
 
-        private DateTime _startedAt;
-        private DateTime _finishedAt;
-
         private int _priority;
-        private int _rate;
-
-        private string _error;
 
         #endregion Fields
 
@@ -65,13 +59,9 @@ namespace TwitchLeecher.Services.Services.Download
             }
         }
 
-        public int Rate => _rate;
+        public DownloadState State => _state;
 
-        public string Error => _error;
-
-        public DateTime StartedAt => _startedAt;
-
-        public DateTime FinishedAt => _finishedAt;
+        public int Rate { get; set; }
 
         #endregion Properties
 
@@ -87,25 +77,21 @@ namespace TwitchLeecher.Services.Services.Download
 
         public void Start()
         {
-
         }
 
         public void Pause()
         {
-
         }
 
         public void Resume()
         {
-
         }
 
         public void Cancel()
         {
-
         }
 
-        #endregion
+        #endregion Methods
 
         #region Events
 
@@ -116,7 +102,6 @@ namespace TwitchLeecher.Services.Services.Download
             StateChanged?.Invoke(this, new DownloadEventArgs(this));
         }
 
-        #endregion
-
+        #endregion Events
     }
 }

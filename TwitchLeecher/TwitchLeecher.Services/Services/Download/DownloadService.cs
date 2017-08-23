@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using TwitchLeecher.Services.Interfaces;
 using System.Linq;
+using TwitchLeecher.Services.Interfaces;
 
 namespace TwitchLeecher.Services.Services.Download
 {
@@ -32,6 +32,6 @@ namespace TwitchLeecher.Services.Services.Download
             }
         }
 
-        #endregion
+        #endregion Properties
     }
 }
