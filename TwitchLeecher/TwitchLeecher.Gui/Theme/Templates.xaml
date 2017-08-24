@@ -5,6 +5,9 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Constants.xaml" />
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BVConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Tooltip -->
@@ -452,16 +455,16 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid.Visibility>
-                                    <TemplateBinding Property="ShowButtonSpinner" Converter="{StaticResource {x:Type BooleanToVisibilityConverter}}" />
+                                    <TemplateBinding Property="ShowButtonSpinner" Converter="{StaticResource BVConverter}" />
                                 </Grid.Visibility>
-                                <RepeatButton x:Name="PART_IncreaseButton" IsTabStop="{TemplateBinding IsTabStop}">
+                                <RepeatButton x:Name="PART_IncreaseButton" Focusable="False" IsTabStop="{TemplateBinding IsTabStop}">
                                     <RepeatButton.ContentTemplate>
                                         <DataTemplate>
                                             <Path Data="M0,5L4.5,0.5 9,5 6,5 4.5,3.5 3,5z" Focusable="False" Fill="{StaticResource ButtonSpinner.Static.Foreground}" HorizontalAlignment="Center" Height="5" SnapsToDevicePixels="True" VerticalAlignment="Center" Width="9" />
                                         </DataTemplate>
                                     </RepeatButton.ContentTemplate>
                                 </RepeatButton>
-                                <RepeatButton x:Name="PART_DecreaseButton" IsTabStop="{TemplateBinding IsTabStop}" Grid.Row="1">
+                                <RepeatButton x:Name="PART_DecreaseButton" Focusable="False" IsTabStop="{TemplateBinding IsTabStop}" Grid.Row="1">
                                     <RepeatButton.ContentTemplate>
                                         <DataTemplate>
                                             <Path Data="M0,0L3,0 4.5,1.5 6,0 9,0 4.5,4.5z" Focusable="False" Fill="{StaticResource ButtonSpinner.Static.Foreground}" HorizontalAlignment="Center" Height="5" SnapsToDevicePixels="True" VerticalAlignment="Center" Width="9" />
@@ -1044,38 +1047,38 @@
     </Style>
     <!-- /WatermarkTextBox -->
 
-    <!-- IntegerLoopUpDown -->
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Static.Foreground" Color="{StaticResource Text.Foreground.Dark.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Static.Background" Color="{StaticResource TextControl.Background.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Static.Border" Color="{StaticResource TextControl.Border.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Disabled.Background" Color="{StaticResource TextControl.Background.Disabled.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Disabled.Border" Color="{StaticResource TextControl.Border.Disabled.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
-    <SolidColorBrush x:Key="IntegerLoopUpDown.Watermark.Foreground" Color="{StaticResource Text.Foreground.Watermark.Color}" />
+    <!-- TlIntegerUpDown -->
+    <SolidColorBrush x:Key="TlIntegerUpDown.Static.Foreground" Color="{StaticResource Text.Foreground.Dark.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Static.Background" Color="{StaticResource TextControl.Background.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Static.Border" Color="{StaticResource TextControl.Border.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Background" Color="{StaticResource TextControl.Background.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Border" Color="{StaticResource TextControl.Border.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Watermark.Foreground" Color="{StaticResource Text.Foreground.Watermark.Color}" />
 
-    <Style TargetType="{x:Type ctrl:IntegerLoopUpDown}">
-        <Setter Property="Foreground" Value="{StaticResource IntegerLoopUpDown.Static.Foreground}" />
-        <Setter Property="Background" Value="{StaticResource IntegerLoopUpDown.Static.Background}" />
-        <Setter Property="BorderBrush" Value="{StaticResource IntegerLoopUpDown.Static.Border}" />
+    <Style TargetType="{x:Type ctrl:TlIntegerUpDown}">
+        <Setter Property="Foreground" Value="{StaticResource TlIntegerUpDown.Static.Foreground}" />
+        <Setter Property="Background" Value="{StaticResource TlIntegerUpDown.Static.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TlIntegerUpDown.Static.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalContentAlignment" Value="Right" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="TextAlignment" Value="Right" />
         <Setter Property="WatermarkTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <ContentControl Content="{Binding}" Foreground="{StaticResource IntegerLoopUpDown.Watermark.Foreground}" Focusable="False" Margin="0,0,3,0" />
+                    <ContentControl Content="{Binding}" Foreground="{StaticResource TlIntegerUpDown.Watermark.Foreground}" Focusable="False" Margin="0,0,3,0" />
                 </DataTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ctrl:IntegerLoopUpDown}">
+                <ControlTemplate TargetType="{x:Type ctrl:TlIntegerUpDown}">
                     <xctk:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ButtonSpinnerLocation="{Binding ButtonSpinnerLocation, RelativeSource={RelativeSource TemplatedParent}}" Background="{TemplateBinding Background}" HorizontalContentAlignment="Stretch" IsTabStop="False" ShowButtonSpinner="{Binding ShowButtonSpinner, RelativeSource={RelativeSource TemplatedParent}}" VerticalContentAlignment="Stretch">
-                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AcceptsReturn="False" BorderThickness="0" Background="Transparent" ContextMenu="{TemplateBinding ContextMenu}" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="{TemplateBinding IsTabStop}" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" SelectAllOnGotFocus="{Binding SelectAllOnGotFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AcceptsReturn="False" BorderThickness="0" Background="Transparent" ContextMenu="{TemplateBinding ContextMenu}" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="True" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" SelectAllOnGotFocus="{Binding SelectAllOnGotFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" />
                     </xctk:ButtonSpinner>
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
@@ -1089,15 +1092,15 @@
                             <Setter Property="IsReadOnly" TargetName="PART_TextBox" Value="True" />
                         </DataTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{StaticResource IntegerLoopUpDown.Disabled.Foreground}" />
-                            <Setter Property="Background" Value="{StaticResource IntegerLoopUpDown.Disabled.Background}" />
-                            <Setter Property="BorderBrush" Value="{StaticResource IntegerLoopUpDown.Disabled.Border}" />
+                            <Setter Property="Foreground" Value="{StaticResource TlIntegerUpDown.Disabled.Foreground}" />
+                            <Setter Property="Background" Value="{StaticResource TlIntegerUpDown.Disabled.Background}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource TlIntegerUpDown.Disabled.Border}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource IntegerLoopUpDown.MouseOver.Border}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource TlIntegerUpDown.MouseOver.Border}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource IntegerLoopUpDown.Focus.Border}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource TlIntegerUpDown.Focus.Border}" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter Property="FocusManager.FocusedElement" TargetName="PART_TextBox" Value="{Binding ElementName=PART_TextBox}" />
@@ -1120,7 +1123,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!-- /IntegerLoopUpDown -->
+    <!-- /TlIntegerUpDown -->
 
     <!-- CheckBox -->
     <SolidColorBrush x:Key="OptionMark.Static.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />

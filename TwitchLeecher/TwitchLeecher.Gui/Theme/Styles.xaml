@@ -174,15 +174,15 @@
     </Style>
     <!-- /ScrollingTextBox -->
 
-    <!-- IntegerLoopUpDown -->
-    <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:IntegerLoopUpDown}"  BasedOn="{StaticResource {x:Type ctrl:IntegerLoopUpDown}}">
-        <Setter Property="ShowButtonSpinner" Value="False" />
+    <!-- TlIntegerUpDown -->
+    <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:TlIntegerUpDown}"  BasedOn="{StaticResource {x:Type ctrl:TlIntegerUpDown}}">
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="Minimum" Value="0" />
         <Setter Property="Maximum" Value="59" />
-        <Setter Property="Width" Value="30" />
+        <Setter Property="Width" Value="55" />
+        <Setter Property="Loop" Value="True" />
     </Style>
-    <!-- /IntegerLoopUpDown -->
+    <!-- /TlIntegerUpDown -->
 
     <!-- FadeContentControl -->
     <SolidColorBrush x:Key="FadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />

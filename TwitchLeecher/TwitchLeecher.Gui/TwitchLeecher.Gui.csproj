@@ -74,7 +74,7 @@
     </Compile>
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
     <Compile Include="Controls\FadeContentControl.cs" />
-    <Compile Include="Controls\IntegerLoopUpDown.cs" />
+    <Compile Include="Controls\TlIntegerUpDown.cs" />
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Controls\SpacedUniformGrid.cs" />
     <Compile Include="Controls\ThemedMessageBox.cs" />

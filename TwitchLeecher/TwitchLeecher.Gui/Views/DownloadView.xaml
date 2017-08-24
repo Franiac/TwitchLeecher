@@ -112,18 +112,18 @@
                     </Grid.ColumnDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding DownloadParams.CropStart}" Content="Start" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartHours}" IsEnabled="{Binding DownloadParams.CropStart}" Maximum="99" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" Maximum="99" Loop="False" />
                     <TextBlock Grid.Row="0" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartMinutes}" IsEnabled="{Binding DownloadParams.CropStart}" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" />
                     <TextBlock Grid.Row="0" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartSeconds}" IsEnabled="{Binding DownloadParams.CropStart}" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" />
 
                     <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding  DownloadParams.CropEnd}" Content="End" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndHours}" IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" />
+                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" Loop="False" />
                     <TextBlock Grid.Row="2" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                     <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:IntegerLoopUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                 </Grid>
             </Grid>
         </Grid>
