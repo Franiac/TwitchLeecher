@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Gui.Controls
 {
-    public class ScrollingTextBox : TextBox
+    public class TlScrollingTextBox : TextBox
     {
         protected override void OnTextChanged(TextChangedEventArgs e)
         {

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace TwitchLeecher.Gui.Controls
 {
-    public class SpacedUniformGrid : Panel
+    public class TlSpacedUniformGrid : Panel
     {
         #region Dependency Properties
 
@@ -13,7 +13,7 @@ namespace TwitchLeecher.Gui.Controls
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
                 "Spacing",
                 typeof(double),
-                typeof(SpacedUniformGrid), new FrameworkPropertyMetadata(
+                typeof(TlSpacedUniformGrid), new FrameworkPropertyMetadata(
                         defaultValue: 10.0,
                         flags: FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 

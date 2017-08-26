@@ -73,11 +73,10 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
-    <Compile Include="Controls\FadeContentControl.cs" />
+    <Compile Include="Controls\TlFadeContentControl.cs" />
     <Compile Include="Controls\TlIntegerUpDown.cs" />
-    <Compile Include="Controls\ScrollingTextBox.cs" />
-    <Compile Include="Controls\SpacedUniformGrid.cs" />
-    <Compile Include="Controls\ThemedMessageBox.cs" />
+    <Compile Include="Controls\TlScrollingTextBox.cs" />
+    <Compile Include="Controls\TlSpacedUniformGrid.cs" />
     <Compile Include="Controls\TlTimePicker.cs" />
     <Compile Include="Controls\TlDateTimePicker.cs" />
     <Compile Include="Converters\DownloadStateToVisibilityConverter.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />
     <Compile Include="Converters\LoadLimitToBooleanConverter.cs" />
+    <Compile Include="Decorators\NoWidthDecorator.cs" />
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Extensions\Icon.cs" />
     <Compile Include="Interfaces\IDonationService.cs" />

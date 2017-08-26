@@ -49,7 +49,7 @@
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
-                <ctrl:ScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
+                <ctrl:TlScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

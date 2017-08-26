@@ -156,9 +156,9 @@
     </Style>
     <!-- /MultilineTextBox -->
 
-    <!-- ScrollingTextBox -->
-    <SolidColorBrush x:Key="ScrollingTextBox.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
-    <SolidColorBrush x:Key="ScrollingTextBox.Border" Color="{StaticResource Global.Theme.Border.Color}" />
+    <!-- TlScrollingTextBox -->
+    <SolidColorBrush x:Key="TlScrollingTextBox.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{StaticResource Global.Theme.Border.Color}" />
 
     <Style x:Key="TlScrollingTextBox" TargetType="{x:Type TextBox}"  BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="FontFamily" Value="Calibri" />
@@ -167,12 +167,12 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Foreground" Value="{StaticResource ScrollingTextBox.Foreground}" />
-        <Setter Property="BorderBrush" Value="{StaticResource ScrollingTextBox.Border}" />
+        <Setter Property="Foreground" Value="{StaticResource TlScrollingTextBox.Foreground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TlScrollingTextBox.Border}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="CaretBrush" Value="Transparent" />
     </Style>
-    <!-- /ScrollingTextBox -->
+    <!-- /TlScrollingTextBox -->
 
     <!-- TlIntegerUpDown -->
     <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:TlIntegerUpDown}"  BasedOn="{StaticResource {x:Type ctrl:TlIntegerUpDown}}">
@@ -198,8 +198,8 @@
     </Style>
     <!-- /TlDateTimePicker -->
 
-    <!-- FadeContentControl -->
-    <SolidColorBrush x:Key="FadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />
+    <!-- TlFadeContentControl -->
+    <SolidColorBrush x:Key="TlFadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />
 
     <Style x:Key="TlFadeContentControl" TargetType="ContentControl">
         <Setter Property="Validation.ErrorTemplate">
@@ -226,7 +226,7 @@
                                         <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" Visibility="{Binding HasMenu, Converter={StaticResource BVConverter}}">
                                             <ContentPresenter.ContentTemplate>
                                                 <DataTemplate>
-                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0" BorderBrush="{StaticResource FadeContentControl.Border}">
+                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0" BorderBrush="{StaticResource TlFadeContentControl.Border}">
                                                         <Border.Background>
                                                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                                                 <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="1" />
@@ -271,7 +271,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- /FadeContentControl -->
+    <!-- /TlFadeContentControl -->
 
     <!-- Popup -->
     <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
