@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -11,9 +10,6 @@ namespace TwitchLeecher.Gui.Views
         public SearchView()
         {
             InitializeComponent();
-
-            dtLoadFrom.FormatString = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
-            dtLoadTo.FormatString = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
 
             IsVisibleChanged += SearchView_IsVisibleChanged;
         }

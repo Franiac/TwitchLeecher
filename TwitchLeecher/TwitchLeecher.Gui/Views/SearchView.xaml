@@ -71,9 +71,9 @@
                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
                     <StackPanel Grid.Column="2" Grid.Row="4" Orientation="Horizontal">
                         <RadioButton GroupName="LoadLimit" Content="From" IsChecked="{Binding SearchParams.LoadOnlyToday, Converter={StaticResource inverseBooleanConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <ctrl:TlDateTimePicker x:Name="dtLoadFrom" Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadOnlyToday, Converter={StaticResource inverseBooleanConverter}}" Value="{Binding SearchParams.LoadFrom, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadFromDefault}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <ctrl:TlDateTimePicker Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadOnlyToday, Converter={StaticResource inverseBooleanConverter}}" Value="{Binding SearchParams.LoadFrom, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadFromDefault}" Margin="5,0,0,0" VerticalAlignment="Center" />
                         <TextBlock Text="to" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
-                        <ctrl:TlDateTimePicker x:Name="dtLoadTo" Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadOnlyToday, Converter={StaticResource inverseBooleanConverter}}" Value="{Binding SearchParams.LoadTo, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadToDefault}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <ctrl:TlDateTimePicker Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadOnlyToday, Converter={StaticResource inverseBooleanConverter}}" Value="{Binding SearchParams.LoadTo, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadToDefault}" Margin="5,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
                     <RadioButton Grid.Column="2" Grid.Row="5" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding SearchParams.LoadOnlyToday}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </Grid>

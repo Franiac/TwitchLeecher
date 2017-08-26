@@ -116,7 +116,7 @@
                                     <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding LengthStr}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Recorded:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding RecordedDate, StringFormat='MM/dd/yyyy hh:mm:ss tt'}" />
+                                    <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding RecordedDate, StringFormat=G}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="6" Text="Quality:" FontWeight="Bold" />
                                     <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding BestQuality}" />
