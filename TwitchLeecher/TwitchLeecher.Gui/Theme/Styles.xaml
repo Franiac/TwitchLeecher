@@ -177,12 +177,26 @@
     <!-- TlIntegerUpDown -->
     <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:TlIntegerUpDown}"  BasedOn="{StaticResource {x:Type ctrl:TlIntegerUpDown}}">
         <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Minimum" Value="0" />
         <Setter Property="Maximum" Value="59" />
-        <Setter Property="Width" Value="55" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="PadZeros" Value="True" />
         <Setter Property="Loop" Value="True" />
     </Style>
     <!-- /TlIntegerUpDown -->
+
+    <!-- TlDateTimePicker -->
+    <Style x:Key="TlDatePicker" TargetType="{x:Type ctrl:TlDateTimePicker}"  BasedOn="{StaticResource {x:Type ctrl:TlDateTimePicker}}">
+        <Setter Property="Width" Value="105" />
+        <Setter Property="Format" Value="Custom" />
+        <Setter Property="ShowDropDownButton" Value="False" />
+        <Setter Property="TimePickerVisibility" Value="Collapsed" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <!-- /TlDateTimePicker -->
 
     <!-- FadeContentControl -->
     <SolidColorBrush x:Key="FadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />

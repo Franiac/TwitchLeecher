@@ -17,6 +17,21 @@ namespace TwitchLeecher.Gui.Controls
 
         #region Dependency Properties
 
+        #region PadZeros
+
+        public static readonly DependencyProperty PadZerosProperty = DependencyProperty.Register(
+                "PadZeros",
+                typeof(bool),
+                typeof(TlIntegerUpDown), new FrameworkPropertyMetadata(defaultValue: false));
+
+        public bool PadZeros
+        {
+            get { return (bool)GetValue(PadZerosProperty); }
+            set { SetValue(PadZerosProperty, value); }
+        }
+
+        #endregion PadZeros
+
         #region Loop
 
         public static readonly DependencyProperty LoopProperty = DependencyProperty.Register(
@@ -35,6 +50,16 @@ namespace TwitchLeecher.Gui.Controls
         #endregion Dependency Properties
 
         #region Methods
+
+        protected void FocusAndSelectAll()
+        {
+            if (!TextBox.IsFocused)
+            {
+                TextBox.Focus();
+            }
+
+            TextBox.SelectAll();
+        }
 
         protected override void OnInitialized(EventArgs e)
         {
@@ -129,8 +154,7 @@ namespace TwitchLeecher.Gui.Controls
                 base.OnIncrement();
             }
 
-            TextBox?.Focus();
-            TextBox?.SelectAll();
+            FocusAndSelectAll();
         }
 
         protected override void OnDecrement()
@@ -144,8 +168,7 @@ namespace TwitchLeecher.Gui.Controls
                 base.OnDecrement();
             }
 
-            TextBox?.Focus();
-            TextBox?.SelectAll();
+            FocusAndSelectAll();
         }
 
         protected void SetValue(int value)
@@ -160,6 +183,8 @@ namespace TwitchLeecher.Gui.Controls
             value = Minimum.HasValue && value < Minimum.Value ? Minimum.Value : value;
 
             Value = value;
+
+            FocusAndSelectAll();
         }
 
         protected override int? ConvertTextToValue(string text)
@@ -178,7 +203,14 @@ namespace TwitchLeecher.Gui.Controls
         {
             int value = Value.GetValueOrDefault();
 
-            return Math.Abs(value).ToString().PadLeft(maxLength, '0');
+            if (Maximum.HasValue && PadZeros)
+            {
+                return Math.Abs(value).ToString().PadLeft(maxLength, '0');
+            }
+            else
+            {
+                return value.ToString();
+            }
         }
 
         #endregion Methods

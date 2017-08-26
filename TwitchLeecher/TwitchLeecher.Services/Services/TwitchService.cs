@@ -377,7 +377,7 @@ namespace TwitchLeecher.Services.Services
             switch (searchParams.SearchType)
             {
                 case SearchType.Channel:
-                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimit);
+                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadOnlyToday, searchParams.LoadFrom.Value, searchParams.LoadTo.Value);
                     break;
 
                 case SearchType.Urls:
@@ -390,7 +390,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void SearchChannel(string channel, VideoType videoType, int loadLimit)
+        private void SearchChannel(string channel, VideoType videoType, bool loadOnlyToday, DateTime loadFrom, DateTime loadTo)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -399,94 +399,88 @@ namespace TwitchLeecher.Services.Services
 
             string channelId = GetChannelIdByName(channel);
 
-            using (WebClient webClient = CreateTwitchWebClient())
+            ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+
+            string broadcastTypeParam = null;
+
+            if (videoType == VideoType.Broadcast)
             {
-                ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
+                broadcastTypeParam = "archive";
+            }
+            else if (videoType == VideoType.Highlight)
+            {
+                broadcastTypeParam = "highlight";
+            }
+            else if (videoType == VideoType.Upload)
+            {
+                broadcastTypeParam = "upload";
+            }
+            else
+            {
+                throw new ApplicationException("Unsupported video type '" + videoType.ToString() + "'");
+            }
 
-                string broadcastTypeParam = null;
+            string channelVideosUrl = string.Format(CHANNEL_VIDEOS_URL, channelId);
 
-                if (videoType == VideoType.Broadcast)
+            DateTime fromDate = loadOnlyToday ? DateTime.Now : loadFrom;
+            DateTime toDate = loadOnlyToday ? DateTime.Now : loadTo;
+
+            int offset = 0;
+            int total = 0;
+            int sum = 0;
+
+            bool stop = false;
+
+            do
+            {
+                using (WebClient webClient = CreateTwitchWebClient())
                 {
-                    broadcastTypeParam = "archive";
-                }
-                else if (videoType == VideoType.Highlight)
-                {
-                    broadcastTypeParam = "highlight";
-                }
-                else if (videoType == VideoType.Upload)
-                {
-                    broadcastTypeParam = "upload";
-                }
-                else
-                {
-                    throw new ApplicationException("Unsupported video type '" + videoType.ToString() + "'");
-                }
+                    webClient.QueryString.Add("broadcast_type", broadcastTypeParam);
+                    webClient.QueryString.Add("limit", TWITCH_MAX_LOAD_LIMIT.ToString());
+                    webClient.QueryString.Add("offset", offset.ToString());
 
-                string channelVideosUrl = string.Format(CHANNEL_VIDEOS_URL, channelId);
+                    string result = webClient.DownloadString(channelVideosUrl);
 
-                int actualLoadLimit = loadLimit > TWITCH_MAX_LOAD_LIMIT ? TWITCH_MAX_LOAD_LIMIT : loadLimit;
+                    JObject videosResponseJson = JObject.Parse(result);
 
-                webClient.QueryString.Add("broadcast_type", broadcastTypeParam);
-                webClient.QueryString.Add("limit", actualLoadLimit.ToString());
-
-                string result = webClient.DownloadString(channelVideosUrl);
-
-                JObject videosRequestJson = JObject.Parse(result);
-
-                if (videosRequestJson != null)
-                {
-                    List<JArray> videoArrays = new List<JArray>();
-
-                    JArray firstArray = videosRequestJson.Value<JArray>("videos");
-
-                    videoArrays.Add(firstArray);
-
-                    int sum = firstArray.Count;
-                    int total = videosRequestJson.Value<int>("_total");
-
-                    int offset = 0;
-
-                    while (sum < loadLimit && sum < total)
+                    if (videosResponseJson != null)
                     {
-                        offset += TWITCH_MAX_LOAD_LIMIT;
+                        JArray videosJson = videosResponseJson.Value<JArray>("videos");
 
-                        actualLoadLimit = Math.Min(TWITCH_MAX_LOAD_LIMIT, loadLimit - sum);
+                        sum += videosJson.Count;
 
-                        using (WebClient webClientReload = CreateTwitchWebClient())
+                        if (total == 0)
                         {
-                            webClientReload.QueryString.Add("broadcast_type", broadcastTypeParam);
-                            webClientReload.QueryString.Add("limit", actualLoadLimit.ToString());
-                            webClientReload.QueryString.Add("offset", offset.ToString());
-
-                            result = webClientReload.DownloadString(channelVideosUrl);
-
-                            videosRequestJson = JObject.Parse(result);
-
-                            if (videosRequestJson != null)
-                            {
-                                JArray array = videosRequestJson.Value<JArray>("videos");
-
-                                videoArrays.Add(array);
-
-                                sum += array.Count;
-                            }
+                            total = videosResponseJson.Value<int>("_total");
                         }
-                    }
 
-                    foreach (JArray videoArray in videoArrays)
-                    {
-                        foreach (JObject videoJson in videoArray)
+                        foreach (JObject videoJson in videosJson)
                         {
                             if (videoJson.Value<string>("_id").StartsWith("v"))
                             {
-                                videos.Add(ParseVideo(videoJson));
+                                TwitchVideo video = ParseVideo(videoJson);
+
+                                DateTime recordedDate = video.RecordedDate;
+
+                                if (recordedDate.Date >= fromDate.Date && recordedDate.Date <= toDate.Date)
+                                {
+                                    videos.Add(video);
+                                }
+
+                                if (recordedDate.Date < fromDate.Date)
+                                {
+                                    stop = true;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
 
-                Videos = videos;
-            }
+                offset += TWITCH_MAX_LOAD_LIMIT;
+            } while (!stop && sum < total);
+
+            Videos = videos;
         }
 
         private void SearchUrls(string urls)

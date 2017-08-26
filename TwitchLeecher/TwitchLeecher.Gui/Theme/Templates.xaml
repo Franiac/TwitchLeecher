@@ -524,6 +524,7 @@
     <SolidColorBrush x:Key="TlDateTimePicker.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
     <SolidColorBrush x:Key="TlDateTimePicker.Disabled.Background" Color="{StaticResource TextControl.Background.Disabled.Color}" />
     <SolidColorBrush x:Key="TlDateTimePicker.Disabled.Border" Color="{StaticResource TextControl.Border.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlDateTimePicker.Error.Background" Color="{StaticResource TextControl.Background.Error.Color}" />
     <SolidColorBrush x:Key="TlDateTimePicker.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
     <SolidColorBrush x:Key="TlDateTimePicker.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
     <SolidColorBrush x:Key="TlDateTimePicker.Watermark.Foreground" Color="{StaticResource Text.Foreground.Watermark.Color}" />
@@ -534,7 +535,6 @@
         <Setter Property="BorderBrush" Value="{StaticResource TlDateTimePicker.Static.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="HorizontalContentAlignment" Value="Right" />
         <Setter Property="TextAlignment" Value="Right" />
         <Setter Property="TimeWatermarkTemplate">
             <Setter.Value>
@@ -564,7 +564,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <xctk:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{TemplateBinding AllowSpin}" BorderThickness="0" ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}" Background="{TemplateBinding Background}" HorizontalContentAlignment="Stretch" IsTabStop="False" ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}" VerticalContentAlignment="Stretch">
-                                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="Transparent" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="True" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="NoWrap" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{TemplateBinding WatermarkTemplate}" Watermark="{TemplateBinding Watermark}" />
+                                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="Transparent" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="True" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="NoWrap" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{TemplateBinding WatermarkTemplate}" Watermark="{TemplateBinding Watermark}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                     </xctk:ButtonSpinner>
                                     <ToggleButton x:Name="_calendarToggleButton" Background="White" Grid.Column="1" Focusable="False" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}}">
                                         <ToggleButton.IsHitTestVisible>
@@ -611,7 +611,7 @@
                                             </Style>
                                         </ToggleButton.Style>
                                         <ToggleButton.Visibility>
-                                            <TemplateBinding Property="ShowDropDownButton" Converter="{StaticResource {x:Type BooleanToVisibilityConverter}}" />
+                                            <TemplateBinding Property="ShowDropDownButton" Converter="{StaticResource BVConverter}" />
                                         </ToggleButton.Visibility>
                                     </ToggleButton>
                                 </Grid>
@@ -684,6 +684,19 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <AdornedElementPlaceholder />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="Background" Value="{StaticResource TlDateTimePicker.Error.Background}" />
+                <Setter Property="ToolTip" Value="{Binding (Validation.Errors).CurrentItem.ErrorContent, RelativeSource={RelativeSource Self}}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!-- /DateTimePicker -->
 
@@ -694,6 +707,7 @@
     <SolidColorBrush x:Key="TlTimePicker.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
     <SolidColorBrush x:Key="TlTimePicker.Disabled.Background" Color="{StaticResource TextControl.Background.Disabled.Color}" />
     <SolidColorBrush x:Key="TlTimePicker.Disabled.Border" Color="{StaticResource TextControl.Border.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlTimePicker.Error.Background" Color="{StaticResource TextControl.Background.Error.Color}" />
     <SolidColorBrush x:Key="TlTimePicker.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
     <SolidColorBrush x:Key="TlTimePicker.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
     <SolidColorBrush x:Key="TlTimePicker.Watermark.Foreground" Color="{StaticResource Text.Foreground.Watermark.Color}" />
@@ -771,7 +785,7 @@
                                     </Style>
                                 </ToggleButton.Style>
                                 <ToggleButton.Visibility>
-                                    <TemplateBinding Property="ShowDropDownButton" Converter="{StaticResource {x:Type BooleanToVisibilityConverter}}" />
+                                    <TemplateBinding Property="ShowDropDownButton" Converter="{StaticResource BVConverter}" />
                                 </ToggleButton.Visibility>
                             </ToggleButton>
                             <Popup x:Name="PART_Popup" AllowsTransparency="True" IsOpen="{Binding IsChecked, ElementName=_timePickerToggleButton}" StaysOpen="False" ToolTip="">
@@ -875,6 +889,19 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <AdornedElementPlaceholder />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="Background" Value="{StaticResource TlTimePicker.Error.Background}" />
+                <Setter Property="ToolTip" Value="{Binding (Validation.Errors).CurrentItem.ErrorContent, RelativeSource={RelativeSource Self}}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!-- /TimePicker -->
 
@@ -1040,7 +1067,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">
-                <Setter Property="Background" Value="{StaticResource TextBox.Error.Background}" />
+                <Setter Property="Background" Value="{StaticResource WatermarkTextBox.Error.Background}" />
                 <Setter Property="ToolTip" Value="{Binding (Validation.Errors).CurrentItem.ErrorContent, RelativeSource={RelativeSource Self}}" />
             </Trigger>
         </Style.Triggers>
@@ -1054,6 +1081,7 @@
     <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
     <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Background" Color="{StaticResource TextControl.Background.Disabled.Color}" />
     <SolidColorBrush x:Key="TlIntegerUpDown.Disabled.Border" Color="{StaticResource TextControl.Border.Disabled.Color}" />
+    <SolidColorBrush x:Key="TlIntegerUpDown.Error.Background" Color="{StaticResource TextControl.Background.Error.Color}" />
     <SolidColorBrush x:Key="TlIntegerUpDown.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
     <SolidColorBrush x:Key="TlIntegerUpDown.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
     <SolidColorBrush x:Key="TlIntegerUpDown.Watermark.Foreground" Color="{StaticResource Text.Foreground.Watermark.Color}" />
@@ -1078,7 +1106,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ctrl:TlIntegerUpDown}">
                     <xctk:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ButtonSpinnerLocation="{Binding ButtonSpinnerLocation, RelativeSource={RelativeSource TemplatedParent}}" Background="{TemplateBinding Background}" HorizontalContentAlignment="Stretch" IsTabStop="False" ShowButtonSpinner="{Binding ShowButtonSpinner, RelativeSource={RelativeSource TemplatedParent}}" VerticalContentAlignment="Stretch">
-                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AcceptsReturn="False" BorderThickness="0" Background="Transparent" ContextMenu="{TemplateBinding ContextMenu}" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="True" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" SelectAllOnGotFocus="{Binding SelectAllOnGotFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <xctk:WatermarkTextBox x:Name="PART_TextBox" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AcceptsReturn="False" BorderThickness="0" Background="Transparent" ContextMenu="{TemplateBinding ContextMenu}" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsTabStop="True" IsUndoEnabled="True" MinWidth="20" Padding="{TemplateBinding Padding}" SelectAllOnGotFocus="{Binding SelectAllOnGotFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </xctk:ButtonSpinner>
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
@@ -1118,7 +1146,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">
-                <Setter Property="Background" Value="{StaticResource TextBox.Error.Background}" />
+                <Setter Property="Background" Value="{StaticResource TlIntegerUpDown.Error.Background}" />
                 <Setter Property="ToolTip" Value="{Binding (Validation.Errors).CurrentItem.ErrorContent, RelativeSource={RelativeSource Self}}" />
             </Trigger>
         </Style.Triggers>
@@ -1380,12 +1408,12 @@
     <!-- /ProgressBar -->
 
     <!-- TabItem -->
-    <SolidColorBrush x:Key="TabItem.Static.Foreground" Color="{StaticResource Text.Foreground.Dark.Color}" />
+    <SolidColorBrush x:Key="TabItem.Static.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
     <SolidColorBrush x:Key="TabItem.Static.Background" Color="{StaticResource Global.Theme.Color}" />
     <SolidColorBrush x:Key="TabItem.Static.Border" Color="{StaticResource Global.Theme.Color}" />
     <SolidColorBrush x:Key="TabItem.MouseOver.Background" Color="{StaticResource Button.Background.MouseOver.Color}" />
     <SolidColorBrush x:Key="TabItem.MouseOver.Border" Color="{StaticResource Button.Background.MouseOver.Color}" />
-    <SolidColorBrush x:Key="TabItem.Disabled.Foreground" Color="{StaticResource Text.Foreground.Dark.Disabled.Color}" />
+    <SolidColorBrush x:Key="TabItem.Disabled.Foreground" Color="{StaticResource Text.Foreground.Light.Disabled.Color}" />
     <SolidColorBrush x:Key="TabItem.Disabled.Background" Color="{StaticResource Button.Background.Disabled.Color}" />
     <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="{StaticResource Button.Background.Disabled.Color}" />
     <SolidColorBrush x:Key="TabItem.Selected.Border" Color="{StaticResource Button.Background.MouseOver.Color}" />

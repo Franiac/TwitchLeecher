@@ -28,7 +28,8 @@ namespace TwitchLeecher.Services.Services
         private const string SEARCH_EL = "Search";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
         private const string SEARCH_VIDEOTYPE_EL = "VideoType";
-        private const string SEARCH_LOADLIMIT_EL = "LoadLimit";
+        private const string SEARCH_LOADONLYTODAY_EL = "LoadOnlyToday";
+        private const string SEARCH_LOADLASTDAYS_EL = "LoadLastDays";
         private const string SEARCH_SEARCHONSTARTUP_EL = "SearchOnStartup";
 
         private const string DOWNLOAD_EL = "Download";
@@ -123,9 +124,13 @@ namespace TwitchLeecher.Services.Services
                 searchVideoTypeEl.SetValue(preferences.SearchVideoType);
                 searchEl.Add(searchVideoTypeEl);
 
-                XElement searchLoadLimitEl = new XElement(SEARCH_LOADLIMIT_EL);
-                searchLoadLimitEl.SetValue(preferences.SearchLoadLimit);
-                searchEl.Add(searchLoadLimitEl);
+                XElement searchLoadOnlyTodayEl = new XElement(SEARCH_LOADONLYTODAY_EL);
+                searchLoadOnlyTodayEl.SetValue(preferences.SearchLoadOnlyToday);
+                searchEl.Add(searchLoadOnlyTodayEl);
+
+                XElement searchLoadLastDaysEl = new XElement(SEARCH_LOADLASTDAYS_EL);
+                searchLoadLastDaysEl.SetValue(preferences.SearchLoadLastDays);
+                searchEl.Add(searchLoadLastDaysEl);
 
                 XElement searchOnStartupEl = new XElement(SEARCH_SEARCHONSTARTUP_EL);
                 searchOnStartupEl.SetValue(preferences.SearchOnStartup);
@@ -263,22 +268,27 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
-                            XElement searchLoadLimitEl = searchEl.Element(SEARCH_LOADLIMIT_EL);
+                            XElement searchLoadOnlyTodayEl = searchEl.Element(SEARCH_LOADONLYTODAY_EL);
 
-                            if (searchLoadLimitEl != null)
+                            if (searchLoadOnlyTodayEl != null)
                             {
                                 try
                                 {
-                                    int limit = searchLoadLimitEl.GetValueAsInt();
+                                    preferences.SearchLoadOnlyToday = searchLoadOnlyTodayEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
 
-                                    if (Preferences.GetLoadLimits().Contains(limit))
-                                    {
-                                        preferences.SearchLoadLimit = limit;
-                                    }
-                                    else
-                                    {
-                                        preferences.SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT;
-                                    }
+                            XElement searchLoadLastDaysEl = searchEl.Element(SEARCH_LOADLASTDAYS_EL);
+
+                            if (searchLoadLastDaysEl != null)
+                            {
+                                try
+                                {
+                                    preferences.SearchLoadLastDays = searchLoadLastDaysEl.GetValueAsInt();
                                 }
                                 catch
                                 {
@@ -377,7 +387,8 @@ namespace TwitchLeecher.Services.Services
                 AppShowDonationButton = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
-                SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,
+                SearchLoadOnlyToday = false,
+                SearchLoadLastDays = 7,
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),

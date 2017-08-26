@@ -15,7 +15,12 @@ namespace TwitchLeecher.Core.Models
         private string _urls;
         private string _ids;
 
-        private int _loadLimit;
+        private bool _loadOnlyToday;
+
+        private DateTime? _loadFrom;
+        private DateTime? _loadFromDefault;
+        private DateTime? _loadTo;
+        private DateTime? _loadToDefault;
 
         #endregion Fields
 
@@ -38,7 +43,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _searchType, value, nameof(SearchType));
+                SetProperty(ref _searchType, value);
             }
         }
 
@@ -50,7 +55,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _videoType, value, nameof(VideoType));
+                SetProperty(ref _videoType, value);
             }
         }
 
@@ -62,7 +67,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _channel, value, nameof(Channel));
+                SetProperty(ref _channel, value);
             }
         }
 
@@ -74,7 +79,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _urls, value, nameof(Urls));
+                SetProperty(ref _urls, value);
             }
         }
 
@@ -86,19 +91,67 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _ids, value, nameof(Ids));
+                SetProperty(ref _ids, value);
             }
         }
 
-        public int LoadLimit
+        public bool LoadOnlyToday
         {
             get
             {
-                return _loadLimit;
+                return _loadOnlyToday;
             }
             set
             {
-                SetProperty(ref _loadLimit, value, nameof(LoadLimit));
+                SetProperty(ref _loadOnlyToday, value);
+            }
+        }
+
+        public DateTime? LoadFrom
+        {
+            get
+            {
+                return _loadFrom;
+            }
+            set
+            {
+                SetProperty(ref _loadFrom, value);
+            }
+        }
+
+        public DateTime? LoadFromDefault
+        {
+            get
+            {
+                return _loadFromDefault;
+            }
+            set
+            {
+                SetProperty(ref _loadFromDefault, value);
+            }
+        }
+
+        public DateTime? LoadTo
+        {
+            get
+            {
+                return _loadTo;
+            }
+            set
+            {
+                SetProperty(ref _loadTo, value);
+            }
+        }
+
+        public DateTime? LoadToDefault
+        {
+            get
+            {
+                return _loadToDefault;
+            }
+            set
+            {
+                SetProperty(ref _loadToDefault, value);
             }
         }
 
@@ -117,6 +170,58 @@ namespace TwitchLeecher.Core.Models
                 if (_searchType == SearchType.Channel && string.IsNullOrWhiteSpace(_channel))
                 {
                     AddError(currentProperty, "Please specify a channel name!");
+                }
+            }
+
+            currentProperty = nameof(LoadFrom);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && !_loadOnlyToday)
+                {
+                    if (!_loadFrom.HasValue)
+                    {
+                        AddError(currentProperty, "Please specify a date!");
+                    }
+                    else
+                    {
+                        DateTime minimum = new DateTime(2010, 01, 01);
+
+                        if (_loadFrom.Value.Date < minimum.Date)
+                        {
+                            AddError(currentProperty, "Date has to be greater than '" + minimum.ToShortDateString() + "'!");
+                        }
+
+                        if (_loadFrom.Value.Date > DateTime.Now.Date)
+                        {
+                            AddError(currentProperty, "Date cannot be greater than today!");
+                        }
+                    }
+                }
+            }
+
+            currentProperty = nameof(LoadTo);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && !_loadOnlyToday)
+                {
+                    if (!_loadTo.HasValue)
+                    {
+                        AddError(currentProperty, "Please specify a date!");
+                    }
+                    else
+                    {
+                        if (_loadTo.Value.Date > DateTime.Now.Date)
+                        {
+                            AddError(currentProperty, "Date cannot be greater than today!");
+                        }
+
+                        if (_loadFrom.HasValue && _loadFrom.Value.Date > _loadTo.Value.Date)
+                        {
+                            AddError(currentProperty, "Date has to be greater than '" + _loadFrom.Value.ToShortDateString() + "'!");
+                        }
+                    }
                 }
             }
 
@@ -232,7 +337,11 @@ namespace TwitchLeecher.Core.Models
                 Channel = _channel,
                 Urls = _urls,
                 Ids = _ids,
-                LoadLimit = _loadLimit
+                LoadOnlyToday = _loadOnlyToday,
+                LoadFrom = _loadFrom,
+                LoadFromDefault = _loadFromDefault,
+                LoadTo = _loadTo,
+                LoadToDefault = _loadToDefault
             };
         }
 
