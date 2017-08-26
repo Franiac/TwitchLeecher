@@ -189,10 +189,9 @@
 
     <!-- TlDateTimePicker -->
     <Style x:Key="TlDatePicker" TargetType="{x:Type ctrl:TlDateTimePicker}"  BasedOn="{StaticResource {x:Type ctrl:TlDateTimePicker}}">
-        <Setter Property="Width" Value="105" />
         <Setter Property="Format" Value="Custom" />
         <Setter Property="FormatString" Value="d" />
-        <Setter Property="ShowDropDownButton" Value="False" />
+        <Setter Property="AutoCloseCalendar" Value="True" />
         <Setter Property="TimePickerVisibility" Value="Collapsed" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />

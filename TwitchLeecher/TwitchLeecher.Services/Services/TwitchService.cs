@@ -377,7 +377,7 @@ namespace TwitchLeecher.Services.Services
             switch (searchParams.SearchType)
             {
                 case SearchType.Channel:
-                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadOnlyToday, searchParams.LoadFrom.Value, searchParams.LoadTo.Value);
+                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimit, searchParams.LoadFrom.Value, searchParams.LoadTo.Value, searchParams.LoadLastVods);
                     break;
 
                 case SearchType.Urls:
@@ -390,7 +390,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void SearchChannel(string channel, VideoType videoType, bool loadOnlyToday, DateTime loadFrom, DateTime loadTo)
+        private void SearchChannel(string channel, VideoType videoType, LoadLimit loadLimit, DateTime loadFrom, DateTime loadTo, int loadLastVods)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -422,8 +422,14 @@ namespace TwitchLeecher.Services.Services
 
             string channelVideosUrl = string.Format(CHANNEL_VIDEOS_URL, channelId);
 
-            DateTime fromDate = loadOnlyToday ? DateTime.Now : loadFrom;
-            DateTime toDate = loadOnlyToday ? DateTime.Now : loadTo;
+            DateTime fromDate = DateTime.Now;
+            DateTime toDate = DateTime.Now;
+
+            if (loadLimit == LoadLimit.Timespan)
+            {
+                fromDate = loadFrom;
+                toDate = loadTo;
+            }
 
             int offset = 0;
             int total = 0;
@@ -445,32 +451,43 @@ namespace TwitchLeecher.Services.Services
 
                     if (videosResponseJson != null)
                     {
-                        JArray videosJson = videosResponseJson.Value<JArray>("videos");
-
-                        sum += videosJson.Count;
-
                         if (total == 0)
                         {
                             total = videosResponseJson.Value<int>("_total");
                         }
 
-                        foreach (JObject videoJson in videosJson)
+                        foreach (JObject videoJson in videosResponseJson.Value<JArray>("videos"))
                         {
+                            sum++;
+
                             if (videoJson.Value<string>("_id").StartsWith("v"))
                             {
                                 TwitchVideo video = ParseVideo(videoJson);
 
-                                DateTime recordedDate = video.RecordedDate;
-
-                                if (recordedDate.Date >= fromDate.Date && recordedDate.Date <= toDate.Date)
+                                if (loadLimit == LoadLimit.LastVods)
                                 {
                                     videos.Add(video);
-                                }
 
-                                if (recordedDate.Date < fromDate.Date)
+                                    if (sum >= loadLastVods)
+                                    {
+                                        stop = true;
+                                        break;
+                                    }
+                                }
+                                else
                                 {
-                                    stop = true;
-                                    break;
+                                    DateTime recordedDate = video.RecordedDate;
+
+                                    if (recordedDate.Date >= fromDate.Date && recordedDate.Date <= toDate.Date)
+                                    {
+                                        videos.Add(video);
+                                    }
+
+                                    if (recordedDate.Date < fromDate.Date)
+                                    {
+                                        stop = true;
+                                        break;
+                                    }
                                 }
                             }
                         }

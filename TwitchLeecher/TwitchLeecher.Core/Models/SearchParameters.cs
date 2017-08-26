@@ -15,12 +15,14 @@ namespace TwitchLeecher.Core.Models
         private string _urls;
         private string _ids;
 
-        private bool _loadOnlyToday;
+        private LoadLimit _loadLimit;
 
         private DateTime? _loadFrom;
         private DateTime? _loadFromDefault;
         private DateTime? _loadTo;
         private DateTime? _loadToDefault;
+
+        private int _loadLastVods;
 
         #endregion Fields
 
@@ -95,15 +97,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public bool LoadOnlyToday
+        public LoadLimit LoadLimit
         {
             get
             {
-                return _loadOnlyToday;
+                return _loadLimit;
             }
             set
             {
-                SetProperty(ref _loadOnlyToday, value);
+                SetProperty(ref _loadLimit, value);
             }
         }
 
@@ -155,6 +157,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public int LoadLastVods
+        {
+            get
+            {
+                return _loadLastVods;
+            }
+            set
+            {
+                SetProperty(ref _loadLastVods, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -177,7 +191,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchType == SearchType.Channel && !_loadOnlyToday)
+                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.Timespan)
                 {
                     if (!_loadFrom.HasValue)
                     {
@@ -204,7 +218,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchType == SearchType.Channel && !_loadOnlyToday)
+                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.Timespan)
                 {
                     if (!_loadTo.HasValue)
                     {
@@ -221,6 +235,19 @@ namespace TwitchLeecher.Core.Models
                         {
                             AddError(currentProperty, "Date has to be greater than '" + _loadFrom.Value.ToShortDateString() + "'!");
                         }
+                    }
+                }
+            }
+
+            currentProperty = nameof(LoadLastVods);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.LastVods)
+                {
+                    if (_loadLastVods < 1 || _loadLastVods > 999)
+                    {
+                        AddError(currentProperty, "Value has to be between 1 and 999!");
                     }
                 }
             }
@@ -337,11 +364,12 @@ namespace TwitchLeecher.Core.Models
                 Channel = _channel,
                 Urls = _urls,
                 Ids = _ids,
-                LoadOnlyToday = _loadOnlyToday,
+                LoadLimit = _loadLimit,
                 LoadFrom = _loadFrom,
                 LoadFromDefault = _loadFromDefault,
                 LoadTo = _loadTo,
-                LoadToDefault = _loadToDefault
+                LoadToDefault = _loadToDefault,
+                LoadLastVods = _loadLastVods
             };
         }
 

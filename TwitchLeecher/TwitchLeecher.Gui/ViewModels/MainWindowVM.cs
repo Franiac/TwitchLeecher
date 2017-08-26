@@ -534,11 +534,12 @@ namespace TwitchLeecher.Gui.ViewModels
                         {
                             Channel = currentPrefs.SearchChannelName,
                             VideoType = currentPrefs.SearchVideoType,
-                            LoadOnlyToday = currentPrefs.SearchLoadOnlyToday,
+                            LoadLimit = currentPrefs.SearchLoadLimit,
                             LoadFrom = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
                             LoadFromDefault = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
                             LoadTo = DateTime.Now.Date,
-                            LoadToDefault = DateTime.Now.Date
+                            LoadToDefault = DateTime.Now.Date,
+                            LoadLastVods = currentPrefs.SearchLoadLastVods
                         };
 
                         _searchService.PerformSearch(searchParams);

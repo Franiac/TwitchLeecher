@@ -19,9 +19,11 @@ namespace TwitchLeecher.Core.Models
 
         private VideoType _searchVideoType;
 
-        private bool _searchLoadOnlyToday;
+        private LoadLimit _searchLoadLimit;
 
         private int _searchLoadLastDays;
+
+        private int _searchLoadLastVods;
 
         private bool _searchOnStartup;
 
@@ -97,15 +99,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public bool SearchLoadOnlyToday
+        public LoadLimit SearchLoadLimit
         {
             get
             {
-                return _searchLoadOnlyToday;
+                return _searchLoadLimit;
             }
             set
             {
-                SetProperty(ref _searchLoadOnlyToday, value);
+                SetProperty(ref _searchLoadLimit, value);
             }
         }
 
@@ -118,6 +120,18 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _searchLoadLastDays, value);
+            }
+        }
+
+        public int SearchLoadLastVods
+        {
+            get
+            {
+                return _searchLoadLastVods;
+            }
+            set
+            {
+                SetProperty(ref _searchLoadLastVods, value);
             }
         }
 
@@ -203,9 +217,19 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (!_searchLoadOnlyToday && (_searchLoadLastDays < 1 || _searchLoadLastDays > 99))
+                if (_searchLoadLimit == LoadLimit.Timespan && (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
                 {
-                    AddError(currentProperty, "Value has to be between 1 and 99!");
+                    AddError(currentProperty, "Value has to be between 1 and 999!");
+                }
+            }
+
+            currentProperty = nameof(SearchLoadLastVods);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchLoadLimit == LoadLimit.LastVods && (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
+                {
+                    AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
             }
 
@@ -265,8 +289,9 @@ namespace TwitchLeecher.Core.Models
                 AppShowDonationButton = AppShowDonationButton,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
-                SearchLoadOnlyToday = SearchLoadOnlyToday,
+                SearchLoadLimit = SearchLoadLimit,
                 SearchLoadLastDays = SearchLoadLastDays,
+                SearchLoadLastVods = SearchLoadLastVods,
                 SearchOnStartup = SearchOnStartup,
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
