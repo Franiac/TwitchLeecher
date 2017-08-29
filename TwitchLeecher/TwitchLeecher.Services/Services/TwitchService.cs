@@ -32,10 +32,12 @@ namespace TwitchLeecher.Services.Services
 
         private const string KRAKEN_URL = "https://api.twitch.tv/kraken";
         private const string VIDEO_URL = "https://api.twitch.tv/kraken/videos/{0}";
+        private const string GAMES_URL = "https://api.twitch.tv/kraken/games/top";
         private const string CHANNEL_SEARCH_URL = "https://api.twitch.tv/kraken/search/channels";
         private const string CHANNEL_VIDEOS_URL = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string ACCESS_TOKEN_URL = "https://api.twitch.tv/api/vods/{0}/access_token";
         private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
+        private const string UNKNOWN_GAME_URL = "https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png";
 
         private const string TEMP_PREFIX = "TL_";
         private const string PLAYLIST_NAME = "vod.m3u8";
@@ -47,8 +49,6 @@ namespace TwitchLeecher.Services.Services
         private const int DOWNLOAD_RETRY_TIME = 20;
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
-        private const int TWITCH_IMG_WIDTH = 240;
-        private const int TWITCH_IMG_HEIGHT = 135;
 
         private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
         private const string TWITCH_CLIENT_ID_HEADER = "Client-ID";
@@ -72,6 +72,7 @@ namespace TwitchLeecher.Services.Services
         private ObservableCollection<TwitchVideoDownload> _downloads;
 
         private ConcurrentDictionary<string, DownloadTask> _downloadTasks;
+        private Dictionary<string, Uri> _gameThumbnails;
         private TwitchAuthInfo _twitchAuthInfo;
 
         private string _appDir;
@@ -179,13 +180,19 @@ namespace TwitchLeecher.Services.Services
             WebClient wc = new WebClient();
             wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
             wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
+            wc.Encoding = Encoding.UTF8;
+            return wc;
+        }
+
+        private WebClient CreateAuthorizedTwitchWebClient()
+        {
+            WebClient wc = CreateTwitchWebClient();
 
             if (IsAuthorized)
             {
                 wc.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + _twitchAuthInfo.AccessToken);
             }
 
-            wc.Encoding = Encoding.UTF8;
             return wc;
         }
 
@@ -854,7 +861,7 @@ namespace TwitchLeecher.Services.Services
 
         private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
         {
-            using (WebClient webClient = CreateTwitchWebClient())
+            using (WebClient webClient = CreateAuthorizedTwitchWebClient())
             {
                 log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
                 string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
@@ -1238,14 +1245,89 @@ namespace TwitchLeecher.Services.Services
             List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("published_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             Uri url = new Uri(videoJson.Value<string>("url"));
+            Uri thumbnail = new Uri(videoJson.Value<JObject>("preview").Value<string>("large"));
+            Uri gameThumbnail = GetGameThumbnail(game);
 
-            string imgUrlTemplate = videoJson.Value<JObject>("preview").Value<string>("template")
-                .Replace("{width}", TWITCH_IMG_WIDTH.ToString())
-                .Replace("{height}", TWITCH_IMG_HEIGHT.ToString());
+            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, gameThumbnail, url);
+        }
 
-            Uri thumbnail = new Uri(imgUrlTemplate);
+        public Uri GetGameThumbnail(string game)
+        {
+            Uri unknownGameUri = new Uri(UNKNOWN_GAME_URL);
 
-            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, url);
+            if (string.IsNullOrWhiteSpace(game))
+            {
+                return unknownGameUri;
+            }
+
+            int hashIndex = game.IndexOf(" #");
+
+            if (hashIndex >= 0)
+            {
+                game = game.Substring(0, game.Length - (game.Length - hashIndex));
+            }
+
+            string gameLower = game.ToLowerInvariant();
+
+            if (_gameThumbnails == null)
+            {
+                InitGameThumbnails();
+            }
+
+            if (_gameThumbnails.TryGetValue(gameLower, out Uri thumb))
+            {
+                return thumb;
+            }
+
+            return unknownGameUri;
+        }
+
+        public void InitGameThumbnails()
+        {
+            _gameThumbnails = new Dictionary<string, Uri>();
+
+            try
+            {
+                int offset = 0;
+                int total = 0;
+
+                do
+                {
+                    using (WebClient webClient = CreateTwitchWebClient())
+                    {
+                        webClient.QueryString.Add("limit", TWITCH_MAX_LOAD_LIMIT.ToString());
+                        webClient.QueryString.Add("offset", offset.ToString());
+
+                        string result = webClient.DownloadString(GAMES_URL);
+
+                        JObject gamesResponseJson = JObject.Parse(result);
+
+                        if (total == 0)
+                        {
+                            total = gamesResponseJson.Value<int>("_total");
+                        }
+
+                        foreach (JObject gamesJson in gamesResponseJson.Value<JArray>("top"))
+                        {
+                            JObject gameJson = gamesJson.Value<JObject>("game");
+
+                            string name = gameJson.Value<string>("name").ToLowerInvariant();
+                            Uri gameThumb = new Uri(gameJson.Value<JObject>("box").Value<string>("medium"));
+
+                            if (!_gameThumbnails.ContainsKey(name))
+                            {
+                                _gameThumbnails.Add(name, gameThumb);
+                            }
+                        }
+                    }
+
+                    offset += TWITCH_MAX_LOAD_LIMIT;
+                } while (offset < total);
+            }
+            catch
+            {
+                // Thumbnail loading should not affect the rest of the application
+            }
         }
 
         public List<TwitchVideoQuality> ParseQualities(JObject resolutionsJson, JObject fpsJson)

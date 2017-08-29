@@ -46,6 +46,14 @@
         <Setter Property="Width" Value="30" />
     </Style>
 
+    <Style x:Key="TlDownloadButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Content" Value="Download" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Padding" Value="3,0,3,0" />
+        <Setter Property="FontSize" Value="11" />
+    </Style>
+
     <Style x:Key="TlImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="Auto" />
@@ -301,6 +309,7 @@
         <Setter Property="Background" Value="{StaticResource MainWindow.Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource MainWindow.Border}" />
         <Setter Property="FontSize" Value="{StaticResource Global.Font.Size}" />
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Width" Value="840" />

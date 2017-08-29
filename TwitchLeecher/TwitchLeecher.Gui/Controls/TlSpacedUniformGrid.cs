@@ -6,6 +6,16 @@ namespace TwitchLeecher.Gui.Controls
 {
     public class TlSpacedUniformGrid : Panel
     {
+        #region Fields
+
+        private double newItemWidth = 0;
+        private double newItemHeight = 0;
+
+        private int columnCount = 1;
+        private int rowCount = 1;
+
+        #endregion Fields
+
         #region Dependency Properties
 
         #region Spacing
@@ -25,59 +35,88 @@ namespace TwitchLeecher.Gui.Controls
 
         #endregion Spacing
 
+        #region ItemWidth
+
+        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(
+                "ItemWidth",
+                typeof(double),
+                typeof(TlSpacedUniformGrid), new FrameworkPropertyMetadata(
+                        defaultValue: 320.0,
+                        flags: FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
+
+        public double ItemWidth
+        {
+            get { return (double)GetValue(ItemWidthProperty); }
+            set { SetValue(ItemWidthProperty, value); }
+        }
+
+        #endregion ItemWidth
+
         #endregion Dependency Properties
 
         #region Methods
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double maxElementWidth = 0;
-            double maxElementHeight = 0;
+            int elementCount = InternalChildren.Count;
 
-            foreach (UIElement element in InternalChildren)
+            if (elementCount == 0)
             {
-                element.Measure(availableSize);
-
-                double desiredWidth = element.DesiredSize.Width;
-                double desiredHeight = element.DesiredSize.Height;
-
-                if (desiredWidth > maxElementWidth)
-                {
-                    maxElementWidth = desiredWidth;
-                }
-
-                if (desiredHeight > maxElementHeight)
-                {
-                    maxElementHeight = desiredHeight;
-                }
+                return new Size(0, 0);
             }
+
+            newItemWidth = 0;
+            newItemHeight = 0;
+            columnCount = 0;
+            rowCount = 0;
+
+            UIElementCollection elements = InternalChildren;
 
             double availableWidth = availableSize.Width;
+            double availableHeight = availableSize.Height;
 
             double spacing = Spacing;
+            double itemWidth = ItemWidth;
 
-            int childCount = InternalChildren.Count;
+            double widthSum = itemWidth;
 
-            int columnCount = 1;
-
-            if (maxElementWidth > 0)
+            while (widthSum < availableWidth)
             {
-                columnCount = (int)Math.Floor(availableWidth / maxElementWidth);
+                columnCount++;
+
+                if (widthSum == itemWidth)
+                {
+                    widthSum += spacing;
+                }
+
+                widthSum += itemWidth;
             }
 
-            if ((columnCount * maxElementWidth + (columnCount - 1) * spacing) > availableWidth)
+            columnCount = Math.Max(1, columnCount);
+
+            rowCount = Math.Max(1, (int)Math.Ceiling(elementCount / (double)columnCount));
+
+            double maxElementHeight = 0;
+
+            if (elementCount < columnCount)
             {
-                columnCount = Math.Max(1, columnCount - 1);
+                newItemWidth = itemWidth;
+            }
+            else
+            {
+                newItemWidth = (availableWidth - (columnCount > 1 ? (columnCount - 1) * spacing : 0)) / columnCount;
             }
 
-            columnCount = Math.Max(1, Math.Min(childCount, columnCount));
+            foreach (UIElement element in elements)
+            {
+                element.Measure(new Size(newItemWidth, double.PositiveInfinity));
+                maxElementHeight = Math.Max(maxElementHeight, element.DesiredSize.Height);
+            }
 
-            int rowCount = (int)Math.Ceiling(childCount / (double)columnCount);
+            newItemHeight = newItemWidth / (itemWidth / maxElementHeight);
 
-            rowCount = Math.Max(1, rowCount);
-
-            double newWidth = maxElementWidth * columnCount + (columnCount > 1 ? (columnCount - 1) * spacing : 0);
-            double newHeight = maxElementHeight * rowCount + (rowCount > 1 ? (rowCount - 1) * spacing : 0);
+            double newWidth = (newItemWidth * columnCount) + (columnCount > 1 ? (columnCount - 1) * spacing : 0);
+            double newHeight = (newItemHeight * rowCount) + (rowCount > 1 ? (rowCount - 1) * spacing : 0);
 
             newWidth = double.IsPositiveInfinity(newWidth) ? int.MaxValue : newWidth;
             newHeight = double.IsPositiveInfinity(newHeight) ? int.MaxValue : newHeight;
@@ -87,64 +126,31 @@ namespace TwitchLeecher.Gui.Controls
 
         protected override Size ArrangeOverride(Size arrangeSize)
         {
-            double maxElementWidth = 0;
-            double maxElementHeight = 0;
+            int elementCount = InternalChildren.Count;
 
-            foreach (UIElement element in InternalChildren)
+            if (elementCount == 0)
             {
-                double desiredWidth = element.DesiredSize.Width;
-                double desiredHeight = element.DesiredSize.Height;
-
-                if (desiredWidth > maxElementWidth)
-                {
-                    maxElementWidth = desiredWidth;
-                }
-
-                if (desiredHeight > maxElementHeight)
-                {
-                    maxElementHeight = desiredHeight;
-                }
+                return arrangeSize;
             }
 
-            double arrangeWidth = arrangeSize.Width;
-            double arrangeHeight = arrangeSize.Height;
+            UIElementCollection elements = InternalChildren;
 
             double spacing = Spacing;
-
-            int childCount = InternalChildren.Count;
-
-            int columnCount = 1;
-
-            if (maxElementWidth > 0)
-            {
-                columnCount = (int)Math.Floor(arrangeWidth / maxElementWidth);
-            }
-
-            if ((columnCount * maxElementWidth + (columnCount - 1) * spacing) > arrangeWidth)
-            {
-                columnCount = Math.Max(1, columnCount - 1);
-            }
-
-            columnCount = Math.Max(1, Math.Min(childCount, columnCount));
-
-            int rowCount = (int)Math.Ceiling(childCount / (double)columnCount);
-
-            rowCount = Math.Max(1, rowCount);
-
-            double newChildWidth = (arrangeWidth - (columnCount > 1 ? (columnCount - 1) * spacing : 0)) / columnCount;
 
             double curX = 0;
             double curY = 0;
 
-            for (int i = 0; i < childCount; i++)
+            for (int i = 0; i < elementCount; i++)
             {
+                UIElement element = elements[i];
+
                 if (i % columnCount == 0)
                 {
                     curX = 0;
 
                     if (i > columnCount - 1)
                     {
-                        curY += spacing + maxElementHeight;
+                        curY += spacing + newItemHeight;
                     }
                 }
 
@@ -153,11 +159,11 @@ namespace TwitchLeecher.Gui.Controls
                     curX += spacing;
                 }
 
-                Rect rect = new Rect(curX, curY, newChildWidth, maxElementHeight);
+                Rect rect = new Rect(curX, curY, newItemWidth, newItemHeight);
 
-                InternalChildren[i].Arrange(rect);
+                elements[i].Arrange(rect);
 
-                curX += newChildWidth;
+                curX += newItemWidth;
             }
 
             return arrangeSize;

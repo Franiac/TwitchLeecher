@@ -30,6 +30,7 @@ namespace TwitchLeecher.Core.Models
         private DateTime _recordedDate;
 
         private Uri _thumbnail;
+        private Uri _gameThumbnail;
         private Uri _url;
 
         #endregion Fields
@@ -37,7 +38,7 @@ namespace TwitchLeecher.Core.Models
         #region Constructors
 
         public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
-            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri url)
+            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri gameThumbnail, Uri url)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -77,6 +78,7 @@ namespace TwitchLeecher.Core.Models
             _qualities = qualities;
             _recordedDate = recordedDate;
             _thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
+            _gameThumbnail = gameThumbnail ?? throw new ArgumentNullException(nameof(gameThumbnail));
             _url = url ?? throw new ArgumentNullException(nameof(url));
         }
 
@@ -165,7 +167,7 @@ namespace TwitchLeecher.Core.Models
                     return TwitchVideoQuality.UNKNOWN;
                 }
 
-                return _qualities.First().DisplayString;
+                return _qualities.First().ResFpsString;
             }
         }
 
@@ -182,6 +184,14 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return _thumbnail;
+            }
+        }
+
+        public Uri GameThumbnail
+        {
+            get
+            {
+                return _gameThumbnail;
             }
         }
 

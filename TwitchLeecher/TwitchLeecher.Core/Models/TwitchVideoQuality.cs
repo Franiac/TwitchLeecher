@@ -39,6 +39,8 @@ namespace TwitchLeecher.Core.Models
 
         public string DisplayString { get; private set; }
 
+        public string ResFpsString { get; private set; }
+
         public string Resolution { get; private set; }
 
         public int? Fps { get; private set; }
@@ -73,6 +75,11 @@ namespace TwitchLeecher.Core.Models
                     DisplayString = UNKNOWN;
                 }
             }
+
+            string displayStr = DisplayString;
+            int index = displayStr.IndexOf(" (");
+
+            ResFpsString = index >= 0 ? displayStr.Substring(0, displayStr.Length - (displayStr.Length - index)) : displayStr;
         }
 
         public bool IsSource

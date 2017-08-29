@@ -3,7 +3,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- Sizes -->
-    <sys:Double x:Key="Global.Font.Size">14.667</sys:Double>
+    <sys:Double x:Key="Global.Font.Size">14</sys:Double>
+    <sys:Double x:Key="Global.Font.Emphasize.Size">18</sys:Double>
     <!-- /sizes -->
 
     <!-- Colors -->

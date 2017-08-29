@@ -29,7 +29,7 @@
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
-                <TextBlock  Text="Update Available" FontSize="21.333" FontWeight="Bold" />
+                <TextBlock  Text="Update Available" FontSize="21" FontWeight="Bold" />
             </Border>
 
             <TextBlock Grid.Row="2">

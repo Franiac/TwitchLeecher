@@ -1,8 +1,6 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.DownloadsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
-             xmlns:dec="clr-namespace:TwitchLeecher.Gui.Decorators"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
@@ -44,15 +42,10 @@
     </UserControl.Resources>
 
     <ScrollViewer x:Name="scroller" VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Downloads, UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ctrl:TlSpacedUniformGrid Margin="20" Spacing="20" IsItemsHost="True" MaxWidth="100000" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+        <ItemsControl ItemsSource="{Binding Downloads, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="10" BorderThickness="1" CornerRadius="5">
+                    <Border Margin="20, 20, 20, 0" Padding="10" BorderThickness="1" CornerRadius="5">
                         <Border.BorderBrush>
                             <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                         </Border.BorderBrush>
@@ -78,9 +71,7 @@
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <dec:NoWidthDecorator Grid.Column="0">
-                                        <TextBlock Text="{Binding DownloadParams.Video.Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                                    </dec:NoWidthDecorator>
+                                    <TextBlock Grid.Column="0" Text="{Binding DownloadParams.Video.Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Button Style="{StaticResource TlMiniButton}"
                                                 Command="{Binding Path=DataContext.RetryDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"

@@ -98,7 +98,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Height="40" Margin="10" RenderOptions.BitmapScalingMode="Fant" />
+                <Image Grid.Column="0" Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Height="40" Margin="10" />
 
                 <StackPanel Grid.Column="1" Margin="0,6,0,0">
                     <TextBlock Style="{StaticResource TlTitleText}" Text="{Binding Title, FallbackValue='Twitch Leecher X.Y'}" />
