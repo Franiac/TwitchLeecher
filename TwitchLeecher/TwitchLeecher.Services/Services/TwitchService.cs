@@ -196,16 +196,16 @@ namespace TwitchLeecher.Services.Services
             return wc;
         }
 
-        public VodAuthInfo RetrieveVodAuthInfo(string idTrimmed)
+        public VodAuthInfo RetrieveVodAuthInfo(string id)
         {
-            if (string.IsNullOrWhiteSpace(idTrimmed))
+            if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentNullException(nameof(idTrimmed));
+                throw new ArgumentNullException(nameof(id));
             }
 
             using (WebClient webClient = CreateTwitchWebClient())
             {
-                string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, idTrimmed));
+                string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, id));
 
                 JObject accessTokenJson = JObject.Parse(accessTokenStr);
 
@@ -700,7 +700,7 @@ namespace TwitchLeecher.Services.Services
                         CancellationToken cancellationToken = cancellationTokenSource.Token;
 
                         string downloadId = download.Id;
-                        string urlIdTrimmed = downloadParams.Video.IdTrimmed;
+                        string vodId = downloadParams.Video.Id;
                         string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
                         string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
                         string ffmpegFile = Path.Combine(_appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
@@ -734,7 +734,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            string playlistUrl = RetrievePlaylistUrlForQuality(log, quality, urlIdTrimmed, vodAuthInfo);
+                            string playlistUrl = RetrievePlaylistUrlForQuality(log, quality, vodId, vodAuthInfo);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -822,7 +822,7 @@ namespace TwitchLeecher.Services.Services
 
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
-            log(Environment.NewLine + "VOD ID: " + downloadParams.Video.IdTrimmed);
+            log(Environment.NewLine + "VOD ID: " + downloadParams.Video.Id);
             log(Environment.NewLine + "Selected Quality: " + downloadParams.Quality.DisplayString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime.ToDaylessString() + ")" : "No"));
@@ -859,12 +859,12 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string urlIdTrimmed, VodAuthInfo vodAuthInfo)
+        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string vodId, VodAuthInfo vodAuthInfo)
         {
             using (WebClient webClient = CreateAuthorizedTwitchWebClient())
             {
                 log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-                string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, urlIdTrimmed, vodAuthInfo.Signature, vodAuthInfo.Token));
+                string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, vodId, vodAuthInfo.Signature, vodAuthInfo.Token));
                 log(" done!");
 
                 List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
@@ -1247,6 +1247,11 @@ namespace TwitchLeecher.Services.Services
             Uri url = new Uri(videoJson.Value<string>("url"));
             Uri thumbnail = new Uri(videoJson.Value<JObject>("preview").Value<string>("large"));
             Uri gameThumbnail = GetGameThumbnail(game);
+
+            if (id.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+            {
+                id = id.Substring(1);
+            }
 
             return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, gameThumbnail, url);
         }

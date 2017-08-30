@@ -110,14 +110,6 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string IdTrimmed
-        {
-            get
-            {
-                return _id.Substring(1);
-            }
-        }
-
         public string Game
         {
             get

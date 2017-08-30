@@ -152,7 +152,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
-                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.IdTrimmed);
+                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id);
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
