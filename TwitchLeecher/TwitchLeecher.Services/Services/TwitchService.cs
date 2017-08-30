@@ -33,7 +33,8 @@ namespace TwitchLeecher.Services.Services
         private const string KRAKEN_URL = "https://api.twitch.tv/kraken";
         private const string VIDEO_URL = "https://api.twitch.tv/kraken/videos/{0}";
         private const string GAMES_URL = "https://api.twitch.tv/kraken/games/top";
-        private const string CHANNEL_SEARCH_URL = "https://api.twitch.tv/kraken/search/channels";
+        private const string USERS_URL = "https://api.twitch.tv/kraken/users";
+        private const string CHANNEL_URL = "https://api.twitch.tv/kraken/channels/{0}";
         private const string CHANNEL_VIDEOS_URL = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string ACCESS_TOKEN_URL = "https://api.twitch.tv/api/vods/{0}/access_token";
         private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
@@ -281,48 +282,49 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(channel));
             }
 
-            Func<string> searchForChannel = () =>
+            using (WebClient webClient = CreateTwitchWebClient())
             {
-                using (WebClient webClient = CreateTwitchWebClient())
+                webClient.QueryString.Add("login", channel);
+
+                string result = webClient.DownloadString(USERS_URL);
+
+                JObject searchResultJson = JObject.Parse(result);
+
+                JArray usersJson = searchResultJson.Value<JArray>("users");
+
+                if (usersJson != null && usersJson.HasValues)
                 {
-                    webClient.QueryString.Add("query", channel);
-                    webClient.QueryString.Add("limit", "1");
+                    JToken userJson = usersJson.FirstOrDefault();
 
-                    string result = webClient.DownloadString(CHANNEL_SEARCH_URL);
-
-                    JObject searchResultJson = JObject.Parse(result);
-
-                    JArray channelsJson = searchResultJson.Value<JArray>("channels");
-
-                    if (channelsJson != null && channelsJson.HasValues)
+                    if (userJson != null)
                     {
-                        foreach (JObject channelJson in channelsJson)
+                        string id = userJson.Value<string>("_id");
+
+                        if (!string.IsNullOrWhiteSpace(id))
                         {
-                            if (channelJson.Value<string>("display_name").Equals(channel, StringComparison.OrdinalIgnoreCase))
+                            using (WebClient webClientChannel = CreateTwitchWebClient())
                             {
-                                return channelJson.Value<string>("_id");
+                                try
+                                {
+                                    webClientChannel.DownloadString(string.Format(CHANNEL_URL, id));
+
+                                    return id;
+                                }
+                                catch (WebException)
+                                {
+                                    return null;
+                                }
+                                catch (Exception)
+                                {
+                                    throw;
+                                }
                             }
                         }
                     }
-
-                    return null;
                 }
-            };
 
-            // The Twitch search API has a bug where it sometimes returns an empty channel list
-            // To work against that, retry searching for the channel name at least 5 times
-
-            for (int i = 0; i < 5; i++)
-            {
-                string id = searchForChannel();
-
-                if (id != null)
-                {
-                    return id;
-                }
+                return null;
             }
-
-            return null;
         }
 
         public bool Authorize(string accessToken)
