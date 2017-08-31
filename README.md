@@ -45,7 +45,7 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Is there any additional information about the issue that might be interesting for me? Write it down!
 - When you have a problem with a download, provide the download log created by Twitch Leecher (see screenshot below)
 
-![Twitch Leecher Log Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14Log.jpg)
+![Twitch Leecher Log Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14log.jpg)
 
 ## LICENSE
 [MIT License](https://github.com/Franiac/TwitchLeecher/blob/master/LICENSE)
