@@ -19,7 +19,7 @@ namespace TwitchLeecher.Core.Models
 
         private VideoType _searchVideoType;
 
-        private LoadLimit _searchLoadLimit;
+        private LoadLimitType _searchLoadLimitType;
 
         private int _searchLoadLastDays;
 
@@ -99,15 +99,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public LoadLimit SearchLoadLimit
+        public LoadLimitType SearchLoadLimitType
         {
             get
             {
-                return _searchLoadLimit;
+                return _searchLoadLimitType;
             }
             set
             {
-                SetProperty(ref _searchLoadLimit, value);
+                SetProperty(ref _searchLoadLimitType, value);
             }
         }
 
@@ -217,7 +217,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchLoadLimit == LoadLimit.Timespan && (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
+                if (_searchLoadLimitType == LoadLimitType.Timespan && (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
                 {
                     AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
@@ -227,7 +227,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchLoadLimit == LoadLimit.LastVods && (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
+                if (_searchLoadLimitType == LoadLimitType.LastVods && (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
                 {
                     AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
@@ -289,7 +289,7 @@ namespace TwitchLeecher.Core.Models
                 AppShowDonationButton = AppShowDonationButton,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
-                SearchLoadLimit = SearchLoadLimit,
+                SearchLoadLimitType = SearchLoadLimitType,
                 SearchLoadLastDays = SearchLoadLastDays,
                 SearchLoadLastVods = SearchLoadLastVods,
                 SearchOnStartup = SearchOnStartup,

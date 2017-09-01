@@ -145,16 +145,16 @@
 
                 <TextBlock Grid.Row="4" Grid.Column="0"  Text="Load Limit:" VerticalAlignment="Center" />
                 <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimit, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimit.Timespan}}" HorizontalAlignment="Left" />
-                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimit, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimit.Timespan}}" Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" HorizontalAlignment="Left" />
+                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <TextBlock Text="days" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimit, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimit.LastVods}}" HorizontalAlignment="Left" />
-                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimit, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimit.LastVods}}" Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" HorizontalAlignment="Left" />
+                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
-                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding CurrentPreferences.SearchLoadLimit, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimit.OnlyToday}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
                 <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}" VerticalAlignment="Center">
                     <fa:ImageAwesome.ToolTip>

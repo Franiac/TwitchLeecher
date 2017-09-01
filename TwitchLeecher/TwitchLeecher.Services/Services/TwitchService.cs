@@ -204,7 +204,7 @@ namespace TwitchLeecher.Services.Services
                 throw new ArgumentNullException(nameof(id));
             }
 
-            using (WebClient webClient = CreateTwitchWebClient())
+            using (WebClient webClient = CreateAuthorizedTwitchWebClient())
             {
                 string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, id));
 
@@ -386,7 +386,7 @@ namespace TwitchLeecher.Services.Services
             switch (searchParams.SearchType)
             {
                 case SearchType.Channel:
-                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimit, searchParams.LoadFrom.Value, searchParams.LoadTo.Value, searchParams.LoadLastVods);
+                    SearchChannel(searchParams.Channel, searchParams.VideoType, searchParams.LoadLimitType, searchParams.LoadFrom.Value, searchParams.LoadTo.Value, searchParams.LoadLastVods);
                     break;
 
                 case SearchType.Urls:
@@ -399,7 +399,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void SearchChannel(string channel, VideoType videoType, LoadLimit loadLimit, DateTime loadFrom, DateTime loadTo, int loadLastVods)
+        private void SearchChannel(string channel, VideoType videoType, LoadLimitType loadLimit, DateTime loadFrom, DateTime loadTo, int loadLastVods)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -434,7 +434,7 @@ namespace TwitchLeecher.Services.Services
             DateTime fromDate = DateTime.Now;
             DateTime toDate = DateTime.Now;
 
-            if (loadLimit == LoadLimit.Timespan)
+            if (loadLimit == LoadLimitType.Timespan)
             {
                 fromDate = loadFrom;
                 toDate = loadTo;
@@ -473,7 +473,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 TwitchVideo video = ParseVideo(videoJson);
 
-                                if (loadLimit == LoadLimit.LastVods)
+                                if (loadLimit == LoadLimitType.LastVods)
                                 {
                                     videos.Add(video);
 

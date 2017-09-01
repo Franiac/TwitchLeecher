@@ -28,7 +28,7 @@ namespace TwitchLeecher.Services.Services
         private const string SEARCH_EL = "Search";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
         private const string SEARCH_VIDEOTYPE_EL = "VideoType";
-        private const string SEARCH_LOADLIMIT_EL = "LoadLimit";
+        private const string SEARCH_LOADLIMITTYPE_EL = "LoadLimitType";
         private const string SEARCH_LOADLASTDAYS_EL = "LoadLastDays";
         private const string SEARCH_LOADLASTVODS_EL = "LoadLastVods";
         private const string SEARCH_SEARCHONSTARTUP_EL = "SearchOnStartup";
@@ -125,9 +125,9 @@ namespace TwitchLeecher.Services.Services
                 searchVideoTypeEl.SetValue(preferences.SearchVideoType);
                 searchEl.Add(searchVideoTypeEl);
 
-                XElement searchLoadLimitEl = new XElement(SEARCH_LOADLIMIT_EL);
-                searchLoadLimitEl.SetValue(preferences.SearchLoadLimit);
-                searchEl.Add(searchLoadLimitEl);
+                XElement searchLoadLimitTypeEl = new XElement(SEARCH_LOADLIMITTYPE_EL);
+                searchLoadLimitTypeEl.SetValue(preferences.SearchLoadLimitType);
+                searchEl.Add(searchLoadLimitTypeEl);
 
                 XElement searchLoadLastDaysEl = new XElement(SEARCH_LOADLASTDAYS_EL);
                 searchLoadLastDaysEl.SetValue(preferences.SearchLoadLastDays);
@@ -273,13 +273,13 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
-                            XElement searchLoadLimitEl = searchEl.Element(SEARCH_LOADLIMIT_EL);
+                            XElement searchLoadLimitTypeEl = searchEl.Element(SEARCH_LOADLIMITTYPE_EL);
 
-                            if (searchLoadLimitEl != null)
+                            if (searchLoadLimitTypeEl != null)
                             {
                                 try
                                 {
-                                    preferences.SearchLoadLimit = searchLoadLimitEl.GetValueAsEnum<LoadLimit>();
+                                    preferences.SearchLoadLimitType = searchLoadLimitTypeEl.GetValueAsEnum<LoadLimitType>();
                                 }
                                 catch
                                 {
@@ -406,7 +406,7 @@ namespace TwitchLeecher.Services.Services
                 AppShowDonationButton = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
-                SearchLoadLimit = LoadLimit.Timespan,
+                SearchLoadLimitType = LoadLimitType.Timespan,
                 SearchLoadLastDays = 10,
                 SearchLoadLastVods = 10,
                 SearchOnStartup = false,

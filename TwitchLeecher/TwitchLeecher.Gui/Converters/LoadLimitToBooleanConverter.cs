@@ -11,18 +11,18 @@ namespace TwitchLeecher.Gui.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is LoadLimit))
+            if (!(value is LoadLimitType))
             {
-                throw new ApplicationException("Value has to be of type '" + typeof(LoadLimit).FullName + "'!");
+                throw new ApplicationException("Value has to be of type '" + typeof(LoadLimitType).FullName + "'!");
             }
 
-            if (!(parameter is LoadLimit))
+            if (!(parameter is LoadLimitType))
             {
-                throw new ApplicationException("Parameter has to be of type '" + typeof(LoadLimit).FullName + "'!");
+                throw new ApplicationException("Parameter has to be of type '" + typeof(LoadLimitType).FullName + "'!");
             }
 
-            LoadLimit valueEnum = (LoadLimit)value;
-            LoadLimit parameterEnum = (LoadLimit)parameter;
+            LoadLimitType valueEnum = (LoadLimitType)value;
+            LoadLimitType parameterEnum = (LoadLimitType)parameter;
 
             return valueEnum.Equals(parameterEnum);
         }
@@ -34,9 +34,9 @@ namespace TwitchLeecher.Gui.Converters
                 throw new ApplicationException("Value has to be of type '" + typeof(bool).FullName + "'!");
             }
 
-            if (!(parameter is LoadLimit))
+            if (!(parameter is LoadLimitType))
             {
-                throw new ApplicationException("Parameter has to be of type '" + typeof(LoadLimit).FullName + "'!");
+                throw new ApplicationException("Parameter has to be of type '" + typeof(LoadLimitType).FullName + "'!");
             }
 
             return parameter;

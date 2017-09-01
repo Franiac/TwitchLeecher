@@ -534,7 +534,7 @@ namespace TwitchLeecher.Gui.ViewModels
                         {
                             Channel = currentPrefs.SearchChannelName,
                             VideoType = currentPrefs.SearchVideoType,
-                            LoadLimit = currentPrefs.SearchLoadLimit,
+                            LoadLimitType = currentPrefs.SearchLoadLimitType,
                             LoadFrom = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
                             LoadFromDefault = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
                             LoadTo = DateTime.Now.Date,

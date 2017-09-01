@@ -15,7 +15,7 @@ namespace TwitchLeecher.Core.Models
         private string _urls;
         private string _ids;
 
-        private LoadLimit _loadLimit;
+        private LoadLimitType _loadLimitType;
 
         private DateTime? _loadFrom;
         private DateTime? _loadFromDefault;
@@ -97,15 +97,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public LoadLimit LoadLimit
+        public LoadLimitType LoadLimitType
         {
             get
             {
-                return _loadLimit;
+                return _loadLimitType;
             }
             set
             {
-                SetProperty(ref _loadLimit, value);
+                SetProperty(ref _loadLimitType, value);
             }
         }
 
@@ -191,7 +191,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.Timespan)
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.Timespan)
                 {
                     if (!_loadFrom.HasValue)
                     {
@@ -218,7 +218,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.Timespan)
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.Timespan)
                 {
                     if (!_loadTo.HasValue)
                     {
@@ -243,7 +243,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchType == SearchType.Channel && _loadLimit == LoadLimit.LastVods)
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.LastVods)
                 {
                     if (_loadLastVods < 1 || _loadLastVods > 999)
                     {
@@ -364,7 +364,7 @@ namespace TwitchLeecher.Core.Models
                 Channel = _channel,
                 Urls = _urls,
                 Ids = _ids,
-                LoadLimit = _loadLimit,
+                LoadLimitType = _loadLimitType,
                 LoadFrom = _loadFrom,
                 LoadFromDefault = _loadFromDefault,
                 LoadTo = _loadTo,
