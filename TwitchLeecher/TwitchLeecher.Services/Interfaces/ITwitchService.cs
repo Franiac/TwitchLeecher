@@ -20,6 +20,8 @@ namespace TwitchLeecher.Services.Interfaces
 
         VodAuthInfo RetrieveVodAuthInfo(string id);
 
+        bool ChannelNameIsValid(string channel);
+
         bool ChannelExists(string channel);
 
         string GetChannelIdByName(string channel);
