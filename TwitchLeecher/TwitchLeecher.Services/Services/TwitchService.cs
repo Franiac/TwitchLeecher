@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -56,6 +57,8 @@ namespace TwitchLeecher.Services.Services
         private const string TWITCH_V5_ACCEPT = "application/vnd.twitchtv.v5+json";
         private const string TWITCH_V5_ACCEPT_HEADER = "Accept";
         private const string TWITCH_AUTHORIZATION_HEADER = "Authorization";
+
+        private const string USERNAME_REGEX = @"^[a-zA-Z0-9][\w]{2,24}$";
 
         #endregion Constants
 
@@ -263,6 +266,16 @@ namespace TwitchLeecher.Services.Services
 
                 return new VodAuthInfo(token, signature, privileged, subOnly);
             }
+        }
+
+        public bool ChannelNameIsValid(string channel)
+        {
+            if (string.IsNullOrWhiteSpace(channel))
+            {
+                throw new ArgumentNullException(nameof(channel));
+            }
+
+            return Regex.IsMatch(channel, USERNAME_REGEX);
         }
 
         public bool ChannelExists(string channel)

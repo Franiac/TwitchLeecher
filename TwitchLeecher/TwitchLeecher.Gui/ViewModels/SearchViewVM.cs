@@ -199,10 +199,16 @@ namespace TwitchLeecher.Gui.ViewModels
                 SearchParams.Validate();
 
                 if (SearchParams.SearchType == SearchType.Channel &&
-                    !string.IsNullOrWhiteSpace(SearchParams.Channel) &&
-                    !_twitchService.ChannelExists(SearchParams.Channel))
+                    !string.IsNullOrWhiteSpace(SearchParams.Channel))
                 {
-                    SearchParams.AddError(nameof(SearchParams.Channel), "The specified channel does not exist on Twitch!");
+                    if (!_twitchService.ChannelNameIsValid(SearchParams.Channel))
+                    {
+                        SearchParams.AddError(nameof(SearchParams.Channel), "Invalid channel name!");
+                    }
+                    else if (!_twitchService.ChannelExists(SearchParams.Channel))
+                    {
+                        SearchParams.AddError(nameof(SearchParams.Channel), "The specified channel does not exist on Twitch!");
+                    }
                 }
 
                 if (SearchParams.HasErrors)
