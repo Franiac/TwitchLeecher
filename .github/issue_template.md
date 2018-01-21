@@ -1,1 +1,5 @@
-Please read [THIS](https://github.com/Franiac/TwitchLeecher#support--issues) before posting anything!
+Please read
+
+https://github.com/Franiac/TwitchLeecher#support--issues
+
+before posting anything!
