@@ -4,6 +4,10 @@ If you are looking for an extremely fast and easy to use Twitch VOD downloader, 
 
 ![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14.jpg)
 
+## Is this project alive?????
+
+Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was an still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I dicide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
+
 ## Download & Requirements
 
 Twitch Leecher requires .NET Framework 4.5 or higher in order to run!
