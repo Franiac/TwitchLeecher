@@ -286,37 +286,49 @@ namespace TwitchLeecher.Services.Services
             {
                 webClient.QueryString.Add("login", channel);
 
-                string result = webClient.DownloadString(USERS_URL);
+                string result = null;
 
-                JObject searchResultJson = JObject.Parse(result);
-
-                JArray usersJson = searchResultJson.Value<JArray>("users");
-
-                if (usersJson != null && usersJson.HasValues)
+                try
                 {
-                    JToken userJson = usersJson.FirstOrDefault();
+                    result = webClient.DownloadString(USERS_URL);
+                }
+                catch (WebException)
+                {
+                    return null;
+                }
 
-                    if (userJson != null)
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    JObject searchResultJson = JObject.Parse(result);
+
+                    JArray usersJson = searchResultJson.Value<JArray>("users");
+
+                    if (usersJson != null && usersJson.HasValues)
                     {
-                        string id = userJson.Value<string>("_id");
+                        JToken userJson = usersJson.FirstOrDefault();
 
-                        if (!string.IsNullOrWhiteSpace(id))
+                        if (userJson != null)
                         {
-                            using (WebClient webClientChannel = CreateTwitchWebClient())
-                            {
-                                try
-                                {
-                                    webClientChannel.DownloadString(string.Format(CHANNEL_URL, id));
+                            string id = userJson.Value<string>("_id");
 
-                                    return id;
-                                }
-                                catch (WebException)
+                            if (!string.IsNullOrWhiteSpace(id))
+                            {
+                                using (WebClient webClientChannel = CreateTwitchWebClient())
                                 {
-                                    return null;
-                                }
-                                catch (Exception)
-                                {
-                                    throw;
+                                    try
+                                    {
+                                        webClientChannel.DownloadString(string.Format(CHANNEL_URL, id));
+
+                                        return id;
+                                    }
+                                    catch (WebException)
+                                    {
+                                        return null;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        throw;
+                                    }
                                 }
                             }
                         }
