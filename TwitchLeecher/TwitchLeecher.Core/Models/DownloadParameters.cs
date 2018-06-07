@@ -10,9 +10,10 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private TwitchVideo _video;
+        private readonly TwitchVideo _video;
+        private readonly VodAuthInfo _vodAuthInfo;
+
         private TwitchVideoQuality _quality;
-        private VodAuthInfo _vodAuthInfo;
 
         private string _folder;
         private string _filename;
@@ -27,7 +28,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, TwitchVideoQuality quality, VodAuthInfo vodAuthInfo, string folder, string filename)
+        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {

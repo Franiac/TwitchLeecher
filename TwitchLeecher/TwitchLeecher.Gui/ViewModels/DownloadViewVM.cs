@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -17,12 +18,16 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private DownloadParameters _downloadParams;
+        private bool _useCustomFilename;
+        private string _customFilename;
 
         private ICommand _chooseCommand;
         private ICommand _downloadCommand;
         private ICommand _cancelCommand;
 
         private readonly IDialogService _dialogService;
+        private readonly IFilenameService _filenameService;
+        private readonly IPreferencesService _preferencesService;
         private readonly ITwitchService _twitchService;
         private readonly INavigationService _navigationService;
         private readonly INotificationService _notificationService;
@@ -35,11 +40,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public DownloadViewVM(
             IDialogService dialogService,
+            IFilenameService filenameService,
+            IPreferencesService preferencesService,
             ITwitchService twitchService,
             INavigationService navigationService,
             INotificationService notificationService)
         {
             _dialogService = dialogService;
+            _filenameService = filenameService;
+            _preferencesService = preferencesService;
             _twitchService = twitchService;
             _navigationService = navigationService;
             _notificationService = notificationService;
@@ -59,7 +68,36 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             set
             {
+                if (_downloadParams != null)
+                {
+                    _downloadParams.PropertyChanged -= _downloadParams_PropertyChanged;
+                }
+
                 SetProperty(ref _downloadParams, value, nameof(DownloadParams));
+
+                _downloadParams.PropertyChanged += _downloadParams_PropertyChanged;
+            }
+        }
+
+        public bool UseCustomFilename
+        {
+            get
+            {
+                return _useCustomFilename;
+            }
+            set
+            {
+                SetProperty(ref _useCustomFilename, value, nameof(UseCustomFilename));
+
+                if (value)
+                {
+                    _downloadParams.Filename = _customFilename;
+                }
+                else
+                {
+                    _customFilename = _downloadParams.Filename;
+                    UpdateFilenameFromTemplate();
+                }
             }
         }
 
@@ -238,6 +276,16 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void UpdateFilenameFromTemplate()
+        {
+            string fileName = _preferencesService.CurrentPreferences.Clone().DownloadFileName;
+
+            TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
+            TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
+
+            _downloadParams.Filename = _filenameService.SubstituteWildcards(fileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+        }
+
         private void Download()
         {
             try
@@ -339,5 +387,26 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Methods
+
+        #region EventHandlers
+
+        private void _downloadParams_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_useCustomFilename)
+            {
+                return;
+            }
+
+            if (e.PropertyName == nameof(DownloadParameters.Quality)
+                || e.PropertyName == nameof(DownloadParameters.CropStart)
+                || e.PropertyName == nameof(DownloadParameters.CropEnd)
+                || e.PropertyName == nameof(DownloadParameters.CropStartTime)
+                || e.PropertyName == nameof(DownloadParameters.CropEndTime))
+            {
+                UpdateFilenameFromTemplate();
+            }
+        }
+
+        #endregion EventHandlers
     }
 }

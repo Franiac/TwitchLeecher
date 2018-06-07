@@ -170,7 +170,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, video.Qualities.First(), vodAuthInfo, currentPrefs.DownloadFolder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), currentPrefs.DownloadFolder, filename);
 
                             _navigationService.ShowDownload(downloadParams);
                         }
