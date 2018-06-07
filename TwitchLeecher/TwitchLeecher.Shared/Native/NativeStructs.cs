@@ -40,8 +40,8 @@ namespace TwitchLeecher.Shared.Native
         [StructLayout(LayoutKind.Sequential)]
         public struct WINDOWPOS
         {
-            private IntPtr hwnd;
-            private IntPtr hwndInsertAfter;
+            private readonly IntPtr hwnd;
+            private readonly IntPtr hwndInsertAfter;
             public int x;
             public int y;
             public int cx;

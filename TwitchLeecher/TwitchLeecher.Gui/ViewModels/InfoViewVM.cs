@@ -12,13 +12,11 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private string _productName;
-
         private ICommand _openlinkCommand;
         private ICommand _donateCommand;
 
-        private IDialogService _dialogService;
-        private IDonationService _donationService;
+        private readonly IDialogService _dialogService;
+        private readonly IDonationService _donationService;
 
         private readonly object _commandLockObject;
 
@@ -30,7 +28,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
-            _productName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
+            ProductName = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
             _dialogService = dialogService;
             _donationService = donationService;
@@ -42,13 +40,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public string ProductName
-        {
-            get
-            {
-                return _productName;
-            }
-        }
+        public string ProductName { get; }
 
         public ICommand OpenLinkCommand
         {

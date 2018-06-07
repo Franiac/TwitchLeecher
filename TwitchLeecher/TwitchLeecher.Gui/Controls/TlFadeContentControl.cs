@@ -17,8 +17,8 @@ namespace TwitchLeecher.Gui.Controls
         private Shape _paintArea;
         private ContentControl _mainContent;
 
-        private DoubleAnimation _fadeInAnim;
-        private DoubleAnimation _fadeOutAnim;
+        private readonly DoubleAnimation _fadeInAnim;
+        private readonly DoubleAnimation _fadeOutAnim;
 
         #endregion Fields
 

@@ -10,9 +10,9 @@ namespace TwitchLeecher.Services.Services.Download
 
         private Guid _id;
 
-        private IList<DownloadFileInfo> _fileInfoList;
+        private readonly IList<DownloadFileInfo> _fileInfoList;
 
-        private DownloadState _state;
+        private readonly DownloadState _state;
 
         private int _priority;
 

@@ -13,9 +13,9 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService _dialogService;
-        private INotificationService _notificationService;
-        private IPreferencesService _preferencesService;
+        private readonly IDialogService _dialogService;
+        private readonly INotificationService _notificationService;
+        private readonly IPreferencesService _preferencesService;
 
         private Preferences _currentPreferences;
 

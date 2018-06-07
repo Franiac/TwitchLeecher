@@ -12,11 +12,11 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService _dialogService;
-        private ITwitchService _twitchService;
-        private INavigationService _navigationService;
-        private INotificationService _notificationService;
-        private IEventAggregator _eventAggregator;
+        private readonly IDialogService _dialogService;
+        private readonly ITwitchService _twitchService;
+        private readonly INavigationService _navigationService;
+        private readonly INotificationService _notificationService;
+        private readonly IEventAggregator _eventAggregator;
 
         private ICommand _revokeCommand;
 

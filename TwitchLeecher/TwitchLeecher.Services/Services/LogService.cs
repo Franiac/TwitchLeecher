@@ -15,7 +15,7 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private string _logDir;
+        private readonly string _logDir;
 
         #endregion Fields
 

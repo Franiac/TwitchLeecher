@@ -16,8 +16,8 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel _kernel;
-        private ILogService _logService;
+        private readonly IKernel _kernel;
+        private readonly ILogService _logService;
 
         private bool _busy;
 

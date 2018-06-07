@@ -46,7 +46,11 @@ namespace TwitchLeecher.Shared.Events
 
         public void Subscribe(Action action, ThreadOption threadOption, bool keepSubscriberReferenceAlive)
         {
-            Action<object> wrappedAction = o => action();
+            void wrappedAction(object o)
+            {
+                action();
+            }
+
             _subscriberActions.Add(action, wrappedAction);
             _innerEvent.Subscribe(wrappedAction, threadOption, keepSubscriberReferenceAlive);
         }

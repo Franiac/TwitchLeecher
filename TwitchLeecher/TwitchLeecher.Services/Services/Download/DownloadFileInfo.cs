@@ -2,27 +2,21 @@
 {
     public class DownloadFileInfo
     {
-        #region Fields
-
-        private string _url;
-        private string _localFile;
-
-        #endregion Fields
-
         #region Constructors
 
         public DownloadFileInfo(string url, string localFile)
         {
-            _url = url;
-            _localFile = localFile;
+            Url = url;
+            LocalFile = localFile;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public string Url => _url;
-        public string LocalFile => _localFile;
+        public string Url { get; }
+
+        public string LocalFile { get; }
 
         #endregion Properties
     }

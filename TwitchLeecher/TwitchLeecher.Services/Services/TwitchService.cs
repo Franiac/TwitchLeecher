@@ -76,9 +76,9 @@ namespace TwitchLeecher.Services.Services
         private Dictionary<string, Uri> _gameThumbnails;
         private TwitchAuthInfo _twitchAuthInfo;
 
-        private string _appDir;
+        private readonly string _appDir;
 
-        private object _changeDownloadLockObject;
+        private readonly object _changeDownloadLockObject;
 
         private volatile bool _paused;
 

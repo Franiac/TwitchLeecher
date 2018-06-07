@@ -23,23 +23,17 @@ namespace TwitchLeecher.Shared.Commands
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            MemberExpression memberExpression = expression.Body as MemberExpression;
-
-            if (memberExpression == null)
+            if (!(expression.Body is MemberExpression memberExpression))
             {
                 throw new ArgumentException("The expression is not a member access expression", nameof(expression));
             }
 
-            PropertyInfo property = memberExpression.Member as PropertyInfo;
-
-            if (property == null)
+            if (!(memberExpression.Member is PropertyInfo propertyInfo))
             {
                 throw new ArgumentException("The member access expression does not access a property", nameof(expression));
             }
 
-            MethodInfo getMethod = property.GetMethod;
-
-            if (getMethod.IsStatic)
+            if (propertyInfo.GetMethod.IsStatic)
             {
                 throw new ArgumentException("The referenced property is a static property", nameof(expression));
             }

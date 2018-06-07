@@ -17,8 +17,8 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _copyCommand;
         private ICommand _closeCommand;
 
-        private IDialogService _dialogService;
-        private INavigationService _navigationService;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
 
         private readonly object _commandLockObject;
 

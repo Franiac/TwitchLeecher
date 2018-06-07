@@ -20,8 +20,6 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private string _title;
-
         private bool _isAuthorized;
         private bool _showDonationButton;
 
@@ -30,16 +28,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private ViewModelBase _mainView;
 
-        private IKernel _kernel;
-        private IEventAggregator _eventAggregator;
-        private ITwitchService _twitchService;
-        private IDialogService _dialogService;
-        private IDonationService _donationService;
-        private INavigationService _navigationService;
-        private ISearchService _searchService;
-        private IPreferencesService _preferencesService;
-        private IRuntimeDataService _runtimeDataService;
-        private IUpdateService _updateService;
+        private readonly IKernel _kernel;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly ITwitchService _twitchService;
+        private readonly IDialogService _dialogService;
+        private readonly IDonationService _donationService;
+        private readonly INavigationService _navigationService;
+        private readonly ISearchService _searchService;
+        private readonly IPreferencesService _preferencesService;
+        private readonly IRuntimeDataService _runtimeDataService;
+        private readonly IUpdateService _updateService;
 
         private ICommand _showSearchCommand;
         private ICommand _showDownloadsCommand;
@@ -71,7 +69,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
-            _title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
+            Title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
             _kernel = kernel;
             _eventAggregator = eventAggregator;
@@ -135,13 +133,7 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return _title;
-            }
-        }
+        public string Title { get; }
 
         public bool ShowDonationButton
         {

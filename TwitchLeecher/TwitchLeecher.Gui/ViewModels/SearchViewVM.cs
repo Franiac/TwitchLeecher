@@ -20,10 +20,10 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _searchCommand;
         private ICommand _cancelCommand;
 
-        private ITwitchService _twitchService;
-        private ISearchService _searchService;
-        private IDialogService _dialogService;
-        private INavigationService _navigationService;
+        private readonly ITwitchService _twitchService;
+        private readonly ISearchService _searchService;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
 
         private readonly object _commandLockObject;
 
