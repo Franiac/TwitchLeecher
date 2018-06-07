@@ -264,10 +264,10 @@ namespace TwitchLeecher.Core.Models
                     }
                     else
                     {
-                        Action addError = () =>
+                        void AddUrlError()
                         {
                             AddError(currentProperty, "One or more urls are invalid!");
-                        };
+                        }
 
                         string[] urls = _urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -277,7 +277,7 @@ namespace TwitchLeecher.Core.Models
                             {
                                 if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
 
@@ -285,7 +285,7 @@ namespace TwitchLeecher.Core.Models
 
                                 if (segments.Length < 2)
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
 
@@ -317,7 +317,7 @@ namespace TwitchLeecher.Core.Models
 
                                 if (!validId)
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
                             }
