@@ -268,6 +268,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!cancelled)
                 {
                     _downloadParams.Folder = folder;
+                    _downloadParams.Validate(nameof(DownloadParameters.Folder));
                 }
             }
             catch (Exception ex)

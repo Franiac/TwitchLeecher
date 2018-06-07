@@ -1147,7 +1147,7 @@ namespace TwitchLeecher.Services.Services
             {
                 int partsCount = vodPlaylist.Count;
 
-                for(int i = 0; i < vodPlaylist.Count; i++)
+                for (int i = 0; i < vodPlaylist.Count; i++)
                 {
                     VodPlaylistPart part = vodPlaylist[i];
 

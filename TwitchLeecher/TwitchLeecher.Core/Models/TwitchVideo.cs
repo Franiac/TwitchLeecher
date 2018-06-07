@@ -14,8 +14,6 @@ namespace TwitchLeecher.Core.Models
 
         #endregion Constatnts
 
-
-
         #region Constructors
 
         public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,

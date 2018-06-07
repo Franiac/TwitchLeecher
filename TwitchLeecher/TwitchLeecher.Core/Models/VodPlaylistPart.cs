@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 namespace TwitchLeecher.Core.Models
 {
@@ -27,7 +26,7 @@ namespace TwitchLeecher.Core.Models
         #endregion Constructors
 
         #region Properties
-        
+
         public string RemoteFile { get; }
 
         public string LocalFile { get; }
