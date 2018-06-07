@@ -56,8 +56,6 @@
     <Compile Include="Events\PreferencesSavedEvent.cs" />
     <Compile Include="Models\CropInfo.cs" />
     <Compile Include="Models\DownloadTask.cs" />
-    <Compile Include="Models\IVodPlaylistPart.cs" />
-    <Compile Include="Models\IVodPlaylistPartExt.cs" />
     <Compile Include="Models\MainWindowInfo.cs" />
     <Compile Include="Models\TwitchAuthInfo.cs" />
     <Compile Include="Models\VodAuthInfo.cs" />
@@ -73,7 +71,6 @@
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Models\VodPlaylist.cs" />
     <Compile Include="Models\VodPlaylistPart.cs" />
-    <Compile Include="Models\VodPlaylistPartExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

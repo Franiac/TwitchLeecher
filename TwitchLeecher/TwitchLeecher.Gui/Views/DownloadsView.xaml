@@ -183,8 +183,8 @@
                                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                                 </Border.BorderBrush>
                                 <Grid Height="26">
-                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsProcessing}" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsProcessing, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
+                                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsIndeterminate, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="Black" />
                                         </TextBlock.Foreground>

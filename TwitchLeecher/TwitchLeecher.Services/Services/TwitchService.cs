@@ -719,6 +719,7 @@ namespace TwitchLeecher.Services.Services
                         string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
                         string ffmpegFile = Path.Combine(_appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
                         string outputFile = downloadParams.FullPath;
+                        string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
 
                         bool cropStart = downloadParams.CropStart;
                         bool cropEnd = downloadParams.CropEnd;
@@ -734,7 +735,7 @@ namespace TwitchLeecher.Services.Services
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
                         Action<int> setProgress = download.SetProgress;
-                        Action<bool> setIsProcessing = download.SetIsProcessing;
+                        Action<bool> setIsIndeterminate = download.SetIsIndeterminate;
 
                         Task downloadVideoTask = new Task(() =>
                         {
@@ -764,11 +765,11 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            WriteNewPlaylist(log, vodPlaylist, playlistFile);
+                            ConcatParts(log, setStatus, setProgress, vodPlaylist, concatFile);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            ProcessVideo(log, setStatus, setProgress, setIsProcessing, ffmpegFile, playlistFile, outputFile, cropInfo);
+                            ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, ffmpegFile, concatFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -777,7 +778,7 @@ namespace TwitchLeecher.Services.Services
                             CleanUp(tempDir, log);
 
                             setProgress(100);
-                            setIsProcessing(false);
+                            setIsIndeterminate(false);
 
                             bool success = false;
 
@@ -915,7 +916,7 @@ namespace TwitchLeecher.Services.Services
                 VodPlaylist vodPlaylist = VodPlaylist.Parse(tempDir, playlistStr, urlPrefix);
                 log(" done!");
 
-                log(Environment.NewLine + "Number of video chunks: " + vodPlaylist.OfType<IVodPlaylistPartExt>().Count());
+                log(Environment.NewLine + "Number of video chunks: " + vodPlaylist.Count());
 
                 return vodPlaylist;
             }
@@ -936,19 +937,14 @@ namespace TwitchLeecher.Services.Services
             end = Math.Round(end / 1000, 3);
             length = Math.Round(length / 1000, 3);
 
-            List<IVodPlaylistPartExt> parts = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
-
-            int firstPartIndex = parts.First().Index;
-            int lastPartIndex = parts.Last().Index;
-
-            List<IVodPlaylistPartExt> deleteStart = new List<IVodPlaylistPartExt>();
-            List<IVodPlaylistPartExt> deleteEnd = new List<IVodPlaylistPartExt>();
+            List<VodPlaylistPart> deleteStart = new List<VodPlaylistPart>();
+            List<VodPlaylistPart> deleteEnd = new List<VodPlaylistPart>();
 
             if (cropStart)
             {
                 double lengthSum = 0;
 
-                foreach (IVodPlaylistPartExt part in vodPlaylist.OfType<IVodPlaylistPartExt>())
+                foreach (VodPlaylistPart part in vodPlaylist)
                 {
                     double partLength = part.Length;
 
@@ -969,7 +965,7 @@ namespace TwitchLeecher.Services.Services
             {
                 double lengthSum = 0;
 
-                foreach (IVodPlaylistPartExt part in vodPlaylist.OfType<IVodPlaylistPartExt>())
+                foreach (VodPlaylistPart part in vodPlaylist)
                 {
                     if (lengthSum >= end)
                     {
@@ -990,38 +986,13 @@ namespace TwitchLeecher.Services.Services
                 vodPlaylist.Remove(part);
             });
 
-            List<IVodPlaylistPartExt> partsCropped = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
-
-            int firstPartCroppedIndex = partsCropped.First().Index;
-            int lastPartCroppedIndex = partsCropped.Last().Index;
-
-            List<IVodPlaylistPart> deleteInfo = new List<IVodPlaylistPart>();
-
-            foreach (IVodPlaylistPart part in vodPlaylist.OfType<IVodPlaylistPart>())
-            {
-                int index = part.Index;
-
-                if ((index > firstPartIndex && index < firstPartCroppedIndex) ||
-                    (index > lastPartCroppedIndex && index < lastPartIndex))
-                {
-                    deleteInfo.Add(part);
-                }
-            }
-
-            deleteInfo.ForEach(part =>
-            {
-                vodPlaylist.Remove(part);
-            });
-
             return new CropInfo(cropStart, cropEnd, cropStart ? start : 0, length);
         }
 
         private void DownloadParts(Action<string> log, Action<string> setStatus, Action<int> setProgress,
             VodPlaylist vodPlaylist, CancellationToken cancellationToken)
         {
-            List<IVodPlaylistPartExt> parts = vodPlaylist.OfType<IVodPlaylistPartExt>().ToList();
-
-            int partsCount = parts.Count;
+            int partsCount = vodPlaylist.Count;
             int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
 
             log(Environment.NewLine + Environment.NewLine + "Starting parallel video chunk download");
@@ -1034,7 +1005,7 @@ namespace TwitchLeecher.Services.Services
 
             long completedPartDownloads = 0;
 
-            Parallel.ForEach(parts, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (part, loopState) =>
+            Parallel.ForEach(vodPlaylist, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 }, (part, loopState) =>
             {
                 int retryCounter = 0;
 
@@ -1046,7 +1017,7 @@ namespace TwitchLeecher.Services.Services
                     {
                         using (WebClient downloadClient = new WebClient())
                         {
-                            byte[] bytes = downloadClient.DownloadData(part.DownloadUrl);
+                            byte[] bytes = downloadClient.DownloadData(part.RemoteFile);
 
                             Interlocked.Increment(ref completedPartDownloads);
 
@@ -1066,13 +1037,13 @@ namespace TwitchLeecher.Services.Services
                         if (retryCounter < DOWNLOAD_RETRIES)
                         {
                             retryCounter++;
-                            log(Environment.NewLine + Environment.NewLine + "Downloading file '" + part.DownloadUrl + "' failed! Trying again in " + DOWNLOAD_RETRY_TIME + "s");
+                            log(Environment.NewLine + Environment.NewLine + "Downloading file '" + part.RemoteFile + "' failed! Trying again in " + DOWNLOAD_RETRY_TIME + "s");
                             log(Environment.NewLine + ex.ToString());
                             Thread.Sleep(DOWNLOAD_RETRY_TIME * 1000);
                         }
                         else
                         {
-                            throw new ApplicationException("Could not download file '" + part.DownloadUrl + "' after " + DOWNLOAD_RETRIES + " retries!");
+                            throw new ApplicationException("Could not download file '" + part.RemoteFile + "' after " + DOWNLOAD_RETRIES + " retries!");
                         }
                     }
                 }
@@ -1089,36 +1060,17 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void WriteNewPlaylist(Action<string> log, VodPlaylist vodPlaylist, string playlistFile)
+        private void ConvertVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+            Action<bool> setIsIndeterminate, string ffmpegFile, string concatFile, string outputFile, CropInfo cropInfo)
         {
-            log(Environment.NewLine + Environment.NewLine + "Creating local m3u8 playlist for FFMPEG...");
+            setStatus("Converting Video");
+            setIsIndeterminate(true);
 
-            StringBuilder sb = new StringBuilder();
-
-            vodPlaylist.ForEach(part =>
-            {
-                sb.AppendLine(part.GetOutput());
-            });
-
-            log(" done!");
-
-            log(Environment.NewLine + "Writing playlist to '" + playlistFile + "'...");
-            FileSystem.DeleteFile(playlistFile);
-            File.WriteAllText(playlistFile, sb.ToString());
-            log(" done!");
-        }
-
-        private void ProcessVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
-            Action<bool> setIsProcessing, string ffmpegFile, string playlistFile, string outputFile, CropInfo cropInfo)
-        {
-            setStatus("Processing");
-            setIsProcessing(true);
-
-            log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on local playlist...");
+            log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on '" + concatFile + "'...");
 
             ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile)
             {
-                Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + playlistFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
+                Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + concatFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 StandardErrorEncoding = Encoding.UTF8,
@@ -1149,12 +1101,12 @@ namespace TwitchLeecher.Services.Services
 
                                 if (TimeSpan.TryParse(timeStr, out TimeSpan current))
                                 {
-                                    setIsProcessing(false);
+                                    setIsIndeterminate(false);
                                     setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
                                 }
                                 else
                                 {
-                                    setIsProcessing(true);
+                                    setIsIndeterminate(true);
                                 }
                             }
                         }
@@ -1175,13 +1127,48 @@ namespace TwitchLeecher.Services.Services
 
                 if (p.ExitCode == 0)
                 {
-                    log(Environment.NewLine + "Processing complete!");
+                    log(Environment.NewLine + "Video conversion complete!");
                 }
                 else
                 {
-                    throw new ApplicationException("An error occured while processing the video!");
+                    throw new ApplicationException("An error occured while converting the video!");
                 }
             }
+        }
+
+        private void ConcatParts(Action<string> log, Action<string> setStatus, Action<int> setProgress, VodPlaylist vodPlaylist, string concatFile)
+        {
+            setStatus("Merging files");
+            setProgress(0);
+
+            log(Environment.NewLine + Environment.NewLine + "Merging all VOD parts into '" + concatFile + "'...");
+
+            using (FileStream outputStream = new FileStream(concatFile, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                int partsCount = vodPlaylist.Count;
+
+                for(int i = 0; i < vodPlaylist.Count; i++)
+                {
+                    VodPlaylistPart part = vodPlaylist[i];
+
+                    using (FileStream partStream = new FileStream(part.LocalFile, FileMode.Open, FileAccess.Read))
+                    {
+                        int maxBytes;
+                        byte[] buffer = new byte[4096];
+
+                        while ((maxBytes = partStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            outputStream.Write(buffer, 0, maxBytes);
+                        }
+                    }
+
+                    FileSystem.DeleteFile(part.LocalFile);
+
+                    setProgress(1 * 100 / partsCount);
+                }
+            }
+
+            setProgress(100);
         }
 
         private void CleanUp(string directory, Action<string> log)
