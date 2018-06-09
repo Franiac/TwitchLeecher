@@ -15,7 +15,7 @@ namespace TwitchLeecher.Core.Models
         private StringBuilder _log;
         private readonly object _logLockObject;
 
-        private int _progress;
+        private double _progress;
         private readonly object _progressLockObject;
 
         private string _status;
@@ -84,7 +84,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public int Progress
+        public double Progress
         {
             get
             {
@@ -155,7 +155,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void SetProgress(int progress)
+        public void SetProgress(double progress)
         {
             lock (_progressLockObject)
             {

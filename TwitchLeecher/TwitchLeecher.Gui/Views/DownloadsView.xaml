@@ -188,7 +188,7 @@
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="Black" />
                                         </TextBlock.Foreground>
-                                        <Run Text="{Binding Progress}" /><Run Text="%" />
+                                        <Run Text="{Binding Progress, StringFormat=N1}" /><Run Text="%" />
                                     </TextBlock>
                                 </Grid>
                             </Border>
