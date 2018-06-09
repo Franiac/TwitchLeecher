@@ -734,7 +734,7 @@ namespace TwitchLeecher.Services.Services
                         Action<DownloadState> setDownloadState = download.SetDownloadState;
                         Action<string> log = download.AppendLog;
                         Action<string> setStatus = download.SetStatus;
-                        Action<int> setProgress = download.SetProgress;
+                        Action<double> setProgress = download.SetProgress;
                         Action<bool> setIsIndeterminate = download.SetIsIndeterminate;
 
                         Task downloadVideoTask = new Task(() =>
@@ -989,7 +989,7 @@ namespace TwitchLeecher.Services.Services
             return new CropInfo(cropStart, cropEnd, cropStart ? start : 0, length);
         }
 
-        private void DownloadParts(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+        private void DownloadParts(Action<string> log, Action<string> setStatus, Action<double> setProgress,
             VodPlaylist vodPlaylist, CancellationToken cancellationToken)
         {
             int partsCount = vodPlaylist.Count;
@@ -1027,7 +1027,7 @@ namespace TwitchLeecher.Services.Services
 
                             long completed = Interlocked.Read(ref completedPartDownloads);
 
-                            setProgress((int)(completedPartDownloads * 100 / partsCount));
+                            setProgress((double)completed / partsCount * 100);
 
                             success = true;
                         }
@@ -1060,7 +1060,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void ConvertVideo(Action<string> log, Action<string> setStatus, Action<int> setProgress,
+        private void ConvertVideo(Action<string> log, Action<string> setStatus, Action<double> setProgress,
             Action<bool> setIsIndeterminate, string ffmpegFile, string concatFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Converting Video");
@@ -1102,7 +1102,7 @@ namespace TwitchLeecher.Services.Services
                                 if (TimeSpan.TryParse(timeStr, out TimeSpan current))
                                 {
                                     setIsIndeterminate(false);
-                                    setProgress((int)(current.TotalMilliseconds * 100 / duration.TotalMilliseconds));
+                                    setProgress(current.TotalMilliseconds / duration.TotalMilliseconds * 100);
                                 }
                                 else
                                 {
@@ -1136,7 +1136,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void ConcatParts(Action<string> log, Action<string> setStatus, Action<int> setProgress, VodPlaylist vodPlaylist, string concatFile)
+        private void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress, VodPlaylist vodPlaylist, string concatFile)
         {
             setStatus("Merging files");
             setProgress(0);
