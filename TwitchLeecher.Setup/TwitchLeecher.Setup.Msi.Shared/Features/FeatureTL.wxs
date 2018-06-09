@@ -73,6 +73,9 @@
       <Component Directory="INSTALLDIR">
         <File Id="TL_TwitchLeecher.Shared.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Shared.dll" />
       </Component>
+      <Component Directory="INSTALLDIR">
+        <File Id="TL_Xceed.Wpf.Toolkit.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Xceed.Wpf.Toolkit.dll" />
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

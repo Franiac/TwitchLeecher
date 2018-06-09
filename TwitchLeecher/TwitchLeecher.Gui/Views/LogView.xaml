@@ -31,7 +31,7 @@
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
-                <ctrl:ScrollingTextBox x:Name="txtLog" Style="{StaticResource TlScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" />
+                <ctrl:TlScrollingTextBox x:Name="txtLog" Style="{StaticResource TlScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

@@ -89,6 +89,12 @@ namespace TwitchLeecher.Shared.IO
                     return false;
                 }
 
+                // Skip UNC paths
+                if (dir.StartsWith(@"\\"))
+                {
+                    return true;
+                }
+
                 DriveInfo driveInfo = new DriveInfo(Directory.GetDirectoryRoot(dir));
 
                 // Only check local drives
@@ -97,7 +103,7 @@ namespace TwitchLeecher.Shared.IO
                     return true;
                 }
 
-                DirectoryInfo dirInfo = new DirectoryInfo(dir);                
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);
 
                 DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
 

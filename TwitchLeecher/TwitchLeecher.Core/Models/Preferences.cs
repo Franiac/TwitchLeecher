@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
@@ -8,18 +7,6 @@ namespace TwitchLeecher.Core.Models
 {
     public class Preferences : BindableBase
     {
-        #region Constants
-
-        public const int DEFAULT_LOAD_LIMIT = 10;
-
-        #endregion Constants
-
-        #region Static Fields
-
-        private static List<int> LOAD_LIMITS;
-
-        #endregion Static Fields
-
         #region Fields
 
         private Version _version;
@@ -32,7 +19,11 @@ namespace TwitchLeecher.Core.Models
 
         private VideoType _searchVideoType;
 
-        private int _searchLoadLimit;
+        private LoadLimitType _searchLoadLimitType;
+
+        private int _searchLoadLastDays;
+
+        private int _searchLoadLastVods;
 
         private bool _searchOnStartup;
 
@@ -108,15 +99,39 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public int SearchLoadLimit
+        public LoadLimitType SearchLoadLimitType
         {
             get
             {
-                return _searchLoadLimit;
+                return _searchLoadLimitType;
             }
             set
             {
-                SetProperty(ref _searchLoadLimit, value);
+                SetProperty(ref _searchLoadLimitType, value);
+            }
+        }
+
+        public int SearchLoadLastDays
+        {
+            get
+            {
+                return _searchLoadLastDays;
+            }
+            set
+            {
+                SetProperty(ref _searchLoadLastDays, value);
+            }
+        }
+
+        public int SearchLoadLastVods
+        {
+            get
+            {
+                return _searchLoadLastVods;
+            }
+            set
+            {
+                SetProperty(ref _searchLoadLastVods, value);
             }
         }
 
@@ -182,29 +197,6 @@ namespace TwitchLeecher.Core.Models
 
         #endregion Properties
 
-        #region Static Methods
-
-        public static List<int> GetLoadLimits()
-        {
-            if (LOAD_LIMITS == null)
-            {
-                LOAD_LIMITS = new List<int>
-                {
-                    10,
-                    25,
-                    50,
-                    100,
-                    250,
-                    500,
-                    1000
-                };
-            }
-
-            return LOAD_LIMITS;
-        }
-
-        #endregion Static Methods
-
         #region Methods
 
         public override void Validate(string propertyName = null)
@@ -221,15 +213,23 @@ namespace TwitchLeecher.Core.Models
                 }
             }
 
-            currentProperty = nameof(SearchLoadLimit);
+            currentProperty = nameof(SearchLoadLastDays);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                List<int> loadLimits = GetLoadLimits();
-
-                if (!loadLimits.Contains(_searchLoadLimit))
+                if (_searchLoadLimitType == LoadLimitType.Timespan && (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
                 {
-                    AddError(currentProperty, "Load limit has to be in '" + string.Join(", ", loadLimits) + "'!");
+                    AddError(currentProperty, "Value has to be between 1 and 999!");
+                }
+            }
+
+            currentProperty = nameof(SearchLoadLastVods);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchLoadLimitType == LoadLimitType.LastVods && (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
+                {
+                    AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
             }
 
@@ -289,7 +289,9 @@ namespace TwitchLeecher.Core.Models
                 AppShowDonationButton = AppShowDonationButton,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
-                SearchLoadLimit = SearchLoadLimit,
+                SearchLoadLimitType = SearchLoadLimitType,
+                SearchLoadLastDays = SearchLoadLastDays,
+                SearchLoadLastVods = SearchLoadLastVods,
                 SearchOnStartup = SearchOnStartup,
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,

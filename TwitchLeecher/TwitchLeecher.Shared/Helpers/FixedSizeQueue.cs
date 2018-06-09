@@ -10,8 +10,6 @@ namespace TwitchLeecher.Shared.Helpers
 
         private ConcurrentQueue<T> _queue;
 
-        private int _size;
-
         #endregion Fields
 
         #region Constructors
@@ -26,20 +24,14 @@ namespace TwitchLeecher.Shared.Helpers
                 size = 1;
             }
 
-            _size = size;
+            Size = size;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public int Size
-        {
-            get
-            {
-                return _size;
-            }
-        }
+        public int Size { get; }
 
         #endregion Properties
 
@@ -51,7 +43,7 @@ namespace TwitchLeecher.Shared.Helpers
             {
                 _queue.Enqueue(obj);
 
-                while (_queue.Count > _size)
+                while (_queue.Count > Size)
                 {
                     _queue.TryDequeue(out T outObj);
                 }

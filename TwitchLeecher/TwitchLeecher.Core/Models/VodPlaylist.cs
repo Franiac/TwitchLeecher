@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class VodPlaylist : List<IVodPlaylistPart>
+    public class VodPlaylist : List<VodPlaylistPart>
     {
         #region Static Methods
 
@@ -15,35 +16,20 @@ namespace TwitchLeecher.Core.Models
 
             List<string> lines = playlistStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            int indexCounter = 0;
             int partCounter = 0;
 
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i];
 
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#EXT-X-TWITCH", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
                 if (line.StartsWith("#EXTINF", StringComparison.OrdinalIgnoreCase))
                 {
-                    playlist.Add(new VodPlaylistPartExt(indexCounter, line, lines[i + 1], urlPrefix, Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
+                    double length = Math.Max(double.Parse(line.Substring(line.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.Any, CultureInfo.InvariantCulture), 0);
+
+                    playlist.Add(new VodPlaylistPart(length, urlPrefix + lines[i + 1], Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
                     partCounter++;
                     i++;
                 }
-                else
-                {
-                    playlist.Add(new VodPlaylistPart(indexCounter, line));
-                }
-
-                indexCounter++;
-            }
-
-            if (!playlist.Last().GetOutput().Equals("#EXT-X-ENDLIST", StringComparison.OrdinalIgnoreCase))
-            {
-                playlist.Add(new VodPlaylistPart(indexCounter, "#EXT-X-ENDLIST"));
             }
 
             return playlist;

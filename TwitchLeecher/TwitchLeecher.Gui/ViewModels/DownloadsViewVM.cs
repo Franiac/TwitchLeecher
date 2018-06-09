@@ -18,11 +18,11 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private ITwitchService _twitchService;
-        private IDialogService _dialogService;
-        private INavigationService _navigationService;
-        private IEventAggregator _eventAggregator;
-        private IPreferencesService _preferencesService;
+        private readonly ITwitchService _twitchService;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IPreferencesService _preferencesService;
 
         private ICommand _retryDownloadCommand;
         private ICommand _cancelDownloadCommand;
@@ -30,7 +30,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _showLogCommand;
         private ICommand _openDownloadFolderCommand;
 
-        private object _commandLockObject;
+        private readonly object _commandLockObject;
 
         #endregion Fields
 

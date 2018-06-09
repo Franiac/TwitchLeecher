@@ -18,19 +18,19 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private ITwitchService _twitchService;
-        private IDialogService _dialogService;
-        private INavigationService _navigationService;
-        private INotificationService _notificationsService;
-        private IEventAggregator _eventAggregator;
-        private IPreferencesService _preferencesService;
-        private IFilenameService _filenameService;
+        private readonly ITwitchService _twitchService;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
+        private readonly INotificationService _notificationsService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IPreferencesService _preferencesService;
+        private readonly IFilenameService _filenameService;
+
+        private readonly object _commandLockObject;
 
         private ICommand _viewCommand;
         private ICommand _downloadCommand;
         private ICommand _seachCommand;
-
-        private object _commandLockObject;
 
         #endregion Fields
 
@@ -76,12 +76,12 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                if (ViewCommand1 == null)
+                if (_viewCommand == null)
                 {
-                    ViewCommand1 = new DelegateCommand<string>(ViewVideo);
+                    _viewCommand = new DelegateCommand<string>(ViewVideo);
                 }
 
-                return ViewCommand1;
+                return _viewCommand;
             }
         }
 
@@ -110,8 +110,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 return _seachCommand;
             }
         }
-
-        public ICommand ViewCommand1 { get => _viewCommand; set => _viewCommand = value; }
 
         #endregion Properties
 
@@ -152,7 +150,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
-                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.IdTrimmed);
+                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id);
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
@@ -172,7 +170,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, video.Qualities.First(), vodAuthInfo, currentPrefs.DownloadFolder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), currentPrefs.DownloadFolder, filename);
 
                             _navigationService.ShowDownload(downloadParams);
                         }

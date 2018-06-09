@@ -122,11 +122,7 @@ namespace TwitchLeecher.Shared.Commands
 
         protected virtual void OnCanExecuteChanged()
         {
-            var handler = CanExecuteChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void Command_IsActiveChanged(object sender, EventArgs e)

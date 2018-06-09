@@ -11,9 +11,9 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService _dialogService;
-        private INavigationService _navigationService;
-        private IEventAggregator _eventAggregator;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
+        private readonly IEventAggregator _eventAggregator;
 
         private ICommand _connectCommand;
 

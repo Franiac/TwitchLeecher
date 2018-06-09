@@ -4,14 +4,15 @@ using System.IO;
 using System.Linq;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Services.Services
 {
-    public class FilenameService : IFilenameService
+    internal class FilenameService : IFilenameService
     {
         #region Methods
 
-        public string SubstituteWildcards(string filename, TwitchVideo video)
+        public string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null)
         {
             if (video == null)
             {
@@ -27,17 +28,21 @@ namespace TwitchLeecher.Services.Services
 
             DateTime recorded = video.RecordedDate;
 
-            TwitchVideoQuality quality = video.Qualities.First();
+            TwitchVideoQuality selectedQuality = quality ?? video.Qualities.First();
+            TimeSpan selectedCropStart = cropStart ?? TimeSpan.Zero;
+            TimeSpan selectedCropEnd = cropEnd ?? video.Length;
 
             result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.GAME, video.Game);
             result = result.Replace(FilenameWildcards.DATE, recorded.ToString("yyyyMMdd"));
             result = result.Replace(FilenameWildcards.TIME, recorded.ToString("hhmmsstt", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
-            result = result.Replace(FilenameWildcards.ID, video.IdTrimmed);
+            result = result.Replace(FilenameWildcards.ID, video.Id);
             result = result.Replace(FilenameWildcards.TITLE, video.Title);
-            result = result.Replace(FilenameWildcards.RES, !string.IsNullOrWhiteSpace(quality.Resolution) ? quality.Resolution : TwitchVideoQuality.UNKNOWN);
-            result = result.Replace(FilenameWildcards.FPS, quality.Fps.HasValue ? quality.Fps.ToString() : TwitchVideoQuality.UNKNOWN);
+            result = result.Replace(FilenameWildcards.RES, !string.IsNullOrWhiteSpace(selectedQuality.Resolution) ? selectedQuality.Resolution : TwitchVideoQuality.UNKNOWN);
+            result = result.Replace(FilenameWildcards.FPS, selectedQuality.Fps.HasValue ? selectedQuality.Fps.ToString() : TwitchVideoQuality.UNKNOWN);
+            result = result.Replace(FilenameWildcards.START, selectedCropStart.ToShortDaylessString());
+            result = result.Replace(FilenameWildcards.END, selectedCropEnd.ToShortDaylessString());
 
             result = SubstituteInvalidChars(result, "_");
 

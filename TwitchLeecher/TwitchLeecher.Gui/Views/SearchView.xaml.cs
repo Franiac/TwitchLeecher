@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using TwitchLeecher.Core.Models;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -11,8 +10,6 @@ namespace TwitchLeecher.Gui.Views
         public SearchView()
         {
             InitializeComponent();
-
-            cmbLoadLimit.ItemsSource = Preferences.GetLoadLimits();
 
             IsVisibleChanged += SearchView_IsVisibleChanged;
         }

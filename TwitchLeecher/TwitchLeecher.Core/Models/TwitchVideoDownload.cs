@@ -9,24 +9,20 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private string _id;
-
-        private DownloadParameters _downloadParams;
-
-        private DownloadStatus _downloadStatus;
-        private object _downloadStatusLockObject;
+        private DownloadState _downloadState;
+        private readonly object _downloadStateLockObject;
 
         private StringBuilder _log;
-        private object _logLockObject;
+        private readonly object _logLockObject;
 
-        private int _progress;
-        private object _progressLockObject;
+        private double _progress;
+        private readonly object _progressLockObject;
 
         private string _status;
-        private object _statusLockObject;
+        private readonly object _statusLockObject;
 
-        private bool _isProcessing;
-        private object _isProcessingLockObject;
+        private bool _isIndeterminate;
+        private readonly object _isIndeterminateLockObject;
 
         #endregion Fields
 
@@ -34,48 +30,36 @@ namespace TwitchLeecher.Core.Models
 
         public TwitchVideoDownload(DownloadParameters downloadParams)
         {
-            _id = Guid.NewGuid().ToString();
-            _downloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
+            Id = Guid.NewGuid().ToString();
+            DownloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
 
             _log = new StringBuilder();
 
-            _downloadStatusLockObject = new object();
+            _downloadStateLockObject = new object();
             _logLockObject = new object();
             _progressLockObject = new object();
             _statusLockObject = new object();
-            _isProcessingLockObject = new object();
+            _isIndeterminateLockObject = new object();
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public string Id
-        {
-            get
-            {
-                return _id;
-            }
-        }
+        public string Id { get; }
 
-        public DownloadParameters DownloadParams
-        {
-            get
-            {
-                return _downloadParams;
-            }
-        }
+        public DownloadParameters DownloadParams { get; }
 
-        public DownloadStatus DownloadStatus
+        public DownloadState DownloadState
         {
             get
             {
-                return _downloadStatus;
+                return _downloadState;
             }
             private set
             {
-                _downloadStatus = value;
-                FirePropertyChanged(nameof(DownloadStatus));
+                _downloadState = value;
+                FirePropertyChanged(nameof(DownloadState));
                 FirePropertyChanged(nameof(CanRetry));
                 FirePropertyChanged(nameof(Status));
             }
@@ -85,7 +69,7 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return DownloadStatus == DownloadStatus.Canceled || DownloadStatus == DownloadStatus.Error;
+                return DownloadState == DownloadState.Canceled || DownloadState == DownloadState.Error;
             }
         }
 
@@ -100,7 +84,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public int Progress
+        public double Progress
         {
             get
             {
@@ -116,9 +100,9 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (_downloadStatus != DownloadStatus.Active)
+                if (_downloadState != DownloadState.Downloading)
                 {
-                    return _downloadStatus.ToString();
+                    return _downloadState.ToString();
                 }
 
                 return _status;
@@ -129,15 +113,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public bool IsProcessing
+        public bool IsIndeterminate
         {
             get
             {
-                return _isProcessing;
+                return _isIndeterminate;
             }
             private set
             {
-                SetProperty(ref _isProcessing, value);
+                SetProperty(ref _isIndeterminate, value);
             }
         }
 
@@ -145,11 +129,11 @@ namespace TwitchLeecher.Core.Models
 
         #region Methods
 
-        public void SetDownloadStatus(DownloadStatus downloadStatus)
+        public void SetDownloadState(DownloadState downloadState)
         {
-            lock (_downloadStatusLockObject)
+            lock (_downloadStateLockObject)
             {
-                DownloadStatus = downloadStatus;
+                DownloadState = downloadState;
             }
         }
 
@@ -171,7 +155,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void SetProgress(int progress)
+        public void SetProgress(double progress)
         {
             lock (_progressLockObject)
             {
@@ -187,11 +171,11 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public void SetIsProcessing(bool isProcessing)
+        public void SetIsIndeterminate(bool isIndeterminate)
         {
-            lock (_isProcessingLockObject)
+            lock (_isIndeterminateLockObject)
             {
-                IsProcessing = isProcessing;
+                IsIndeterminate = isIndeterminate;
             }
         }
 

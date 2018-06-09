@@ -782,12 +782,12 @@ namespace TwitchLeecher.Setup.Gui
 
                 IList<string> filesFormated = FormatFileInUseList(files);
 
-                Func<bool?> showFilesInUseWindow = () =>
+                bool? showFilesInUseWindow()
                 {
                     FilesInUseWindow filesInUseWindow = new FilesInUseWindow() { DataContext = new FilesInUseWindowVM(filesFormated) };
 
                     return filesInUseWindow.ShowDialog();
-                };
+                }
 
                 bool? dlgRes = InvokeOnUiThread(showFilesInUseWindow);
 

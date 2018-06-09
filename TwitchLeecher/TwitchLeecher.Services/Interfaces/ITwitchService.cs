@@ -18,7 +18,7 @@ namespace TwitchLeecher.Services.Interfaces
 
         #region Methods
 
-        VodAuthInfo RetrieveVodAuthInfo(string idTrimmed);
+        VodAuthInfo RetrieveVodAuthInfo(string id);
 
         bool ChannelExists(string channel);
 

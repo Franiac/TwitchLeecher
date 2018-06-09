@@ -10,21 +10,21 @@ namespace TwitchLeecher.Gui.Controls
 {
     [TemplatePart(Name = "Tpl_Part_PaintArea", Type = typeof(Shape)),
      TemplatePart(Name = "Tpl_Part_MainContent", Type = typeof(ContentControl))]
-    public class FadeContentControl : ContentControl
+    public class TlFadeContentControl : ContentControl
     {
         #region Fields
 
         private Shape _paintArea;
         private ContentControl _mainContent;
 
-        private DoubleAnimation _fadeInAnim;
-        private DoubleAnimation _fadeOutAnim;
+        private readonly DoubleAnimation _fadeInAnim;
+        private readonly DoubleAnimation _fadeOutAnim;
 
         #endregion Fields
 
         #region Constructors
 
-        public FadeContentControl()
+        public TlFadeContentControl()
         {
             _fadeInAnim = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
             _fadeOutAnim = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(200));

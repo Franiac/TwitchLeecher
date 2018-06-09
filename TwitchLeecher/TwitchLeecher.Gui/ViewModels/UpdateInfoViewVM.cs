@@ -12,13 +12,11 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private UpdateInfo _updateInfo;
-
-        private IDialogService _dialogService;
-
-        private ICommand _downloadCommand;
+        private readonly IDialogService _dialogService;
 
         private readonly object _commandLockObject;
+
+        private ICommand _downloadCommand;
 
         #endregion Fields
 
@@ -27,7 +25,6 @@ namespace TwitchLeecher.Gui.ViewModels
         public UpdateInfoViewVM(IDialogService dialogService)
         {
             _dialogService = dialogService;
-
             _commandLockObject = new object();
         }
 
@@ -35,17 +32,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public UpdateInfo UpdateInfo
-        {
-            get
-            {
-                return _updateInfo;
-            }
-            set
-            {
-                _updateInfo = value;
-            }
-        }
+        public UpdateInfo UpdateInfo { get; set; }
 
         public ICommand DownloadCommand
         {
@@ -70,7 +57,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    Process.Start(_updateInfo.DownloadUrl);
+                    Process.Start(UpdateInfo.DownloadUrl);
                 }
             }
             catch (Exception ex)

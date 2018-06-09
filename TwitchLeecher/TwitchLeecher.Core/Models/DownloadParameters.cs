@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 
@@ -9,9 +10,10 @@ namespace TwitchLeecher.Core.Models
     {
         #region Fields
 
-        private TwitchVideo _video;
+        private readonly TwitchVideo _video;
+        private readonly VodAuthInfo _vodAuthInfo;
+
         private TwitchVideoQuality _quality;
-        private VodAuthInfo _vodAuthInfo;
 
         private string _folder;
         private string _filename;
@@ -26,7 +28,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, TwitchVideoQuality quality, VodAuthInfo vodAuthInfo, string folder, string filename)
+        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -189,6 +191,14 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public string CroppedLengthStr
+        {
+            get
+            {
+                return CroppedLength.ToDaylessString();
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -253,7 +263,7 @@ namespace TwitchLeecher.Core.Models
 
                     if (_cropStartTime < TimeSpan.Zero || _cropStartTime > videoLength)
                     {
-                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
+                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToDaylessString() + "'!");
                     }
                     else if (CroppedLength.TotalSeconds < 5)
                     {
@@ -272,7 +282,7 @@ namespace TwitchLeecher.Core.Models
 
                     if (_cropEndTime < TimeSpan.Zero || _cropEndTime > videoLength)
                     {
-                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToString() + "'!");
+                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToDaylessString() + "'!");
                     }
                     else if (_cropStart && (_cropEndTime <= _cropStartTime))
                     {

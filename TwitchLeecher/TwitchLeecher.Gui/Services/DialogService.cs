@@ -2,7 +2,6 @@
 using Ninject;
 using System;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TwitchLeecher.Gui.Interfaces;
@@ -17,8 +16,8 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel _kernel;
-        private ILogService _logService;
+        private readonly IKernel _kernel;
+        private readonly ILogService _logService;
 
         private bool _busy;
 
@@ -88,37 +87,20 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
-            if (CommonFileDialog.IsPlatformSupported)
+            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
             {
-                using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
+                cofd.IsFolderPicker = true;
+
+                if (!string.IsNullOrWhiteSpace(folder))
                 {
-                    cofd.IsFolderPicker = true;
-
-                    if (!string.IsNullOrWhiteSpace(folder))
-                    {
-                        cofd.InitialDirectory = folder;
-                    }
-
-                    CommonFileDialogResult result = cofd.ShowDialog();
-
-                    bool canceled = result != CommonFileDialogResult.Ok;
-
-                    dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
+                    cofd.InitialDirectory = folder;
                 }
-            }
-            else
-            {
-                using (FolderBrowserDialog fbd = new FolderBrowserDialog())
-                {
-                    if (!string.IsNullOrWhiteSpace(folder))
-                    {
-                        fbd.SelectedPath = folder;
-                    }
 
-                    DialogResult result = fbd.ShowDialog();
+                CommonFileDialogResult result = cofd.ShowDialog();
 
-                    dialogCompleteCallback(result != DialogResult.OK, fbd.SelectedPath);
-                }
+                bool canceled = result != CommonFileDialogResult.Ok;
+
+                dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
             }
         }
 

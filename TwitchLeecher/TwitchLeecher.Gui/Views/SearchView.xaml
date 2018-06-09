@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
-        xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core">
+        xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
+        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,8 +13,9 @@
                 <ResourceDictionary Source="../Theme/Styles.xaml" />
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
-                    <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
                     <converters:SearchTypeToBooleanConverter x:Key="searchTypeToBooleanConverter" />
+                    <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
+                    <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -38,19 +40,23 @@
                     <TextBlock Style="{StaticResource TlTabItemText}" FontWeight="Bold" Text="Channel" />
                 </TabItem.Header>
                 <Grid Margin="0,10,0,0" Grid.IsSharedSizeScope="True" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
                     <Grid.RowDefinitions>
                         <RowDefinition SharedSizeGroup="g1" />
                         <RowDefinition Height="10" />
                         <RowDefinition SharedSizeGroup="g1" />
                         <RowDefinition Height="10" />
                         <RowDefinition SharedSizeGroup="g1" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition SharedSizeGroup="g1" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition SharedSizeGroup="g1" />
                     </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <TextBox Grid.Column="2" Grid.Row="0" Name="txtChannel" Text="{Binding SearchParams.Channel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
@@ -66,7 +72,41 @@
                         <RadioButton GroupName="VideoType" Content="Upload" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
-                    <ComboBox Name="cmbLoadLimit" Grid.Row="4" Grid.Column="2" SelectedItem="{Binding SearchParams.LoadLimit}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="60" />
+
+                    <Grid Grid.Column="2" Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="g2" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton Grid.Column="0" GroupName="LoadLimit" Content="From" IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <Grid  Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ctrl:TlDateTimePicker Grid.Column="0" Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" Value="{Binding SearchParams.LoadFrom, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadFromDefault}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="to" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0" />
+                            <ctrl:TlDateTimePicker Grid.Column="2" Style="{StaticResource TlDatePicker}" IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" Value="{Binding SearchParams.LoadTo, UpdateSourceTrigger=LostFocus}" DefaultValue="{Binding SearchParams.LoadToDefault}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="6" Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="g2" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton Grid.Column="0" GroupName="LoadLimit" Content="Last" IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" HorizontalAlignment="Left" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0">
+                            <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" Value="{Binding SearchParams.LoadLastVods}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <RadioButton Grid.Column="2" Grid.Row="8" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </Grid>
             </TabItem>
             <TabItem IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Urls}}" Width="85">
@@ -84,7 +124,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video urls in the textbox below. Make sure that every url is placed in a new line." />
+                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video urls in the textbox below. Make sure every url is placed in a new line." />
                     <TextBlock Grid.Row="2" Text="Example: https://www.twitch.tv/videos/123456789" />
                     <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearUrlsCommand}" Width="75" HorizontalAlignment="Left">
@@ -111,7 +151,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video IDs in the textbox below. Make sure that every ID is placed in a new line." />
+                    <TextBlock Grid.Row="0" Text="Paste one or more Twitch video IDs in the textbox below. Make sure every ID is placed in a new line." />
                     <TextBlock Grid.Row="2" Text="Example: 123456789" />
                     <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearIdsCommand}" Width="75" HorizontalAlignment="Left">

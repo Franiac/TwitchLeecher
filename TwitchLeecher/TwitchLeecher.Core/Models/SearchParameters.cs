@@ -15,7 +15,14 @@ namespace TwitchLeecher.Core.Models
         private string _urls;
         private string _ids;
 
-        private int _loadLimit;
+        private LoadLimitType _loadLimitType;
+
+        private DateTime? _loadFrom;
+        private DateTime? _loadFromDefault;
+        private DateTime? _loadTo;
+        private DateTime? _loadToDefault;
+
+        private int _loadLastVods;
 
         #endregion Fields
 
@@ -38,7 +45,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _searchType, value, nameof(SearchType));
+                SetProperty(ref _searchType, value);
             }
         }
 
@@ -50,7 +57,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _videoType, value, nameof(VideoType));
+                SetProperty(ref _videoType, value);
             }
         }
 
@@ -62,7 +69,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _channel, value, nameof(Channel));
+                SetProperty(ref _channel, value);
             }
         }
 
@@ -74,7 +81,7 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _urls, value, nameof(Urls));
+                SetProperty(ref _urls, value);
             }
         }
 
@@ -86,19 +93,79 @@ namespace TwitchLeecher.Core.Models
             }
             set
             {
-                SetProperty(ref _ids, value, nameof(Ids));
+                SetProperty(ref _ids, value);
             }
         }
 
-        public int LoadLimit
+        public LoadLimitType LoadLimitType
         {
             get
             {
-                return _loadLimit;
+                return _loadLimitType;
             }
             set
             {
-                SetProperty(ref _loadLimit, value, nameof(LoadLimit));
+                SetProperty(ref _loadLimitType, value);
+            }
+        }
+
+        public DateTime? LoadFrom
+        {
+            get
+            {
+                return _loadFrom;
+            }
+            set
+            {
+                SetProperty(ref _loadFrom, value);
+            }
+        }
+
+        public DateTime? LoadFromDefault
+        {
+            get
+            {
+                return _loadFromDefault;
+            }
+            set
+            {
+                SetProperty(ref _loadFromDefault, value);
+            }
+        }
+
+        public DateTime? LoadTo
+        {
+            get
+            {
+                return _loadTo;
+            }
+            set
+            {
+                SetProperty(ref _loadTo, value);
+            }
+        }
+
+        public DateTime? LoadToDefault
+        {
+            get
+            {
+                return _loadToDefault;
+            }
+            set
+            {
+                SetProperty(ref _loadToDefault, value);
+            }
+        }
+
+        public int LoadLastVods
+        {
+            get
+            {
+                return _loadLastVods;
+            }
+            set
+            {
+                SetProperty(ref _loadLastVods, value);
             }
         }
 
@@ -120,6 +187,71 @@ namespace TwitchLeecher.Core.Models
                 }
             }
 
+            currentProperty = nameof(LoadFrom);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.Timespan)
+                {
+                    if (!_loadFrom.HasValue)
+                    {
+                        AddError(currentProperty, "Please specify a date!");
+                    }
+                    else
+                    {
+                        DateTime minimum = new DateTime(2010, 01, 01);
+
+                        if (_loadFrom.Value.Date < minimum.Date)
+                        {
+                            AddError(currentProperty, "Date has to be greater than '" + minimum.ToShortDateString() + "'!");
+                        }
+
+                        if (_loadFrom.Value.Date > DateTime.Now.Date)
+                        {
+                            AddError(currentProperty, "Date cannot be greater than today!");
+                        }
+                    }
+                }
+            }
+
+            currentProperty = nameof(LoadTo);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.Timespan)
+                {
+                    if (!_loadTo.HasValue)
+                    {
+                        AddError(currentProperty, "Please specify a date!");
+                    }
+                    else
+                    {
+                        if (_loadTo.Value.Date > DateTime.Now.Date)
+                        {
+                            AddError(currentProperty, "Date cannot be greater than today!");
+                        }
+
+                        if (_loadFrom.HasValue && _loadFrom.Value.Date > _loadTo.Value.Date)
+                        {
+                            AddError(currentProperty, "Date has to be greater than '" + _loadFrom.Value.ToShortDateString() + "'!");
+                        }
+                    }
+                }
+            }
+
+            currentProperty = nameof(LoadLastVods);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_searchType == SearchType.Channel && _loadLimitType == LoadLimitType.LastVods)
+                {
+                    if (_loadLastVods < 1 || _loadLastVods > 999)
+                    {
+                        AddError(currentProperty, "Value has to be between 1 and 999!");
+                    }
+                }
+            }
+
             currentProperty = nameof(Urls);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
@@ -132,10 +264,10 @@ namespace TwitchLeecher.Core.Models
                     }
                     else
                     {
-                        Action addError = () =>
+                        void AddUrlError()
                         {
                             AddError(currentProperty, "One or more urls are invalid!");
-                        };
+                        }
 
                         string[] urls = _urls.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -145,7 +277,7 @@ namespace TwitchLeecher.Core.Models
                             {
                                 if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
 
@@ -153,7 +285,7 @@ namespace TwitchLeecher.Core.Models
 
                                 if (segments.Length < 2)
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
 
@@ -185,7 +317,7 @@ namespace TwitchLeecher.Core.Models
 
                                 if (!validId)
                                 {
-                                    addError();
+                                    AddUrlError();
                                     break;
                                 }
                             }
@@ -232,7 +364,12 @@ namespace TwitchLeecher.Core.Models
                 Channel = _channel,
                 Urls = _urls,
                 Ids = _ids,
-                LoadLimit = _loadLimit
+                LoadLimitType = _loadLimitType,
+                LoadFrom = _loadFrom,
+                LoadFromDefault = _loadFromDefault,
+                LoadTo = _loadTo,
+                LoadToDefault = _loadToDefault,
+                LoadLastVods = _loadLastVods
             };
         }
 

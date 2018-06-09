@@ -11,16 +11,6 @@ namespace TwitchLeecher.Shared.Native
 {
     public class NativeDisplay
     {
-        #region Fields
-
-        private System.Windows.Rect _bounds;
-        private IntPtr _handle;
-        private bool _isPrimary;
-        private string _name;
-        private System.Windows.Rect _workingArea;
-
-        #endregion Fields
-
         #region Constructor
 
         private NativeDisplay(IntPtr hMonitor, IntPtr hdc)
@@ -28,16 +18,16 @@ namespace TwitchLeecher.Shared.Native
             MonitorInfoEx info = new MonitorInfoEx();
             GetMonitorInfoNative(new HandleRef(null, hMonitor), info);
 
-            _isPrimary = ((info.dwFlags & NativeFlags.MonitorinfofPrimary) != 0);
-            _name = new string(info.szDevice).TrimEnd((char)0);
-            _handle = hMonitor;
+            IsPrimary = ((info.dwFlags & NativeFlags.MonitorinfofPrimary) != 0);
+            Name = new string(info.szDevice).TrimEnd((char)0);
+            Handle = hMonitor;
 
-            _bounds = new System.Windows.Rect(
+            Bounds = new System.Windows.Rect(
                         info.rcMonitor.left, info.rcMonitor.top,
                         info.rcMonitor.right - info.rcMonitor.left,
                         info.rcMonitor.bottom - info.rcMonitor.top);
 
-            _workingArea = new System.Windows.Rect(
+            WorkingArea = new System.Windows.Rect(
                         info.rcWork.left, info.rcWork.top,
                         info.rcWork.right - info.rcWork.left,
                         info.rcWork.bottom - info.rcWork.top);
@@ -47,47 +37,15 @@ namespace TwitchLeecher.Shared.Native
 
         #region Properties
 
-        public System.Windows.Rect Bounds
-        {
-            get
-            {
-                return _bounds;
-            }
-        }
+        public System.Windows.Rect Bounds { get; }
 
-        public IntPtr Handle
-        {
-            get
-            {
-                return _handle;
-            }
-        }
+        public IntPtr Handle { get; }
 
-        public bool IsPrimary
-        {
-            get
+        public bool IsPrimary { get; }
 
-            {
-                return _isPrimary;
-            }
-        }
+        public string Name { get; }
 
-        public string Name
-
-        {
-            get
-            {
-                return _name;
-            }
-        }
-
-        public System.Windows.Rect WorkingArea
-        {
-            get
-            {
-                return _workingArea;
-            }
-        }
+        public System.Windows.Rect WorkingArea { get; }
 
         #endregion Properties
 

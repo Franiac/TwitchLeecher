@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -8,6 +9,7 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -16,15 +18,19 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private DownloadParameters _downloadParams;
+        private bool _useCustomFilename;
+        private string _customFilename;
 
         private ICommand _chooseCommand;
         private ICommand _downloadCommand;
         private ICommand _cancelCommand;
 
-        private IDialogService _dialogService;
-        private ITwitchService _twitchService;
-        private INavigationService _navigationService;
-        private INotificationService _notificationService;
+        private readonly IDialogService _dialogService;
+        private readonly IFilenameService _filenameService;
+        private readonly IPreferencesService _preferencesService;
+        private readonly ITwitchService _twitchService;
+        private readonly INavigationService _navigationService;
+        private readonly INotificationService _notificationService;
 
         private readonly object _commandLockObject;
 
@@ -34,11 +40,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public DownloadViewVM(
             IDialogService dialogService,
+            IFilenameService filenameService,
+            IPreferencesService preferencesService,
             ITwitchService twitchService,
             INavigationService navigationService,
             INotificationService notificationService)
         {
             _dialogService = dialogService;
+            _filenameService = filenameService;
+            _preferencesService = preferencesService;
             _twitchService = twitchService;
             _navigationService = navigationService;
             _notificationService = notificationService;
@@ -58,41 +68,138 @@ namespace TwitchLeecher.Gui.ViewModels
             }
             set
             {
+                if (_downloadParams != null)
+                {
+                    _downloadParams.PropertyChanged -= _downloadParams_PropertyChanged;
+                }
+
                 SetProperty(ref _downloadParams, value, nameof(DownloadParams));
+
+                _downloadParams.PropertyChanged += _downloadParams_PropertyChanged;
             }
         }
 
-        public string CropStartTime
+        public bool UseCustomFilename
         {
             get
             {
-                return _downloadParams.CropStartTime.ToString();
+                return _useCustomFilename;
             }
             set
             {
-                if (TimeSpan.TryParse(value, out TimeSpan ts))
-                {
-                    _downloadParams.CropStartTime = ts;
-                }
+                SetProperty(ref _useCustomFilename, value, nameof(UseCustomFilename));
 
-                FirePropertyChanged(nameof(CropStartTime));
+                if (value)
+                {
+                    _downloadParams.Filename = _customFilename;
+                }
+                else
+                {
+                    _customFilename = _downloadParams.Filename;
+                    UpdateFilenameFromTemplate();
+                }
             }
         }
 
-        public string CropEndTime
+        public int CropStartHours
         {
             get
             {
-                return _downloadParams.CropEndTime.ToString();
+                return _downloadParams.CropStartTime.GetDaysInHours();
             }
             set
             {
-                if (TimeSpan.TryParse(value, out TimeSpan ts))
-                {
-                    _downloadParams.CropEndTime = ts;
-                }
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(value, current.Minutes, current.Seconds);
 
-                FirePropertyChanged(nameof(CropEndTime));
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
+            }
+        }
+
+        public int CropStartMinutes
+        {
+            get
+            {
+                return _downloadParams.CropStartTime.Minutes;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
+
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
+            }
+        }
+
+        public int CropStartSeconds
+        {
+            get
+            {
+                return _downloadParams.CropStartTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropStartTime;
+                _downloadParams.CropStartTime = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+
+                FirePropertyChanged(nameof(CropStartHours));
+                FirePropertyChanged(nameof(CropStartMinutes));
+                FirePropertyChanged(nameof(CropStartSeconds));
+            }
+        }
+
+        public int CropEndHours
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.GetDaysInHours();
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(value, current.Minutes, current.Seconds);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
+            }
+        }
+
+        public int CropEndMinutes
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.Minutes;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
+            }
+        }
+
+        public int CropEndSeconds
+        {
+            get
+            {
+                return _downloadParams.CropEndTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.CropEndTime;
+                _downloadParams.CropEndTime = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+
+                FirePropertyChanged(nameof(CropEndHours));
+                FirePropertyChanged(nameof(CropEndMinutes));
+                FirePropertyChanged(nameof(CropEndSeconds));
             }
         }
 
@@ -161,12 +268,23 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!cancelled)
                 {
                     _downloadParams.Folder = folder;
+                    _downloadParams.Validate(nameof(DownloadParameters.Folder));
                 }
             }
             catch (Exception ex)
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private void UpdateFilenameFromTemplate()
+        {
+            string fileName = _preferencesService.CurrentPreferences.Clone().DownloadFileName;
+
+            TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
+            TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
+
+            _downloadParams.Filename = _filenameService.SubstituteWildcards(fileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
         }
 
         private void Download()
@@ -234,35 +352,21 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (DownloadParams.HasErrors)
                 {
                     AddError(currentProperty, "Invalid Download Parameters!");
-                }
-            }
 
-            currentProperty = nameof(CropStartTime);
-
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
-            {
-                DownloadParams?.Validate(currentProperty);
-
-                if (DownloadParams.HasErrors)
-                {
-                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropStartTime)) is List<string> cropStartErrors && cropStartErrors.Count > 0)
                     {
-                        AddError(currentProperty, errors.First());
+                        string firstError = cropStartErrors.First();
+                        AddError(nameof(CropStartHours), firstError);
+                        AddError(nameof(CropStartMinutes), firstError);
+                        AddError(nameof(CropStartSeconds), firstError);
                     }
-                }
-            }
 
-            currentProperty = nameof(CropEndTime);
-
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
-            {
-                DownloadParams?.Validate(currentProperty);
-
-                if (DownloadParams.HasErrors)
-                {
-                    if (DownloadParams.GetErrors(currentProperty) is List<string> errors && errors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropEndTime)) is List<string> cropEndErrors && cropEndErrors.Count > 0)
                     {
-                        AddError(currentProperty, errors.First());
+                        string firstError = cropEndErrors.First();
+                        AddError(nameof(CropEndHours), firstError);
+                        AddError(nameof(CropEndMinutes), firstError);
+                        AddError(nameof(CropEndSeconds), firstError);
                     }
                 }
             }
@@ -284,5 +388,26 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Methods
+
+        #region EventHandlers
+
+        private void _downloadParams_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_useCustomFilename)
+            {
+                return;
+            }
+
+            if (e.PropertyName == nameof(DownloadParameters.Quality)
+                || e.PropertyName == nameof(DownloadParameters.CropStart)
+                || e.PropertyName == nameof(DownloadParameters.CropEnd)
+                || e.PropertyName == nameof(DownloadParameters.CropStartTime)
+                || e.PropertyName == nameof(DownloadParameters.CropEndTime))
+            {
+                UpdateFilenameFromTemplate();
+            }
+        }
+
+        #endregion EventHandlers
     }
 }

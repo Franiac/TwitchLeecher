@@ -28,7 +28,9 @@ namespace TwitchLeecher.Services.Services
         private const string SEARCH_EL = "Search";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
         private const string SEARCH_VIDEOTYPE_EL = "VideoType";
-        private const string SEARCH_LOADLIMIT_EL = "LoadLimit";
+        private const string SEARCH_LOADLIMITTYPE_EL = "LoadLimitType";
+        private const string SEARCH_LOADLASTDAYS_EL = "LoadLastDays";
+        private const string SEARCH_LOADLASTVODS_EL = "LoadLastVods";
         private const string SEARCH_SEARCHONSTARTUP_EL = "SearchOnStartup";
 
         private const string DOWNLOAD_EL = "Download";
@@ -123,9 +125,17 @@ namespace TwitchLeecher.Services.Services
                 searchVideoTypeEl.SetValue(preferences.SearchVideoType);
                 searchEl.Add(searchVideoTypeEl);
 
-                XElement searchLoadLimitEl = new XElement(SEARCH_LOADLIMIT_EL);
-                searchLoadLimitEl.SetValue(preferences.SearchLoadLimit);
-                searchEl.Add(searchLoadLimitEl);
+                XElement searchLoadLimitTypeEl = new XElement(SEARCH_LOADLIMITTYPE_EL);
+                searchLoadLimitTypeEl.SetValue(preferences.SearchLoadLimitType);
+                searchEl.Add(searchLoadLimitTypeEl);
+
+                XElement searchLoadLastDaysEl = new XElement(SEARCH_LOADLASTDAYS_EL);
+                searchLoadLastDaysEl.SetValue(preferences.SearchLoadLastDays);
+                searchEl.Add(searchLoadLastDaysEl);
+
+                XElement searchLoadLastVodsEl = new XElement(SEARCH_LOADLASTVODS_EL);
+                searchLoadLastVodsEl.SetValue(preferences.SearchLoadLastVods);
+                searchEl.Add(searchLoadLastVodsEl);
 
                 XElement searchOnStartupEl = new XElement(SEARCH_SEARCHONSTARTUP_EL);
                 searchOnStartupEl.SetValue(preferences.SearchOnStartup);
@@ -263,22 +273,41 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
-                            XElement searchLoadLimitEl = searchEl.Element(SEARCH_LOADLIMIT_EL);
+                            XElement searchLoadLimitTypeEl = searchEl.Element(SEARCH_LOADLIMITTYPE_EL);
 
-                            if (searchLoadLimitEl != null)
+                            if (searchLoadLimitTypeEl != null)
                             {
                                 try
                                 {
-                                    int limit = searchLoadLimitEl.GetValueAsInt();
+                                    preferences.SearchLoadLimitType = searchLoadLimitTypeEl.GetValueAsEnum<LoadLimitType>();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
 
-                                    if (Preferences.GetLoadLimits().Contains(limit))
-                                    {
-                                        preferences.SearchLoadLimit = limit;
-                                    }
-                                    else
-                                    {
-                                        preferences.SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT;
-                                    }
+                            XElement searchLoadLastDaysEl = searchEl.Element(SEARCH_LOADLASTDAYS_EL);
+
+                            if (searchLoadLastDaysEl != null)
+                            {
+                                try
+                                {
+                                    preferences.SearchLoadLastDays = searchLoadLastDaysEl.GetValueAsInt();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement searchLoadLastVodsEl = searchEl.Element(SEARCH_LOADLASTVODS_EL);
+
+                            if (searchLoadLastVodsEl != null)
+                            {
+                                try
+                                {
+                                    preferences.SearchLoadLastVods = searchLoadLastVodsEl.GetValueAsInt();
                                 }
                                 catch
                                 {
@@ -377,7 +406,9 @@ namespace TwitchLeecher.Services.Services
                 AppShowDonationButton = true,
                 SearchChannelName = null,
                 SearchVideoType = VideoType.Broadcast,
-                SearchLoadLimit = Preferences.DEFAULT_LOAD_LIMIT,
+                SearchLoadLimitType = LoadLimitType.Timespan,
+                SearchLoadLastDays = 10,
+                SearchLoadLastVods = 10,
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),

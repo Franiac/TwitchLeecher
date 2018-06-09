@@ -29,14 +29,14 @@
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
                 </Border.BorderBrush>
-                <TextBlock  Text="Update Available" FontSize="21.333" FontWeight="Bold" />
+                <TextBlock  Text="Update Available" FontSize="21" FontWeight="Bold" />
             </Border>
 
             <TextBlock Grid.Row="2">
                 <Run Text="Twitch Leecher" />
                 <Run Text="{Binding UpdateInfo.NewVersion, Mode=OneWay, FallbackValue='X.Y.Z'}" />
                 <Run Text="has been released on" />
-                <Run Text="{Binding UpdateInfo.ReleaseDate, Mode=OneWay, FallbackValue='04/21/2016', StringFormat='MM/dd/yyyy'}" />
+                <Run Text="{Binding UpdateInfo.ReleaseDate, Mode=OneWay, FallbackValue='04/21/2016', StringFormat=d}" />
             </TextBlock>
 
             <TextBlock Grid.Row="4">
@@ -49,7 +49,7 @@
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
-                <ctrl:ScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
+                <ctrl:TlScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

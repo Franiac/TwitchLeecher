@@ -16,10 +16,10 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private IDialogService _dialogService;
-        private ITwitchService _twitchService;
-        private INavigationService _navigationService;
-        private INotificationService _notificationService;
+        private readonly IDialogService _dialogService;
+        private readonly ITwitchService _twitchService;
+        private readonly INavigationService _navigationService;
+        private readonly INotificationService _notificationService;
 
         private ICommand _navigatingCommand;
         private ICommand _cancelCommand;
@@ -139,11 +139,11 @@ namespace TwitchLeecher.Gui.ViewModels
                             }
                             else
                             {
-                                Action unspecifiedError = () =>
+                                void UnspecifiedError()
                                 {
                                     _dialogService.ShowMessageBox("Twitch responded with an unspecified error! Authorization aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                     _navigationService.NavigateBack();
-                                };
+                                }
 
                                 if (urlParams.ContainsKey("error_description"))
                                 {
@@ -151,7 +151,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                                     if (string.IsNullOrWhiteSpace(errorDesc))
                                     {
-                                        unspecifiedError();
+                                        UnspecifiedError();
                                     }
                                     else
                                     {
@@ -166,7 +166,7 @@ namespace TwitchLeecher.Gui.ViewModels
                                 }
                                 else
                                 {
-                                    unspecifiedError();
+                                    UnspecifiedError();
                                 }
                             }
                         }

@@ -1,51 +1,38 @@
-﻿namespace TwitchLeecher.Core.Models
+﻿using System;
+
+namespace TwitchLeecher.Core.Models
 {
-    public class VodPlaylistPart : IVodPlaylistPart
+    public class VodPlaylistPart
     {
-        #region Fields
-
-        private int _index;
-        private string _output;
-
-        #endregion Fields
-
         #region Constructors
 
-        public VodPlaylistPart(int index, string input)
+        public VodPlaylistPart(double length, string remoteFile, string localFile)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrWhiteSpace(remoteFile))
             {
-                _output = null;
-            }
-            else
-            {
-                _output = input;
+                throw new ArgumentNullException(nameof(remoteFile));
             }
 
-            _index = index;
+            if (string.IsNullOrWhiteSpace(localFile))
+            {
+                throw new ArgumentNullException(nameof(localFile));
+            }
+
+            Length = length;
+            RemoteFile = remoteFile;
+            LocalFile = localFile;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public int Index
-        {
-            get
-            {
-                return _index;
-            }
-        }
+        public string RemoteFile { get; }
+
+        public string LocalFile { get; }
+
+        public double Length { get; }
 
         #endregion Properties
-
-        #region Methods
-
-        public string GetOutput()
-        {
-            return _output;
-        }
-
-        #endregion Methods
     }
 }

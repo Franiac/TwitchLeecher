@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="wix">
-      <HintPath>C:\Program Files (x86)\WiX Toolset v3.10\bin\wix.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\WiX Toolset v3.11\bin\wix.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
