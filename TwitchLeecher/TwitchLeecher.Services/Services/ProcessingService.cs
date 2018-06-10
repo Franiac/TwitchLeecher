@@ -77,7 +77,7 @@ namespace TwitchLeecher.Services.Services
 
                     FileSystem.DeleteFile(part.LocalFile);
 
-                    setProgress(1 * 100 / partsCount);
+                    setProgress(i * 100 / partsCount);
                 }
             }
 
