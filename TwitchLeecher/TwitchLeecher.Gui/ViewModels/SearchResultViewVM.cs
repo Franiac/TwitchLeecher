@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -168,9 +169,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
+                            string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
+                                ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
+                                : currentPrefs.DownloadFolder;
+
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), currentPrefs.DownloadFolder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename);
 
                             _navigationService.ShowDownload(downloadParams);
                         }

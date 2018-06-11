@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
@@ -7,6 +8,7 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Extensions;
+using TwitchLeecher.Shared.Helpers;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Reflection;
 
@@ -26,6 +28,7 @@ namespace TwitchLeecher.Services.Services
         private const string APP_SHOWDONATIONBUTTON_EL = "ShowDonationButton";
 
         private const string SEARCH_EL = "Search";
+        private const string SEARCH_FAVCHANNELS_EL = "FavChannels";
         private const string SEARCH_CHANNELNAME_EL = "ChannelName";
         private const string SEARCH_VIDEOTYPE_EL = "VideoType";
         private const string SEARCH_LOADLIMITTYPE_EL = "LoadLimitType";
@@ -37,6 +40,7 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
+        private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
 
         #endregion Constants
@@ -85,6 +89,28 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
+        public bool IsChannelInFavourites(string channel)
+        {
+            if (string.IsNullOrWhiteSpace(channel))
+            {
+                return false;
+            }
+
+            if (CurrentPreferences.SearchChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(c => c.Equals(channel, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(existingEntry))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public void Save(Preferences preferences)
         {
             lock (_commandLockObject)
@@ -114,6 +140,15 @@ namespace TwitchLeecher.Services.Services
                 appEl.Add(appShowDonationButtonEl);
 
                 // Search
+                RangeObservableCollection<string> favChannels = preferences.SearchFavouriteChannels;
+
+                if (favChannels != null && favChannels.Count > 0)
+                {
+                    XElement favChannelsEl = new XElement(SEARCH_FAVCHANNELS_EL);
+                    favChannelsEl.SetValue(string.Join(";", preferences.SearchFavouriteChannels));
+                    searchEl.Add(favChannelsEl);
+                }
+
                 if (!string.IsNullOrWhiteSpace(preferences.SearchChannelName))
                 {
                     XElement searchChannelNameEl = new XElement(SEARCH_CHANNELNAME_EL);
@@ -162,6 +197,10 @@ namespace TwitchLeecher.Services.Services
                     downloadFileNameEl.SetValue(preferences.DownloadFileName);
                     downloadEl.Add(downloadFileNameEl);
                 }
+
+                XElement downloadSubfoldersForFavEl = new XElement(DOWNLOAD_SUBFOLDERSFORFAV_EL);
+                downloadSubfoldersForFavEl.SetValue(preferences.DownloadSubfoldersForFav);
+                downloadEl.Add(downloadSubfoldersForFavEl);
 
                 XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
@@ -245,6 +284,30 @@ namespace TwitchLeecher.Services.Services
 
                         if (searchEl != null)
                         {
+                            XElement searchFavChannelsEl = searchEl.Element(SEARCH_FAVCHANNELS_EL);
+
+                            if (searchFavChannelsEl != null)
+                            {
+                                try
+                                {
+                                    string favChannelsStr = searchFavChannelsEl.GetValueAsString();
+
+                                    if (!string.IsNullOrWhiteSpace(favChannelsStr))
+                                    {
+                                        string[] channelList = favChannelsStr.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                        if (channelList.Length > 0)
+                                        {
+                                            preferences.SearchFavouriteChannels.AddRange(channelList);
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be parsed
+                                }
+                            }
+
                             XElement searchChannelNameEl = searchEl.Element(SEARCH_CHANNELNAME_EL);
 
                             if (searchChannelNameEl != null)
@@ -369,6 +432,20 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.DownloadFileName = downloadFileNameEl.GetValueAsString();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement donwloadSubfolderForFavEl = downloadEl.Element(DOWNLOAD_SUBFOLDERSFORFAV_EL);
+
+                            if (donwloadSubfolderForFavEl != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadSubfoldersForFav = donwloadSubfolderForFavEl.GetValueAsBool();
                                 }
                                 catch
                                 {

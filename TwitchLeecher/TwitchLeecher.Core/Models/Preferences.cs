@@ -1,5 +1,6 @@
 ﻿using System;
 using TwitchLeecher.Core.Enums;
+using TwitchLeecher.Shared.Helpers;
 using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 
@@ -14,6 +15,8 @@ namespace TwitchLeecher.Core.Models
         private bool _appCheckForUpdates;
 
         private bool _appShowDonationButton;
+
+        private RangeObservableCollection<string> _searchFavouriteChannels;
 
         private string _searchChannelName;
 
@@ -32,6 +35,8 @@ namespace TwitchLeecher.Core.Models
         private string _downloadFolder;
 
         private string _downloadFileName;
+
+        private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
 
@@ -72,6 +77,19 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _appShowDonationButton, value);
+            }
+        }
+
+        public RangeObservableCollection<string> SearchFavouriteChannels
+        {
+            get
+            {
+                if (_searchFavouriteChannels == null)
+                {
+                    _searchFavouriteChannels = new RangeObservableCollection<string>();
+                }
+
+                return _searchFavouriteChannels;
             }
         }
 
@@ -180,6 +198,18 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _downloadFileName, value);
+            }
+        }
+
+        public bool DownloadSubfoldersForFav
+        {
+            get
+            {
+                return _downloadSubfoldersForFav;
+            }
+            set
+            {
+                SetProperty(ref _downloadSubfoldersForFav, value);
             }
         }
 
@@ -296,8 +326,11 @@ namespace TwitchLeecher.Core.Models
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
                 DownloadFileName = DownloadFileName,
+                DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted
             };
+
+            clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);
 
             return clone;
         }

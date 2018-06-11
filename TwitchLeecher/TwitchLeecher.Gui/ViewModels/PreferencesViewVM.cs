@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
@@ -19,6 +20,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private Preferences _currentPreferences;
 
+        private ICommand _addFavouriteChannelCommand;
+        private ICommand _removeFavouriteChannelCommand;
         private ICommand _chooseDownloadTempFolderCommand;
         private ICommand _chooseDownloadFolderCommand;
         private ICommand _saveCommand;
@@ -62,6 +65,32 @@ namespace TwitchLeecher.Gui.ViewModels
             private set
             {
                 SetProperty(ref _currentPreferences, value);
+            }
+        }
+
+        public ICommand AddFavouriteChannelCommand
+        {
+            get
+            {
+                if (_addFavouriteChannelCommand == null)
+                {
+                    _addFavouriteChannelCommand = new DelegateCommand(AddFavouriteChannel);
+                }
+
+                return _addFavouriteChannelCommand;
+            }
+        }
+
+        public ICommand RemoveFavouriteChannelCommand
+        {
+            get
+            {
+                if (_removeFavouriteChannelCommand == null)
+                {
+                    _removeFavouriteChannelCommand = new DelegateCommand(RemoveFavouriteChannel);
+                }
+
+                return _removeFavouriteChannelCommand;
             }
         }
 
@@ -133,6 +162,61 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Properties
 
         #region Methods
+
+        private void AddFavouriteChannel()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    string currentChannel = CurrentPreferences.SearchChannelName;
+
+                    if (!string.IsNullOrWhiteSpace(currentChannel))
+                    {
+                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel => channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
+
+                        if (!string.IsNullOrWhiteSpace(existingEntry))
+                        {
+                            CurrentPreferences.SearchChannelName = existingEntry;
+                        }
+                        else
+                        {
+                            CurrentPreferences.SearchFavouriteChannels.Add(currentChannel);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void RemoveFavouriteChannel()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    string currentChannel = CurrentPreferences.SearchChannelName;
+
+                    if (!string.IsNullOrWhiteSpace(currentChannel))
+                    {
+                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel => channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
+
+                        if (!string.IsNullOrWhiteSpace(existingEntry))
+                        {
+                            CurrentPreferences.SearchFavouriteChannels.Remove(existingEntry);
+                            CurrentPreferences.SearchChannelName = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
 
         private void ChooseDownloadTempFolder()
         {

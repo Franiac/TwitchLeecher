@@ -59,12 +59,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <TextBox Grid.Column="2" Grid.Row="0" Name="txtChannel" Text="{Binding SearchParams.Channel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" VerticalContentAlignment="Center">
-                        <TextBox.InputBindings>
+                    <ComboBox Grid.Column="2" Grid.Row="0" Name="cmbChannel" IsEditable="True" Text="{Binding SearchParams.Channel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" ItemsSource="{Binding FavChannels, Mode=OneWay}" VerticalContentAlignment="Center">
+                        <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
                             <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
-                        </TextBox.InputBindings>
-                    </TextBox>
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+
                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Right" />
                     <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
                         <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" VerticalAlignment="Center" HorizontalAlignment="Left" />

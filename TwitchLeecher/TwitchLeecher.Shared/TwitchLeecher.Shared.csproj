@@ -66,6 +66,7 @@
     <Compile Include="Extensions\NameValueCollection.cs" />
     <Compile Include="Extensions\Xml.cs" />
     <Compile Include="Helpers\FixedSizeQueue.cs" />
+    <Compile Include="Helpers\RangeObservableCollection.cs" />
     <Compile Include="Native\NativeDelegates.cs" />
     <Compile Include="Native\NativeFlags.cs" />
     <Compile Include="Native\NativeStructs.cs" />

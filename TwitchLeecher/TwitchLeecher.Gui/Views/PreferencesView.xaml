@@ -109,15 +109,30 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Channel Name:" VerticalAlignment="Center" />
-                <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CurrentPreferences.SearchChannelName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Favourite Channels:" VerticalAlignment="Center" />
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" IsEditable="True" Text="{Binding CurrentPreferences.SearchChannelName, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Style="{StaticResource TlMiniButton}" Command="{Binding AddFavouriteChannelCommand}" Height="Auto">
+                        <fa:ImageAwesome Icon="Plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                    <Button Grid.Column="4" Style="{StaticResource TlMiniButton}" Command="{Binding RemoveFavouriteChannelCommand}" Height="Auto">
+                        <fa:ImageAwesome Icon="Minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                </Grid>
                 <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Channel Name" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Favourite Channels" />
                                 <TextBlock TextAlignment="Justify">
-                                        Specify a default channel name to use in the search dialog.
+                                        Specify a list of your favourite channels for the search dialog. The one selected here will be pre-selected in the search dialog. Use the +/- buttons in order to add/remove channels to/from the dropdown list.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
@@ -149,13 +164,6 @@
                     <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <TextBlock Text="days" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
-                <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" HorizontalAlignment="Left" />
-                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                    <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
-                </StackPanel>
-                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-
                 <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}" VerticalAlignment="Center">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
@@ -169,8 +177,16 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
+                <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" HorizontalAlignment="Left" />
+                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}" Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                </StackPanel>
+
+                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="LoadLimit" Content="Only today" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
                 <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.SearchOnStartup}" Content="Search on Start" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -193,6 +209,8 @@
 
             <Grid Grid.Row="5" Margin="15,0,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
@@ -352,14 +370,28 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}" Content="Create subfolders for favourite channels" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip  Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Create subfolders for favourite channels" />
+                                <TextBlock TextAlignment="Justify">
+                                    If enabled, VODs of your favorite channels will be downloaded to their own subfolders within the download folder.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Remove Successful Downloads" />
                                 <TextBlock TextAlignment="Justify">
-                                        If enabled, successfully downloaded VODs get removed from the download queue.
+                                    If enabled, successfully downloaded VODs get removed from the download queue.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>

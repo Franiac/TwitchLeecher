@@ -20,8 +20,7 @@ namespace TwitchLeecher.Gui.Views
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
                 {
-                    txtChannel.Focus();
-                    txtChannel.SelectAll();
+                    cmbChannel.Focus();
                 }));
             }
         }

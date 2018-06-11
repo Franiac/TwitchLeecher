@@ -6,6 +6,8 @@ namespace TwitchLeecher.Services.Interfaces
     {
         Preferences CurrentPreferences { get; }
 
+        bool IsChannelInFavourites(string channel);
+
         void Save(Preferences preferences);
 
         Preferences CreateDefault();

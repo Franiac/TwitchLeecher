@@ -6,6 +6,7 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Helpers;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -24,6 +25,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly ISearchService _searchService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
+        private readonly IPreferencesService _preferencesService;
 
         private readonly object _commandLockObject;
 
@@ -35,12 +37,14 @@ namespace TwitchLeecher.Gui.ViewModels
             ITwitchService twitchService,
             ISearchService searchService,
             IDialogService dialogService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IPreferencesService preferencesService)
         {
             _twitchService = twitchService;
             _searchService = searchService;
             _dialogService = dialogService;
             _navigationService = navigationService;
+            _preferencesService = preferencesService;
 
             _commandLockObject = new object();
         }
@@ -63,6 +67,14 @@ namespace TwitchLeecher.Gui.ViewModels
             set
             {
                 SetProperty(ref _searchParams, value, nameof(SearchParams));
+            }
+        }
+
+        public RangeObservableCollection<string> FavChannels
+        {
+            get
+            {
+                return _preferencesService.CurrentPreferences.SearchFavouriteChannels;
             }
         }
 
