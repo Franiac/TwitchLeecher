@@ -8,8 +8,6 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private string _headerText;
-        private string _descText;
         private string _statusText;
 
         private int progressValue;
@@ -23,8 +21,8 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             if (_bootstrapper.IsUpgrade)
             {
-                _headerText = "Upgrading";
-                _descText = "Please wait while the Setup Wizard upgrades " + _bootstrapper.ProductName + " to version " + _bootstrapper.ProductVersionTrimmed.ToString();
+                HeaderText = "Upgrading";
+                DescText = "Please wait while the Setup Wizard upgrades " + _bootstrapper.ProductName + " to version " + _bootstrapper.ProductVersionTrimmed.ToString();
                 _statusText = "Upgrading...";
             }
             else
@@ -32,14 +30,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 switch (_bootstrapper.LaunchAction)
                 {
                     case LaunchAction.Install:
-                        _headerText = "Installing " + ProductNameVersionDisplay;
-                        _descText = "Please wait while the Setup Wizard installs " + ProductNameVersionDisplay;
+                        HeaderText = "Installing " + ProductNameVersionDisplay;
+                        DescText = "Please wait while the Setup Wizard installs " + ProductNameVersionDisplay;
                         _statusText = "Installing...";
                         break;
 
                     case LaunchAction.Uninstall:
-                        _headerText = "Uninstalling " + ProductNameVersionDisplay;
-                        _descText = "Please wait while the Setup Wizard uninstalls " + ProductNameVersionDisplay;
+                        HeaderText = "Uninstalling " + ProductNameVersionDisplay;
+                        DescText = "Please wait while the Setup Wizard uninstalls " + ProductNameVersionDisplay;
                         _statusText = "Uninstalling...";
                         break;
 
@@ -71,21 +69,9 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             }
         }
 
-        public string HeaderText
-        {
-            get
-            {
-                return _headerText;
-            }
-        }
+        public string HeaderText { get; }
 
-        public string DescText
-        {
-            get
-            {
-                return _descText;
-            }
-        }
+        public string DescText { get; }
 
         public string StatusText
         {

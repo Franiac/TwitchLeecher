@@ -9,8 +9,6 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private IList<string> _files;
-
         private ICommand _retryCommand;
         private ICommand _cancelCommand;
 
@@ -28,20 +26,14 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 throw new ArgumentNullException("files");
             }
 
-            _files = files;
+            Files = files;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public IList<string> Files
-        {
-            get
-            {
-                return _files;
-            }
-        }
+        public IList<string> Files { get; }
 
         public ICommand RetryCommand
         {

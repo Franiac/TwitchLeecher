@@ -9,8 +9,8 @@ namespace TwitchLeecher.Setup.Gui.Services
     {
         #region Fields
 
-        private Dispatcher _dispatcher;
-        private SetupApplication _bootstrapper;
+        private readonly Dispatcher _dispatcher;
+        private readonly SetupApplication _bootstrapper;
 
         private bool _busy;
 

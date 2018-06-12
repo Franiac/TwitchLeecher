@@ -7,13 +7,13 @@ namespace WixAssemblyInfoExtension
 {
     public class AssemlbyInfoPreprocessor : PreprocessorExtension
     {
-        private string[] prefixes = { "AssemblyInfo" };
+        private readonly string[] _prefixes = { "AssemblyInfo" };
 
         public override string[] Prefixes
         {
             get
             {
-                return this.prefixes;
+                return _prefixes;
             }
         }
 

@@ -11,13 +11,11 @@ namespace TwitchLeecher.Setup.Gui.Services
 {
     internal class UacService : IUacService
     {
+
         #region Fields
 
-        private bool _isUacEnabled;
-        private bool _isUserAdmin;
-
         private BitmapImage _uacIcon;
-        private object _uacIconLock;
+        private readonly object _uacIconLock;
 
         #endregion Fields
 
@@ -26,29 +24,17 @@ namespace TwitchLeecher.Setup.Gui.Services
         public UacService()
         {
             _uacIconLock = new object();
-            _isUacEnabled = GetIsUacEnabled();
-            _isUserAdmin = GetIsUserAdmin();
+            IsUacEnabled = GetIsUacEnabled();
+            IsUserAdmin = GetIsUserAdmin();
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public bool IsUacEnabled
-        {
-            get
-            {
-                return _isUacEnabled;
-            }
-        }
+        public bool IsUacEnabled { get; }
 
-        public bool IsUserAdmin
-        {
-            get
-            {
-                return _isUserAdmin;
-            }
-        }
+        public bool IsUserAdmin { get; }
 
         public BitmapImage UacIcon
         {
