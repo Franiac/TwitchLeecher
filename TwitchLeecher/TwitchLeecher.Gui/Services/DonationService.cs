@@ -8,7 +8,7 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Constants
 
-        private const string donationLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYGSLTBJFMAVE";
+        private const string donationLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R43T6CB8SG2HL";
 
         #endregion Constants
 
