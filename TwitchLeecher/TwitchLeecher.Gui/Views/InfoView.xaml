@@ -40,12 +40,12 @@
             </StackPanel>
 
             <TextBlock Grid.Row="1" Text="Developer" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="2" Text="Dominik &quot;Fake Smile Revolution&quot; Rebitzer" Margin="15,5,0,0" />
+            <TextBlock Grid.Row="2" Text="Dominik &quot;Franiac&quot; Rebitzer" Margin="15,5,0,0" />
 
             <TextBlock Grid.Row="3" Text="Contact" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="4" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="mailto:contact@fakesmilerevolution.com">
-                contact@fakesmilerevolution.com
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="mailto:contact@franiac.com">
+                contact@franiac.com
             </Hyperlink>
             </TextBlock>
 
