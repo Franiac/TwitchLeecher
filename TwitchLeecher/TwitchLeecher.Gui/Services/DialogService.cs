@@ -104,6 +104,25 @@ namespace TwitchLeecher.Gui.Services
             }
         }
 
+        public void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder, Action<bool, string> dialogCompleteCallback)
+        {
+            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
+            {
+                cofd.Filters.Add(filter);
+
+                if (!string.IsNullOrWhiteSpace(folder))
+                {
+                    cofd.InitialDirectory = folder;
+                }
+
+                CommonFileDialogResult result = cofd.ShowDialog();
+
+                bool canceled = result != CommonFileDialogResult.Ok;
+
+                dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
+            }
+        }
+
         public void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback)
         {
             SaveFileDialog sfd = new SaveFileDialog()

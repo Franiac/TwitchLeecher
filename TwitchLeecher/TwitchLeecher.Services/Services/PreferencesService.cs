@@ -26,6 +26,8 @@ namespace TwitchLeecher.Services.Services
         private const string APP_EL = "Application";
         private const string APP_CHECKFORUPDATES_EL = "CheckForUpdates";
         private const string APP_SHOWDONATIONBUTTON_EL = "ShowDonationButton";
+        private const string APP_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
+        private const string APP_EXTERNALPLAYER_EL = "ExternalPlayer";
 
         private const string SEARCH_EL = "Search";
         private const string SEARCH_FAVCHANNELS_EL = "FavChannels";
@@ -138,6 +140,14 @@ namespace TwitchLeecher.Services.Services
                 XElement appShowDonationButtonEl = new XElement(APP_SHOWDONATIONBUTTON_EL);
                 appShowDonationButtonEl.SetValue(preferences.AppShowDonationButton);
                 appEl.Add(appShowDonationButtonEl);
+
+                XElement useExternalPlayerEl = new XElement(APP_USEEXTERNALPLAYER_EL);
+                useExternalPlayerEl.SetValue(preferences.UseExternalPlayer);
+                appEl.Add(useExternalPlayerEl);
+
+                XElement externalPlayerEl = new XElement(APP_EXTERNALPLAYER_EL);
+                externalPlayerEl.SetValue(preferences.ExternalPlayer);
+                appEl.Add(externalPlayerEl);
 
                 // Search
                 RangeObservableCollection<string> favChannels = preferences.SearchFavouriteChannels;
@@ -272,6 +282,34 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.AppShowDonationButton = appShowDonationButtonEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement useExternalPlayerEl = appEl.Element(APP_USEEXTERNALPLAYER_EL);
+
+                            if (useExternalPlayerEl != null)
+                            {
+                                try
+                                {
+                                    preferences.UseExternalPlayer = useExternalPlayerEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement externalPlayerEl = appEl.Element(APP_EXTERNALPLAYER_EL);
+
+                            if (externalPlayerEl != null)
+                            {
+                                try
+                                {
+                                    preferences.ExternalPlayer = externalPlayerEl.GetValueAsString();
                                 }
                                 catch
                                 {

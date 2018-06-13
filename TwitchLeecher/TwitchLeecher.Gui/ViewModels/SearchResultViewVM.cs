@@ -128,7 +128,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null && video.Url != null && video.Url.IsAbsoluteUri)
                         {
-                            Process.Start(video.Url.ToString());
+                            StartVideoStream(video);
                         }
                     }
                 }
@@ -136,6 +136,19 @@ namespace TwitchLeecher.Gui.ViewModels
             catch (Exception ex)
             {
                 _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void StartVideoStream(TwitchVideo video)
+        {
+            var preferences = _preferencesService.CurrentPreferences;
+            if (preferences.UseExternalPlayer)
+            {
+                Process.Start(preferences.ExternalPlayer, video.Url.ToString());
+            }
+            else
+            {
+                Process.Start(video.Url.ToString());
             }
         }
 

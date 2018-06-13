@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -27,6 +28,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _saveCommand;
         private ICommand _undoCommand;
         private ICommand _defaultsCommand;
+        private ICommand _chooseExternalPlayerCommand;
 
         private readonly object _commandLockObject;
 
@@ -91,6 +93,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _removeFavouriteChannelCommand;
+            }
+        }
+
+        public ICommand ChooseExternalPlayerCommand
+        {
+            get
+            {
+                if (_chooseExternalPlayerCommand == null)
+                {
+                    _chooseExternalPlayerCommand = new DelegateCommand(ChooseExternalPlayer);
+                }
+
+                return _chooseExternalPlayerCommand;
             }
         }
 
@@ -270,6 +285,37 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (!cancelled)
                 {
                     CurrentPreferences.DownloadFolder = folder;
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ChooseExternalPlayer()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    var filter = new CommonFileDialogFilter("Executables", "*.exe");
+                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.ExternalPlayer, ChooseExternalPlayerCallback);
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ChooseExternalPlayerCallback(bool cancelled, string file)
+        {
+            try
+            {
+                if (!cancelled)
+                {
+                    CurrentPreferences.ExternalPlayer = file;
                 }
             }
             catch (Exception ex)

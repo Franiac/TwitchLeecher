@@ -15,6 +15,7 @@
                 <ResourceDictionary>
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
                     <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
+                    <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -40,6 +41,10 @@
 
             <Grid Grid.Row="1" Margin="15,0,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
@@ -78,6 +83,50 @@
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
+
+                <CheckBox Grid.Row="4" Grid.Column="0" Content="Use external video player" IsChecked="{Binding CurrentPreferences.UseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="4" Grid.Column="2" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Use external video player" />
+                                <TextBlock TextAlignment="Justify">
+                                        Use  an external video player (e.g. VLC) to stream videos instead of opening the twitch link in the browser
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <Grid Grid.Row="6" Grid.Column="0" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Video Player:" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CurrentPreferences.ExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
+                    
+                </Grid>
+
+                <fa:ImageAwesome Grid.Row="6" Grid.Column="2" Style="{StaticResource Img_Help}" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
+                                <TextBlock TextAlignment="Justify">
+                                        The external video player to use
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
             </Grid>
 
             <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">

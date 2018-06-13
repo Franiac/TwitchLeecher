@@ -40,6 +40,11 @@ namespace TwitchLeecher.Core.Models
 
         private bool _downloadRemoveCompleted;
 
+        private bool _useExternalPlayer;
+
+        private string _externalPlayer;
+
+
         #endregion Fields
 
         #region Properties
@@ -225,6 +230,31 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public string ExternalPlayer
+        {
+            get
+            {
+                return _externalPlayer;
+            }
+
+            set
+            {
+                SetProperty(ref _externalPlayer, value);
+            }
+        }
+
+        public bool UseExternalPlayer
+        {
+            get
+            {
+                return _useExternalPlayer;
+            }
+            set
+            {
+                SetProperty(ref _useExternalPlayer, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -308,6 +338,23 @@ namespace TwitchLeecher.Core.Models
                     AddError(currentProperty, "Filename contains invalid characters!");
                 }
             }
+
+            currentProperty = nameof(ExternalPlayer);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (UseExternalPlayer)
+                {
+                    if (string.IsNullOrWhiteSpace(_externalPlayer))
+                    {
+                        AddError(currentProperty, "Please specify a external player!");
+                    }
+                    else if (!_externalPlayer.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddError(currentProperty, "Filename must be an executable!");
+                    }
+                }
+            }
         }
 
         public Preferences Clone()
@@ -317,6 +364,8 @@ namespace TwitchLeecher.Core.Models
                 Version = Version,
                 AppCheckForUpdates = AppCheckForUpdates,
                 AppShowDonationButton = AppShowDonationButton,
+                UseExternalPlayer = UseExternalPlayer,
+                ExternalPlayer = ExternalPlayer,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
                 SearchLoadLimitType = SearchLoadLimitType,
