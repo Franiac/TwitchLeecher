@@ -142,11 +142,11 @@ namespace TwitchLeecher.Services.Services
                 appEl.Add(appShowDonationButtonEl);
 
                 XElement useExternalPlayerEl = new XElement(APP_USEEXTERNALPLAYER_EL);
-                useExternalPlayerEl.SetValue(preferences.UseExternalPlayer);
+                useExternalPlayerEl.SetValue(preferences.AppUseExternalPlayer);
                 appEl.Add(useExternalPlayerEl);
 
                 XElement externalPlayerEl = new XElement(APP_EXTERNALPLAYER_EL);
-                externalPlayerEl.SetValue(preferences.ExternalPlayer);
+                externalPlayerEl.SetValue(preferences.AppExternalPlayer);
                 appEl.Add(externalPlayerEl);
 
                 // Search
@@ -295,7 +295,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.UseExternalPlayer = useExternalPlayerEl.GetValueAsBool();
+                                    preferences.AppUseExternalPlayer = useExternalPlayerEl.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -309,7 +309,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.ExternalPlayer = externalPlayerEl.GetValueAsString();
+                                    preferences.AppExternalPlayer = externalPlayerEl.GetValueAsString();
                                 }
                                 catch
                                 {

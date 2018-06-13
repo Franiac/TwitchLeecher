@@ -25,10 +25,10 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _removeFavouriteChannelCommand;
         private ICommand _chooseDownloadTempFolderCommand;
         private ICommand _chooseDownloadFolderCommand;
+        private ICommand _chooseExternalPlayerCommand;
         private ICommand _saveCommand;
         private ICommand _undoCommand;
         private ICommand _defaultsCommand;
-        private ICommand _chooseExternalPlayerCommand;
 
         private readonly object _commandLockObject;
 
@@ -94,20 +94,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 return _removeFavouriteChannelCommand;
             }
-        }
-
-        public ICommand ChooseExternalPlayerCommand
-        {
-            get
-            {
-                if (_chooseExternalPlayerCommand == null)
-                {
-                    _chooseExternalPlayerCommand = new DelegateCommand(ChooseExternalPlayer);
-                }
-
-                return _chooseExternalPlayerCommand;
-            }
-        }
+        }        
 
         public ICommand ChooseDownloadTempFolderCommand
         {
@@ -132,6 +119,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _chooseDownloadFolderCommand;
+            }
+        }
+
+        public ICommand ChooseExternalPlayerCommand
+        {
+            get
+            {
+                if (_chooseExternalPlayerCommand == null)
+                {
+                    _chooseExternalPlayerCommand = new DelegateCommand(ChooseExternalPlayer);
+                }
+
+                return _chooseExternalPlayerCommand;
             }
         }
 
@@ -300,7 +300,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     var filter = new CommonFileDialogFilter("Executables", "*.exe");
-                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.ExternalPlayer, ChooseExternalPlayerCallback);
+                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.AppExternalPlayer, ChooseExternalPlayerCallback);
                 }
             }
             catch (Exception ex)
@@ -315,7 +315,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    CurrentPreferences.ExternalPlayer = file;
+                    CurrentPreferences.AppExternalPlayer = file;
                 }
             }
             catch (Exception ex)

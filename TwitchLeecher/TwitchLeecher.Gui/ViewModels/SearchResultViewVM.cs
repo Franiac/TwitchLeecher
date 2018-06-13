@@ -141,14 +141,22 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void StartVideoStream(TwitchVideo video)
         {
-            var preferences = _preferencesService.CurrentPreferences;
-            if (preferences.UseExternalPlayer)
+            try
             {
-                Process.Start(preferences.ExternalPlayer, video.Url.ToString());
+                Preferences currentPrefs = _preferencesService.CurrentPreferences;
+
+                if (currentPrefs.AppUseExternalPlayer)
+                {
+                    Process.Start(currentPrefs.AppExternalPlayer, video.Url.ToString());
+                }
+                else
+                {
+                    Process.Start(video.Url.ToString());
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Process.Start(video.Url.ToString());
+                _dialogService.ShowAndLogException(ex);
             }
         }
 

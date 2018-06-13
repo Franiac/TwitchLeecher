@@ -30,6 +30,8 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -44,13 +46,9 @@
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition SharedSizeGroup="r1" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition SharedSizeGroup="r1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="15" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -82,49 +80,7 @@
                             </StackPanel>
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
-
-                <CheckBox Grid.Row="4" Grid.Column="0" Content="Use external video player" IsChecked="{Binding CurrentPreferences.UseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="4" Grid.Column="2" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
-                        <ToolTip Width="350">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Use external video player" />
-                                <TextBlock TextAlignment="Justify">
-                                        Use  an external video player (e.g. VLC) to stream videos instead of opening the twitch link in the browser
-                                </TextBlock>
-                            </StackPanel>
-                        </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
-
-                <Grid Grid.Row="6" Grid.Column="0" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Video Player:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CurrentPreferences.ExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                    <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
-                </Grid>
-
-                <fa:ImageAwesome Grid.Row="6" Grid.Column="2" Style="{StaticResource Img_Help}" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
-                    <fa:ImageAwesome.ToolTip>
-                        <ToolTip Width="350">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
-                                <TextBlock TextAlignment="Justify">
-                                        The external video player to use
-                                </TextBlock>
-                            </StackPanel>
-                        </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                </fa:ImageAwesome>                
             </Grid>
 
             <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -156,7 +112,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Favourite Channels:" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Favourite Channels" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Grid Grid.Row="0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -186,7 +142,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <TextBlock Grid.Row="2" Grid.Column="0"  Text="Video Type:" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="0"  Text="Video Type" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <StackPanel Grid.Row="2" Grid.Column="2"  Orientation="Horizontal">
                     <RadioButton GroupName="VideoType" Content="Broadcast" IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <RadioButton GroupName="VideoType" Content="Highlight" IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
@@ -205,7 +161,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <TextBlock Grid.Row="4" Grid.Column="0"  Text="Load Limit:" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="4" Grid.Column="0"  Text="Load Limit" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton GroupName="LoadLimit" Content="Last" IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" HorizontalAlignment="Left" />
                     <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60" IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}" Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" />
@@ -274,7 +230,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Temporary Folder:" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Temporary Folder" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Grid Grid.Column="2" Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -297,7 +253,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder:" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Grid Grid.Column="2" Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -320,7 +276,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Filename Template:" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Filename Template" VerticalAlignment="Center" />
                 <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding CurrentPreferences.DownloadFileName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
@@ -445,6 +401,67 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
             </Grid>
+
+            <Border Grid.Row="6" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+                </Border.BorderBrush>
+                <TextBlock  Text="Miscellaneous" FontSize="21.333" FontWeight="Bold" />
+            </Border>
+
+            <Grid Grid.Row="7" Margin="15,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player" IsChecked="{Binding CurrentPreferences.AppUseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Use external video player" />
+                                <TextBlock TextAlignment="Justify">
+                                        Use an external video player (e.g. VLC) to watch the videos instead of opening them in the browser
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Player" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Grid Grid.Row="2" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding CurrentPreferences.AppExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
+                </Grid>
+                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
+                                <TextBlock TextAlignment="Justify">
+                                        The external video player to use (preferably VLC because it works great with Twitch streams)
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+            </Grid>
         </Grid>
+        
     </ScrollViewer>
 </UserControl>

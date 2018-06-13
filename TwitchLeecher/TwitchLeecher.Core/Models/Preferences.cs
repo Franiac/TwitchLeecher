@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Shared.Helpers;
 using TwitchLeecher.Shared.IO;
@@ -15,6 +16,10 @@ namespace TwitchLeecher.Core.Models
         private bool _appCheckForUpdates;
 
         private bool _appShowDonationButton;
+
+        private bool _appUseExternalPlayer;
+
+        private string _appExternalPlayer;
 
         private RangeObservableCollection<string> _searchFavouriteChannels;
 
@@ -39,10 +44,6 @@ namespace TwitchLeecher.Core.Models
         private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
-
-        private bool _useExternalPlayer;
-
-        private string _externalPlayer;
 
         #endregion Fields
 
@@ -81,6 +82,31 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _appShowDonationButton, value);
+            }
+        }
+
+        public bool AppUseExternalPlayer
+        {
+            get
+            {
+                return _appUseExternalPlayer;
+            }
+            set
+            {
+                SetProperty(ref _appUseExternalPlayer, value);
+            }
+        }
+
+        public string AppExternalPlayer
+        {
+            get
+            {
+                return _appExternalPlayer;
+            }
+
+            set
+            {
+                SetProperty(ref _appExternalPlayer, value);
             }
         }
 
@@ -229,31 +255,6 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string ExternalPlayer
-        {
-            get
-            {
-                return _externalPlayer;
-            }
-
-            set
-            {
-                SetProperty(ref _externalPlayer, value);
-            }
-        }
-
-        public bool UseExternalPlayer
-        {
-            get
-            {
-                return _useExternalPlayer;
-            }
-            set
-            {
-                SetProperty(ref _useExternalPlayer, value);
-            }
-        }
-
         #endregion Properties
 
         #region Methods
@@ -262,7 +263,28 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(SearchChannelName);
+            string currentProperty = nameof(AppExternalPlayer);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (AppUseExternalPlayer)
+                {
+                    if (string.IsNullOrWhiteSpace(_appExternalPlayer))
+                    {
+                        AddError(currentProperty, "Please specify an external player!");
+                    }
+                    else if (!_appExternalPlayer.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddError(currentProperty, "Filename must be an executable!");
+                    }
+                    else if (!File.Exists(_appExternalPlayer))
+                    {
+                        AddError(currentProperty, "The specified file does not exist!");
+                    }
+                }
+            }
+
+            currentProperty = nameof(SearchChannelName);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
@@ -336,24 +358,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Filename contains invalid characters!");
                 }
-            }
-
-            currentProperty = nameof(ExternalPlayer);
-
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
-            {
-                if (UseExternalPlayer)
-                {
-                    if (string.IsNullOrWhiteSpace(_externalPlayer))
-                    {
-                        AddError(currentProperty, "Please specify a external player!");
-                    }
-                    else if (!_externalPlayer.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        AddError(currentProperty, "Filename must be an executable!");
-                    }
-                }
-            }
+            }            
         }
 
         public Preferences Clone()
@@ -363,8 +368,8 @@ namespace TwitchLeecher.Core.Models
                 Version = Version,
                 AppCheckForUpdates = AppCheckForUpdates,
                 AppShowDonationButton = AppShowDonationButton,
-                UseExternalPlayer = UseExternalPlayer,
-                ExternalPlayer = ExternalPlayer,
+                AppUseExternalPlayer = AppUseExternalPlayer,
+                AppExternalPlayer = AppExternalPlayer,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
                 SearchLoadLimitType = SearchLoadLimitType,
