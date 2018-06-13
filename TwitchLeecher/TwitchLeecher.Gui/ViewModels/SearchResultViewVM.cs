@@ -128,9 +128,30 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null && video.Url != null && video.Url.IsAbsoluteUri)
                         {
-                            Process.Start(video.Url.ToString());
+                            StartVideoStream(video);
                         }
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void StartVideoStream(TwitchVideo video)
+        {
+            try
+            {
+                Preferences currentPrefs = _preferencesService.CurrentPreferences;
+
+                if (currentPrefs.MiscUseExternalPlayer)
+                {
+                    Process.Start(currentPrefs.MiscExternalPlayer, video.Url.ToString());
+                }
+                else
+                {
+                    Process.Start(video.Url.ToString());
                 }
             }
             catch (Exception ex)

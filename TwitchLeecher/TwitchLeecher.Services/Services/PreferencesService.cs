@@ -43,6 +43,10 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
 
+        private const string MISC_EL = "Misc";
+        private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
+        private const string MISC_EXTERNALPLAYER_EL = "ExternalPlayer";
+
         #endregion Constants
 
         #region Fields
@@ -130,6 +134,9 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadEl = new XElement(DOWNLOAD_EL);
                 preferencesEl.Add(downloadEl);
 
+                XElement miscEl = new XElement(MISC_EL);
+                preferencesEl.Add(miscEl);
+
                 // Application
                 XElement appCheckForUpdatesEl = new XElement(APP_CHECKFORUPDATES_EL);
                 appCheckForUpdatesEl.SetValue(preferences.AppCheckForUpdates);
@@ -205,6 +212,15 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
                 downloadEl.Add(downloadRemoveCompletedEl);
+
+                // Miscellanious
+                XElement miscUseExternalPlayerEl = new XElement(MISC_USEEXTERNALPLAYER_EL);
+                miscUseExternalPlayerEl.SetValue(preferences.MiscUseExternalPlayer);
+                miscEl.Add(miscUseExternalPlayerEl);
+
+                XElement miscExternalPlayerEl = new XElement(MISC_EXTERNALPLAYER_EL);
+                miscExternalPlayerEl.SetValue(preferences.MiscExternalPlayer);
+                miscEl.Add(miscExternalPlayerEl);
 
                 string appDataFolder = _folderService.GetAppDataFolder();
 
@@ -467,6 +483,39 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
                         }
+
+                        XElement miscEl = preferencesEl.Element(MISC_EL);
+
+                        if (miscEl != null)
+                        {
+                            XElement miscUseExternalPlayerEl = miscEl.Element(MISC_USEEXTERNALPLAYER_EL);
+
+                            if (miscUseExternalPlayerEl != null)
+                            {
+                                try
+                                {
+                                    preferences.MiscUseExternalPlayer = miscUseExternalPlayerEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement miscExternalPlayerEl = miscEl.Element(MISC_EXTERNALPLAYER_EL);
+
+                            if (miscExternalPlayerEl != null)
+                            {
+                                try
+                                {
+                                    preferences.MiscExternalPlayer = miscExternalPlayerEl.GetValueAsString();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -490,7 +539,9 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadRemoveCompleted = false
+                DownloadRemoveCompleted = false,
+                MiscUseExternalPlayer = false,
+                MiscExternalPlayer = null
             };
 
             return preferences;

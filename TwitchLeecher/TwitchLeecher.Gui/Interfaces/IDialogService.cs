@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Windows;
 
 namespace TwitchLeecher.Gui.Interfaces
@@ -16,6 +17,8 @@ namespace TwitchLeecher.Gui.Interfaces
         void ShowAndLogException(Exception ex);
 
         void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback);
+
+        void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder, Action<bool, string> dialogCompleteCallback);
 
         void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback);
 

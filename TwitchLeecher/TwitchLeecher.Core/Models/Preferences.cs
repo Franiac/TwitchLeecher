@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Shared.Helpers;
 using TwitchLeecher.Shared.IO;
@@ -14,7 +15,7 @@ namespace TwitchLeecher.Core.Models
 
         private bool _appCheckForUpdates;
 
-        private bool _appShowDonationButton;
+        private bool _appShowDonationButton;        
 
         private RangeObservableCollection<string> _searchFavouriteChannels;
 
@@ -39,6 +40,10 @@ namespace TwitchLeecher.Core.Models
         private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
+
+        private bool _miscUseExternalPlayer;
+
+        private string _miscExternalPlayer;
 
         #endregion Fields
 
@@ -77,6 +82,31 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _appShowDonationButton, value);
+            }
+        }
+
+        public bool MiscUseExternalPlayer
+        {
+            get
+            {
+                return _miscUseExternalPlayer;
+            }
+            set
+            {
+                SetProperty(ref _miscUseExternalPlayer, value);
+            }
+        }
+
+        public string MiscExternalPlayer
+        {
+            get
+            {
+                return _miscExternalPlayer;
+            }
+
+            set
+            {
+                SetProperty(ref _miscExternalPlayer, value);
             }
         }
 
@@ -233,7 +263,28 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(SearchChannelName);
+            string currentProperty = nameof(MiscExternalPlayer);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (MiscUseExternalPlayer)
+                {
+                    if (string.IsNullOrWhiteSpace(_miscExternalPlayer))
+                    {
+                        AddError(currentProperty, "Please specify an external player!");
+                    }
+                    else if (!_miscExternalPlayer.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddError(currentProperty, "Filename must be an executable!");
+                    }
+                    else if (!File.Exists(_miscExternalPlayer))
+                    {
+                        AddError(currentProperty, "The specified file does not exist!");
+                    }
+                }
+            }
+
+            currentProperty = nameof(SearchChannelName);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
@@ -299,7 +350,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Filename contains invalid characters!");
                 }
-            }
+            }            
         }
 
         public Preferences Clone()
@@ -309,6 +360,8 @@ namespace TwitchLeecher.Core.Models
                 Version = Version,
                 AppCheckForUpdates = AppCheckForUpdates,
                 AppShowDonationButton = AppShowDonationButton,
+                MiscUseExternalPlayer = MiscUseExternalPlayer,
+                MiscExternalPlayer = MiscExternalPlayer,
                 SearchChannelName = SearchChannelName,
                 SearchVideoType = SearchVideoType,
                 SearchLoadLimitType = SearchLoadLimitType,
