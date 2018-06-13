@@ -26,6 +26,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _chooseDownloadTempFolderCommand;
         private ICommand _chooseDownloadFolderCommand;
         private ICommand _chooseExternalPlayerCommand;
+        private ICommand _clearExternalPlayerCommand;
         private ICommand _saveCommand;
         private ICommand _undoCommand;
         private ICommand _defaultsCommand;
@@ -94,7 +95,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 return _removeFavouriteChannelCommand;
             }
-        }        
+        }
 
         public ICommand ChooseDownloadTempFolderCommand
         {
@@ -132,6 +133,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _chooseExternalPlayerCommand;
+            }
+        }
+
+        public ICommand ClearExternalPlayerCommand
+        {
+            get
+            {
+                if (_clearExternalPlayerCommand == null)
+                {
+                    _clearExternalPlayerCommand = new DelegateCommand(ClearExternalPlayer);
+                }
+
+                return _clearExternalPlayerCommand;
             }
         }
 
@@ -301,6 +315,21 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     var filter = new CommonFileDialogFilter("Executables", "*.exe");
                     _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.MiscExternalPlayer, ChooseExternalPlayerCallback);
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ClearExternalPlayer()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    CurrentPreferences.MiscExternalPlayer = null;
                 }
             }
             catch (Exception ex)

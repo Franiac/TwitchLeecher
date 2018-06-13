@@ -443,10 +443,15 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding CurrentPreferences.MiscExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                     <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
+                    <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}" Command="{Binding ClearExternalPlayerCommand}" Height="Auto" ToolTip="Clear">
+                        <fa:ImageAwesome Icon="Eraser" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
                 </Grid>
                 <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>

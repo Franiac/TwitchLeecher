@@ -218,9 +218,12 @@ namespace TwitchLeecher.Services.Services
                 miscUseExternalPlayerEl.SetValue(preferences.MiscUseExternalPlayer);
                 miscEl.Add(miscUseExternalPlayerEl);
 
-                XElement miscExternalPlayerEl = new XElement(MISC_EXTERNALPLAYER_EL);
-                miscExternalPlayerEl.SetValue(preferences.MiscExternalPlayer);
-                miscEl.Add(miscExternalPlayerEl);
+                if (!string.IsNullOrWhiteSpace(preferences.MiscExternalPlayer))
+                {
+                    XElement miscExternalPlayerEl = new XElement(MISC_EXTERNALPLAYER_EL);
+                    miscExternalPlayerEl.SetValue(preferences.MiscExternalPlayer);
+                    miscEl.Add(miscExternalPlayerEl);
+                }
 
                 string appDataFolder = _folderService.GetAppDataFolder();
 
