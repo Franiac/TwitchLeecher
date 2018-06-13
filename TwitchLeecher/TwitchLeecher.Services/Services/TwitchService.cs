@@ -861,7 +861,7 @@ namespace TwitchLeecher.Services.Services
         {
             if (!Directory.Exists(tempDir))
             {
-                log(Environment.NewLine + Environment.NewLine + "Creating directory '" + tempDir + "'...");
+                log(Environment.NewLine + Environment.NewLine + "Creating temporary download directory '" + tempDir + "'...");
                 FileSystem.CreateDirectory(tempDir);
                 log(" done!");
             }
@@ -870,7 +870,7 @@ namespace TwitchLeecher.Services.Services
             {
                 throw new ApplicationException("Temporary download directory '" + tempDir + "' is not empty!");
             }
-        }
+        }        
 
         private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string vodId, VodAuthInfo vodAuthInfo)
         {

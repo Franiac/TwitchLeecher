@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.IO;
@@ -66,10 +65,6 @@ namespace TwitchLeecher.Services.Services
 
                     FileSystem.DeleteFile(part.LocalFile);
 
-                    Debug.WriteLine(i * 100 / partsCount);
-
-                    Thread.Sleep(500);
-
                     setProgress(i * 100 / partsCount);
                 }
             }
@@ -82,6 +77,8 @@ namespace TwitchLeecher.Services.Services
         {
             setStatus("Converting Video");
             setIsIndeterminate(true);
+
+            CheckOutputDirectory(log, Path.GetDirectoryName(outputFile));
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + FFMPEGExe + "' on '" + sourceFile + "'...");
 
@@ -150,6 +147,16 @@ namespace TwitchLeecher.Services.Services
                 {
                     throw new ApplicationException("An error occured while converting the video!");
                 }
+            }
+        }
+
+        private void CheckOutputDirectory(Action<string> log, string outputDir)
+        {
+            if (!Directory.Exists(outputDir))
+            {
+                log(Environment.NewLine + Environment.NewLine + "Creating output directory '" + outputDir + "'...");
+                FileSystem.CreateDirectory(outputDir);
+                log(" done!");
             }
         }
 

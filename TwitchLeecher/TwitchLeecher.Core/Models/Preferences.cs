@@ -271,10 +271,6 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Please specify a temporary download folder!");
                 }
-                else if (!FileSystem.HasWritePermission(_downloadTempFolder))
-                {
-                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
-                }
             }
 
             currentProperty = nameof(DownloadFolder);
@@ -284,10 +280,6 @@ namespace TwitchLeecher.Core.Models
                 if (string.IsNullOrWhiteSpace(_downloadFolder))
                 {
                     AddError(currentProperty, "Please specify a default download folder!");
-                }
-                else if (!FileSystem.HasWritePermission(_downloadFolder))
-                {
-                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
                 }
             }
 

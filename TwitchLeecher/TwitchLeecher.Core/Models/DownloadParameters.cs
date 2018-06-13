@@ -225,14 +225,6 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Please specify a folder!");
                 }
-                else if (!Directory.Exists(_folder))
-                {
-                    AddError(currentProperty, "The specified folder does not exist!");
-                }
-                else if (!FileSystem.HasWritePermission(_folder))
-                {
-                    AddError(currentProperty, "You do not have write permissions on the specified folder! Please choose a different one!");
-                }
             }
 
             currentProperty = nameof(Filename);
