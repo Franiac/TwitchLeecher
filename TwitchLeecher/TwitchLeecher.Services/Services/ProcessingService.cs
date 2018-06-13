@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.IO;
@@ -19,31 +20,19 @@ namespace TwitchLeecher.Services.Services
 
         #endregion Constants
 
-        #region Fields
-
-        private readonly string _ffmpegExe;
-
-        #endregion Fields
-
         #region Constructors
 
         public ProcessingService()
         {
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            _ffmpegExe = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
+            FFMPEGExe = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public string FFMPEGExe
-        {
-            get
-            {
-                return _ffmpegExe;
-            }
-        }
+        public string FFMPEGExe { get; }
 
         #endregion Properties
 
@@ -60,7 +49,7 @@ namespace TwitchLeecher.Services.Services
             {
                 int partsCount = vodPlaylist.Count;
 
-                for (int i = 0; i < vodPlaylist.Count; i++)
+                for (int i = 0; i < partsCount; i++)
                 {
                     VodPlaylistPart part = vodPlaylist[i];
 
@@ -77,6 +66,10 @@ namespace TwitchLeecher.Services.Services
 
                     FileSystem.DeleteFile(part.LocalFile);
 
+                    Debug.WriteLine(i * 100 / partsCount);
+
+                    Thread.Sleep(500);
+
                     setProgress(i * 100 / partsCount);
                 }
             }
@@ -90,9 +83,9 @@ namespace TwitchLeecher.Services.Services
             setStatus("Converting Video");
             setIsIndeterminate(true);
 
-            log(Environment.NewLine + Environment.NewLine + "Executing '" + _ffmpegExe + "' on '" + sourceFile + "'...");
+            log(Environment.NewLine + Environment.NewLine + "Executing '" + FFMPEGExe + "' on '" + sourceFile + "'...");
 
-            ProcessStartInfo psi = new ProcessStartInfo(_ffmpegExe)
+            ProcessStartInfo psi = new ProcessStartInfo(FFMPEGExe)
             {
                 Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + sourceFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
                 RedirectStandardError = true,
@@ -137,7 +130,7 @@ namespace TwitchLeecher.Services.Services
                     }
                     catch (Exception ex)
                     {
-                        log(Environment.NewLine + "An error occured while reading '" + _ffmpegExe + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
+                        log(Environment.NewLine + "An error occured while reading '" + FFMPEGExe + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
                     }
                 });
 

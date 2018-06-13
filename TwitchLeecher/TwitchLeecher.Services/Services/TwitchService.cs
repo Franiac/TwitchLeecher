@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -41,9 +40,6 @@ namespace TwitchLeecher.Services.Services
         private const string UNKNOWN_GAME_URL = "https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png";
 
         private const string TEMP_PREFIX = "TL_";
-        private const string PLAYLIST_NAME = "vod.m3u8";
-        private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
-        private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
 
         private const int TIMER_INTERVALL = 2;
         private const int DOWNLOAD_RETRIES = 3;
@@ -64,6 +60,7 @@ namespace TwitchLeecher.Services.Services
         private bool disposedValue = false;
 
         private IPreferencesService _preferencesService;
+        private IProcessingService _processingService;
         private IRuntimeDataService _runtimeDataService;
         private IEventAggregator _eventAggregator;
 
@@ -88,10 +85,12 @@ namespace TwitchLeecher.Services.Services
 
         public TwitchService(
             IPreferencesService preferencesService,
+            IProcessingService processingService,
             IRuntimeDataService runtimeDataService,
             IEventAggregator eventAggregator)
         {
             _preferencesService = preferencesService;
+            _processingService = processingService;
             _runtimeDataService = runtimeDataService;
             _eventAggregator = eventAggregator;
 
@@ -716,8 +715,7 @@ namespace TwitchLeecher.Services.Services
                         string downloadId = download.Id;
                         string vodId = downloadParams.Video.Id;
                         string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
-                        string playlistFile = Path.Combine(tempDir, PLAYLIST_NAME);
-                        string ffmpegFile = Path.Combine(_appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
+                        string ffmpegFile = _processingService.FFMPEGExe;
                         string outputFile = downloadParams.FullPath;
                         string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
 
@@ -765,11 +763,11 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            ConcatParts(log, setStatus, setProgress, vodPlaylist, concatFile);
+                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, concatFile);
 
                             cancellationToken.ThrowIfCancellationRequested();
-
-                            ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, ffmpegFile, concatFile, outputFile, cropInfo);
+                            
+                            _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -1058,117 +1056,6 @@ namespace TwitchLeecher.Services.Services
             setProgress(100);
 
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
-        }
-
-        private void ConvertVideo(Action<string> log, Action<string> setStatus, Action<double> setProgress,
-            Action<bool> setIsIndeterminate, string ffmpegFile, string concatFile, string outputFile, CropInfo cropInfo)
-        {
-            setStatus("Converting Video");
-            setIsIndeterminate(true);
-
-            log(Environment.NewLine + Environment.NewLine + "Executing '" + ffmpegFile + "' on '" + concatFile + "'...");
-
-            ProcessStartInfo psi = new ProcessStartInfo(ffmpegFile)
-            {
-                Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + concatFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy -bsf:a aac_adtstoasc" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                StandardErrorEncoding = Encoding.UTF8,
-                StandardOutputEncoding = Encoding.UTF8,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            log(Environment.NewLine + "Command line arguments: " + psi.Arguments + Environment.NewLine);
-
-            using (Process p = new Process())
-            {
-                TimeSpan duration = TimeSpan.FromSeconds(cropInfo.Length);
-
-                DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
-                {
-                    try
-                    {
-                        if (!string.IsNullOrWhiteSpace(e.Data))
-                        {
-                            string dataTrimmed = e.Data.Trim();
-
-                            if (dataTrimmed.StartsWith("frame", StringComparison.OrdinalIgnoreCase) && duration != TimeSpan.Zero)
-                            {
-                                string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
-                                timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
-                                timeStr = timeStr.Substring(0, timeStr.IndexOf(" ")).Trim();
-
-                                if (TimeSpan.TryParse(timeStr, out TimeSpan current))
-                                {
-                                    setIsIndeterminate(false);
-                                    setProgress(current.TotalMilliseconds / duration.TotalMilliseconds * 100);
-                                }
-                                else
-                                {
-                                    setIsIndeterminate(true);
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        log(Environment.NewLine + "An error occured while reading '" + ffmpegFile + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
-                    }
-                });
-
-                p.OutputDataReceived += outputDataReceived;
-                p.ErrorDataReceived += outputDataReceived;
-                p.StartInfo = psi;
-                p.Start();
-                p.BeginErrorReadLine();
-                p.BeginOutputReadLine();
-                p.WaitForExit();
-
-                if (p.ExitCode == 0)
-                {
-                    log(Environment.NewLine + "Video conversion complete!");
-                }
-                else
-                {
-                    throw new ApplicationException("An error occured while converting the video!");
-                }
-            }
-        }
-
-        private void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress, VodPlaylist vodPlaylist, string concatFile)
-        {
-            setStatus("Merging files");
-            setProgress(0);
-
-            log(Environment.NewLine + Environment.NewLine + "Merging all VOD parts into '" + concatFile + "'...");
-
-            using (FileStream outputStream = new FileStream(concatFile, FileMode.OpenOrCreate, FileAccess.Write))
-            {
-                int partsCount = vodPlaylist.Count;
-
-                for (int i = 0; i < vodPlaylist.Count; i++)
-                {
-                    VodPlaylistPart part = vodPlaylist[i];
-
-                    using (FileStream partStream = new FileStream(part.LocalFile, FileMode.Open, FileAccess.Read))
-                    {
-                        int maxBytes;
-                        byte[] buffer = new byte[4096];
-
-                        while ((maxBytes = partStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            outputStream.Write(buffer, 0, maxBytes);
-                        }
-                    }
-
-                    FileSystem.DeleteFile(part.LocalFile);
-
-                    setProgress(1 * 100 / partsCount);
-                }
-            }
-
-            setProgress(100);
         }
 
         private void CleanUp(string directory, Action<string> log)
