@@ -44,7 +44,6 @@ namespace TwitchLeecher.Core.Models
 
         private string _externalPlayer;
 
-
         #endregion Fields
 
         #region Properties

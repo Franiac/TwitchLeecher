@@ -99,7 +99,7 @@
                 </fa:ImageAwesome>
 
                 <Grid Grid.Row="6" Grid.Column="0" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
-                    
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="5" />
@@ -107,11 +107,10 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Video Player:" VerticalAlignment="Center" />
                     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CurrentPreferences.ExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                     <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
-                    
                 </Grid>
 
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="2" Style="{StaticResource Img_Help}" Visibility="{Binding CurrentPreferences.UseExternalPlayer, Converter={StaticResource BoolToVisConverter}}">
@@ -126,7 +125,6 @@
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
-
             </Grid>
 
             <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
