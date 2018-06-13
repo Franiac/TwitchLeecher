@@ -423,7 +423,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player" IsChecked="{Binding CurrentPreferences.AppUseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player" IsChecked="{Binding CurrentPreferences.MiscUseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
@@ -445,7 +445,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding CurrentPreferences.AppExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding CurrentPreferences.MiscExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                     <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TlMiniButton}" Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
                 </Grid>
                 <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">

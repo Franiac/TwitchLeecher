@@ -300,7 +300,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     var filter = new CommonFileDialogFilter("Executables", "*.exe");
-                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.AppExternalPlayer, ChooseExternalPlayerCallback);
+                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.MiscExternalPlayer, ChooseExternalPlayerCallback);
                 }
             }
             catch (Exception ex)
@@ -315,7 +315,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (!cancelled)
                 {
-                    CurrentPreferences.AppExternalPlayer = file;
+                    CurrentPreferences.MiscExternalPlayer = file;
                 }
             }
             catch (Exception ex)

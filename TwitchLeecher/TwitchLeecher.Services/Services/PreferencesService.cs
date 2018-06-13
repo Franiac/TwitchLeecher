@@ -142,11 +142,11 @@ namespace TwitchLeecher.Services.Services
                 appEl.Add(appShowDonationButtonEl);
 
                 XElement useExternalPlayerEl = new XElement(APP_USEEXTERNALPLAYER_EL);
-                useExternalPlayerEl.SetValue(preferences.AppUseExternalPlayer);
+                useExternalPlayerEl.SetValue(preferences.MiscUseExternalPlayer);
                 appEl.Add(useExternalPlayerEl);
 
                 XElement externalPlayerEl = new XElement(APP_EXTERNALPLAYER_EL);
-                externalPlayerEl.SetValue(preferences.AppExternalPlayer);
+                externalPlayerEl.SetValue(preferences.MiscExternalPlayer);
                 appEl.Add(externalPlayerEl);
 
                 // Search
@@ -295,7 +295,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.AppUseExternalPlayer = useExternalPlayerEl.GetValueAsBool();
+                                    preferences.MiscUseExternalPlayer = useExternalPlayerEl.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -309,7 +309,7 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.AppExternalPlayer = externalPlayerEl.GetValueAsString();
+                                    preferences.MiscExternalPlayer = externalPlayerEl.GetValueAsString();
                                 }
                                 catch
                                 {
@@ -528,7 +528,9 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
-                DownloadRemoveCompleted = false
+                DownloadRemoveCompleted = false,
+                MiscUseExternalPlayer = false,
+                MiscExternalPlayer = null
             };
 
             return preferences;

@@ -145,9 +145,9 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 Preferences currentPrefs = _preferencesService.CurrentPreferences;
 
-                if (currentPrefs.AppUseExternalPlayer)
+                if (currentPrefs.MiscUseExternalPlayer)
                 {
-                    Process.Start(currentPrefs.AppExternalPlayer, video.Url.ToString());
+                    Process.Start(currentPrefs.MiscExternalPlayer, video.Url.ToString());
                 }
                 else
                 {
