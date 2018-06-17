@@ -19,7 +19,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private DownloadParameters _downloadParams;
         private bool _useCustomFilename;
-        private string _customFilename;
 
         private ICommand _chooseCommand;
         private ICommand _downloadCommand;
@@ -89,13 +88,8 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 SetProperty(ref _useCustomFilename, value, nameof(UseCustomFilename));
 
-                if (value)
+                if (!value)
                 {
-                    _downloadParams.Filename = _customFilename;
-                }
-                else
-                {
-                    _customFilename = _downloadParams.Filename;
                     UpdateFilenameFromTemplate();
                 }
             }
