@@ -100,7 +100,9 @@ namespace TwitchLeecher.Services.Services
                 return false;
             }
 
-            if (CurrentPreferences.SearchChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))
+            string searchChannelName = CurrentPreferences.SearchChannelName;
+
+            if (!string.IsNullOrWhiteSpace(searchChannelName) && searchChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
