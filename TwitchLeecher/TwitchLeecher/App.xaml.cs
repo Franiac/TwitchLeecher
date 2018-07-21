@@ -1,5 +1,6 @@
 ﻿using Ninject;
 using System;
+using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,9 @@ namespace TwitchLeecher
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
             _kernel = CreateKernel();
 
