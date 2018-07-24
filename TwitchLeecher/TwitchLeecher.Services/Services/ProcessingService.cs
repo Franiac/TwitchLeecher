@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared.Helpers;
 using TwitchLeecher.Shared.IO;
 
 namespace TwitchLeecher.Services.Services
@@ -97,6 +98,8 @@ namespace TwitchLeecher.Services.Services
 
             using (Process p = new Process())
             {
+                FixedSizeQueue<string> logQueue = new FixedSizeQueue<string>(200);
+
                 TimeSpan duration = TimeSpan.FromSeconds(cropInfo.Length);
 
                 DataReceivedEventHandler outputDataReceived = new DataReceivedEventHandler((s, e) =>
@@ -106,6 +109,8 @@ namespace TwitchLeecher.Services.Services
                         if (!string.IsNullOrWhiteSpace(e.Data))
                         {
                             string dataTrimmed = e.Data.Trim();
+
+                            logQueue.Enqueue(dataTrimmed);
 
                             if (dataTrimmed.StartsWith("frame", StringComparison.OrdinalIgnoreCase) && duration != TimeSpan.Zero)
                             {
@@ -145,6 +150,14 @@ namespace TwitchLeecher.Services.Services
                 }
                 else
                 {
+                    if (!logQueue.IsEmpty)
+                    {
+                        foreach(string line in logQueue)
+                        {
+                            log(Environment.NewLine + line);
+                        }
+                    }
+
                     throw new ApplicationException("An error occured while converting the video!");
                 }
             }

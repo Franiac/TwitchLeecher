@@ -2,13 +2,11 @@
 
 namespace TwitchLeecher.Shared.Helpers
 {
-    public class FixedSizeQueue<T>
+    public class FixedSizeQueue<T> : ConcurrentQueue<T>
     {
         #region Fields
 
-        private readonly object _queueLockObject;
-
-        private ConcurrentQueue<T> _queue;
+        private readonly object _lockObject = new object();
 
         #endregion Fields
 
@@ -16,14 +14,6 @@ namespace TwitchLeecher.Shared.Helpers
 
         public FixedSizeQueue(int size)
         {
-            _queueLockObject = new object();
-            _queue = new ConcurrentQueue<T>();
-
-            if (size < 1)
-            {
-                size = 1;
-            }
-
             Size = size;
         }
 
@@ -37,15 +27,15 @@ namespace TwitchLeecher.Shared.Helpers
 
         #region Methods
 
-        public void Enqueue(T obj)
+        public new void Enqueue(T obj)
         {
-            lock (_queueLockObject)
-            {
-                _queue.Enqueue(obj);
+            base.Enqueue(obj);
 
-                while (_queue.Count > Size)
+            lock (_lockObject)
+            {
+                while (Count > Size)
                 {
-                    _queue.TryDequeue(out T outObj);
+                    base.TryDequeue(out T result);
                 }
             }
         }
