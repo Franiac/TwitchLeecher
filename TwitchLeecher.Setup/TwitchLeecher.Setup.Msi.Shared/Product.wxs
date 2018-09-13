@@ -16,6 +16,9 @@
              Compressed="yes"
              InstallScope="perMachine" />
 
+    <!-- DISABLE ADVERTISED SHORTCUTS -->
+    <Property Id="DISABLEADVTSHORTCUTS" Value="1" />
+
     <!-- UPGRADE -->
     <MajorUpgrade DowngradeErrorMessage="!(loc.UITextDowngradeError)" />
 
@@ -85,7 +88,7 @@
         <Directory Id="INSTALLDIR" Name="$(var.TL_PRODUCT_NAME)" />
       </Directory>
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ProgramMenuInstallFolder" Name="$(var.TL_PRODUCT_NAME)" />
+        <Directory Id="ShortcutsFolder" Name="$(var.TL_PRODUCT_NAME)" />
       </Directory>
     </Directory>
 
