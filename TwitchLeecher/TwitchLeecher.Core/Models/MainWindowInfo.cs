@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Core.Models
@@ -38,19 +39,19 @@ namespace TwitchLeecher.Core.Models
             XElement mainWindowInfoEl = new XElement(MAINWINDOW_EL);
 
             XElement widthEl = new XElement(MAINWINDOW_WIDTH_EL);
-            widthEl.SetValue(Width);
+            widthEl.SetValue(Math.Round(Width));
             mainWindowInfoEl.Add(widthEl);
 
             XElement heightEl = new XElement(MAINWINDOW_HEIGHT_EL);
-            heightEl.SetValue(Height);
+            heightEl.SetValue(Math.Round(Height));
             mainWindowInfoEl.Add(heightEl);
 
             XElement topEl = new XElement(MAINWINDOW_TOP_EL);
-            topEl.SetValue(Top);
+            topEl.SetValue(Math.Round(Top));
             mainWindowInfoEl.Add(topEl);
 
             XElement leftEl = new XElement(MAINWINDOW_LEFT_EL);
-            leftEl.SetValue(Left);
+            leftEl.SetValue(Math.Round(Left));
             mainWindowInfoEl.Add(leftEl);
 
             XElement isMaximizedEl = new XElement(MAINWINDOW_ISMAXIMIZED_EL);
@@ -76,7 +77,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     try
                     {
-                        mainWindowInfo.Width = widthEl.GetValueAsDouble();
+                        mainWindowInfo.Width = (int)Math.Round(widthEl.GetValueAsDouble());
                     }
                     catch
                     {
@@ -96,7 +97,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     try
                     {
-                        mainWindowInfo.Height = heightEl.GetValueAsDouble();
+                        mainWindowInfo.Height = (int)Math.Round(heightEl.GetValueAsDouble());
                     }
                     catch
                     {
@@ -116,7 +117,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     try
                     {
-                        mainWindowInfo.Top = topEl.GetValueAsDouble();
+                        mainWindowInfo.Top = (int)Math.Round(topEl.GetValueAsDouble());
                     }
                     catch
                     {
@@ -136,7 +137,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     try
                     {
-                        mainWindowInfo.Left = leftEl.GetValueAsDouble();
+                        mainWindowInfo.Left = (int)Math.Round(leftEl.GetValueAsDouble());
                     }
                     catch
                     {
