@@ -1130,11 +1130,19 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
-            DateTime recordedDate = DateTime.ParseExact(videoJson.Value<string>("published_at"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));            
             Uri url = new Uri(videoJson.Value<string>("url"));
             Uri thumbnail = new Uri(videoJson.Value<JObject>("preview").Value<string>("large"));
             Uri gameThumbnail = GetGameThumbnail(game);
+
+            string dateStr = videoJson.Value<string>("published_at");
+
+            if (string.IsNullOrWhiteSpace(dateStr))
+            {
+                dateStr = videoJson.Value<string>("created_at");
+            }
+
+            DateTime recordedDate = DateTime.Parse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             if (id.StartsWith("v", StringComparison.OrdinalIgnoreCase))
             {
