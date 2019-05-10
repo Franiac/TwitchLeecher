@@ -6,7 +6,7 @@ using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class DownloadParameters : BindableBase
+    public class DownloadParameters : BindableBase, ICloneable
     {
         #region Fields
 
@@ -20,9 +20,11 @@ namespace TwitchLeecher.Core.Models
 
         private bool _cropStart;
         private bool _cropEnd;
+        private bool _splitVideo;
 
         private TimeSpan _cropStartTime;
         private TimeSpan _cropEndTime;
+        private TimeSpan _splitLength;
 
         #endregion Fields
 
@@ -191,6 +193,7 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+
         public string CroppedLengthStr
         {
             get
@@ -199,9 +202,37 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool SplitVideo
+        {
+            get
+            {
+                return _splitVideo;
+            }
+            set
+            {
+                SetProperty(ref _splitVideo, value, nameof(SplitVideo));
+            }
+        }
+
+        public TimeSpan SplitLength
+        {
+            get
+            {
+                return _splitLength;
+            }
+            set
+            {
+                SetProperty(ref _splitLength, value, nameof(SplitLength));
+            }
+        }
         #endregion Properties
 
         #region Methods
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public override void Validate(string propertyName = null)
         {
@@ -286,7 +317,27 @@ namespace TwitchLeecher.Core.Models
                     }
                 }
             }
+
+            currentProperty = nameof(SplitLength);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_splitVideo)
+                {
+                    TimeSpan videoLength = _video.Length;
+
+                    if (_splitLength < TimeSpan.Zero || _splitLength > videoLength)
+                    {
+                        AddError(currentProperty, "Please enter a value between '" + TimeSpan.Zero.ToString() + "' and '" + videoLength.ToDaylessString() + "'!");
+                    }
+                    else if (_splitLength.TotalSeconds < 60)
+                    {
+                        AddError(currentProperty, "The video part length has to be at least 1 minute long!");
+                    }
+                }
+            }
         }
+
 
         #endregion Methods
     }

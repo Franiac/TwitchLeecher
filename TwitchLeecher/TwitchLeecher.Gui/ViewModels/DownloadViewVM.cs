@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -197,6 +197,45 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public int SplitLengthHours
+        {
+            get
+            {
+                return _downloadParams.SplitLength.GetDaysInHours();
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.SplitLength;
+                _downloadParams.SplitLength = new TimeSpan(value, current.Minutes, current.Seconds);
+            }
+        }
+
+        public int SplitLengthMinutes
+        {
+            get
+            {
+                return _downloadParams.SplitLength.Minutes;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.SplitLength;
+                _downloadParams.SplitLength = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
+            }
+        }
+
+        public int SplitLengthSeconds
+        {
+            get
+            {
+                return _downloadParams.SplitLength.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.SplitLength;
+                _downloadParams.SplitLength = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+            }
+        }
+
         public ICommand ChooseCommand
         {
             get
@@ -271,14 +310,14 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void UpdateFilenameFromTemplate()
+        private void UpdateFilenameFromTemplate(int? partNumber = null)
         {
             string fileName = _preferencesService.CurrentPreferences.Clone().DownloadFileName;
 
             TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
             TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
-            _downloadParams.Filename = _filenameService.SubstituteWildcards(fileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+            _downloadParams.Filename = _filenameService.SubstituteWildcards(fileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime, partNumber);
         }
 
         private void Download()
@@ -291,17 +330,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                     if (!HasErrors)
                     {
-                        if (File.Exists(_downloadParams.FullPath))
-                        {
-                            MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                            if (result != MessageBoxResult.Yes)
-                            {
-                                return;
-                            }
-                        }
-
-                        _twitchService.Enqueue(_downloadParams);
+                        EnqueueDownloads();
                         _navigationService.NavigateBack();
                         _notificationService.ShowNotification("Download added");
                     }
@@ -311,6 +340,78 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private void EnqueueDownloads()
+        {
+
+            bool hasMoreParts = true;
+
+            TimeSpan partStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
+            TimeSpan videoEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
+            TimeSpan partEndTime = videoEndTime;
+            int? partNumber = null;
+
+            if (_downloadParams.SplitVideo)
+            {
+                partNumber = 1;
+                _downloadParams.CropStart = true;
+                _downloadParams.CropEnd = true;
+            }
+            
+            do
+            {
+                if ((partEndTime - partStartTime) > _downloadParams.SplitLength)
+                {
+                    partEndTime = partStartTime + _downloadParams.SplitLength;
+                }
+                else
+                {
+                    hasMoreParts = false;
+                }
+
+
+                _downloadParams.CropStartTime = partStartTime;
+                _downloadParams.CropEndTime = partEndTime;
+                if (_useCustomFilename)
+                {
+                    if (partNumber.HasValue)
+                    {
+                        if (partNumber > 1)
+                        {
+                            _downloadParams.Filename = _downloadParams.Filename.Remove(0, 4);
+                        }
+                        _downloadParams.Filename = ((int)partNumber).ToString("000") + "_" + _downloadParams.Filename;
+                    }
+                } else
+                {
+                    UpdateFilenameFromTemplate(partNumber);
+                }
+                
+
+
+                if (File.Exists(_downloadParams.FullPath))
+                {
+                    MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+                }
+
+                _twitchService.Enqueue((DownloadParameters)_downloadParams.Clone());
+
+                if (hasMoreParts)
+                {
+                    partNumber++;
+                    partStartTime = partEndTime;
+                    partEndTime = videoEndTime;
+                }
+                
+            } while (hasMoreParts);
+            
+            
         }
 
         private void Cancel()
@@ -361,6 +462,14 @@ namespace TwitchLeecher.Gui.ViewModels
                         AddError(nameof(CropEndHours), firstError);
                         AddError(nameof(CropEndMinutes), firstError);
                         AddError(nameof(CropEndSeconds), firstError);
+                    }
+
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.SplitLength)) is List<string> splitLengthErrors && splitLengthErrors.Count > 0)
+                    {
+                        string firstError = splitLengthErrors.First();
+                        AddError(nameof(SplitLengthHours), firstError);
+                        AddError(nameof(SplitLengthMinutes), firstError);
+                        AddError(nameof(SplitLengthSeconds), firstError);
                     }
                 }
             }

@@ -44,6 +44,7 @@
                 <RowDefinition />
                 <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -133,6 +134,55 @@
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                     <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="11" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" BorderThickness="0,0,0,1" Padding="0,0,0,5" Margin="0,0,0,5">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
+                    </Border.BorderBrush>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Split Video" FontWeight="Bold" />
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.IsSharedSizeScope="True" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition SharedSizeGroup="g2" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition SharedSizeGroup="g2" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding DownloadParams.SplitVideo}" Content="Parts length" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding SplitLengthHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.SplitVideo}" Maximum="99" Loop="False" />
+                    <TextBlock Grid.Row="0" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding SplitLengthMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.SplitVideo}" />
+                    <TextBlock Grid.Row="0" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding SplitLengthSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.SplitVideo}" />
+
                 </Grid>
             </Grid>
         </Grid>
