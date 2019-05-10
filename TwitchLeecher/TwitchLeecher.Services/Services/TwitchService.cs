@@ -63,6 +63,7 @@ namespace TwitchLeecher.Services.Services
         private IProcessingService _processingService;
         private IRuntimeDataService _runtimeDataService;
         private IEventAggregator _eventAggregator;
+        private readonly IFilenameService _filenameService;
 
         private Timer _downloadTimer;
 
@@ -87,11 +88,13 @@ namespace TwitchLeecher.Services.Services
             IPreferencesService preferencesService,
             IProcessingService processingService,
             IRuntimeDataService runtimeDataService,
+            IFilenameService filenameService,
             IEventAggregator eventAggregator)
         {
             _preferencesService = preferencesService;
             _processingService = processingService;
             _runtimeDataService = runtimeDataService;
+            _filenameService = filenameService;
             _eventAggregator = eventAggregator;
 
             _videos = new ObservableCollection<TwitchVideo>();
@@ -676,7 +679,7 @@ namespace TwitchLeecher.Services.Services
                 _downloads.Add(new TwitchVideoDownload(downloadParams));
             }
         }
-
+        
         private void DownloadTimerCallback(object state)
         {
             if (_paused)

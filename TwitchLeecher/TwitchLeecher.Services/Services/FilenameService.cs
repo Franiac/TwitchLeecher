@@ -12,7 +12,7 @@ namespace TwitchLeecher.Services.Services
     {
         #region Methods
 
-        public string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null)
+        public string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null, int? splitPartNumber = null)
         {
             if (video == null)
             {
@@ -31,6 +31,11 @@ namespace TwitchLeecher.Services.Services
             TwitchVideoQuality selectedQuality = quality ?? video.Qualities.First();
             TimeSpan selectedCropStart = cropStart ?? TimeSpan.Zero;
             TimeSpan selectedCropEnd = cropEnd ?? video.Length;
+
+            if (splitPartNumber.HasValue && !(result.Contains(FilenameWildcards.START) && result.Contains(FilenameWildcards.END)))
+            {
+                result = ((int)splitPartNumber).ToString("000") + "_" + result;
+            }
 
             result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.GAME, video.Game);
