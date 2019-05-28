@@ -361,7 +361,7 @@ namespace TwitchLeecher.Gui.ViewModels
             
             do
             {
-                if ((partEndTime - partStartTime) > _downloadParams.SplitLength)
+                if (_downloadParams.SplitVideo && ((partEndTime - partStartTime) > _downloadParams.SplitLength))
                 {
                     partEndTime = partStartTime + _downloadParams.SplitLength;
                 }
