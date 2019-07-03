@@ -36,7 +36,7 @@ namespace TwitchLeecher.Services.Services
         private const string CHANNEL_URL = "https://api.twitch.tv/kraken/channels/{0}";
         private const string CHANNEL_VIDEOS_URL = "https://api.twitch.tv/kraken/channels/{0}/videos";
         private const string ACCESS_TOKEN_URL = "https://api.twitch.tv/api/vods/{0}/access_token";
-        private const string ALL_PLAYLISTS_URL = "https://usher.twitch.tv/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
+        private const string ALL_PLAYLISTS_URL = "https://usher.ttvnw.net/vod/{0}?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
         private const string UNKNOWN_GAME_URL = "https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png";
 
         private const string TEMP_PREFIX = "TL_";
