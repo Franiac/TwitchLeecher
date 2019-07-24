@@ -42,6 +42,7 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_FILENAME_EL = "FileName";
         private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
+        private const string DOWNLOAD_CONVERTTOMP4_EL = "ConvertToMp4";
 
         private const string MISC_EL = "Misc";
         private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
@@ -214,6 +215,10 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadRemoveCompletedEl = new XElement(DOWNLOAD_REMOVECOMPLETED_EL);
                 downloadRemoveCompletedEl.SetValue(preferences.DownloadRemoveCompleted);
                 downloadEl.Add(downloadRemoveCompletedEl);
+
+                XElement downloadConvertToMp4El = new XElement(DOWNLOAD_CONVERTTOMP4_EL);
+                downloadConvertToMp4El.SetValue(preferences.DownloadConvertToMp4);
+                downloadEl.Add(downloadConvertToMp4El);
 
                 // Miscellanious
                 XElement miscUseExternalPlayerEl = new XElement(MISC_USEEXTERNALPLAYER_EL);
@@ -452,7 +457,14 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.DownloadFileName = downloadFileNameEl.GetValueAsString();
+                                    string fileName = downloadFileNameEl.GetValueAsString();
+
+                                    if (preferences.Version < new Version(1, 5, 9) && !string.IsNullOrEmpty(fileName) && fileName.EndsWith(".mp4"))
+                                    {
+                                        fileName = fileName.Substring(0, fileName.Length - 4);
+                                    }
+
+                                    preferences.DownloadFileName = fileName;
                                 }
                                 catch
                                 {
@@ -481,6 +493,20 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.DownloadRemoveCompleted = donwloadRemoveCompletedEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement donwloadConvertToMp4El = downloadEl.Element(DOWNLOAD_CONVERTTOMP4_EL);
+
+                            if (donwloadConvertToMp4El != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadConvertToMp4 = donwloadConvertToMp4El.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -543,8 +569,9 @@ namespace TwitchLeecher.Services.Services
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
-                DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME + ".mp4",
+                DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME,
                 DownloadRemoveCompleted = false,
+                DownloadConvertToMp4 = false,
                 MiscUseExternalPlayer = false,
                 MiscExternalPlayer = null
             };

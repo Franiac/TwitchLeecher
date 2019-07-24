@@ -20,6 +20,7 @@ namespace TwitchLeecher.Core.Models
 
         private bool _cropStart;
         private bool _cropEnd;
+        private bool _convertToMp4;
 
         private TimeSpan _cropStartTime;
         private TimeSpan _cropEndTime;
@@ -28,7 +29,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename)
+        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename, bool convertToMp4)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -46,6 +47,7 @@ namespace TwitchLeecher.Core.Models
 
             _folder = folder;
             _filename = filename;
+            _convertToMp4 = convertToMp4;
 
             _cropEndTime = video.Length;
         }
@@ -113,6 +115,18 @@ namespace TwitchLeecher.Core.Models
             get
             {
                 return Path.Combine(_folder, _filename);
+            }
+        }
+
+        public bool ConvertToMp4
+        {
+            get
+            {
+                return _convertToMp4;
+            }
+            set
+            {
+                SetProperty(ref _convertToMp4, value, nameof(ConvertToMp4));
             }
         }
 
@@ -235,9 +249,13 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Please specify a filename!");
                 }
-                else if (!_filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                else if (_convertToMp4 && !_filename.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                 {
                     AddError(currentProperty, "Filename must end with '.mp4'!");
+                }
+                else if (!_convertToMp4 && !_filename.EndsWith(".ts", StringComparison.OrdinalIgnoreCase))
+                {
+                    AddError(currentProperty, "Filename must end with '.ts'!");
                 }
                 else if (FileSystem.FilenameContainsInvalidChars(_filename))
                 {

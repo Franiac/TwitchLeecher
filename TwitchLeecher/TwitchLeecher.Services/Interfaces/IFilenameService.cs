@@ -8,5 +8,7 @@ namespace TwitchLeecher.Services.Interfaces
         string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null);
 
         string SubstituteInvalidChars(string filename, string replaceStr);
+
+        string EnsureExtension(string filename, bool mp4);
     }
 }

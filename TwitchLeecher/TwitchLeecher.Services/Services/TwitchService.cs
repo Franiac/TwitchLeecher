@@ -716,9 +716,10 @@ namespace TwitchLeecher.Services.Services
                         string vodId = downloadParams.Video.Id;
                         string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
                         string ffmpegFile = _processingService.FFMPEGExe;
-                        string outputFile = downloadParams.FullPath;
                         string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
+                        string outputFile = downloadParams.FullPath;
 
+                        bool convertToMp4 = downloadParams.ConvertToMp4;
                         bool cropStart = downloadParams.CropStart;
                         bool cropEnd = downloadParams.CropEnd;
 
@@ -763,11 +764,14 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, concatFile);
+                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, convertToMp4 ? concatFile : outputFile);
 
-                            cancellationToken.ThrowIfCancellationRequested();
+                            if (convertToMp4)
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
+                            }
                             
-                            _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -843,6 +847,7 @@ namespace TwitchLeecher.Services.Services
 
             log(Environment.NewLine + Environment.NewLine + "OUTPUT INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
+            log(Environment.NewLine + "Convert to mp4: " + (downloadParams.ConvertToMp4 ? "Yes" : "No"));
             log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
             log(Environment.NewLine + "Temporary Download Folder: " + tempDir);

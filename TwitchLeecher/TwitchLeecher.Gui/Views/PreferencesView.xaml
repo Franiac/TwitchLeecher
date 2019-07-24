@@ -221,6 +221,8 @@
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -395,6 +397,20 @@
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Remove Successful Downloads" />
                                 <TextBlock TextAlignment="Justify">
                                     If enabled, successfully downloaded VODs get removed from the download queue.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadConvertToMp4}" Content="Convert video to mp4 after download (caution!)" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip  Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Convert video to mp4" />
+                                <TextBlock TextAlignment="Justify">
+                                    If enabled, FFMPEG is used to convert the downloaded .ts file to .mp4. Depending on the video containing muted parts, frame drops or the encoding settings of the streamer this can introduce A/V desync in rare cases!
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>

@@ -195,8 +195,9 @@ namespace TwitchLeecher.Gui.ViewModels
                                 : currentPrefs.DownloadFolder;
 
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
+                            filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadConvertToMp4);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadConvertToMp4);
 
                             _navigationService.ShowDownload(downloadParams);
                         }

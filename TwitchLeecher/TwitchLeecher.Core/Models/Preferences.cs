@@ -15,7 +15,7 @@ namespace TwitchLeecher.Core.Models
 
         private bool _appCheckForUpdates;
 
-        private bool _appShowDonationButton;        
+        private bool _appShowDonationButton;
 
         private RangeObservableCollection<string> _searchFavouriteChannels;
 
@@ -40,6 +40,8 @@ namespace TwitchLeecher.Core.Models
         private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
+
+        private bool _downloadConvertToMp4;
 
         private bool _miscUseExternalPlayer;
 
@@ -255,6 +257,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool DownloadConvertToMp4
+        {
+            get
+            {
+                return _downloadConvertToMp4;
+            }
+            set
+            {
+                SetProperty(ref _downloadConvertToMp4, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -342,15 +356,13 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Please specify a default download filename!");
                 }
-                else if (!_downloadFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                else if (_downloadFileName.Contains(".") || FileSystem.FilenameContainsInvalidChars(_downloadFileName))
                 {
-                    AddError(currentProperty, "Filename must end with '.mp4'!");
+                    string invalidChars = new string(Path.GetInvalidFileNameChars());
+
+                    AddError(currentProperty, $"Filename contains invalid characters ({invalidChars}.)!");
                 }
-                else if (FileSystem.FilenameContainsInvalidChars(_downloadFileName))
-                {
-                    AddError(currentProperty, "Filename contains invalid characters!");
-                }
-            }            
+            }
         }
 
         public Preferences Clone()
@@ -372,7 +384,8 @@ namespace TwitchLeecher.Core.Models
                 DownloadFolder = DownloadFolder,
                 DownloadFileName = DownloadFileName,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
-                DownloadRemoveCompleted = DownloadRemoveCompleted
+                DownloadRemoveCompleted = DownloadRemoveCompleted,
+                DownloadConvertToMp4 = DownloadConvertToMp4
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);
