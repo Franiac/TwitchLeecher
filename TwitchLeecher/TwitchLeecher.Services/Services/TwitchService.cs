@@ -719,7 +719,7 @@ namespace TwitchLeecher.Services.Services
                         string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
                         string outputFile = downloadParams.FullPath;
 
-                        bool convertToMp4 = downloadParams.ConvertToMp4;
+                        bool disableConversion = downloadParams.DisableConversion;
                         bool cropStart = downloadParams.CropStart;
                         bool cropEnd = downloadParams.CropEnd;
 
@@ -764,9 +764,9 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, convertToMp4 ? concatFile : outputFile);
+                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, disableConversion ? outputFile : concatFile);
 
-                            if (convertToMp4)
+                            if (!disableConversion)
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
                                 _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
@@ -847,8 +847,8 @@ namespace TwitchLeecher.Services.Services
 
             log(Environment.NewLine + Environment.NewLine + "OUTPUT INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
-            log(Environment.NewLine + "Convert to mp4: " + (downloadParams.ConvertToMp4 ? "Yes" : "No"));
             log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
+            log(Environment.NewLine + "Disable Conversion: " + (downloadParams.DisableConversion ? "Yes" : "No"));
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
             log(Environment.NewLine + "Temporary Download Folder: " + tempDir);
 

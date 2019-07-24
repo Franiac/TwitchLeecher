@@ -69,28 +69,29 @@ namespace TwitchLeecher.Services.Services
             return filename;
         }
 
-        public string EnsureExtension(string filename, bool mp4)
+        public string EnsureExtension(string filename, bool disableConversion)
         {
             if (string.IsNullOrWhiteSpace(filename))
             {
                 return filename;
             }
 
-            if (mp4 && !filename.EndsWith(".mp4"))
-            {
-                return filename + ".mp4";
-            }
-            else if (mp4 && filename.EndsWith(".ts"))
-            {
-                return filename.Substring(0, filename.Length - 3) + ".mp4";
-            }
-            else if (!mp4 && !filename.EndsWith(".ts"))
+            
+            if (disableConversion && !filename.EndsWith(".ts"))
             {
                 return filename + ".ts";
             }
-            else if (!mp4 && filename.EndsWith(".mp4"))
+            else if (disableConversion && filename.EndsWith(".mp4"))
             {
                 return filename.Substring(0, filename.Length - 4) + ".ts";
+            }
+            else if (!disableConversion && !filename.EndsWith(".mp4"))
+            {
+                return filename + ".mp4";
+            }
+            else if (!disableConversion && filename.EndsWith(".ts"))
+            {
+                return filename.Substring(0, filename.Length - 3) + ".mp4";
             }
 
             return filename;

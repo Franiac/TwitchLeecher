@@ -20,8 +20,6 @@ namespace TwitchLeecher.Gui.Interfaces
 
         void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder, Action<bool, string> dialogCompleteCallback);
 
-        void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback);
-
         void SetBusy();
     }
 }

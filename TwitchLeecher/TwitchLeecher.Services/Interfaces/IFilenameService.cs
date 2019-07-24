@@ -9,6 +9,6 @@ namespace TwitchLeecher.Services.Interfaces
 
         string SubstituteInvalidChars(string filename, string replaceStr);
 
-        string EnsureExtension(string filename, bool mp4);
+        string EnsureExtension(string filename, bool disableConversion);
     }
 }

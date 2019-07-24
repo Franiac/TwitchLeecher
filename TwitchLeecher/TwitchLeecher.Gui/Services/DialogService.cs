@@ -16,7 +16,6 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private readonly IKernel _kernel;
         private readonly ILogService _logService;
 
         private bool _busy;
@@ -25,9 +24,8 @@ namespace TwitchLeecher.Gui.Services
 
         #region Constructor
 
-        public DialogService(IKernel kernel, ILogService logService)
+        public DialogService(ILogService logService)
         {
-            _kernel = kernel;
             _logService = logService;
         }
 
@@ -74,8 +72,7 @@ namespace TwitchLeecher.Gui.Services
                 return;
             }
 
-            ILogService logService = _kernel.Get<ILogService>();
-            string logFile = logService.LogException(ex);
+            string logFile = _logService.LogException(ex);
 
             MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
                 + Environment.NewLine + Environment.NewLine + ex.Message
@@ -121,23 +118,6 @@ namespace TwitchLeecher.Gui.Services
 
                 dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
             }
-        }
-
-        public void ShowSaveFileDialog(string filename, Action<bool, string> dialogCompleteCallback)
-        {
-            SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "Broadcasts|*.mp4"
-            };
-
-            if (!string.IsNullOrWhiteSpace(filename))
-            {
-                sfd.FileName = filename;
-            }
-
-            bool? result = sfd.ShowDialog();
-
-            dialogCompleteCallback(result != true, sfd.FileName);
         }
 
         public void SetBusy()

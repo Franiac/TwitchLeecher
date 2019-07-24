@@ -41,7 +41,7 @@ namespace TwitchLeecher.Core.Models
 
         private bool _downloadRemoveCompleted;
 
-        private bool _downloadConvertToMp4;
+        private bool _downloadDisableConversion;
 
         private bool _miscUseExternalPlayer;
 
@@ -257,15 +257,15 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public bool DownloadConvertToMp4
+        public bool DownloadDisableConversion
         {
             get
             {
-                return _downloadConvertToMp4;
+                return _downloadDisableConversion;
             }
             set
             {
-                SetProperty(ref _downloadConvertToMp4, value);
+                SetProperty(ref _downloadDisableConversion, value);
             }
         }
 
@@ -385,7 +385,7 @@ namespace TwitchLeecher.Core.Models
                 DownloadFileName = DownloadFileName,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
-                DownloadConvertToMp4 = DownloadConvertToMp4
+                DownloadDisableConversion = DownloadDisableConversion
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);

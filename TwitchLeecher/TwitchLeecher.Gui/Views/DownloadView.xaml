@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
+                    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -80,7 +81,7 @@
 
             <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding UseCustomFilename, UpdateSourceTrigger=PropertyChanged}" Content="Use Custom Filename" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-1,0,0,0" FontSize="12" />
 
-            <Grid Grid.Row="10" Grid.Column="2">
+            <Grid Grid.Row="10" Grid.Column="2" Visibility="{Binding DownloadParams.DisableConversion, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

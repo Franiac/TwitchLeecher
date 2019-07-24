@@ -22,7 +22,7 @@
     </UserControl.Resources>
 
     <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-        <Grid VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True" Width="500">
+        <Grid VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True" Width="550">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -403,14 +403,14 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadConvertToMp4}" Content="Convert video to mp4 after download (caution!)" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Convert video to mp4" />
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Disable conversion to mp4" />
                                 <TextBlock TextAlignment="Justify">
-                                    If enabled, FFMPEG is used to convert the downloaded .ts file to .mp4. Depending on the video containing muted parts, frame drops or the encoding settings of the streamer this can introduce A/V desync in rare cases!
+                                    Depending on the video containing muted parts, frame drops or the encoding settings of the streamer, the conversion to mp4 can introduce A/V desync in rare cases. If you want to download the raw .ts video file from Twitch, enable this option. Cropping is not available in this mode.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>

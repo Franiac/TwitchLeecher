@@ -279,7 +279,7 @@ namespace TwitchLeecher.Gui.ViewModels
             TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
             string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
-            fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadConvertToMp4);
+            fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
 
             _downloadParams.Filename = fileName;
         }
