@@ -847,8 +847,8 @@ namespace TwitchLeecher.Services.Services
 
             log(Environment.NewLine + Environment.NewLine + "OUTPUT INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
-            log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "Disable Conversion: " + (downloadParams.DisableConversion ? "Yes" : "No"));
+            log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
             log(Environment.NewLine + "Temporary Download Folder: " + tempDir);
 
