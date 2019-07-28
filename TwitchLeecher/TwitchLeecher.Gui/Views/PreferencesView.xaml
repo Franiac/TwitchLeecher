@@ -80,7 +80,7 @@
                             </StackPanel>
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>                
+                </fa:ImageAwesome>
             </Grid>
 
             <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -483,6 +483,5 @@
                 </fa:ImageAwesome>
             </Grid>
         </Grid>
-        
     </ScrollViewer>
 </UserControl>

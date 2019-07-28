@@ -52,7 +52,6 @@ namespace TwitchLeecher.Setup.Gui
         private Version _productVersionPadded;
         private Version _productVersionTrimmed;
 
-        private string _architecture;
         private string _manufacturer;
         private string _productName;
         private string _featureTLSize;
@@ -130,22 +129,6 @@ namespace TwitchLeecher.Setup.Gui
             get
             {
                 return _productVersionTrimmed;
-            }
-        }
-
-        public bool IsBundle64Bit
-        {
-            get
-            {
-                return _architecture == "x64";
-            }
-        }
-
-        public bool OSAndBundleBitMatch
-        {
-            get
-            {
-                return (IsBundle64Bit && Environment.Is64BitOperatingSystem) || (!IsBundle64Bit && !Environment.Is64BitOperatingSystem);
             }
         }
 
@@ -367,6 +350,8 @@ namespace TwitchLeecher.Setup.Gui
         {
             Log("Starting Initialization of Custom Bootstrapper Application");
 
+            ResolveSource += SetupApplication_ResolveSource;
+
             InitializeBundleProperties();
             InitializeMsiProperties();
             InitializeFeatureSizes();
@@ -375,10 +360,6 @@ namespace TwitchLeecher.Setup.Gui
         private void InitializeBundleProperties()
         {
             string logName = "Action InitializeBundleProperties: ";
-
-            Log(logName + "Retrieving architecture");
-            _architecture = Engine.StringVariables["BUNDLE_ARCHITECTURE"];
-            Log(logName + "Architecture is '" + _architecture + "'");
 
             Log(logName + "Retrieving manufacturer");
             _manufacturer = Engine.StringVariables["BUNDLE_MANUFACTURER"];
@@ -881,6 +862,18 @@ namespace TwitchLeecher.Setup.Gui
         }
 
         #endregion Apply
+
+        #region ResolveSource
+
+        private void SetupApplication_ResolveSource(object sender, ResolveSourceEventArgs e)
+        {
+            if (!File.Exists(e.LocalSource) && !string.IsNullOrEmpty(e.DownloadSource))
+            {
+                e.Result = Result.Download;
+            }
+        }
+
+        #endregion ResolveSource
 
         #endregion Burn Engine
 

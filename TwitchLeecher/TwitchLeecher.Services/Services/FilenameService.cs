@@ -76,7 +76,6 @@ namespace TwitchLeecher.Services.Services
                 return filename;
             }
 
-            
             if (disableConversion && !filename.EndsWith(".ts"))
             {
                 return filename + ".ts";

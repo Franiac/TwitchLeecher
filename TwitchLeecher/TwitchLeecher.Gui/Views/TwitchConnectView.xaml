@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.TwitchConnectView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,6 +14,6 @@
     </UserControl.Resources>
 
     <Grid>
-        <WebBrowser Name="webBrowser" />
+        <cef:ChromiumWebBrowser Name="chrome" />
     </Grid>
 </UserControl>

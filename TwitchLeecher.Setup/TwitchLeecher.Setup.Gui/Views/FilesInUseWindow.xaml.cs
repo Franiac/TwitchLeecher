@@ -14,7 +14,6 @@ namespace TwitchLeecher.Setup.Gui.Views
 
         private void FilesInUseWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-
             if (e.NewValue is FilesInUseWindowVM filesInUseWindowVM)
             {
                 filesInUseWindowVM.SetWindowCloseAction(Close);

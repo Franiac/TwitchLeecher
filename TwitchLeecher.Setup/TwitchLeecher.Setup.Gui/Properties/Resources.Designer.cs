@@ -19,7 +19,7 @@ namespace TwitchLeecher.Setup.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -63,7 +63,7 @@ namespace TwitchLeecher.Setup.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The MIT License (MIT)
         ///
-        ///Copyright (c) 2016 Dominik Rebitzer
+        ///Copyright (c) 2018 Dominik Rebitzer
         ///
         ///Permission is hereby granted, free of charge, to any person obtaining a copy
         ///of this software and associated documentation files (the &quot;Software&quot;), to deal

@@ -15,12 +15,10 @@ namespace TwitchLeecher.Setup.Gui
 
         private void WizardWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-
             if (e.OldValue is WizardWindowVM oldWizardWindowVM)
             {
                 oldWizardWindowVM.WiazrdFinished -= WizardWindowVM_WiazrdFinished;
             }
-
 
             if (e.NewValue is WizardWindowVM newWizardWindowVM)
             {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using Ninject;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -8,7 +7,6 @@ using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using Cursors = System.Windows.Input.Cursors;
-using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace TwitchLeecher.Gui.Services
 {

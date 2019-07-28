@@ -11,7 +11,6 @@ namespace TwitchLeecher.Setup.Gui.Services
 {
     internal class UacService : IUacService
     {
-
         #region Fields
 
         private BitmapImage _uacIcon;

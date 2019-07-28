@@ -198,7 +198,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             _errorDlgVM = new ErrorDlgVM(_bootstrapper, _guiService);
             _finishedDlgVM = new FinishedDlgVM(_bootstrapper, _guiService);
 
-            if (!_bootstrapper.OSAndBundleBitMatch)
+            if (!Environment.Is64BitOperatingSystem)
             {
                 BitErrorDlgVM bitErrorDlgVM = new BitErrorDlgVM(_bootstrapper, _guiService);
                 _viewModels.Add(typeof(BitErrorDlgVM), bitErrorDlgVM);

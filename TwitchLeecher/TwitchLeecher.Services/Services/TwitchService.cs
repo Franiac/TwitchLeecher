@@ -771,7 +771,6 @@ namespace TwitchLeecher.Services.Services
                                 cancellationToken.ThrowIfCancellationRequested();
                                 _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                             }
-                            
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>
@@ -875,7 +874,7 @@ namespace TwitchLeecher.Services.Services
             {
                 throw new ApplicationException("Temporary download directory '" + tempDir + "' is not empty!");
             }
-        }        
+        }
 
         private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string vodId, VodAuthInfo vodAuthInfo)
         {
@@ -1138,7 +1137,7 @@ namespace TwitchLeecher.Services.Services
             string game = videoJson.Value<string>("game");
             int views = videoJson.Value<int>("views");
             TimeSpan length = new TimeSpan(0, 0, videoJson.Value<int>("length"));
-            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));            
+            List<TwitchVideoQuality> qualities = ParseQualities(videoJson.Value<JObject>("resolutions"), videoJson.Value<JObject>("fps"));
             Uri url = new Uri(videoJson.Value<string>("url"));
             Uri thumbnail = new Uri(videoJson.Value<JObject>("preview").Value<string>("large"));
             Uri gameThumbnail = GetGameThumbnail(game);

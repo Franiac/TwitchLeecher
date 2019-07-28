@@ -29,18 +29,15 @@ namespace TwitchLeecher.Setup.Publish
 
                 Version version = new Version(fvi.FileVersion).Trim();
 
-                string srcX86 = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x86", "bin", "TwitchLeecher_x86.exe");
-                string srcX64 = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper.x64", "bin", "TwitchLeecher_x64.exe");
+                string src = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper", "bin", "TwitchLeecher.exe");
 
-                string tgtFilenameX86 = "TwitchLeecher_" + version.ToString() + "_x86.exe";
-                string tgtFilenameX64 = "TwitchLeecher_" + version.ToString() + "_x64.exe";
+                string tgtFilename = "TwitchLeecher_" + version.ToString() + ".exe";
 
                 string publishDir = Path.Combine(solutionDir, "..", "TwitchLeecher.Setup.Publish");
 
                 CleanDirectory(publishDir);
 
-                CopyFile(srcX86, publishDir, tgtFilenameX86);
-                CopyFile(srcX64, publishDir, tgtFilenameX64);
+                CopyFile(src, publishDir, tgtFilename);
             }
             catch
             {

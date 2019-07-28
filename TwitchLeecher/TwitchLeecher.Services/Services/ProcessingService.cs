@@ -15,8 +15,7 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string FFMPEG_EXE_X86 = "ffmpeg_x86.exe";
-        private const string FFMPEG_EXE_X64 = "ffmpeg_x64.exe";
+        private const string FFMPEG_EXE = "ffmpeg.exe";
 
         #endregion Constants
 
@@ -25,7 +24,7 @@ namespace TwitchLeecher.Services.Services
         public ProcessingService()
         {
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            FFMPEGExe = Path.Combine(appDir, Environment.Is64BitOperatingSystem ? FFMPEG_EXE_X64 : FFMPEG_EXE_X86);
+            FFMPEGExe = Path.Combine(appDir, FFMPEG_EXE);
         }
 
         #endregion Constructors
@@ -152,7 +151,7 @@ namespace TwitchLeecher.Services.Services
                 {
                     if (!logQueue.IsEmpty)
                     {
-                        foreach(string line in logQueue)
+                        foreach (string line in logQueue)
                         {
                             log(Environment.NewLine + line);
                         }

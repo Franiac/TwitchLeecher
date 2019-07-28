@@ -274,7 +274,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private void UpdateFilenameFromTemplate()
         {
             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
-            
+
             TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
             TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
