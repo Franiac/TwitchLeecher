@@ -68,6 +68,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
+    <Compile Include="Browser\AuthRequestHandler.cs" />
     <Compile Include="Controls\TlFadeContentControl.cs" />
     <Compile Include="Controls\TlIntegerUpDown.cs" />
     <Compile Include="Controls\TlScrollingTextBox.cs" />
