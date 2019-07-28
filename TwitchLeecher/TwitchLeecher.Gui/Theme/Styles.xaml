@@ -180,6 +180,8 @@
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="Height" Value="Auto" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="BorderThickness" Value="0" />

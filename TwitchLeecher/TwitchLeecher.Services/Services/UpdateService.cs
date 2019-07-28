@@ -44,17 +44,14 @@ namespace TwitchLeecher.Services.Services
                             string releasedStr = releaseJson.Value<string>("published_at");
                             string infoStr = releaseJson.Value<string>("body");
 
-                            Version releaseVersion = Version.Parse(tagStr.Substring(1));
-
-                            Version localVersion = AssemblyUtil.Get.GetAssemblyVersion();
+                            Version releaseVersion = Version.Parse(tagStr.Substring(1)).Pad();
+                            Version localVersion = AssemblyUtil.Get.GetAssemblyVersion().Pad();
 
                             DateTime released = DateTime.Parse(releasedStr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
-                            string downloadUrl = string.Format(latestReleaseUrl, releaseVersion.Trim().ToString());
-
                             if (releaseVersion > localVersion)
                             {
-                                return new UpdateInfo(releaseVersion, released, downloadUrl, infoStr);
+                                return new UpdateInfo(releaseVersion, released, string.Format(latestReleaseUrl, releaseVersion.ToString(3)), infoStr);
                             }
                             else
                             {
