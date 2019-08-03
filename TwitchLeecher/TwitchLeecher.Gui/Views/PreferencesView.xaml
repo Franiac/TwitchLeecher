@@ -4,6 +4,7 @@
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:fa="http://schemas.fontawesome.io/icons/">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,6 +15,7 @@
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
+                    <converters:VideoQualityToTextConverter x:Key="videoQualityToTextConverter" />
                     <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
                     <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
                 </ResourceDictionary>
@@ -211,7 +213,17 @@
             </Border>
 
             <Grid Grid.Row="5" Margin="15,0,0,0">
+                <Grid.Resources>
+                    <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="enums:VideoQuality"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
@@ -278,7 +290,7 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Filename Template" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Filename Template" VerticalAlignment="Center" />
                 <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding CurrentPreferences.DownloadFileName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
@@ -290,6 +302,14 @@
                                 </TextBlock>
                                 <Grid Margin="0,5,0,0">
                                     <Grid.RowDefinitions>
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
                                         <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
@@ -338,45 +358,76 @@
                                     <TextBlock Grid.Row="6" Grid.Column="2" Text="Recording date (yyyyMMdd)" />
                                     <TextBlock Grid.Row="6" Grid.Column="4" Text="20160418" />
 
-                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="{}{time}" />
-                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="Recording time" />
-                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="034622PM" />
+                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="{}{date-}" />
+                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="Recording date (yyyy-MM-dd)" />
+                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="2016-04-18" />
 
-                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{time24}" />
-                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Recording time (24 hours)" />
-                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="174622" />
+                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{time}" />
+                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Recording time" />
+                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="034622PM" />
 
-                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{id}" />
-                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Twitch video ID" />
-                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="54869708" />
+                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{time-}" />
+                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Recording time" />
+                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="03-46-22_PM" />
+                                    
+                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{time24}" />
+                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Recording time (24 hours)" />
+                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="174622" />
 
-                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{title}" />
-                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Video Title" />
-                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="Best Strim Evr!!!" />
+                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{time24-}" />
+                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Recording time (24 hours)" />
+                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="17-46-22" />
 
-                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{res}" />
-                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Video Resolution" />
-                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="1280x720" />
+                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{id}" />
+                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Twitch video ID" />
+                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="54869708" />
 
-                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{fps}" />
-                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Video Framerate" />
-                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="60" />
+                                    <TextBlock Grid.Row="20" Grid.Column="0" Text="{}{title}" />
+                                    <TextBlock Grid.Row="20" Grid.Column="2" Text="Video Title" />
+                                    <TextBlock Grid.Row="20" Grid.Column="4" Text="Best Strim Evr!!!" />
 
-                                    <TextBlock Grid.Row="20" Grid.Column="0" Text="{}{start}" />
-                                    <TextBlock Grid.Row="20" Grid.Column="2" Text="Crop start time (HHmmss)" />
-                                    <TextBlock Grid.Row="20" Grid.Column="4" Text="012744" />
+                                    <TextBlock Grid.Row="22" Grid.Column="0" Text="{}{res}" />
+                                    <TextBlock Grid.Row="22" Grid.Column="2" Text="Video Resolution" />
+                                    <TextBlock Grid.Row="22" Grid.Column="4" Text="1280x720" />
 
-                                    <TextBlock Grid.Row="22" Grid.Column="0" Text="{}{end}" />
-                                    <TextBlock Grid.Row="22" Grid.Column="2" Text="Crop end time (HHmmss)" />
-                                    <TextBlock Grid.Row="22" Grid.Column="4" Text="025317" />
+                                    <TextBlock Grid.Row="24" Grid.Column="0" Text="{}{fps}" />
+                                    <TextBlock Grid.Row="24" Grid.Column="2" Text="Video Framerate" />
+                                    <TextBlock Grid.Row="24" Grid.Column="4" Text="60" />
+
+                                    <TextBlock Grid.Row="26" Grid.Column="0" Text="{}{start}" />
+                                    <TextBlock Grid.Row="26" Grid.Column="2" Text="Crop start time (HHmmss)" />     
+                                    <TextBlock Grid.Row="26" Grid.Column="4" Text="012744" />
+
+                                    <TextBlock Grid.Row="28" Grid.Column="0" Text="{}{end}" />
+                                    <TextBlock Grid.Row="28" Grid.Column="2" Text="Crop end time (HHmmss)" />
+                                    <TextBlock Grid.Row="28" Grid.Column="4" Text="025317" />
+
+                                    <TextBlock Grid.Row="30" Grid.Column="0" Text="{}{unumber}" />
+                                    <TextBlock Grid.Row="30" Grid.Column="2" Text="Number to avoid overwrite" />
+                                    <TextBlock Grid.Row="30" Grid.Column="4" Text="1" />
                                 </Grid>
                             </StackPanel>
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}" Content="Create subfolders for favourite channels" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Quality by default" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource dataFromEnum}, Converter={StaticResource videoQualityToTextConverter}}" SelectedItem="{Binding CurrentPreferences.DownloadQuality, Converter={StaticResource videoQualityToTextConverter}}"/>
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip  Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Quality by default" />
+                                <TextBlock TextAlignment="Justify">
+                                    Stream quality that will be select for download by default. If there are no this quality, will be select the nearest resolution.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+                
+                <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}" Content="Create subfolders for favourite channels" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -389,8 +440,8 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -403,8 +454,8 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <CheckBox Grid.Row="12" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -427,6 +478,8 @@
 
             <Grid Grid.Row="7" Margin="15,0,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
@@ -476,6 +529,42 @@
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
                                 <TextBlock TextAlignment="Justify">
                                         The external video player to use (preferably VLC because it works great with Twitch streams)
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Auto Split" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Grid Grid.Row="4" Grid.Column="2" Grid.IsSharedSizeScope="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox Grid.Column="0" IsChecked="{Binding CurrentPreferences.DownloadSplitUse}" Content="Auto" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" Maximum="99" Loop="False" />
+                    <TextBlock Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" />
+                    <TextBlock Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" />
+                </Grid>
+                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Auto Split" />
+                                <TextBlock TextAlignment="Justify">
+                                        Auto split stream in part with this length
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>

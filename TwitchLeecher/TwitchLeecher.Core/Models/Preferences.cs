@@ -37,11 +37,17 @@ namespace TwitchLeecher.Core.Models
 
         private string _downloadFileName;
 
+        private VideoQuality _downloadQuality;
+        
         private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
 
         private bool _downloadDisableConversion;
+
+        private bool _downloadSplitUse;
+
+        private TimeSpan _downloadSplitTime;
 
         private bool _miscUseExternalPlayer;
 
@@ -233,6 +239,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public VideoQuality DownloadQuality
+        {
+            get
+            {
+                return _downloadQuality;
+            }
+            set
+            {
+                SetProperty(ref _downloadQuality, value);
+            }
+        }
+
         public bool DownloadSubfoldersForFav
         {
             get
@@ -266,6 +284,30 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _downloadDisableConversion, value);
+            }
+        }
+
+        public bool DownloadSplitUse
+        {
+            get
+            {
+                return _downloadSplitUse;
+            }
+            set
+            {
+                SetProperty(ref _downloadSplitUse, value);
+            }
+        }
+
+        public TimeSpan DownloadSplitTime
+        {
+            get
+            {
+                return _downloadSplitTime;
+            }
+            set
+            {
+                SetProperty(ref _downloadSplitTime, value);
             }
         }
 
@@ -363,6 +405,16 @@ namespace TwitchLeecher.Core.Models
                     AddError(currentProperty, $"Filename contains invalid characters ({invalidChars}.)!");
                 }
             }
+
+            currentProperty = nameof(DownloadSplitTime);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_downloadSplitUse == true && _downloadSplitTime.TotalSeconds < 60)
+                {
+                    AddError(currentProperty, "Split time has to be equal or more 1 minute!");
+                }
+            }
         }
 
         public Preferences Clone()
@@ -382,15 +434,34 @@ namespace TwitchLeecher.Core.Models
                 SearchOnStartup = SearchOnStartup,
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
+                DownloadQuality = DownloadQuality,
                 DownloadFileName = DownloadFileName,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
-                DownloadDisableConversion = DownloadDisableConversion
+                DownloadDisableConversion = DownloadDisableConversion,
+                DownloadSplitUse = DownloadSplitUse,
+                DownloadSplitTime = DownloadSplitTime
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);
 
             return clone;
+        }
+
+        public int GetBestFps()
+        {
+            if (_downloadQuality == VideoQuality.Source)
+                return int.MaxValue;
+            else
+                return int.Parse(_downloadQuality.ToString().Substring(_downloadQuality.ToString().IndexOf("f") + 1));
+        }
+
+        public int GetBestResolution()
+        {
+            if (_downloadQuality == VideoQuality.Source)
+                return int.MaxValue;
+            else
+                return int.Parse(_downloadQuality.ToString().Substring(1, _downloadQuality.ToString().IndexOf("f") - 1));
         }
 
         #endregion Methods

@@ -194,10 +194,23 @@ namespace TwitchLeecher.Gui.ViewModels
                                 ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
                                 : currentPrefs.DownloadFolder;
 
-                            string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
-                            filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
+                            if (video.Length < currentPrefs.DownloadSplitTime)
+                                currentPrefs.DownloadSplitUse = false;
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
+                            string fileName = currentPrefs.DownloadFileName;
+                            fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
+                            if (currentPrefs.DownloadSplitUse == true)
+                            {
+                                fileName = fileName.Replace(FilenameWildcards.UNIQNUMBER, FilenameWildcards.UNIQNUMBER.Insert(FilenameWildcards.UNIQNUMBER.Length - 1, "_TEMP"));
+                                fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, video);
+                                fileName = fileName.Replace(FilenameWildcards.UNIQNUMBER.Insert(FilenameWildcards.UNIQNUMBER.Length - 1, "_TEMP"), FilenameWildcards.UNIQNUMBER);
+                            }
+                            else
+                                fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, video);
+
+                            TwitchVideoQuality bestQual = SolveQuality(video.Qualities, currentPrefs.DownloadQuality);
+
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, bestQual, folder, fileName, currentPrefs.DownloadSplitTime, currentPrefs.DownloadDisableConversion);
 
                             _navigationService.ShowDownload(downloadParams);
                         }
@@ -208,6 +221,37 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private TwitchVideoQuality SolveQuality(List<TwitchVideoQuality> qualities, Core.Enums.VideoQuality shouldQuality)
+        {
+            if (qualities.Count == 1 || shouldQuality == Core.Enums.VideoQuality.Source)
+                return qualities.First();
+            if (shouldQuality == Core.Enums.VideoQuality.AudioOnly)
+            {
+                return qualities.Find(x => x.DisplayString == "Audio Only") ?? qualities.First();
+            }
+            int fpsShould = int.Parse(shouldQuality.ToString().Substring(shouldQuality.ToString().IndexOf("f") + 1));
+            int resolutionShould = int.Parse(shouldQuality.ToString().Substring(1, shouldQuality.ToString().IndexOf("f") - 1));
+
+            TwitchVideoQuality bestResult = qualities.Find(x => x.Fps.HasValue && x.ResolutionY.HasValue);
+            if (bestResult == null)
+                return qualities.First();
+            foreach (TwitchVideoQuality qual in qualities)
+            {
+                if (!qual.ResolutionY.HasValue) continue;
+                if (Math.Abs(qual.ResolutionY.Value - resolutionShould) < Math.Abs(bestResult.ResolutionY.Value - resolutionShould))
+                {
+                    bestResult = qual;
+                }
+                else if (Math.Abs(qual.ResolutionY.Value - resolutionShould) == Math.Abs(bestResult.ResolutionY.Value - resolutionShould)
+                    && Math.Abs(qual.Fps.Value - fpsShould) == Math.Abs(bestResult.Fps.Value - fpsShould))
+                {
+                    bestResult = qual;
+                }
+            }
+
+            return bestResult;
         }
 
         public void ShowSearch()

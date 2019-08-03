@@ -18,6 +18,9 @@ namespace TwitchLeecher.Core.Models
         private string _folder;
         private string _filename;
 
+        private bool _autoSplit;
+        private TimeSpan _autoSplitTime;
+
         private bool _cropStart;
         private bool _cropEnd;
         private bool _disableConversion;
@@ -29,7 +32,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename, bool disableConversion)
+        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename, TimeSpan autoTime, bool disableConversion)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -44,6 +47,12 @@ namespace TwitchLeecher.Core.Models
             _video = video ?? throw new ArgumentNullException(nameof(video));
             _quality = quality ?? throw new ArgumentNullException(nameof(quality));
             _vodAuthInfo = vodAuthInfo ?? throw new ArgumentNullException(nameof(vodAuthInfo));
+
+            if (autoTime.Ticks > 0 && autoTime < video.Length)
+            {
+                _autoSplit = true;
+            }
+            _autoSplitTime = autoTime;
 
             _folder = folder;
             _filename = filename;
@@ -130,6 +139,37 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool AutoSplit
+        {
+            get
+            {
+                return _autoSplit;
+            }
+            set
+            {
+                SetProperty(ref _autoSplit, value, nameof(AutoSplit));
+                FirePropertyChanged(nameof(CroppedLength));
+                //if (_cropAuto)
+                //{
+                //    if (CropEnd) CropEnd = false;
+                //    if (CropStart) CropStart = false;
+                //}
+            }
+        }
+
+        public TimeSpan AutoSplitTime
+        {
+            get
+            {
+                return _autoSplitTime;
+            }
+            set
+            {
+                SetProperty(ref _autoSplitTime, value, nameof(AutoSplitTime));
+                FirePropertyChanged(nameof(CroppedLength));
+            }
+        }
+
         public bool CropStart
         {
             get
@@ -205,11 +245,14 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string CroppedLengthStr
+        public string VideoLengthStr
         {
             get
             {
-                return CroppedLength.ToDaylessString();
+                if (_cropStart || _cropEnd)
+                    return $"{CroppedLength.ToDaylessString()} ({(_cropStart ? _cropStartTime.ToDaylessString() : "00:00:00")} - {(_cropEnd ? _cropEndTime.ToDaylessString() : Video.Length.ToDaylessString())})";
+                else
+                    return CroppedLength.ToDaylessString();
             }
         }
 
@@ -301,6 +344,24 @@ namespace TwitchLeecher.Core.Models
                     else if (CroppedLength.TotalSeconds < 5)
                     {
                         AddError(currentProperty, "The cropped video has to be at least 5s long!");
+                    }
+                }
+            }
+
+            currentProperty = nameof(AutoSplitTime);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_autoSplit)
+                {
+                    if (_autoSplitTime.TotalSeconds < 60)
+                    {
+                        AddError(currentProperty, "The split time has to be at least 60s long!");
+                    }
+                    else if (!_filename.Contains(FilenameWildcards.UNIQNUMBER) && _autoSplitTime.TotalSeconds < _video.Length.TotalSeconds+60)
+                    {
+                        AddError(currentProperty, $"File name should contains '{FilenameWildcards.UNIQNUMBER}' for auto naming!");
+                        AddError(nameof(Filename), $"File name should contains '{FilenameWildcards.UNIQNUMBER}' for auto naming!");
                     }
                 }
             }

@@ -39,11 +39,14 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_EL = "Download";
         private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
+        private const string DOWNLOAD_QUALITY_EL = "Quality";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
         private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
         private const string DOWNLOAD_DISABLECONVERSION_EL = "DisableConversion";
-
+        private const string DOWNLOAD_SPLITEUSE_EL = "SplitUse";
+        private const string DOWNLOAD_SPLITETIME_EL = "SplitTime";
+        
         private const string MISC_EL = "Misc";
         private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
         private const string MISC_EXTERNALPLAYER_EL = "ExternalPlayer";
@@ -201,6 +204,10 @@ namespace TwitchLeecher.Services.Services
                     downloadEl.Add(downloadFolderEl);
                 }
 
+                XElement downloadQualityEl = new XElement(DOWNLOAD_QUALITY_EL);
+                downloadQualityEl.SetValue(preferences.DownloadQuality);
+                downloadEl.Add(downloadQualityEl);
+
                 if (!string.IsNullOrWhiteSpace(preferences.DownloadFileName))
                 {
                     XElement downloadFileNameEl = new XElement(DOWNLOAD_FILENAME_EL);
@@ -219,6 +226,14 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadDisableConversionEl = new XElement(DOWNLOAD_DISABLECONVERSION_EL);
                 downloadDisableConversionEl.SetValue(preferences.DownloadDisableConversion);
                 downloadEl.Add(downloadDisableConversionEl);
+
+                XElement downloadSplitUseEl = new XElement(DOWNLOAD_SPLITEUSE_EL);
+                downloadSplitUseEl.SetValue(preferences.DownloadSplitUse);
+                downloadEl.Add(downloadSplitUseEl);
+
+                XElement downloadSplitTimeEl = new XElement(DOWNLOAD_SPLITETIME_EL);
+                downloadSplitTimeEl.SetValue(DateTime.MinValue + preferences.DownloadSplitTime);
+                downloadEl.Add(downloadSplitTimeEl);
 
                 // Miscellanious
                 XElement miscUseExternalPlayerEl = new XElement(MISC_USEEXTERNALPLAYER_EL);
@@ -451,6 +466,20 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
+                            XElement downloadQualityEl = downloadEl.Element(DOWNLOAD_QUALITY_EL);
+
+                            if (downloadQualityEl != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadQuality = downloadQualityEl.GetValueAsEnum<VideoQuality>();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
                             XElement downloadFileNameEl = downloadEl.Element(DOWNLOAD_FILENAME_EL);
 
                             if (downloadFileNameEl != null)
@@ -513,6 +542,34 @@ namespace TwitchLeecher.Services.Services
                                     // Value from config file could not be loaded, use default value
                                 }
                             }
+
+                            XElement downloadSplitUseEl = downloadEl.Element(DOWNLOAD_SPLITEUSE_EL);
+
+                            if (downloadSplitUseEl != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadSplitUse = downloadSplitUseEl.GetValueAsBool();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement downloadSplitTimeEl = downloadEl.Element(DOWNLOAD_SPLITETIME_EL);
+
+                            if (downloadSplitTimeEl != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadSplitTime = downloadSplitTimeEl.GetValueAsDateTime() - DateTime.MinValue;
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
                         }
 
                         XElement miscEl = preferencesEl.Element(MISC_EL);
@@ -569,6 +626,7 @@ namespace TwitchLeecher.Services.Services
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
+                DownloadQuality = VideoQuality.Source,
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,

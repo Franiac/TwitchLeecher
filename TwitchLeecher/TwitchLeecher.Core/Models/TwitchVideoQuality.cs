@@ -43,6 +43,8 @@ namespace TwitchLeecher.Core.Models
 
         public string Resolution { get; private set; }
 
+        public int? ResolutionY { get; private set; }
+
         public int? Fps { get; private set; }
 
         #endregion Properties
@@ -53,7 +55,9 @@ namespace TwitchLeecher.Core.Models
         {
             QualityId = qualityId;
             QualityString = GetQualityString(qualityId);
-            Resolution = GetResolution(qualityId, resolution);
+            int? _resolutionY = null;
+            Resolution = GetResolution(qualityId, resolution, out _resolutionY);
+            ResolutionY = _resolutionY;
             Fps = GetFps(qualityId, fps);
 
             if (qualityId == QUALITY_AUDIO)
@@ -117,8 +121,9 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        private string GetResolution(string qualityId, string resolution)
+        private string GetResolution(string qualityId, string resolution, out int? resolutionY)
         {
+            resolutionY = null;
             if (!string.IsNullOrWhiteSpace(resolution))
             {
                 if (resolution.Equals("0x0", StringComparison.OrdinalIgnoreCase))
@@ -126,20 +131,28 @@ namespace TwitchLeecher.Core.Models
                     switch (qualityId)
                     {
                         case QUALITY_HIGH:
+                            resolutionY = 720;
                             return "1280x720";
 
                         case QUALITY_MEDIUM:
+                            resolutionY = 480;
                             return "852x480";
 
                         case QUALITY_LOW:
+                            resolutionY = 360;
                             return "640x360";
 
                         case QUALITY_MOBILE:
+                            resolutionY = 160;
                             return "284x160";
                     }
                 }
                 else
                 {
+                    //System.Text.RegularExpressions.Regex parseResolition = new System.Text.RegularExpressions.Regex(@"^(?<x>\d+)x(?<y>\d+)$");
+                    var match = System.Text.RegularExpressions.Regex.Match(resolution, @"^(?<x>\d+)x(?<y>\d+)$");
+                    //resolutionX = match.Success ? (int?)int.Parse(match.Groups["x"].Value) : null;
+                    resolutionY = match.Success ? (int?)int.Parse(match.Groups["y"].Value) : null;
                     return resolution;
                 }
             }
