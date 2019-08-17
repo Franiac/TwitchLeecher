@@ -205,11 +205,14 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public string CroppedLengthStr
+        public string VideoLengthStr
         {
             get
             {
-                return CroppedLength.ToDaylessString();
+                if (_cropStart || _cropEnd)
+                    return $"{CroppedLength.ToDaylessString()} ({(_cropStart ? _cropStartTime.ToDaylessString() : "00:00:00")} - {(_cropEnd ? _cropEndTime.ToDaylessString() : Video.Length.ToDaylessString())})";
+                else
+                    return CroppedLength.ToDaylessString();
             }
         }
 
