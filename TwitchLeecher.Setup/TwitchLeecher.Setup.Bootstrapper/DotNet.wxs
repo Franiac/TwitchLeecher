@@ -30,7 +30,7 @@
         <RemotePayload
           CertificateThumbprint="9DC17888B5CFAD98B3CB35C1994E96227F061675"
           Description="Microsoft .NET Framework 4.8 Setup"
-          Hash="755349ECD6A478FE010E466B29911D2388F6CE94"
+          Hash="5A84A8E612E270E27D0061D58DB6B470153BE1F9"
           ProductName="Microsoft .NET Framework 4.8"
           Size="1486376"
           Version="4.8.03761.0" />
