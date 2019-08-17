@@ -109,6 +109,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropStartHours));
                 FirePropertyChanged(nameof(CropStartMinutes));
                 FirePropertyChanged(nameof(CropStartSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
 
@@ -126,6 +127,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropStartHours));
                 FirePropertyChanged(nameof(CropStartMinutes));
                 FirePropertyChanged(nameof(CropStartSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
 
@@ -143,6 +145,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropStartHours));
                 FirePropertyChanged(nameof(CropStartMinutes));
                 FirePropertyChanged(nameof(CropStartSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
 
@@ -160,6 +163,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropEndHours));
                 FirePropertyChanged(nameof(CropEndMinutes));
                 FirePropertyChanged(nameof(CropEndSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
 
@@ -177,6 +181,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropEndHours));
                 FirePropertyChanged(nameof(CropEndMinutes));
                 FirePropertyChanged(nameof(CropEndSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
 
@@ -194,8 +199,106 @@ namespace TwitchLeecher.Gui.ViewModels
                 FirePropertyChanged(nameof(CropEndHours));
                 FirePropertyChanged(nameof(CropEndMinutes));
                 FirePropertyChanged(nameof(CropEndSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
             }
         }
+
+        public bool AutoSplitUseExtended
+        {
+            get
+            {
+                return _downloadParams.AutoSplit;
+            }
+            set
+            {
+                if (value != _downloadParams.AutoSplit)
+                {
+                    _downloadParams.AutoSplit = value;
+                    if (!UseCustomFilename)
+                        UpdateFilenameFromTemplate();
+                    else
+                    {
+                        if (_downloadParams.AutoSplit && !_downloadParams.Filename.Contains(FilenameWildcards.UNIQNUMBER))
+                        {//Add _{unumber} before extension
+                            _downloadParams.Filename = _downloadParams.Filename.Insert(_downloadParams.Filename.Length - Path.GetExtension(_downloadParams.Filename).Length, $"_{FilenameWildcards.UNIQNUMBER}");
+                        }
+                        else if (!_downloadParams.AutoSplit)
+                        {
+                            string searchStr = $"_{FilenameWildcards.UNIQNUMBER}{Path.GetExtension(_downloadParams.Filename)}";
+                            if (_downloadParams.Filename.EndsWith(searchStr))
+                            {//remove _{unumber} from end of filename
+                                _downloadParams.Filename = _downloadParams.Filename.Remove(_downloadParams.Filename.Length - searchStr.Length, searchStr.Length - Path.GetExtension(_downloadParams.Filename).Length);
+                            }
+                        }
+                    }
+                    FirePropertyChanged(nameof(AutoSplitUseExtended));
+                }
+            }
+        }
+
+        public int AutoSplitTimeHours
+        {
+            get
+            {
+                return _downloadParams.AutoSplitTime.GetDaysInHours();
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.AutoSplitTime;
+                _downloadParams.AutoSplitTime = new TimeSpan(value, current.Minutes, current.Seconds);
+
+                FirePropertyChanged(nameof(AutoSplitTimeHours));
+                FirePropertyChanged(nameof(AutoSplitTimeMinutes));
+                FirePropertyChanged(nameof(AutoSplitTimeSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
+            }
+        }
+
+        public int AutoSplitTimeMinutes
+        {
+            get
+            {
+                return _downloadParams.AutoSplitTime.Minutes;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.AutoSplitTime;
+                _downloadParams.AutoSplitTime = new TimeSpan(current.GetDaysInHours(), value, current.Seconds);
+
+                FirePropertyChanged(nameof(AutoSplitTimeHours));
+                FirePropertyChanged(nameof(AutoSplitTimeMinutes));
+                FirePropertyChanged(nameof(AutoSplitTimeSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
+            }
+        }
+
+        public int AutoSplitTimeSeconds
+        {
+            get
+            {
+                return _downloadParams.AutoSplitTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = _downloadParams.AutoSplitTime;
+                _downloadParams.AutoSplitTime = new TimeSpan(current.GetDaysInHours(), current.Minutes, value);
+
+                FirePropertyChanged(nameof(AutoSplitTimeHours));
+                FirePropertyChanged(nameof(AutoSplitTimeMinutes));
+                FirePropertyChanged(nameof(AutoSplitTimeSeconds));
+                FirePropertyChanged(nameof(AutoSplitPartCount));
+            }
+        }
+
+        public int AutoSplitPartCount
+        {
+            get
+            {
+                if (_downloadParams.AutoSplit == false || DownloadParams.AutoSplitTime.TotalSeconds < Preferences.MinSplitLength || DownloadParams.CroppedLength.TotalSeconds < Preferences.MinSplitLength)
+                    return 1;
+                return Math.Max((int)Math.Ceiling((DownloadParams.CroppedLength.TotalSeconds - Preferences.MinSplitLength) / DownloadParams.AutoSplitTime.TotalSeconds), 1);
+            }
+         }
 
         public ICommand ChooseCommand
         {
@@ -281,12 +384,47 @@ namespace TwitchLeecher.Gui.ViewModels
             TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
             fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
+            //if (AutoSplitUseExtended && currentPrefs.DownloadDisableConversion)
+            //    AutoSplitUseExtended = false;
 
-            fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+            if (AutoSplitUseExtended && fileName.Contains(FilenameWildcards.UNIQNUMBER))
+            {
+                string tempUniqNumb = FilenameWildcards.UNIQNUMBER.Insert(FilenameWildcards.UNIQNUMBER.Length - 1, "_temp");
+                fileName = fileName.Replace(FilenameWildcards.UNIQNUMBER, tempUniqNumb);
+                fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+                fileName = fileName.Replace(tempUniqNumb, FilenameWildcards.UNIQNUMBER);
+            }
+            else
+                fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
 
             _downloadParams.Filename = fileName;
-            
-            _downloadParams.Filename = fileName;
+        }
+
+        private string GetFilenameFromTemplate(string fileName, string folder, TimeSpan? cropStartTime = null, TimeSpan? cropEndTime = null)
+        {
+            return _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+        }
+
+        private List<Tuple<TimeSpan?, TimeSpan?>> GetListOfSplitTimes(TwitchVideo video, TimeSpan? startCrop, TimeSpan? endCrop, TimeSpan splitTime, int overlapSec)
+        {
+            endCrop = endCrop ?? video.Length;
+            List<Tuple<TimeSpan?, TimeSpan?>> result = new List<Tuple<TimeSpan?, TimeSpan?>>();
+
+            TimeSpan? curStart = startCrop;// ?? TimeSpan.Zero;
+            TimeSpan curEnd = (curStart ?? TimeSpan.Zero).Add(splitTime.Add(new TimeSpan(0, 0, overlapSec)));
+            while (curEnd < endCrop.Value)
+            {
+                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, curEnd));
+                curStart = curEnd.Add(new TimeSpan(0, 0, -overlapSec));
+                curEnd = curEnd.Add(splitTime);
+            }
+            if (endCrop.Value.TotalSeconds - (curStart?.TotalSeconds??0) < Preferences.MinSplitLength && result.Count > 0)
+            {//Add remaining seconds to last part
+                result[result.Count - 1] = new Tuple<TimeSpan?, TimeSpan?>(result[result.Count - 1].Item1, null);
+            }
+            else//or add new last part
+                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, null));
+            return result;
         }
 
         private void Download()
@@ -297,21 +435,63 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     Validate();
 
+                    //if (!HasErrors)
+                    //{
+                    //    if (File.Exists(_downloadParams.FullPath))
+                    //    {
+                    //        MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    //        if (result != MessageBoxResult.Yes)
+                    //        {
+                    //            return;
+                    //        }
+                    //    }
+
+                    //    _twitchService.Enqueue(_downloadParams);
+                    //    _navigationService.NavigateBack();
+                    //    _notificationService.ShowNotification("Download added");
+                    //}
                     if (!HasErrors)
                     {
-                        if (File.Exists(_downloadParams.FullPath))
+                        int downloadAddedCount = 1;
+                        if (_downloadParams.AutoSplit && _downloadParams.AutoSplitTime.TotalSeconds > Preferences.MinSplitLength)
                         {
-                            MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            string baseFolder = Path.GetDirectoryName(_downloadParams.FullPath);
+                            string baseFilename = Path.GetFileName(_downloadParams.FullPath);
 
-                            if (result != MessageBoxResult.Yes)
+                            var splitTimes = GetListOfSplitTimes(_downloadParams.Video, _downloadParams.CropStart ? (TimeSpan?)_downloadParams.CropStartTime : null, _downloadParams.CropEnd ? (TimeSpan?)_downloadParams.CropEndTime : null, _downloadParams.AutoSplitTime, _downloadParams.AutoSplitOverlap);
+                            foreach(var splitPair in splitTimes)
                             {
-                                return;
+                                string filename = GetFilenameFromTemplate(baseFilename, baseFolder, splitPair.Item1, splitPair.Item2);
+                                DownloadParameters tempParams = new DownloadParameters(_downloadParams.Video, _downloadParams.VodAuthInfo, _downloadParams.Quality, baseFolder, filename, _downloadParams.DisableConversion, false, new TimeSpan(), 0);
+                                tempParams.AutoSplit = false;
+                                tempParams.CropStart = splitPair.Item1.HasValue;
+                                tempParams.CropStartTime = splitPair.Item1 ?? new TimeSpan();
+                                tempParams.CropEnd = splitPair.Item2.HasValue;
+                                tempParams.CropEndTime = splitPair.Item2 ?? _downloadParams.Video.Length;
+                                _twitchService.Enqueue(tempParams);
                             }
+                            downloadAddedCount = splitTimes.Count;
                         }
+                        else
+                        {
+                            if (File.Exists(_downloadParams.FullPath))
+                            {
+                                MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                        _twitchService.Enqueue(_downloadParams);
+                                if (result != MessageBoxResult.Yes)
+                                {
+                                    return;
+                                }
+                            }
+
+                            _twitchService.Enqueue(_downloadParams);
+                        }
                         _navigationService.NavigateBack();
-                        _notificationService.ShowNotification("Download added");
+                        if (downloadAddedCount <= 1)
+                            _notificationService.ShowNotification("Download added");
+                        else
+                            _notificationService.ShowNotification($"{downloadAddedCount} downloads added");
                     }
                 }
             }
@@ -369,6 +549,21 @@ namespace TwitchLeecher.Gui.ViewModels
                         AddError(nameof(CropEndHours), firstError);
                         AddError(nameof(CropEndMinutes), firstError);
                         AddError(nameof(CropEndSeconds), firstError);
+                    }
+
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.AutoSplitTime)) is List<string> autoSplitTimeErrors && autoSplitTimeErrors.Count > 0)
+                    {
+                        string firstError = autoSplitTimeErrors.First();
+                        AddError(nameof(AutoSplitTimeHours), firstError);
+                        AddError(nameof(AutoSplitTimeMinutes), firstError);
+                        AddError(nameof(AutoSplitTimeSeconds), firstError);
+                        AddError(nameof(AutoSplitUseExtended), firstError);
+                    }
+
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.AutoSplitOverlap)) is List<string> overlapErrors && overlapErrors.Count > 0)
+                    {
+                        string firstError = overlapErrors.First();
+                        AddError(nameof(AutoSplitUseExtended), firstError);
                     }
                 }
             }

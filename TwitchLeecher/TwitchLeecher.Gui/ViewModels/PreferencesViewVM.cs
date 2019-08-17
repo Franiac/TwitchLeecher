@@ -188,6 +188,56 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public int DownloadSplitTimeHours
+        {
+            get
+            {
+                return (int) CurrentPreferences.DownloadSplitTime.TotalHours;
+            }
+            set
+            {
+                TimeSpan current = CurrentPreferences.DownloadSplitTime;
+                CurrentPreferences.DownloadSplitTime = new TimeSpan(value, current.Minutes, current.Seconds);
+
+                FirePropertyChanged(nameof(DownloadSplitTimeHours));
+                FirePropertyChanged(nameof(DownloadSplitTimeMinutes));
+                FirePropertyChanged(nameof(DownloadSplitTimeSeconds));
+            }
+        }
+
+        public int DownloadSplitTimeMinutes
+        {
+            get
+            {
+                return CurrentPreferences.DownloadSplitTime.Minutes;
+            }
+            set
+            {
+                TimeSpan current = CurrentPreferences.DownloadSplitTime;
+                CurrentPreferences.DownloadSplitTime = new TimeSpan((int) CurrentPreferences.DownloadSplitTime.TotalHours, value, current.Seconds);
+
+                FirePropertyChanged(nameof(DownloadSplitTimeHours));
+                FirePropertyChanged(nameof(DownloadSplitTimeMinutes));
+                FirePropertyChanged(nameof(DownloadSplitTimeSeconds));
+            }
+        }
+
+        public int DownloadSplitTimeSeconds
+        {
+            get
+            {
+                return CurrentPreferences.DownloadSplitTime.Seconds;
+            }
+            set
+            {
+                TimeSpan current = CurrentPreferences.DownloadSplitTime;
+                CurrentPreferences.DownloadSplitTime = new TimeSpan((int) CurrentPreferences.DownloadSplitTime.TotalHours, current.Minutes, value);
+
+                FirePropertyChanged(nameof(DownloadSplitTimeHours));
+                FirePropertyChanged(nameof(DownloadSplitTimeMinutes));
+                FirePropertyChanged(nameof(DownloadSplitTimeSeconds));
+            }
+        }
         #endregion Properties
 
         #region Methods
@@ -432,6 +482,14 @@ namespace TwitchLeecher.Gui.ViewModels
                 if (CurrentPreferences.HasErrors)
                 {
                     AddError(currentProperty, "Invalid Preferences!");
+
+                    if (CurrentPreferences.GetErrors(nameof(CurrentPreferences.DownloadSplitTime)) is List<string> downloadSplitTimeErrors && downloadSplitTimeErrors.Count > 0)
+                    {
+                        string firstError = downloadSplitTimeErrors.First();
+                        AddError(nameof(DownloadSplitTimeHours), firstError);
+                        AddError(nameof(DownloadSplitTimeMinutes), firstError);
+                        AddError(nameof(DownloadSplitTimeSeconds), firstError);
+                    }
                 }
             }
         }

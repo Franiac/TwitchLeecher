@@ -44,6 +44,9 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
         private const string DOWNLOAD_DISABLECONVERSION_EL = "DisableConversion";
+        private const string DOWNLOAD_SPLITUSE_EL = "SplitUse";
+        private const string DOWNLOAD_SPLITTIME_EL = "SplitTime";
+        private const string DOWNLOAD_SPLITOVERLAP_EL = "SplitOverlapSeconds";
 
         private const string MISC_EL = "Misc";
         private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
@@ -224,6 +227,18 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadDisableConversionEl = new XElement(DOWNLOAD_DISABLECONVERSION_EL);
                 downloadDisableConversionEl.SetValue(preferences.DownloadDisableConversion);
                 downloadEl.Add(downloadDisableConversionEl);
+
+                XElement downloadSplitUseEl = new XElement(DOWNLOAD_SPLITUSE_EL);
+                downloadSplitUseEl.SetValue(preferences.DownloadSplitUse);
+                downloadEl.Add(downloadSplitUseEl);
+                
+                XElement downloadSplitTimeEl = new XElement(DOWNLOAD_SPLITTIME_EL);
+                downloadSplitTimeEl.SetValue(DateTime.MinValue + preferences.DownloadSplitTime);
+                downloadEl.Add(downloadSplitTimeEl);
+
+                XElement splitOverlapSecondsEl = new XElement(DOWNLOAD_SPLITOVERLAP_EL);
+                splitOverlapSecondsEl.SetValue(preferences.SplitOverlapSeconds);
+                downloadEl.Add(splitOverlapSecondsEl);
 
                 // Miscellanious
                 XElement miscUseExternalPlayerEl = new XElement(MISC_USEEXTERNALPLAYER_EL);
@@ -534,6 +549,48 @@ namespace TwitchLeecher.Services.Services
                             }
                         }
 
+                        XElement downloadSplitUseEl = downloadEl.Element(DOWNLOAD_SPLITUSE_EL);
+
+                        if (downloadSplitUseEl != null)
+                        {
+                            try
+                            {
+                                preferences.DownloadSplitUse = downloadSplitUseEl.GetValueAsBool();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
+                        }
+
+                        XElement downloadSplitTimeEl = downloadEl.Element(DOWNLOAD_SPLITTIME_EL);
+
+                        if (downloadSplitTimeEl != null)
+                        {
+                            try
+                            {
+                                preferences.DownloadSplitTime = downloadSplitTimeEl.GetValueAsDateTime() - DateTime.MinValue;
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
+                        }
+
+                        XElement splitOverlapSecondsEl = downloadEl.Element(DOWNLOAD_SPLITOVERLAP_EL);
+
+                        if (splitOverlapSecondsEl != null)
+                        {
+                            try
+                            {
+                                preferences.SplitOverlapSeconds = splitOverlapSecondsEl.GetValueAsInt();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
+                        }
+
                         XElement miscEl = preferencesEl.Element(MISC_EL);
 
                         if (miscEl != null)
@@ -592,8 +649,11 @@ namespace TwitchLeecher.Services.Services
                 DownloadQuality = VideoQuality.Source,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
+                DownloadSplitTime = new TimeSpan(),
+                DownloadSplitUse = false,
                 MiscUseExternalPlayer = false,
-                MiscExternalPlayer = null
+                MiscExternalPlayer = null,
+                SplitOverlapSeconds = 10,
             };
 
             return preferences;

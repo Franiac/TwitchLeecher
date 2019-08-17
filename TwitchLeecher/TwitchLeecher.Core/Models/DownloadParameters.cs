@@ -18,6 +18,10 @@ namespace TwitchLeecher.Core.Models
         private string _folder;
         private string _filename;
 
+        private bool _autoSplit;
+        private TimeSpan _autoSplitTime;
+        private int _autoSplitOverlap;
+
         private bool _cropStart;
         private bool _cropEnd;
         private bool _disableConversion;
@@ -29,7 +33,8 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename, bool disableConversion)
+        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, 
+            string folder, string filename, bool disableConversion, bool autoSplitUse, TimeSpan autoSplitTime, int autoSplitOverlap)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -50,6 +55,10 @@ namespace TwitchLeecher.Core.Models
             _folder = folder;
             _filename = filename;
             _disableConversion = disableConversion;
+
+            _autoSplitTime = autoSplitTime;
+            _autoSplit = autoSplitUse && (autoSplitTime.TotalSeconds > Preferences.MinSplitLength && autoSplitTime.TotalSeconds < video.Length.TotalSeconds + Preferences.MinSplitLength);
+            _autoSplitOverlap = autoSplitOverlap;
 
             _cropEndTime = video.Length;
         }
@@ -129,6 +138,44 @@ namespace TwitchLeecher.Core.Models
             set
             {
                 SetProperty(ref _disableConversion, value, nameof(DisableConversion));
+            }
+        }
+
+        public bool AutoSplit
+        {
+            get
+            {
+                return _autoSplit;
+            }
+            set
+            {
+                SetProperty(ref _autoSplit, value, nameof(AutoSplit));
+                FirePropertyChanged(nameof(CroppedLength));
+            }
+        }
+
+        public TimeSpan AutoSplitTime
+        {
+            get
+            {
+               return _autoSplitTime;
+            }
+            set
+            {
+                SetProperty(ref _autoSplitTime, value, nameof(AutoSplitTime));
+                FirePropertyChanged(nameof(CroppedLength));
+            }
+        }
+
+        public int AutoSplitOverlap
+        {
+            get
+            {
+                return _autoSplitOverlap;
+            }
+            set
+            {
+                SetProperty(ref _autoSplitOverlap, value, nameof(AutoSplitOverlap));
             }
         }
 
@@ -307,6 +354,35 @@ namespace TwitchLeecher.Core.Models
                     {
                         AddError(currentProperty, "The cropped video has to be at least 5s long!");
                     }
+                }
+            }
+
+            currentProperty = nameof(AutoSplitTime);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_autoSplit)
+                {
+                    if (_autoSplitTime.TotalSeconds < Preferences.MinSplitLength)
+                    {
+                        AddError(currentProperty, $"The split time has to be at least {Preferences.MinSplitLength}s long!");
+                    }
+                    else if (!_filename.Contains(FilenameWildcards.UNIQNUMBER) && _autoSplitTime.TotalSeconds < _video.Length.TotalSeconds + Preferences.MinSplitLength)
+                    {
+                        AddError(currentProperty, $"File name should contains '{FilenameWildcards.UNIQNUMBER}' for auto naming!");
+                        AddError(nameof(Filename), $"File name should contains '{FilenameWildcards.UNIQNUMBER}' for auto naming!");
+                    }
+                }
+            }
+
+            currentProperty = nameof(AutoSplitOverlap);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_autoSplit && (_autoSplitOverlap >= Preferences.MinSplitLength / 2 || _autoSplitOverlap <0))
+                {
+                    string errorMessage = $"Overlap seconds has to be less than {Preferences.MinSplitLength / 2} seconds!";
+                    AddError(currentProperty, errorMessage);
                 }
             }
         }

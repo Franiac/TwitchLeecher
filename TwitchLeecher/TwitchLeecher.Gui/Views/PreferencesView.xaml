@@ -4,6 +4,7 @@
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
+             xmlns:prefs="clr-namespace:TwitchLeecher.Core.Models;assembly=TwitchLeecher.Core"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:fa="http://schemas.fontawesome.io/icons/">
     <UserControl.Resources>
@@ -18,6 +19,7 @@
                     <converters:VideoQualityToTextConverter x:Key="videoQualityToTextConverter" />
                     <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
                     <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+                    <converters:InverseBooleanConverter x:Key="InverseBoolConverter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -419,7 +421,7 @@
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Quality by default" />
                                 <TextBlock TextAlignment="Justify">
-                                    Specify quality that will be select for download by default. If there are no selected quality, it will be empty and you will have to select it manually.
+                                    Specify quality that will be select for download by default. If video hasn't selected quality, you will have to select it manually.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
@@ -481,6 +483,8 @@
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -528,6 +532,47 @@
                                 <TextBlock TextAlignment="Justify">
                                         The external video player to use (preferably VLC because it works great with Twitch streams)
                                 </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+                
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Auto Split" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Grid Grid.Row="4" Grid.Column="2" Grid.IsSharedSizeScope="True" IsEnabled="{Binding CurrentPreferences.DownloadDisableConversion, Converter={StaticResource InverseBoolConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox Grid.Column="0" IsChecked="{Binding CurrentPreferences.DownloadSplitUse}" Content="Auto" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" Maximum="99" Loop="False" />
+                    <TextBlock Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" />
+                    <TextBlock Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadSplitTimeSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" />
+                    <TextBlock Grid.Column="12"  Text="Overlap" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Column="14" Style="{StaticResource TlTimeUpDown}" Value="{Binding CurrentPreferences.SplitOverlapSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding CurrentPreferences.DownloadSplitUse}" Maximum="99"/>
+                </Grid>
+                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Auto Split" />
+                                <TextBlock TextAlignment="Justify" Text="{Binding Path=(prefs:Preferences.MinSplitLength), 
+                                    StringFormat='Auto split stream in part with this length. Also add extra seconds to overlap between video parts. Split time has to be at least {0} seconds, parts smaller will be attached to previous part.'}"/>
                             </StackPanel>
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>

@@ -9,6 +9,9 @@ namespace TwitchLeecher.Core.Models
 {
     public class Preferences : BindableBase
     {
+        static public int MinSplitLength { get { return 120; } }//in seconds
+        //At least 60 seconds
+
         #region Fields
 
         private Version _version;
@@ -44,6 +47,12 @@ namespace TwitchLeecher.Core.Models
         private bool _downloadRemoveCompleted;
 
         private bool _downloadDisableConversion;
+        
+        private bool _downloadSplitUse;
+
+        private TimeSpan _downloadSplitTime;
+
+        private int _splitOverlapSeconds;
 
         private bool _miscUseExternalPlayer;
 
@@ -283,6 +292,42 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool DownloadSplitUse
+        {
+            get
+            {
+                return _downloadSplitUse;
+            }
+            set
+            {
+                SetProperty(ref _downloadSplitUse, value);
+            }
+        }
+
+        public TimeSpan DownloadSplitTime
+        {
+            get
+            {
+                return _downloadSplitTime;
+            }
+            set
+            {
+                SetProperty(ref _downloadSplitTime, value);
+            }
+        }
+
+        public int SplitOverlapSeconds
+        {
+            get
+            {
+                return _splitOverlapSeconds;
+            }
+            set
+            {
+                SetProperty(ref _splitOverlapSeconds, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -377,6 +422,42 @@ namespace TwitchLeecher.Core.Models
                     AddError(currentProperty, $"Filename contains invalid characters ({invalidChars}.)!");
                 }
             }
+
+            currentProperty = nameof(DownloadSplitUse);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_downloadSplitUse && !_downloadDisableConversion && !_downloadFileName.Contains(FilenameWildcards.UNIQNUMBER))
+                {
+                    string errorMessage = $"With autosplit option enabled, download file name has to contain {FilenameWildcards.UNIQNUMBER} for autonaming!";
+                    AddError(currentProperty, errorMessage);
+                    AddError(nameof(DownloadFileName), errorMessage);
+                }
+            }
+
+            currentProperty = nameof(DownloadSplitTime);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_downloadSplitUse && !_downloadDisableConversion && _downloadSplitTime.TotalSeconds < Preferences.MinSplitLength)
+                {
+                    string errorMessage = $"Split time has to be equal or more {Preferences.MinSplitLength} seconds!";
+                    AddError(currentProperty, errorMessage);
+                    AddError(nameof(DownloadSplitUse), errorMessage);
+                }
+            }
+
+            currentProperty = nameof(SplitOverlapSeconds);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_downloadSplitUse && !_downloadDisableConversion && (_splitOverlapSeconds >= Preferences.MinSplitLength / 2 || _splitOverlapSeconds < 0))
+                {
+                    string errorMessage = $"Overlap seconds has to be less than {Preferences.MinSplitLength / 2} seconds!";
+                    AddError(currentProperty, errorMessage);
+                    AddError(nameof(DownloadSplitUse), errorMessage);
+                }
+            }
         }
 
         public Preferences Clone()
@@ -400,7 +481,10 @@ namespace TwitchLeecher.Core.Models
                 DownloadQuality = DownloadQuality,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
-                DownloadDisableConversion = DownloadDisableConversion
+                DownloadDisableConversion = DownloadDisableConversion,
+                DownloadSplitUse = DownloadSplitUse,
+                DownloadSplitTime = DownloadSplitTime,
+                SplitOverlapSeconds = SplitOverlapSeconds,
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);

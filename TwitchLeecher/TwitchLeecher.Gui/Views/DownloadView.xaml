@@ -106,6 +106,9 @@
                         <RowDefinition SharedSizeGroup="g2" />
                         <RowDefinition Height="5" />
                         <RowDefinition SharedSizeGroup="g2" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition SharedSizeGroup="g2" />
+                        <RowDefinition SharedSizeGroup="g2" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -116,6 +119,10 @@
                         <ColumnDefinition Width="3" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="12" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="3" />
                         <ColumnDefinition Width="Auto" />
@@ -134,6 +141,18 @@
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                     <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+
+                    <CheckBox Grid.Row="4" Grid.Column="0" IsChecked="{Binding AutoSplitUseExtended}" Content="Auto" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="4" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding AutoSplitTimeHours, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DownloadParams.AutoSplit}" Maximum="99" Loop="False" />
+                    <TextBlock Grid.Row="4" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="4" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding AutoSplitTimeMinutes, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DownloadParams.AutoSplit}" />
+                    <TextBlock Grid.Row="4" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="4" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding AutoSplitTimeSeconds, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DownloadParams.AutoSplit}" />
+                    <TextBlock Grid.Row="4" Grid.Column="12"  Text="Overlap" VerticalAlignment="Center" />
+                    <ctrl:TlIntegerUpDown Grid.Row="4" Grid.Column="14" Style="{StaticResource TlTimeUpDown}" Value="{Binding DownloadParams.AutoSplitOverlap, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.AutoSplit}" Maximum="99"/>
+                    
+                    <TextBlock Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="9" Text="{Binding AutoSplitPartCount, StringFormat='Video parts: {0}', FallbackValue='Video count: 1'}" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Visibility="{Binding AutoSplitUseExtended, Converter={StaticResource ResourceKey='BVConverter'}}"/>
                 </Grid>
             </Grid>
         </Grid>
