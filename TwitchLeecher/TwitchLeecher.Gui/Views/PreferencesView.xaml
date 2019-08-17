@@ -319,6 +319,8 @@
                                         <RowDefinition SharedSizeGroup="r2" />
                                         <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -387,6 +389,10 @@
                                     <TextBlock Grid.Row="28" Grid.Column="0" Text="{}{end}" />
                                     <TextBlock Grid.Row="28" Grid.Column="2" Text="Crop end time (HHmmss)" />
                                     <TextBlock Grid.Row="28" Grid.Column="4" Text="025317" />
+                                    
+                                    <TextBlock Grid.Row="30" Grid.Column="0" Text="{}{unumber}" />
+                                    <TextBlock Grid.Row="30" Grid.Column="2" Text="Number to avoid overwrite" />
+                                    <TextBlock Grid.Row="30" Grid.Column="4" Text="1" />
                                 </Grid>
                             </StackPanel>
                         </ToolTip>

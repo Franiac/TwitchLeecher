@@ -2,6 +2,8 @@
 {
     public static class FilenameWildcards
     {
+        public delegate bool IsFileNameUsedsDelegate(string fileName);
+
         public static string CHANNEL = "{channel}";
 
         public static string GAME = "{game}";
@@ -29,5 +31,7 @@
         public static string START = "{start}";
 
         public static string END = "{end}";
+
+        public static string UNIQNUMBER = "{unumber}";
     }
 }

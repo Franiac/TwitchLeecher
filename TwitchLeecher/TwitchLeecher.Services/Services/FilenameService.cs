@@ -12,7 +12,7 @@ namespace TwitchLeecher.Services.Services
     {
         #region Methods
 
-        public string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null)
+        public string SubstituteWildcards(string filename, string folder, FilenameWildcards.IsFileNameUsedsDelegate IsFileNameUsed, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null)
         {
             if (video == null)
             {
@@ -48,6 +48,14 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.END, selectedCropEnd.ToShortDaylessString());
 
             result = SubstituteInvalidChars(result, "_");
+
+            if (result.Contains(FilenameWildcards.UNIQNUMBER))
+            {
+                int index = 1;
+                while (File.Exists(Path.Combine(folder, result.Replace(FilenameWildcards.UNIQNUMBER, index.ToString()))) || IsFileNameUsed(Path.Combine(folder, result.Replace(FilenameWildcards.UNIQNUMBER, index.ToString()))))
+                    index++;
+                result = result.Replace(FilenameWildcards.UNIQNUMBER, index.ToString());
+            }
 
             return result;
         }

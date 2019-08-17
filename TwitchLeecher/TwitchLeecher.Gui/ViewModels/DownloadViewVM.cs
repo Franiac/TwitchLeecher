@@ -274,13 +274,18 @@ namespace TwitchLeecher.Gui.ViewModels
         private void UpdateFilenameFromTemplate()
         {
             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+            string folder = currentPrefs.DownloadFolder;
+            string fileName = currentPrefs.DownloadFileName;
 
             TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
             TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
-            string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
             fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
 
+            fileName = _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
+
+            _downloadParams.Filename = fileName;
+            
             _downloadParams.Filename = fileName;
         }
 
