@@ -37,6 +37,8 @@ namespace TwitchLeecher.Core.Models
 
         private string _downloadFileName;
 
+        private VideoQuality _downloadQuality;
+
         private bool _downloadSubfoldersForFav;
 
         private bool _downloadRemoveCompleted;
@@ -233,6 +235,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public VideoQuality DownloadQuality
+        {
+            get
+            {
+                return _downloadQuality;
+            }
+            set
+            {
+                SetProperty(ref _downloadQuality, value);
+            }
+        }
+
         public bool DownloadSubfoldersForFav
         {
             get
@@ -383,6 +397,7 @@ namespace TwitchLeecher.Core.Models
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
                 DownloadFileName = DownloadFileName,
+                DownloadQuality = DownloadQuality,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
                 DownloadDisableConversion = DownloadDisableConversion
@@ -392,7 +407,6 @@ namespace TwitchLeecher.Core.Models
 
             return clone;
         }
-
         #endregion Methods
     }
 }

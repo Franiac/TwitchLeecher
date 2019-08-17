@@ -40,6 +40,7 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_TEMPFOLDER_EL = "TempFolder";
         private const string DOWNLOAD_FOLDER_EL = "Folder";
         private const string DOWNLOAD_FILENAME_EL = "FileName";
+        private const string DOWNLOAD_QUALITY_EL = "Quality";
         private const string DOWNLOAD_SUBFOLDERSFORFAV_EL = "SubfoldersForFav";
         private const string DOWNLOAD_REMOVECOMPLETED_EL = "RemoveCompleted";
         private const string DOWNLOAD_DISABLECONVERSION_EL = "DisableConversion";
@@ -207,6 +208,10 @@ namespace TwitchLeecher.Services.Services
                     downloadFileNameEl.SetValue(preferences.DownloadFileName);
                     downloadEl.Add(downloadFileNameEl);
                 }
+
+                XElement downloadQualityEl = new XElement(DOWNLOAD_QUALITY_EL);
+                downloadQualityEl.SetValue(preferences.DownloadQuality);
+                downloadEl.Add(downloadQualityEl);
 
                 XElement downloadSubfoldersForFavEl = new XElement(DOWNLOAD_SUBFOLDERSFORFAV_EL);
                 downloadSubfoldersForFavEl.SetValue(preferences.DownloadSubfoldersForFav);
@@ -472,6 +477,20 @@ namespace TwitchLeecher.Services.Services
                                 }
                             }
 
+                            XElement downloadQualityEl = downloadEl.Element(DOWNLOAD_QUALITY_EL);
+
+                            if (downloadQualityEl != null)
+                            {
+                                try
+                                {
+                                    preferences.DownloadQuality = downloadQualityEl.GetValueAsEnum<VideoQuality>();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
                             XElement donwloadSubfolderForFavEl = downloadEl.Element(DOWNLOAD_SUBFOLDERSFORFAV_EL);
 
                             if (donwloadSubfolderForFavEl != null)
@@ -570,6 +589,7 @@ namespace TwitchLeecher.Services.Services
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
                 DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME,
+                DownloadQuality = VideoQuality.Source,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
                 MiscUseExternalPlayer = false,
