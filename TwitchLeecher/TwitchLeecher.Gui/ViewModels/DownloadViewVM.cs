@@ -418,12 +418,12 @@ namespace TwitchLeecher.Gui.ViewModels
                 curStart = curEnd.Add(new TimeSpan(0, 0, -overlapSec));
                 curEnd = curEnd.Add(splitTime);
             }
-            if (endCrop.Value.TotalSeconds - (curStart?.TotalSeconds??0) < Preferences.MinSplitLength && result.Count > 0)
+            if (endCrop.Value.TotalSeconds - (curStart?.TotalSeconds ?? 0) < Preferences.MinSplitLength && result.Count > 0)
             {//Add remaining seconds to last part
-                result[result.Count - 1] = new Tuple<TimeSpan?, TimeSpan?>(result[result.Count - 1].Item1, null);
+                result[result.Count - 1] = new Tuple<TimeSpan?, TimeSpan?>(result[result.Count - 1].Item1, endCrop == video.Length ? null : endCrop);
             }
             else//or add new last part
-                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, null));
+                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, endCrop == video.Length ? null : endCrop));
             return result;
         }
 
