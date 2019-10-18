@@ -14,8 +14,8 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string latestReleaseUrl = "https://github.com/Franiac/TwitchLeecher/releases/tag/v{0}";
-        private const string releasesApiUrl = "https://api.github.com/repos/Franiac/TwitchLeecher/releases";
+        private const string latestReleaseUrl = "https://github.com/Targen92/TwitchLeecher/releases/tag/v{0}";
+        private const string releasesApiUrl = "https://api.github.com/repos/Targen92/TwitchLeecher/releases";
 
         #endregion Constants
 

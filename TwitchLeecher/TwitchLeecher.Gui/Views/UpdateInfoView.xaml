@@ -41,7 +41,7 @@
 
             <TextBlock Grid.Row="4">
                 <Hyperlink Command="{Binding DownloadCommand}" NavigateUri="{Binding UpdateInfo.DownloadUrl, Mode=OneWay}">
-                    <TextBlock Text="{Binding UpdateInfo.DownloadUrl, Mode=OneWay, FallbackValue='https://github.com/Franiac/TwitchLeecher/releases/tag/vX.Y.Z'}" />
+                    <TextBlock Text="{Binding UpdateInfo.DownloadUrl, Mode=OneWay, FallbackValue='https://github.com/Targen92/TwitchLeecher/releases/tag/vX.Y.Z'}" />
                 </Hyperlink>
             </TextBlock>
 

@@ -10,6 +10,8 @@ This project is fork from original version, with some improvement (from my point
 
 I will improve it futher, you can ask any quastion
 
+Below information from original creator - Franiac
+
 ## Is this project alive?????
 
 Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was an still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I dicide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
