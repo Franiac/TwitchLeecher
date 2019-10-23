@@ -97,6 +97,18 @@
                                                             <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
                                                             <Setter Property="ToolTip" Value="Cancel" />
                                                         </DataTrigger>
+                                                        <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.WaitConcatenation}">
+                                                            <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
+                                                            <Setter Property="ToolTip" Value="Cancel" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Concatenation}">
+                                                            <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
+                                                            <Setter Property="ToolTip" Value="Cancel" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Converting}">
+                                                            <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
+                                                            <Setter Property="ToolTip" Value="Cancel" />
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Button.Style>
@@ -106,6 +118,15 @@
                                                         <Setter Property="Icon" Value="Times" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
+                                                                <Setter Property="Icon" Value="Ban" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.WaitConcatenation}">
+                                                                <Setter Property="Icon" Value="Ban" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Concatenation}">
+                                                                <Setter Property="Icon" Value="Ban" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Converting}">
                                                                 <Setter Property="Icon" Value="Ban" />
                                                             </DataTrigger>
                                                         </Style.Triggers>

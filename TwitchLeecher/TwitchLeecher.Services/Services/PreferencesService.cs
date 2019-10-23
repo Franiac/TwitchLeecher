@@ -48,6 +48,8 @@ namespace TwitchLeecher.Services.Services
         private const string DOWNLOAD_SPLITTIME_EL = "SplitTime";
         private const string DOWNLOAD_SPLITOVERLAP_EL = "SplitOverlapSeconds";
 
+        private const string DOWNLOAD_CONCAT_SIMULTANEOUSLY_EL = "DownloadAndConcatSimultaneously";
+        
         private const string MISC_EL = "Misc";
         private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
         private const string MISC_EXTERNALPLAYER_EL = "ExternalPlayer";
@@ -227,6 +229,10 @@ namespace TwitchLeecher.Services.Services
                 XElement downloadDisableConversionEl = new XElement(DOWNLOAD_DISABLECONVERSION_EL);
                 downloadDisableConversionEl.SetValue(preferences.DownloadDisableConversion);
                 downloadEl.Add(downloadDisableConversionEl);
+
+                XElement downloadAndConcatSimultaneouslyEl = new XElement(DOWNLOAD_CONCAT_SIMULTANEOUSLY_EL);
+                downloadAndConcatSimultaneouslyEl.SetValue(preferences.DownloadAndConcatSimultaneously);
+                downloadEl.Add(downloadAndConcatSimultaneouslyEl);
 
                 XElement downloadSplitUseEl = new XElement(DOWNLOAD_SPLITUSE_EL);
                 downloadSplitUseEl.SetValue(preferences.DownloadSplitUse);
@@ -549,6 +555,20 @@ namespace TwitchLeecher.Services.Services
                             }
                         }
 
+                        XElement downloadAndConcatSimultaneouslyEl = downloadEl.Element(DOWNLOAD_CONCAT_SIMULTANEOUSLY_EL);
+
+                        if (downloadAndConcatSimultaneouslyEl != null)
+                        {
+                            try
+                            {
+                                preferences.DownloadAndConcatSimultaneously = downloadAndConcatSimultaneouslyEl.GetValueAsBool();
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
+                            }
+                        }
+
                         XElement downloadSplitUseEl = downloadEl.Element(DOWNLOAD_SPLITUSE_EL);
 
                         if (downloadSplitUseEl != null)
@@ -649,6 +669,7 @@ namespace TwitchLeecher.Services.Services
                 DownloadQuality = VideoQuality.Source,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
+                DownloadAndConcatSimultaneously = false,
                 DownloadSplitTime = new TimeSpan(),
                 DownloadSplitUse = false,
                 MiscUseExternalPlayer = false,

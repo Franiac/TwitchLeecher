@@ -54,6 +54,8 @@ namespace TwitchLeecher.Core.Models
 
         private int _splitOverlapSeconds;
 
+        private bool _downloadAndConcatSimultaneously;
+
         private bool _miscUseExternalPlayer;
 
         private string _miscExternalPlayer;
@@ -292,6 +294,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public bool DownloadAndConcatSimultaneously
+        {
+            get
+            {
+                return _downloadAndConcatSimultaneously;
+            }
+            set
+            {
+                SetProperty(ref _downloadAndConcatSimultaneously, value);
+            }
+        }
+
         public bool DownloadSplitUse
         {
             get
@@ -482,6 +496,7 @@ namespace TwitchLeecher.Core.Models
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
                 DownloadDisableConversion = DownloadDisableConversion,
+                DownloadAndConcatSimultaneously = DownloadAndConcatSimultaneously,
                 DownloadSplitUse = DownloadSplitUse,
                 DownloadSplitTime = DownloadSplitTime,
                 SplitOverlapSeconds = SplitOverlapSeconds,

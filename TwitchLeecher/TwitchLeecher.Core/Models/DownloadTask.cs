@@ -6,16 +6,13 @@ namespace TwitchLeecher.Core.Models
 {
     public class DownloadTask
     {
-        public DownloadTask(Task task, Task continueTask, CancellationTokenSource cancellationTokenSource)
+        public DownloadTask(CancellationTokenSource cancellationTokenSource, params Task[] tasks)
         {
-            Task = task ?? throw new ArgumentNullException(nameof(task));
-            ContinueTask = continueTask ?? throw new ArgumentNullException(nameof(continueTask));
+            Tasks = tasks ?? throw new ArgumentNullException(nameof(tasks));
             CancellationTokenSource = cancellationTokenSource ?? throw new ArgumentNullException(nameof(cancellationTokenSource));
         }
 
-        public Task Task { get; private set; }
-
-        public Task ContinueTask { get; private set; }
+        public Task[] Tasks { get; private set; }
 
         public CancellationTokenSource CancellationTokenSource { get; private set; }
     }

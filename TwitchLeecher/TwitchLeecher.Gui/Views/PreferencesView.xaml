@@ -237,6 +237,8 @@
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -442,8 +444,22 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadAndConcatSimultaneously}" Content="Download and concatenating videos simultaneously" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip  Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download and concatenate simultaneously" />
+                                <TextBlock TextAlignment="Justify">
+                                    Start downloading next video in the moment when previous video has downloaded and start concatination. It download all videos faster, but load drive more.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+                
+                <CheckBox Grid.Row="12" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -456,14 +472,14 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="12" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <CheckBox Grid.Row="14" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="14" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Disable conversion to mp4" />
                                 <TextBlock TextAlignment="Justify">
-                                    Depending on the video containing muted parts, frame drops or the encoding settings of the streamer, the conversion to mp4 can introduce A/V desync in rare cases. If you want to download the raw .ts video file from Twitch, enable this option. Cropping is not available in this mode.
+                                    Depending on the video containing muted parts, frame drops or the encoding settings of the streamer, the conversion to mp4 can introduce A/V desync in rare cases. If you want to download the raw .ts video file from Twitch, enable this option. Cropping (and autosplit) is not available in this mode.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
@@ -495,7 +511,7 @@
                 </Grid.ColumnDefinitions>
 
                 <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player" IsChecked="{Binding CurrentPreferences.MiscUseExternalPlayer}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}"><!--TODO-->
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>

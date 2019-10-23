@@ -30,6 +30,9 @@ namespace TwitchLeecher.Gui.Converters
                 case DownloadState.Canceled:
                     return (Color)ColorConverter.ConvertFromString("#FFFF1900");
 
+                case DownloadState.WaitConcatenation:
+                    return (Color)ColorConverter.ConvertFromString("#FFE1CD00");
+                    
                 default:
                     return (Color)ColorConverter.ConvertFromString("#FF03C600");
             }
