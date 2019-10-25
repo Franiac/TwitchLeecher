@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLeecher.Shared.Extensions;
+using TwitchLeecher.Shared.Notification;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class TwitchVideo
+    public class TwitchVideo : BindableBase
     {
         #region Constatnts
 
@@ -13,6 +14,12 @@ namespace TwitchLeecher.Core.Models
         private const string UNKNOWN_GAME = "Unknown";
 
         #endregion Constatnts
+
+        #region Fields
+
+        private TimeSpan _length;
+
+        #endregion Fields
 
         #region Constructors
 
@@ -53,7 +60,7 @@ namespace TwitchLeecher.Core.Models
             }
 
             Views = views;
-            Length = length;
+            _length = length;
             Qualities = qualities;
             RecordedDate = recordedDate;
             Thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
@@ -73,7 +80,18 @@ namespace TwitchLeecher.Core.Models
 
         public string Game { get; }
 
-        public TimeSpan Length { get; }
+        public TimeSpan Length
+        {
+            get
+            {
+                return _length;
+            }
+            set
+            {
+                SetProperty(ref _length, value, nameof(Length));
+                FirePropertyChanged(nameof(LengthStr));
+            }
+        }
 
         public string LengthStr
         {
