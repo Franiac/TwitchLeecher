@@ -705,7 +705,7 @@ namespace TwitchLeecher.Services.Services
                     if (_downloads.Where(d => d.DownloadState == DownloadState.Downloading).Any())
                         return;
                     if (!_preferencesService.CurrentPreferences.DownloadAndConcatSimultaneously
-                        && _downloads.Where(d => d.DownloadState == DownloadState.WaitConcatenation || d.DownloadState == DownloadState.Concatenation || d.DownloadState == DownloadState.Converting).Any())
+                        && _downloads.Where(d => d.DownloadState == DownloadState.Waiting || d.DownloadState == DownloadState.Concatenation).Any())
                         return;
                     {
                         TwitchVideoDownload download = _downloads.Where(d => d.DownloadState == DownloadState.Queued).FirstOrDefault();
@@ -772,7 +772,11 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            WaitUntilAnyConcatination(log, setDownloadState, download, cancellationToken);
+                            setDownloadState(DownloadState.Waiting);
+
+                            WaitUntilAnyConcatination(log, setStatus, setDownloadState, download, cancellationToken);
+
+                            setDownloadState(DownloadState.Concatenation);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -781,8 +785,6 @@ namespace TwitchLeecher.Services.Services
                             if (!disableConversion)
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
-
-                                setDownloadState(DownloadState.Converting);
 
                                 _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                             }
@@ -1080,17 +1082,17 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "Download of all video chunks complete!");
         }
 
-        private void WaitUntilAnyConcatination(Action<string> log, Action<DownloadState> setDownloadState, TwitchVideoDownload thisDwonload, CancellationToken cancellationToken)
+        private void WaitUntilAnyConcatination(Action<string> log, Action<string> setStatus, Action<DownloadState> setDownloadState, TwitchVideoDownload thisDwonload, CancellationToken cancellationToken)
         {
-            setDownloadState(DownloadState.WaitConcatenation);
+            setStatus("Wait other concatinations");
             log("Check that no one is concatenating");
             while (true)
             {//Pause if there are any other is contatenating
                 cancellationToken.ThrowIfCancellationRequested();
                 lock (_changeDownloadLockObject)
                 {
-                    bool isBusy = _downloads.Where(d => d.DownloadState == DownloadState.Concatenation || d.DownloadState == DownloadState.Converting).Any()
-                    || _downloads.TakeWhile(d => !d.Equals(thisDwonload)).Where(d => d.DownloadState == DownloadState.WaitConcatenation).Any();
+                    bool isBusy = _downloads.Where(d => d.DownloadState == DownloadState.Concatenation).Any()
+                    || _downloads.TakeWhile(d => !d.Equals(thisDwonload)).Where(d => d.DownloadState == DownloadState.Waiting).Any();
                     if (!isBusy)
                     {
                         setDownloadState(DownloadState.Concatenation);
@@ -1334,7 +1336,7 @@ namespace TwitchLeecher.Services.Services
 
             try
             {
-                return !_downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.WaitConcatenation || d.DownloadState == DownloadState.Concatenation || d.DownloadState == DownloadState.Converting || d.DownloadState == DownloadState.Queued).Any();
+                return !_downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.Waiting || d.DownloadState == DownloadState.Concatenation || d.DownloadState == DownloadState.Queued).Any();
             }
             finally
             {
@@ -1372,7 +1374,7 @@ namespace TwitchLeecher.Services.Services
 
         public bool IsFileNameUsed(string fullPath)
         {
-            IEnumerable<TwitchVideoDownload> downloads = _downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.Queued);
+            IEnumerable<TwitchVideoDownload> downloads = _downloads.Where(d => d.DownloadState == DownloadState.Downloading || d.DownloadState == DownloadState.Concatenation || d.DownloadState == DownloadState.Waiting || d.DownloadState == DownloadState.Queued);
 
             foreach (TwitchVideoDownload download in downloads)
             {

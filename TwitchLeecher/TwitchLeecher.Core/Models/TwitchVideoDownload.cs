@@ -100,12 +100,12 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                if (_downloadState != DownloadState.Downloading)
+                if (_downloadState == DownloadState.Downloading || _downloadState == DownloadState.Waiting || _downloadState == DownloadState.Concatenation)
                 {
-                    return _downloadState.ToString();
+                    return _status;
                 }
 
-                return _status;
+                return _downloadState.ToString();
             }
             private set
             {
