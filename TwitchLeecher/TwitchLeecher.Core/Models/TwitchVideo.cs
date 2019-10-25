@@ -15,6 +15,32 @@ namespace TwitchLeecher.Core.Models
 
         #endregion Constatnts
 
+        #region GlobalMethods
+
+        public static List<Tuple<TimeSpan?, TimeSpan?>> GetListOfSplitTimes(TimeSpan videoLength, TimeSpan? startCrop, TimeSpan? endCrop, TimeSpan splitTime, int overlapSec)
+        {
+            endCrop = endCrop ?? videoLength;
+            List<Tuple<TimeSpan?, TimeSpan?>> result = new List<Tuple<TimeSpan?, TimeSpan?>>();
+
+            TimeSpan? curStart = startCrop;// ?? TimeSpan.Zero;
+            TimeSpan curEnd = (curStart ?? TimeSpan.Zero).Add(splitTime.Add(new TimeSpan(0, 0, overlapSec)));
+            while (curEnd < endCrop.Value)
+            {
+                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, curEnd));
+                curStart = curEnd.Add(new TimeSpan(0, 0, -overlapSec));
+                curEnd = curEnd.Add(splitTime);
+            }
+            if (endCrop.Value.TotalSeconds - (curStart?.TotalSeconds ?? 0) < Preferences.MinSplitLength && result.Count > 0)
+            {//Add remaining seconds to last part
+                result[result.Count - 1] = new Tuple<TimeSpan?, TimeSpan?>(result[result.Count - 1].Item1, endCrop == videoLength ? null : endCrop);
+            }
+            else//or add new last part
+                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, endCrop == videoLength ? null : endCrop));
+            return result;
+        }
+
+        #endregion GlobalMethods
+
         #region Fields
 
         private TimeSpan _length;

@@ -405,28 +405,6 @@ namespace TwitchLeecher.Gui.ViewModels
             return _filenameService.SubstituteWildcards(fileName, folder, _twitchService.IsFileNameUsed, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
         }
 
-        private List<Tuple<TimeSpan?, TimeSpan?>> GetListOfSplitTimes(TwitchVideo video, TimeSpan? startCrop, TimeSpan? endCrop, TimeSpan splitTime, int overlapSec)
-        {
-            endCrop = endCrop ?? video.Length;
-            List<Tuple<TimeSpan?, TimeSpan?>> result = new List<Tuple<TimeSpan?, TimeSpan?>>();
-
-            TimeSpan? curStart = startCrop;// ?? TimeSpan.Zero;
-            TimeSpan curEnd = (curStart ?? TimeSpan.Zero).Add(splitTime.Add(new TimeSpan(0, 0, overlapSec)));
-            while (curEnd < endCrop.Value)
-            {
-                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, curEnd));
-                curStart = curEnd.Add(new TimeSpan(0, 0, -overlapSec));
-                curEnd = curEnd.Add(splitTime);
-            }
-            if (endCrop.Value.TotalSeconds - (curStart?.TotalSeconds ?? 0) < Preferences.MinSplitLength && result.Count > 0)
-            {//Add remaining seconds to last part
-                result[result.Count - 1] = new Tuple<TimeSpan?, TimeSpan?>(result[result.Count - 1].Item1, endCrop == video.Length ? null : endCrop);
-            }
-            else//or add new last part
-                result.Add(new Tuple<TimeSpan?, TimeSpan?>(curStart, endCrop == video.Length ? null : endCrop));
-            return result;
-        }
-
         private void Download()
         {
             try
@@ -459,16 +437,24 @@ namespace TwitchLeecher.Gui.ViewModels
                             string baseFolder = Path.GetDirectoryName(_downloadParams.FullPath);
                             string baseFilename = Path.GetFileName(_downloadParams.FullPath);
 
-                            var splitTimes = GetListOfSplitTimes(_downloadParams.Video, _downloadParams.CropStart ? (TimeSpan?)_downloadParams.CropStartTime : null, _downloadParams.CropEnd ? (TimeSpan?)_downloadParams.CropEndTime : null, _downloadParams.AutoSplitTime, _downloadParams.AutoSplitOverlap);
+                            var splitTimes = TwitchVideo.GetListOfSplitTimes(_downloadParams.Video.Length, _downloadParams.CropStart ? (TimeSpan?)_downloadParams.CropStartTime : null, _downloadParams.CropEnd ? (TimeSpan?)_downloadParams.CropEndTime : null, _downloadParams.AutoSplitTime, _downloadParams.AutoSplitOverlap);
                             foreach(var splitPair in splitTimes)
                             {
                                 string filename = GetFilenameFromTemplate(baseFilename, baseFolder, splitPair.Item1, splitPair.Item2);
                                 DownloadParameters tempParams = new DownloadParameters(_downloadParams.Video, _downloadParams.VodAuthInfo, _downloadParams.Quality, baseFolder, filename, _downloadParams.DisableConversion, false, new TimeSpan(), 0);
+                                tempParams.StreamingNow = _downloadParams.StreamingNow;
                                 tempParams.AutoSplit = false;
                                 tempParams.CropStart = splitPair.Item1.HasValue;
                                 tempParams.CropStartTime = splitPair.Item1 ?? new TimeSpan();
                                 tempParams.CropEnd = splitPair.Item2.HasValue;
                                 tempParams.CropEndTime = splitPair.Item2 ?? _downloadParams.Video.Length;
+                                if (tempParams.StreamingNow)
+                                {
+                                    tempParams.AutoSplit = true;
+                                    tempParams.AutoSplitOverlap = _downloadParams.AutoSplitOverlap;
+                                    tempParams.AutoSplitTime = _downloadParams.AutoSplitTime;
+                                    tempParams.Filename = baseFilename;
+                                }
                                 _twitchService.Enqueue(tempParams);
                             }
                             downloadAddedCount = splitTimes.Count;

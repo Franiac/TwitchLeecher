@@ -1,9 +1,10 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.DownloadView"
-        x:Name="control"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
-        xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters">
+             x:Name="control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
+             xmlns:fa="http://schemas.fontawesome.io/icons/">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -135,12 +136,25 @@
                     <TextBlock Grid.Row="0" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" />
 
-                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding  DownloadParams.CropEnd}" Content="End" VerticalAlignment="Center" />
+                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding DownloadParams.CropEnd}" Content="End" VerticalAlignment="Center" IsEnabled="{Binding DownloadParams.StreamingNow, Converter={StaticResource InverseBoolConverter}}"/>
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" Loop="False" />
                     <TextBlock Grid.Row="2" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
                     <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <CheckBox Grid.Row="2" Grid.Column="12" Grid.ColumnSpan="3" IsChecked="{Binding DownloadParams.StreamingNow}" Content="Online" VerticalAlignment="Center" />
+                    <fa:ImageAwesome Grid.Row="2" Grid.Column="14" Style="{StaticResource Img_Help}">
+                        <fa:ImageAwesome.ToolTip>
+                            <ToolTip Width="350">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download live stream" />
+                                    <TextBlock TextAlignment="Justify">
+                                        Download living stream until it end. Check new parts every 5 minutes, also able to auto split video. Incompatible with end crop
+                                    </TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </fa:ImageAwesome.ToolTip>
+                    </fa:ImageAwesome>
 
                     <CheckBox Grid.Row="4" Grid.Column="0" IsChecked="{Binding AutoSplitUseExtended}" Content="Auto" VerticalAlignment="Center" />
                     <ctrl:TlIntegerUpDown Grid.Row="4" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding AutoSplitTimeHours, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DownloadParams.AutoSplit}" Maximum="99" Loop="False" />

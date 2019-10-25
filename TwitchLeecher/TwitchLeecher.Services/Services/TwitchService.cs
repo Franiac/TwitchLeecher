@@ -43,6 +43,7 @@ namespace TwitchLeecher.Services.Services
 
         private const int TIMER_INTERVALL = 2;
         private const int DOWNLOAD_RETRIES = 3;
+        private const int TIMER_STREAMINGNOW_INTERVALL = 500;
         private const int DOWNLOAD_RETRY_TIME = 20;
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
@@ -59,6 +60,7 @@ namespace TwitchLeecher.Services.Services
 
         private bool disposedValue = false;
 
+        private readonly IFilenameService _filenameService;
         private IPreferencesService _preferencesService;
         private IProcessingService _processingService;
         private IRuntimeDataService _runtimeDataService;
@@ -68,6 +70,7 @@ namespace TwitchLeecher.Services.Services
 
         private ObservableCollection<TwitchVideo> _videos;
         private ObservableCollection<TwitchVideoDownload> _downloads;
+        private ObservableCollection<TwitchVideoDownload> _streamingNowDownloads;
 
         private ConcurrentDictionary<string, DownloadTask> _downloadTasks;
         private Dictionary<string, Uri> _gameThumbnails;
@@ -86,11 +89,13 @@ namespace TwitchLeecher.Services.Services
         #region Constructors
 
         public TwitchService(
+            IFilenameService filenameService,
             IPreferencesService preferencesService,
             IProcessingService processingService,
             IRuntimeDataService runtimeDataService,
             IEventAggregator eventAggregator)
         {
+            _filenameService = filenameService;
             _preferencesService = preferencesService;
             _processingService = processingService;
             _runtimeDataService = runtimeDataService;
@@ -101,6 +106,8 @@ namespace TwitchLeecher.Services.Services
 
             _downloads = new ObservableCollection<TwitchVideoDownload>();
             _downloads.CollectionChanged += Downloads_CollectionChanged;
+
+            _streamingNowDownloads = new ObservableCollection<TwitchVideoDownload>();
 
             _downloadTasks = new ConcurrentDictionary<string, DownloadTask>();
 
@@ -724,20 +731,21 @@ namespace TwitchLeecher.Services.Services
                         string vodId = downloadParams.Video.Id;
                         string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, TEMP_PREFIX + downloadId);
                         string ffmpegFile = _processingService.FFMPEGExe;
-                        string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
-                        string outputFile = downloadParams.FullPath;
 
                         bool disableConversion = downloadParams.DisableConversion;
                         bool cropStart = downloadParams.CropStart;
                         bool cropEnd = downloadParams.CropEnd;
 
-                        TimeSpan cropStartTime = downloadParams.CropStartTime;
+                        TimeSpan cropStartTime = cropStart ? downloadParams.CropStartTime : new TimeSpan(0, 0, 0);
                         TimeSpan cropEndTime = downloadParams.CropEndTime;
                         TimeSpan totalTime = downloadParams.CropEndTime;
 
                         TwitchVideoQuality quality = downloadParams.Quality;
 
                         VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
+
+                        string prepareFileName = downloadParams.Filename;
+                        downloadParams.Filename = _filenameService.SubstituteWildcards(prepareFileName, downloadParams.Folder, IsFileNameUsed, downloadParams.Video, downloadParams.Quality, cropStartTime, totalTime);
 
                         Action<DownloadState> setDownloadState = download.SetDownloadState;
                         Action<string> log = download.AppendLog;
@@ -757,23 +765,155 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            string playlistUrl = RetrievePlaylistUrlForQuality(log, quality, vodId, vodAuthInfo);
+                            DateTime lastUpdateTime = DateTime.Now;
+                            string curPlaylistUrl = RetrievePlaylistUrlForQuality(log, quality, vodId, vodAuthInfo);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            VodPlaylist curVodPlaylist = RetrieveVodPlaylist(log, tempDir, curPlaylistUrl);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
                             totalTime = CalcTotalTime(curVodPlaylist);
                             if (!cropEnd)//Update total video time of downloads tab
                                 downloadParams.CropEndTime = totalTime;
                             downloadParams.Video.Length = totalTime;
 
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            VodPlaylist vodPlaylist = RetrieveVodPlaylist(log, tempDir, playlistUrl);
-
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            CropInfo cropInfo = CropVodPlaylist(vodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
+                            VodPlaylist allVodPlaylist = new VodPlaylist();
+                            allVodPlaylist.AddRange(curVodPlaylist);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
+                            CropInfo curCropInfo = CropVodPlaylist(curVodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            DownloadParts(log, setStatus, setProgress, curVodPlaylist, cancellationToken);
+
+                            VodPlaylist alreadyDownloadedVodPlaylist = new VodPlaylist();
+                            alreadyDownloadedVodPlaylist.AddRange(curVodPlaylist);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            if (downloadParams.StreamingNow)
+                            {
+                                do
+                                {
+                                    setStatus("Wait streaming");
+
+                                    for (int index = TIMER_STREAMINGNOW_INTERVALL - (int)(DateTime.Now - lastUpdateTime).TotalSeconds; index >= 0; index--)
+                                    {
+                                        Thread.Sleep(1000);
+                                        cancellationToken.ThrowIfCancellationRequested();
+                                    }
+
+                                    setStatus("Update information");
+
+                                    lastUpdateTime = DateTime.Now;
+                                    curPlaylistUrl = RetrievePlaylistUrlForQuality(log, quality, vodId, vodAuthInfo);
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+
+                                    curVodPlaylist = RetrieveVodPlaylist(log, tempDir, curPlaylistUrl);
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+
+                                    totalTime = CalcTotalTime(curVodPlaylist);
+                                    if (!cropEnd) downloadParams.CropEndTime = totalTime;
+                                    downloadParams.Video.Length = totalTime;
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+
+                                    CropVodPlaylist(curVodPlaylist, cropStart, false, cropStartTime, totalTime);
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+
+                                    curVodPlaylist.RemoveAll(x => alreadyDownloadedVodPlaylist.Where(y => x.LocalFile == y.LocalFile).Any());
+                                    alreadyDownloadedVodPlaylist.AddRange(curVodPlaylist);
+                                    allVodPlaylist.AddRange(curVodPlaylist);
+
+                                    log($"{curVodPlaylist.Count} new parts, total video time {totalTime.ToString("HH:mm:ss")}");
+
+                                    DownloadParts(log, setStatus, setProgress, curVodPlaylist, cancellationToken);
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+
+                                    if (downloadParams.AutoSplit && downloadParams.AutoSplitTime.TotalSeconds < (totalTime.TotalSeconds - cropStartTime.TotalSeconds) - Preferences.MinSplitLength)
+                                    {
+                                        var splitTimes = TwitchVideo.GetListOfSplitTimes(totalTime, cropStart ? (TimeSpan?)cropStartTime : null, null, downloadParams.AutoSplitTime, downloadParams.AutoSplitOverlap);
+
+                                        for (int index = 0; index < splitTimes.Count - 1; index++)
+                                        {
+                                            downloadParams.Filename = prepareFileName;
+                                            downloadParams.Filename = _filenameService.SubstituteWildcards(prepareFileName, downloadParams.Folder, IsFileNameUsed, downloadParams.Video, downloadParams.Quality, cropStartTime, totalTime);
+                                            string tempOutputFile = downloadParams.FullPath;
+                                            string tempConcatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
+
+                                            downloadParams.CropStart = splitTimes[index].Item1.HasValue;
+                                            downloadParams.CropStartTime = splitTimes[index].Item1 ?? new TimeSpan();
+                                            downloadParams.CropEnd = splitTimes[index].Item2.HasValue;
+                                            downloadParams.CropEndTime = splitTimes[index].Item2 ?? totalTime;
+
+                                            cropStart = splitTimes[index + 1].Item1.HasValue;
+                                            cropStartTime = splitTimes[index + 1].Item1.Value;
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+
+                                            VodPlaylist tempVodPlaylist = new VodPlaylist();
+                                            tempVodPlaylist.AddRange(allVodPlaylist);
+                                            var tempCropInfo = CropVodPlaylist(tempVodPlaylist, downloadParams.CropStart, downloadParams.CropEnd, downloadParams.CropStartTime, downloadParams.CropEndTime);
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+
+                                            curVodPlaylist.Clear();
+                                            curVodPlaylist.AddRange(allVodPlaylist);
+                                            CropVodPlaylist(curVodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+
+                                            //Not delete parts
+                                            _processingService.ConcatParts(log, setStatus, setProgress, tempVodPlaylist, disableConversion ? tempOutputFile : tempConcatFile, false);
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+
+                                            //Now delete parts that are outdated
+                                            tempVodPlaylist.RemoveAll(x => curVodPlaylist.Where(y => x.LocalFile == y.LocalFile).Any());
+                                            foreach (var part in tempVodPlaylist)
+                                                FileSystem.DeleteFile(part.LocalFile);
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+
+                                            if (!disableConversion)
+                                            {
+                                                cancellationToken.ThrowIfCancellationRequested();
+
+                                                setStatus("Converting part");
+
+                                                _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, tempConcatFile, tempOutputFile, tempCropInfo);
+                                            }
+
+                                            cancellationToken.ThrowIfCancellationRequested();
+                                        }
+
+                                        downloadParams.CropStart = splitTimes[splitTimes.Count - 1].Item1.HasValue;
+                                        downloadParams.CropStartTime = splitTimes[splitTimes.Count - 1].Item1 ?? new TimeSpan();
+                                        downloadParams.Filename = prepareFileName;
+                                        downloadParams.Filename = _filenameService.SubstituteWildcards(prepareFileName, downloadParams.Folder, IsFileNameUsed, downloadParams.Video, downloadParams.Quality, cropStartTime, totalTime);
+
+                                        cancellationToken.ThrowIfCancellationRequested();
+
+                                        continue;//because it is possible only if there was new 
+                                    }
+                                }
+                                while (curVodPlaylist.Count > 0);
+
+                            }
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            curVodPlaylist.Clear();
+                            curVodPlaylist.AddRange(allVodPlaylist);
+                            curCropInfo = CropVodPlaylist(curVodPlaylist, cropStart, cropEnd, cropStartTime, cropEndTime);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -781,18 +921,33 @@ namespace TwitchLeecher.Services.Services
 
                             WaitUntilAnyConcatination(log, setStatus, setDownloadState, download, cancellationToken);
 
+                            cancellationToken.ThrowIfCancellationRequested();
+
                             setDownloadState(DownloadState.Concatenation);
+                            
+                            downloadParams.Filename = prepareFileName;
+                            downloadParams.Filename = _filenameService.SubstituteWildcards(prepareFileName, downloadParams.Folder, IsFileNameUsed, downloadParams.Video, downloadParams.Quality, cropStartTime, downloadParams.CropEndTime);
+                            string outputFile = downloadParams.FullPath;
+                            string concatFile = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(downloadParams.FullPath) + ".ts");
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, disableConversion ? outputFile : concatFile);
+                            _processingService.ConcatParts(log, setStatus, setProgress, curVodPlaylist, disableConversion ? outputFile : concatFile);
 
                             if (!disableConversion)
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
+                                _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, curCropInfo);
                             }
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            allVodPlaylist.RemoveAll(x => !File.Exists(x.LocalFile));
+                            allVodPlaylist.ForEach(x => File.Delete(x.LocalFile));
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
                         }, cancellationToken);
 
                         Task continueTask = downloadVideoTask.ContinueWith(task =>

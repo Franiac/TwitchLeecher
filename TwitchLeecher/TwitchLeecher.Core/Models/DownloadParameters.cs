@@ -24,6 +24,7 @@ namespace TwitchLeecher.Core.Models
 
         private bool _cropStart;
         private bool _cropEnd;
+        private bool _streamingNow;
         private bool _disableConversion;
 
         private TimeSpan _cropStartTime;
@@ -209,11 +210,15 @@ namespace TwitchLeecher.Core.Models
         {
             get
             {
-                return _cropEnd;
+                return _cropEnd && !_streamingNow;
             }
             set
             {
                 SetProperty(ref _cropEnd, value, nameof(CropEnd));
+                if (_cropEnd && _streamingNow)
+                {
+                    SetProperty(ref _streamingNow, false, nameof(StreamingNow));
+                }
                 FirePropertyChanged(nameof(CroppedLength));
             }
         }
@@ -228,6 +233,7 @@ namespace TwitchLeecher.Core.Models
             {
                 SetProperty(ref _cropEndTime, value, nameof(CropEndTime));
                 FirePropertyChanged(nameof(CroppedLength));
+                FirePropertyChanged(nameof(VideoLengthStr));
             }
         }
 
@@ -262,6 +268,20 @@ namespace TwitchLeecher.Core.Models
                     return $"{CroppedLength.ToDaylessString()} ({(_cropStart ? _cropStartTime.ToDaylessString() : "00:00:00")} - {(_cropEnd ? _cropEndTime.ToDaylessString() : Video.Length.ToDaylessString())})";
                 else
                     return CroppedLength.ToDaylessString();
+            }
+        }
+
+        public bool StreamingNow
+        {
+            get
+            {
+                return _streamingNow;
+            }
+            set
+            {
+                SetProperty(ref _streamingNow, value, nameof(StreamingNow));
+                FirePropertyChanged(nameof(CropEnd));
+                FirePropertyChanged(nameof(CroppedLength));
             }
         }
 
@@ -338,7 +358,7 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_cropEnd)
+                if (_cropEnd && !_streamingNow)
                 {
                     TimeSpan videoLength = _video.Length;
 
@@ -354,6 +374,15 @@ namespace TwitchLeecher.Core.Models
                     {
                         AddError(currentProperty, "The cropped video has to be at least 5s long!");
                     }
+                }
+            }
+
+            currentProperty = nameof(StreamingNow);
+
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
+            {
+                if (_streamingNow)
+                {
                 }
             }
 
