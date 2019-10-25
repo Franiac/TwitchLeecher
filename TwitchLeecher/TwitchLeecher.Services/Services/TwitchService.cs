@@ -43,7 +43,7 @@ namespace TwitchLeecher.Services.Services
 
         private const int TIMER_INTERVALL = 2;
         private const int DOWNLOAD_RETRIES = 3;
-        private const int TIMER_STREAMINGNOW_INTERVALL = 500;
+        private const int TIMER_STREAMINGNOW_INTERVALL = 300;
         private const int DOWNLOAD_RETRY_TIME = 20;
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
@@ -832,7 +832,7 @@ namespace TwitchLeecher.Services.Services
                                     alreadyDownloadedVodPlaylist.AddRange(curVodPlaylist);
                                     allVodPlaylist.AddRange(curVodPlaylist);
 
-                                    log($"{curVodPlaylist.Count} new parts, total video time {totalTime.ToString("HH:mm:ss")}");
+                                    log($"{curVodPlaylist.Count} new parts, total video time {totalTime.ToString()}");
 
                                     DownloadParts(log, setStatus, setProgress, curVodPlaylist, cancellationToken);
 
