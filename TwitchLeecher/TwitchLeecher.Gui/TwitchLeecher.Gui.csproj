@@ -81,6 +81,7 @@
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />
     <Compile Include="Converters\LoadLimitToBooleanConverter.cs" />
+    <Compile Include="Converters\VideoQualityToTextConverter.cs" />
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Extensions\Icon.cs" />
     <Compile Include="Interfaces\IDonationService.cs" />

@@ -4,6 +4,7 @@
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:fa="http://schemas.fontawesome.io/icons/">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,6 +15,7 @@
                 <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
+                    <converters:VideoQualityToTextConverter x:Key="videoQualityToTextConverter" />
                     <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
                     <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
                 </ResourceDictionary>
@@ -211,7 +213,17 @@
             </Border>
 
             <Grid Grid.Row="5" Margin="15,0,0,0">
+                <Grid.Resources>
+                    <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                        ObjectType="{x:Type System:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="enums:VideoQuality"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
@@ -392,9 +404,24 @@
                         </ToolTip>
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
-
-                <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}" Content="Create subfolders for favourite channels" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Quality by default" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource dataFromEnum}, Converter={StaticResource videoQualityToTextConverter}}" SelectedItem="{Binding CurrentPreferences.DownloadQuality, Converter={StaticResource videoQualityToTextConverter}}"/>
                 <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa:ImageAwesome.ToolTip>
+                        <ToolTip  Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Quality by default" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify quality that will be select for download by default. If there are no selected quality, it will be empty and you will have to select it manually.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa:ImageAwesome.ToolTip>
+                </fa:ImageAwesome>
+
+                <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}" Content="Create subfolders for favourite channels" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -407,8 +434,8 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}" Content="Remove successful downloads from queue" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>
@@ -421,8 +448,8 @@
                     </fa:ImageAwesome.ToolTip>
                 </fa:ImageAwesome>
 
-                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                <CheckBox Grid.Row="12" Grid.Column="2" IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}" Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
                     <fa:ImageAwesome.ToolTip>
                         <ToolTip  Width="350">
                             <StackPanel>

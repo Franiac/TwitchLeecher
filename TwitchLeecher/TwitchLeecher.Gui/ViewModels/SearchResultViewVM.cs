@@ -12,6 +12,7 @@ using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
+using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -197,7 +198,9 @@ namespace TwitchLeecher.Gui.ViewModels
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
                             filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
+                            TwitchVideoQuality shouldQualityOrNull = TryFindQuality(video.Qualities, currentPrefs.DownloadQuality);
+
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, shouldQualityOrNull, folder, filename, currentPrefs.DownloadDisableConversion);
 
                             _navigationService.ShowDownload(downloadParams);
                         }
@@ -223,6 +226,21 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+        
+        private TwitchVideoQuality TryFindQuality(List<TwitchVideoQuality> qualities, VideoQuality shouldQuality)
+        {
+            if (shouldQuality == VideoQuality.Source)
+                return qualities.First();
+            if (shouldQuality == Core.Enums.VideoQuality.AudioOnly)
+            {
+                return qualities.Find(x => x.QualityString == TwitchVideoQuality.GetQualityString(TwitchVideoQuality.QUALITY_AUDIO));
+            }
+            int fpsShould = shouldQuality.GetFps();
+            int resolutionYShould = shouldQuality.GetResolutionY();
+            
+            //sometimes fps is near value, like 61 or 59 instead 60
+            return qualities.Find(x => x.Fps.HasValue && Math.Abs(x.Fps.Value - fpsShould) < 3 && x.ResolutionY.HasValue && x.ResolutionY.Value == resolutionYShould);
         }
 
         protected override List<MenuCommand> BuildMenu()

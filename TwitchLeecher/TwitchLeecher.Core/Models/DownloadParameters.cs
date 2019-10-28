@@ -42,9 +42,11 @@ namespace TwitchLeecher.Core.Models
             }
 
             _video = video ?? throw new ArgumentNullException(nameof(video));
-            _quality = quality ?? throw new ArgumentNullException(nameof(quality));
             _vodAuthInfo = vodAuthInfo ?? throw new ArgumentNullException(nameof(vodAuthInfo));
 
+            //null mean that user should manually select quality. Don't worry, validation check will mark this issue
+            _quality = quality;// ?? throw new ArgumentNullException(nameof(quality));
+            
             _folder = folder;
             _filename = filename;
             _disableConversion = disableConversion;
