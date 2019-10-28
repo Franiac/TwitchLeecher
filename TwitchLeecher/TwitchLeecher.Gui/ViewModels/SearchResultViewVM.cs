@@ -197,11 +197,24 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             string filename = currentPrefs.DownloadFileName;
                             filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
-                            filename = _filenameService.SubstituteWildcards(filename, folder, _twitchService.IsFileNameUsed, video);
+
+                            if (currentPrefs.DownloadDisableConversion || video.Length.TotalSeconds < currentPrefs.DownloadSplitTime.TotalSeconds + Preferences.MinSplitLength)
+                                currentPrefs.DownloadSplitUse = false;
+
+                            if (currentPrefs.DownloadSplitUse)
+                            {//Keep UNIQNUMBER wildcard in name to split file (only in conversation mode)
+                                string tempUniqWildcard = FilenameWildcards.UNIQNUMBER.Insert(FilenameWildcards.UNIQNUMBER.Length - 1, "_TEMP");
+                                filename = filename.Replace(FilenameWildcards.UNIQNUMBER, tempUniqWildcard);
+                                filename = _filenameService.SubstituteWildcards(filename, folder, _twitchService.IsFileNameUsed, video);
+                                filename = filename.Replace(tempUniqWildcard, FilenameWildcards.UNIQNUMBER);
+                            }
+                            else
+                                filename = _filenameService.SubstituteWildcards(filename, folder, _twitchService.IsFileNameUsed, video);
 
                             TwitchVideoQuality shouldQualityOrNull = TryFindQuality(video.Qualities, currentPrefs.DownloadQuality);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, shouldQualityOrNull, folder, filename, currentPrefs.DownloadDisableConversion);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, shouldQualityOrNull, folder, filename, currentPrefs.DownloadDisableConversion,
+                                currentPrefs.DownloadSplitUse, currentPrefs.DownloadSplitTime, currentPrefs.SplitOverlapSeconds);
 
                             _navigationService.ShowDownload(downloadParams);
                         }
