@@ -195,8 +195,9 @@ namespace TwitchLeecher.Gui.ViewModels
                                 ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
                                 : currentPrefs.DownloadFolder;
 
-                            string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
+                            string filename = currentPrefs.DownloadFileName;
                             filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
+                            filename = _filenameService.SubstituteWildcards(filename, folder, _twitchService.IsFileNameUsed, video);
 
                             TwitchVideoQuality shouldQualityOrNull = TryFindQuality(video.Qualities, currentPrefs.DownloadQuality);
 

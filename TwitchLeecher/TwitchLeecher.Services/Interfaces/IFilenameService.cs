@@ -5,7 +5,7 @@ namespace TwitchLeecher.Services.Interfaces
 {
     public interface IFilenameService
     {
-        string SubstituteWildcards(string filename, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null);
+        string SubstituteWildcards(string filename, string folder, FilenameWildcards.IsFileNameUsedsDelegate IsFileNameUsed, TwitchVideo video, TwitchVideoQuality quality = null, TimeSpan? cropStart = null, TimeSpan? cropEnd = null);
 
         string SubstituteInvalidChars(string filename, string replaceStr);
 
