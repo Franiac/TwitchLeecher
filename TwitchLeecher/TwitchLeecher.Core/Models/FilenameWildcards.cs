@@ -12,6 +12,12 @@
 
         public static string TIME24 = "{time24}";
 
+        public static string DATE_ = "{date-}";
+
+        public static string TIME_ = "{time-}";
+
+        public static string TIME24_ = "{time24-}";
+
         public static string TITLE = "{title}";
 
         public static string RES = "{res}";
