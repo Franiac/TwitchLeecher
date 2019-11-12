@@ -31,7 +31,6 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
-                <RowDefinition />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -42,16 +41,23 @@
             <TextBlock Grid.Row="1" Text="Developer" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="2" Text="Dominik &quot;Franiac&quot; Rebitzer" Margin="15,5,0,0" />
 
-            <TextBlock Grid.Row="3" Text="Contact" FontWeight="Bold"  Margin="0,15,0,0" />
+            <TextBlock Grid.Row="3" Text="Support &amp; Issues" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="4" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="mailto:contact@franiac.com">
-                contact@franiac.com
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/Franiac/TwitchLeecher/issues">
+                https://github.com/Franiac/TwitchLeecher/issues
             </Hyperlink>
             </TextBlock>
 
-            <TextBlock Grid.Row="5" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="6" Text="Help me out with a bottle of beer if you like the program :)" Margin="15,5,0,0" />
-            <Button Grid.Row="7" Command="{Binding DonateCommand}" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
+            <TextBlock Grid.Row="5" Text="Source Code &amp; Documentation" FontWeight="Bold"  Margin="0,15,0,0" />
+            <TextBlock Grid.Row="6" Margin="15,5,0,0">
+            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
+                http://github.com/Franiac/TwitchLeecher
+            </Hyperlink>
+            </TextBlock>
+
+            <TextBlock Grid.Row="7" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
+            <TextBlock Grid.Row="8" Text="Help me out with a bottle of beer if you like the program :)" Margin="15,5,0,0" />
+            <Button Grid.Row="9" Command="{Binding DonateCommand}" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -75,16 +81,9 @@
                     </Style>
                 </Button.Style>
                 <Image Style="{StaticResource Img_Donate}" />
-            </Button>
+            </Button>            
 
-            <TextBlock Grid.Row="8" Text="Source Code &amp; Documentation" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="9" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
-                http://github.com/Franiac/TwitchLeecher
-            </Hyperlink>
-            </TextBlock>
-
-            <TextBlock Grid.Row="10" Text="Links" FontWeight="Bold"  Margin="0,15,0,0" />
+            <TextBlock Grid.Row="10" Text="My One-Man Metal Band Project" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="11" Margin="15,5,0,0">
             <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
                 http://www.fakesmilerevolution.com
@@ -96,21 +95,16 @@
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="13" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://plus.google.com/+fakesmilerevolution">
-                http://plus.google.com/+fakesmilerevolution
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Grid.Row="14" Margin="15,5,0,0">
             <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
                 http://www.youtube.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
-            <TextBlock Grid.Row="15" Margin="15,5,0,0">
+            <TextBlock Grid.Row="14" Margin="15,5,0,0">
             <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
                 http://www.facebook.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
-            <TextBlock Grid.Row="16" Margin="15,5,0,0">
+            <TextBlock Grid.Row="15" Margin="15,5,0,0">
             <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
                 http://www.soundcloud.com/fakesmilerevolution
             </Hyperlink>
