@@ -47,10 +47,11 @@ namespace TwitchLeecher.Services.Services
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
 
-        private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
         private const string TWITCH_CLIENT_ID_HEADER = "Client-ID";
-        private const string TWITCH_V5_ACCEPT = "application/vnd.twitchtv.v5+json";
+        private const string TWITCH_CLIENT_ID = "37v97169hnj8kaoq8fs3hzz8v6jezdj";
+        private const string TWITCH_CLIENT_ID_WEB = "kimne78kx3ncx6brgo4mv6wki5h1ko";
         private const string TWITCH_V5_ACCEPT_HEADER = "Accept";
+        private const string TWITCH_V5_ACCEPT = "application/vnd.twitchtv.v5+json";
         private const string TWITCH_AUTHORIZATION_HEADER = "Authorization";
 
         #endregion Constants
@@ -186,7 +187,10 @@ namespace TwitchLeecher.Services.Services
 
         private WebClient CreateAuthorizedTwitchWebClient()
         {
-            WebClient wc = CreateTwitchWebClient();
+            WebClient wc = new WebClient();
+            wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID_WEB);
+            wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
+            wc.Encoding = Encoding.UTF8;
 
             if (IsAuthorized)
             {
