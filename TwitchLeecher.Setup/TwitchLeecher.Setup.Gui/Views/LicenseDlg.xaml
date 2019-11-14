@@ -52,7 +52,7 @@
                 <RowDefinition Height="15px" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" Name="txtLicense" IsReadOnly="True" Height="Auto" Padding="5" FontFamily="Consolas" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" />
+            <TextBox Grid.Row="0" Name="txtLicense" IsReadOnly="True" Height="Auto" Padding="5" FontFamily="Consolas" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
             <!--<RichTextBox Grid.Row="0" Padding="5,10,5,5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" FontFamily="Consolas" />-->
             <CheckBox Grid.Row="2" Content="I accept the terms of the above License Agreement" IsChecked="{Binding LicenseAccepted, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
         </Grid>
