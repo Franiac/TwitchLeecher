@@ -54,6 +54,7 @@ namespace TwitchLeecher.Services.Services
         private const string TWITCH_V5_ACCEPT = "application/vnd.twitchtv.v5+json";
         private const string TWITCH_AUTHORIZATION_PARAM = "oauth_token";
         private const string TWITCH_AUTHORIZATION_HEADER = "Authorization";
+        private const string TWITCH_AUTHORIZATION_VALUE = "OAuth {0}";
 
         #endregion Constants
 
@@ -208,7 +209,7 @@ namespace TwitchLeecher.Services.Services
                 if (IsAuthorized)
                 {
                     webClient.QueryString.Add(TWITCH_AUTHORIZATION_PARAM, _twitchAuthInfo.AccessToken);
-                    webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, _twitchAuthInfo.AccessToken);
+                    webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, string.Format(TWITCH_AUTHORIZATION_VALUE, _twitchAuthInfo.AccessToken));
                 }
 
                 string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, id));
@@ -350,7 +351,7 @@ namespace TwitchLeecher.Services.Services
             {
                 using (WebClient webClient = CreatePublicApiWebClient())
                 {
-                    webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, "OAuth " + accessToken);
+                    webClient.Headers.Add(TWITCH_AUTHORIZATION_HEADER, string.Format(TWITCH_AUTHORIZATION_VALUE, accessToken));
 
                     string result = webClient.DownloadString(KRAKEN_URL);
 
