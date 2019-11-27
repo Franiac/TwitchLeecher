@@ -63,57 +63,6 @@
     </Style>
     <!-- /Button -->
 
-    <!-- LoginButton -->
-    <SolidColorBrush x:Key="TlLoginButton.Authorized.Background" Color="{StaticResource LoginButton.Background.Authorized.Color}" />
-    <SolidColorBrush x:Key="TlLoginButton.Authorized.Border" Color="{StaticResource LoginButton.Background.Authorized.Color}" />
-    <SolidColorBrush x:Key="TlLoginButton.Authorized.MouseOver.Background" Color="{StaticResource LoginButton.Background.Authorized.MouseOver.Color}" />
-    <SolidColorBrush x:Key="TlLoginButton.Authorized.MouseOver.Border" Color="{StaticResource LoginButton.Background.Authorized.MouseOver.Color}" />
-
-    <ToolTip x:Key="TlAuthorizedToolTip">
-        <TextBlock Text="Your Twitch account is authorized for sub-only VOD downloads" />
-    </ToolTip>
-
-    <ToolTip x:Key="TlUnauthorizedToolTip">
-        <TextBlock Text="Authorize your Twitch account in order to download sub-only VODs" />
-    </ToolTip>
-
-    <Style x:Key="TlLoginButton" TargetType="Button" BasedOn="{StaticResource TlMiniButton}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" ToolTip="{StaticResource TlUnauthorizedToolTip}">
-                        <fa:ImageAwesome x:Name="icon" Icon="Twitch" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsAuthorized}" Value="True">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.Border}" />
-                            <Setter Property="ToolTip" TargetName="border" Value="{StaticResource TlAuthorizedToolTip}" />
-                            <Setter Property="Icon" TargetName="icon" Value="Check" />
-                        </DataTrigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
-                        </Trigger>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsAuthorized}" Value="True" />
-                                <Condition Binding="{Binding RelativeSource='{RelativeSource Self}', Path='IsMouseOver'}" Value="True" />
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.MouseOver.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TlLoginButton.Authorized.MouseOver.Border}" />
-                        </MultiDataTrigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!-- /LoginButton -->
-
     <!-- MultilineTextBox -->
     <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
     <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />

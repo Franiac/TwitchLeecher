@@ -21,235 +21,18 @@
     </ComponentGroup>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="LocalesDir" Name="locales" />
-      <Directory Id="ShaderDir" Name="swiftshader" />
     </DirectoryRef>
 
     <ComponentGroup Id="FeatureTLComponents">
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_am.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\am.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ar.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ar.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_bg.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bg.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_bn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bn.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ca.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ca.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_cs.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\cs.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_da.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\da.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_de.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\de.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_el.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\el.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_en_GB.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-GB.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_eb_US.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-US.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_es.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_es_419.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es-419.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_et.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\et.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_fa.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fa.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_fi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fi.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_fil.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fil.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_fr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fr.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_gu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\gu.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_he.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\he.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_hi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hi.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_hr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hr.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_hu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hu.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_id.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\id.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_it.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\it.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ja.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ja.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_kn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\kn.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ko.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ko.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_lt.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lt.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_lv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lv.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ml.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ml.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_mr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\mr.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ms.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ms.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_nb.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nb.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_nl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nl.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_pl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pl.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_pt_BR.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-BR.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_pt_PT.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-PT.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ro.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ro.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ru.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ru.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_sk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sk.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_sl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sl.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_sr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sr.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_sv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sv.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_sw.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sw.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_ta.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ta.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_te.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\te.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_th.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\th.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_tr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\tr.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_uk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\uk.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_vi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\vi.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_zh_CN.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-CN.pak" />
-      </Component>
-      <Component Directory="LocalesDir">
-        <File Id="TL_Locales_zh_TW.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-TW.pak" />
-      </Component>
-
-      <Component Directory="ShaderDir">
-        <File Id="TL_Shader_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libEGL.dll" />
-      </Component>
-      <Component Directory="ShaderDir">
-        <File Id="TL_Shader_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libGLESv2.dll" />
-      </Component>
-
       <Component Directory="INSTALLDIR">
         <File Id="TL_LICENSE" KeyPath="yes" Source="$(var.SolutionDir)..\LICENSE" />
       </Component>
 
       <Component Directory="INSTALLDIR">
-        <File Id="TL_cef.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)cef.pak" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_cef_100_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)cef_100_percent.pak" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_cef_200_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)cef_200_percent.pak" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_cef_extensions.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)cef_extensions.pak" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_CefSharp.BrowserSubprocess.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.Core.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_CefSharp.BrowserSubprocess.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.exe" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_CefSharp.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Core.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_CefSharp.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_CefSharp.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Wpf.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_chrome_elf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_elf.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_d3dcompiler_47.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)d3dcompiler_47.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_devtools_resources.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)devtools_resources.pak" />
-      </Component>
-      <Component Directory="INSTALLDIR">
         <File Id="TL_ffmpeg.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg.exe" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_icudtl.dat" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)icudtl.dat" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_libcef.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libcef.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libEGL.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libGLESv2.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_Microsoft.WindowsAPICodePack.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.dll" />
@@ -258,16 +41,10 @@
         <File Id="TL_Microsoft.WindowsAPICodePack.Shell.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.Shell.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
-        <File Id="TL_natives_blob.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)natives_blob.bin" />
-      </Component>
-      <Component Directory="INSTALLDIR">
         <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_Ninject.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Ninject.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_snapshot_blob.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)snapshot_blob.bin" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll" />
@@ -293,9 +70,6 @@
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_TwitchLeecher.Shared.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Shared.dll" />
-      </Component>
-      <Component Directory="INSTALLDIR">
-        <File Id="TL_v8_context_snapshot.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)v8_context_snapshot.bin" />
       </Component>
       <Component Directory="INSTALLDIR">
         <File Id="TL_Xceed.Wpf.Toolkit.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Xceed.Wpf.Toolkit.dll" />

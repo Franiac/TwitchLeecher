@@ -176,14 +176,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
-                                if (!_twitchService.IsAuthorized)
-                                {
-                                    _dialogService.ShowMessageBox("This video is sub-only! Please authorize your Twitch account by clicking the Twitch button in the menu.", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                                }
-                                else
-                                {
-                                    _dialogService.ShowMessageBox("This video is sub-only but you are not subscribed to '" + video.Channel + "'!", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                                }
+                                _dialogService.ShowMessageBox("This video is sub-only! Twitch removed the ability for 3rd party software to download such videos, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                                 return;
                             }

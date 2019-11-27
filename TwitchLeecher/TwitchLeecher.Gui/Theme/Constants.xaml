@@ -40,9 +40,6 @@
     <Color x:Key="Button.Background.Pressed.Color">#FFFFFFFF</Color>
     <Color x:Key="Button.FocusVisual.Border.Color">#FF000000</Color>
 
-    <Color x:Key="LoginButton.Background.Authorized.Color">#FF00E600</Color>
-    <Color x:Key="LoginButton.Background.Authorized.MouseOver.Color">#FFAAFFAA</Color>
-
     <Color x:Key="TextBox.Background.Inactive.Selected.Color">#FFF0F0F0</Color>
 
     <Color x:Key="Scrollbar.Background.MouseOver.Color">#FFFFE1AA</Color>

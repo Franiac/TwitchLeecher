@@ -20,7 +20,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bundle.wxs" />
-    <Compile Include="DotNet.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixAssemblyInfoExtension">
@@ -30,10 +29,6 @@
     <WixExtension Include="WixUtilExtension">
       <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
       <Name>WixUtilExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixNetFxExtension">
-      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
-      <Name>WixNetFxExtension</Name>
     </WixExtension>
     <WixExtension Include="WixBalExtension">
       <HintPath>$(WixExtDir)\WixBalExtension.dll</HintPath>

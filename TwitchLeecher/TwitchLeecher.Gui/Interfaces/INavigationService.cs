@@ -16,12 +16,6 @@ namespace TwitchLeecher.Gui.Interfaces
 
         void ShowDownloads();
 
-        void ShowAuthorize();
-
-        void ShowRevokeAuthorization();
-
-        void ShowTwitchConnect();
-
         void ShowPreferences();
 
         void ShowInfo();

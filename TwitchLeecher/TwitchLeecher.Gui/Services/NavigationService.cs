@@ -82,21 +82,6 @@ namespace TwitchLeecher.Gui.Services
             Navigate(vm);
         }
 
-        public void ShowAuthorize()
-        {
-            Navigate(_kernel.Get<AuthorizeViewVM>());
-        }
-
-        public void ShowRevokeAuthorization()
-        {
-            Navigate(_kernel.Get<RevokeAuthorizationViewVM>());
-        }
-
-        public void ShowTwitchConnect()
-        {
-            Navigate(_kernel.Get<TwitchConnectViewVM>());
-        }
-
         public void ShowPreferences()
         {
             Navigate(_kernel.Get<PreferencesViewVM>());
