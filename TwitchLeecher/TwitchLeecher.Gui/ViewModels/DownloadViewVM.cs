@@ -341,6 +341,11 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 DownloadParams?.Validate();
 
+                if (_downloadParams.FullPath.Length > 250)
+                {
+                    DownloadParams.AddError(nameof(DownloadParams.Filename), "The full filename (directory + filename) must be shorter than 250 characters!");
+                }
+
                 if (_twitchService.IsFileNameUsed(_downloadParams.FullPath))
                 {
                     DownloadParams.AddError(nameof(DownloadParams.Filename), "Another video is already being downloaded to this file!");

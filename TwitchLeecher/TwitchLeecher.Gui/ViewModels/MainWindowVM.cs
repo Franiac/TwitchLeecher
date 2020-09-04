@@ -20,7 +20,6 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private bool _isAuthorized;
         private bool _showDonationButton;
 
         private int _videosCount;
@@ -28,7 +27,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private ViewModelBase _mainView;
 
-        private readonly IKernel _kernel;
         private readonly IEventAggregator _eventAggregator;
         private readonly ITwitchService _twitchService;
         private readonly IDialogService _dialogService;
@@ -36,12 +34,10 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly INavigationService _navigationService;
         private readonly ISearchService _searchService;
         private readonly IPreferencesService _preferencesService;
-        private readonly IRuntimeDataService _runtimeDataService;
         private readonly IUpdateService _updateService;
 
         private ICommand _showSearchCommand;
         private ICommand _showDownloadsCommand;
-        private ICommand _showAuthorizeCommand;
         private ICommand _showPreferencesCommand;
         private ICommand _donateCommand;
         private ICommand _showInfoCommand;
@@ -64,14 +60,12 @@ namespace TwitchLeecher.Gui.ViewModels
             INavigationService navigationService,
             ISearchService searchService,
             IPreferencesService preferencesService,
-            IRuntimeDataService runtimeDataService,
             IUpdateService updateService)
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
             Title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
-            _kernel = kernel;
             _eventAggregator = eventAggregator;
             _twitchService = twitchService;
             _dialogService = dialogService;
@@ -79,13 +73,11 @@ namespace TwitchLeecher.Gui.ViewModels
             _navigationService = navigationService;
             _searchService = searchService;
             _preferencesService = preferencesService;
-            _runtimeDataService = runtimeDataService;
             _updateService = updateService;
 
             _commandLockObject = new object();
 
             _eventAggregator.GetEvent<ShowViewEvent>().Subscribe(ShowView);
-            _eventAggregator.GetEvent<IsAuthorizedChangedEvent>().Subscribe(IsAuthorizedChanged);
             _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
             _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
             _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
@@ -96,18 +88,6 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Constructors
 
         #region Properties
-
-        public bool IsAuthorized
-        {
-            get
-            {
-                return _isAuthorized;
-            }
-            private set
-            {
-                SetProperty(ref _isAuthorized, value, nameof(IsAuthorized));
-            }
-        }
 
         public int VideosCount
         {
@@ -183,19 +163,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showDownloadsCommand;
-            }
-        }
-
-        public ICommand ShowAuthorizeCommand
-        {
-            get
-            {
-                if (_showAuthorizeCommand == null)
-                {
-                    _showAuthorizeCommand = new DelegateCommand(ShowAuthorize);
-                }
-
-                return _showAuthorizeCommand;
             }
         }
 
@@ -331,28 +298,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void ShowAuthorize()
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (_twitchService.IsAuthorized)
-                    {
-                        _navigationService.ShowRevokeAuthorization();
-                    }
-                    else
-                    {
-                        _navigationService.ShowAuthorize();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
-
         private void ShowPreferences()
         {
             try
@@ -466,11 +411,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void IsAuthorizedChanged(bool isAuthorized)
-        {
-            IsAuthorized = isAuthorized;
-        }
-
         private void PreferencesSaved()
         {
             try
@@ -542,8 +482,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     _navigationService.ShowWelcome();
                 }
-
-                _twitchService.Authorize(_runtimeDataService.RuntimeData.AccessToken);
             }
             catch (Exception ex)
             {

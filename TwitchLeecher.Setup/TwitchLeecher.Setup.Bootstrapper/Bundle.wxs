@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <?include $(var.SolutionDir)TwitchLeecher.Setup.Bootstrapper\Variables.wxi?>
 
   <Bundle Name ="$(var.BUNDLE_PRODUCT_NAME) $(var.BUNDLE_PRODUCT_VERSION_TRIMMED)"
@@ -11,6 +12,9 @@
           UpgradeCode ="$(var.BUNDLE_UPGRADE_CODE)"
           AboutUrl="$(var.BUNDLE_ABOUT_URL)"
           IconSourceFile ="$(var.SolutionDir)Resources\Images\TL_Icon.ico">
+
+    <util:RegistrySearchRef Id="NetFxRegSearch" />
+
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
       <Payload SourceFile ="$(var.TwitchLeecher.Setup.Gui.TargetPath)" />
       <Payload SourceFile ="$(var.TwitchLeecher.Setup.Gui.TargetDir)BootstrapperCore.dll" />
@@ -18,14 +22,17 @@
       <Payload SourceFile ="$(var.TwitchLeecher.Setup.Gui.TargetDir)Microsoft.Deployment.WindowsInstaller.dll" />
     </BootstrapperApplicationRef>
 
+    <WixVariable Id="WixMbaPrereqPackageId" Value="NetFxWeb" />
+    <WixVariable Id="WixMbaPrereqLicenseUrl" Value="http://referencesource.microsoft.com/license.html" />
+
     <Variable Name="BUNDLE_MANUFACTURER" Type="string" Value="$(var.BUNDLE_MANUFACTURER)" />
     <Variable Name="BUNDLE_PRODUCT_NAME" Type="string" Value="$(var.BUNDLE_PRODUCT_NAME)" />
 
     <Variable Name="BUNDLE_PRODUCT_VERSION_PADDED" Type="string" Value="$(var.BUNDLE_PRODUCT_VERSION_PADDED)" />
     <Variable Name="BUNDLE_PRODUCT_VERSION_TRIMMED" Type="string" Value="$(var.BUNDLE_PRODUCT_VERSION_TRIMMED)" />
+    <Variable Name="BUNDLE_REQUIRED_NETFX_VERSION" Type="string" Value="$(var.BUNDLE_REQUIRED_NETFX_VERSION)" />
 
     <Chain>
-      <PackageGroupRef Id="NetFxWeb" />
       <MsiPackage Id="TL" SourceFile="$(var.BUNDLE_TL_PROJECT_TARGET)" Cache="yes" Visible="no">
         <MsiProperty Name="INSTALLDIR" Value="[TL_INSTALLDIR]" />
         <MsiProperty Name="TL_INSTALLDIR_REGVALUENAME" Value="[TL_INSTALLDIR_REGVALUENAME]" />
@@ -35,4 +42,18 @@
       </MsiPackage>
     </Chain>
   </Bundle>
+
+  <Fragment>
+    <util:RegistrySearch
+          Id="NetFxRegSearch"
+          Win64="yes"
+          Root="HKLM"
+          Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+          Value="Release"
+          Variable="NetFxInstalled" />
+
+    <bal:Condition Message="Twitch Leecher requires Microsoft .NET Framework 4.8 or higher to run!">
+      <![CDATA[NetFxInstalled AND (NetFxInstalled >= BUNDLE_REQUIRED_NETFX_VERSION)]]>
+    </bal:Condition>
+  </Fragment>
 </Wix>

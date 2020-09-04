@@ -13,4 +13,6 @@
   <?define BUNDLE_ABOUT_URL="http://www.fakesmilerevolution.com"?>
 
   <?define BUNDLE_TL_PROJECT_TARGET="$(var.TwitchLeecher.Setup.Msi.TargetPath)"?>
+
+  <?define BUNDLE_REQUIRED_NETFX_VERSION="528040" ?>
 </Include>

@@ -40,15 +40,6 @@
                     <DataTemplate DataType="{x:Type vm:DownloadsViewVM}">
                         <view:DownloadsView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:AuthorizeViewVM}">
-                        <view:AuthorizeView />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:RevokeAuthorizationViewVM}">
-                        <view:RevokeAuthorizationView />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:TwitchConnectViewVM}">
-                        <view:TwitchConnectView />
-                    </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:PreferencesViewVM}">
                         <view:PreferencesView />
                     </DataTemplate>
@@ -125,7 +116,6 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource TlLoginButton}" Command="{Binding ShowAuthorizeCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
                         <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>

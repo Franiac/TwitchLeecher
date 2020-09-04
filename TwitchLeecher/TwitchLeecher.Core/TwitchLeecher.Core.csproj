@@ -51,14 +51,12 @@
     <Compile Include="Enums\SearchType.cs" />
     <Compile Include="Enums\VideoType.cs" />
     <Compile Include="Events\DownloadsCountChangedEvent.cs" />
-    <Compile Include="Events\IsAuthorizedChangedEvent.cs" />
     <Compile Include="Events\VideosCountChangedEvent.cs" />
     <Compile Include="Events\RemoveDownloadEvent.cs" />
     <Compile Include="Events\PreferencesSavedEvent.cs" />
     <Compile Include="Models\CropInfo.cs" />
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\MainWindowInfo.cs" />
-    <Compile Include="Models\TwitchAuthInfo.cs" />
     <Compile Include="Models\VodAuthInfo.cs" />
     <Compile Include="Models\DownloadParameters.cs" />
     <Compile Include="Models\FilenameWildcards.cs" />
