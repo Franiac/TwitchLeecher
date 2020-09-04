@@ -293,7 +293,7 @@ namespace TwitchLeecher.Core.Models
 
                                 for (int i = 0; i < segments.Length; i++)
                                 {
-                                    if (segments[i].Equals("videos/", StringComparison.OrdinalIgnoreCase))
+                                    if (segments[i].Equals("video/", StringComparison.OrdinalIgnoreCase) || segments[i].Equals("videos/", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (segments.Length > (i + 1))
                                         {
