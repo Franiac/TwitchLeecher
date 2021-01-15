@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace TwitchLeecher.Services.Services
         private const string USERS_URL = "https://api.twitch.tv/kraken/users";
         private const string CHANNEL_URL = "https://api.twitch.tv/kraken/channels/{0}";
         private const string CHANNEL_VIDEOS_URL = "https://api.twitch.tv/kraken/channels/{0}/videos";
-        private const string ACCESS_TOKEN_URL = "https://api.twitch.tv/api/vods/{0}/access_token";
+        private const string ACCESS_TOKEN_URL = "https://gql.twitch.tv/gql";
         private const string ALL_PLAYLISTS_URL = "https://usher.ttvnw.net/vod/{0}.m3u8?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
         private const string UNKNOWN_GAME_URL = "https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png";
 
@@ -173,7 +174,6 @@ namespace TwitchLeecher.Services.Services
         {
             WebClient wc = new WebClient();
             wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID_WEB);
-            wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
             wc.Encoding = Encoding.UTF8;
 
             return wc;
@@ -188,12 +188,14 @@ namespace TwitchLeecher.Services.Services
 
             using (WebClient webClient = CreatePrivateApiWebClient())
             {
-                string accessTokenStr = webClient.DownloadString(string.Format(ACCESS_TOKEN_URL, id));
+                string accessTokenStr = webClient.UploadString(ACCESS_TOKEN_URL, CreateGqlPlaybackAccessToken(id));
 
                 JObject accessTokenJson = JObject.Parse(accessTokenStr);
 
-                string token = Uri.EscapeDataString(accessTokenJson.Value<string>("token"));
-                string signature = accessTokenJson.Value<string>("sig");
+                JToken vpaToken = accessTokenJson.SelectToken("$.data.videoPlaybackAccessToken", false);
+
+                string token = Uri.EscapeDataString(vpaToken.Value<string>("value"));
+                string signature = vpaToken.Value<string>("signature");
 
                 if (string.IsNullOrWhiteSpace(token))
                 {
@@ -245,6 +247,28 @@ namespace TwitchLeecher.Services.Services
 
                 return new VodAuthInfo(token, signature, privileged, subOnly);
             }
+        }
+
+        private string CreateGqlPlaybackAccessToken(string id)
+        {
+            // {
+            //   "operationName": "PlaybackAccessToken",
+            //   "variables": {
+            //       "isLive": false,
+            //       "login": "",
+            //       "isVod": true,
+            //       "vodID": "870835569",
+            //       "playerType": "channel_home_live"
+            //   },
+            //   "extensions": {
+            //     "persistedQuery": {
+            //       "version": 1,
+            //       "sha256Hash": "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712"
+            //     }
+            //   }
+            // }
+
+            return "{\"operationName\": \"PlaybackAccessToken\",\"variables\": {\"isLive\": false,\"login\": \"\",\"isVod\": true,\"vodID\": \"" + id + "\",\"playerType\": \"channel_home_live\"},\"extensions\": {\"persistedQuery\": {\"version\": 1,\"sha256Hash\": \"0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712\"}}}";
         }
 
         public bool ChannelExists(string channel)
