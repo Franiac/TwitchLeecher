@@ -8,7 +8,7 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel _kernel;
+        private readonly IKernel _kernel;
 
         #endregion Fields
 

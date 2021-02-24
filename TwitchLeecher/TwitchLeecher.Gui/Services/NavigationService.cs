@@ -13,13 +13,13 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IKernel _kernel;
-        private IEventAggregator _eventAggregator;
+        private readonly IKernel _kernel;
+        private readonly IEventAggregator _eventAggregator;
 
         private ViewModelBase _lastView;
         private ViewModelBase _currentView;
 
-        private Dictionary<Type, ViewModelBase> _persistentViews;
+        private readonly Dictionary<Type, ViewModelBase> _persistentViews;
 
         #endregion Fields
 

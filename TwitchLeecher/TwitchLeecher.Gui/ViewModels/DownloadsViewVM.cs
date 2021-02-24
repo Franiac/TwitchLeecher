@@ -10,7 +10,6 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
-using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -21,8 +20,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly ITwitchService _twitchService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IPreferencesService _preferencesService;
 
         private ICommand _retryDownloadCommand;
         private ICommand _cancelDownloadCommand;
@@ -39,15 +36,11 @@ namespace TwitchLeecher.Gui.ViewModels
         public DownloadsViewVM(
             ITwitchService twitchService,
             IDialogService dialogService,
-            INavigationService navigationService,
-            IEventAggregator eventAggregator,
-            IPreferencesService preferencesService)
+            INavigationService navigationService)
         {
             _twitchService = twitchService;
             _dialogService = dialogService;
             _navigationService = navigationService;
-            _eventAggregator = eventAggregator;
-            _preferencesService = preferencesService;
 
             _twitchService.PropertyChanged += TwitchService_PropertyChanged;
 
@@ -126,7 +119,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_openDownloadFolderCommand == null)
                 {
-                    _openDownloadFolderCommand = new DelegateCommand(OpenDownloadFolder);
+                    _openDownloadFolderCommand = new DelegateCommand<string>(OpenDownloadFolder);
                 }
 
                 return _openDownloadFolderCommand;
@@ -191,34 +184,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void ViewVideo(string id)
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (!string.IsNullOrWhiteSpace(id))
-                    {
-                        TwitchVideoDownload download = Downloads.Where(d => d.Id == id).FirstOrDefault();
-
-                        if (download != null)
-                        {
-                            string folder = download.DownloadParams.Folder;
-
-                            if (Directory.Exists(folder))
-                            {
-                                Process.Start(folder);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
-
         private void ShowLog(string id)
         {
             try
@@ -242,17 +207,25 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void OpenDownloadFolder()
+        private void OpenDownloadFolder(string id)
         {
             try
             {
                 lock (_commandLockObject)
                 {
-                    string folder = _preferencesService.CurrentPreferences.DownloadFolder;
-
-                    if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder))
+                    if (!string.IsNullOrWhiteSpace(id))
                     {
-                        Process.Start(folder);
+                        TwitchVideoDownload download = Downloads.Where(d => d.Id == id).FirstOrDefault();
+
+                        if (download != null)
+                        {
+                            string folder = download.DownloadParams.Folder;
+
+                            if (Directory.Exists(folder))
+                            {
+                                Process.Start(folder);
+                            }
+                        }
                     }
                 }
             }

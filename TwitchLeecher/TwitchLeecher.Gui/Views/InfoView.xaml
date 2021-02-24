@@ -81,7 +81,7 @@
                     </Style>
                 </Button.Style>
                 <Image Style="{StaticResource Img_Donate}" />
-            </Button>            
+            </Button>
 
             <TextBlock Grid.Row="10" Text="My One-Man Metal Band Project" FontWeight="Bold"  Margin="0,15,0,0" />
             <TextBlock Grid.Row="11" Margin="15,5,0,0">

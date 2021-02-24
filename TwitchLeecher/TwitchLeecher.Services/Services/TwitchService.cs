@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -58,12 +57,11 @@ namespace TwitchLeecher.Services.Services
 
         private bool disposedValue = false;
 
-        private IPreferencesService _preferencesService;
-        private IProcessingService _processingService;
-        private IRuntimeDataService _runtimeDataService;
-        private IEventAggregator _eventAggregator;
+        private readonly IPreferencesService _preferencesService;
+        private readonly IProcessingService _processingService;
+        private readonly IEventAggregator _eventAggregator;
 
-        private Timer _downloadTimer;
+        private readonly Timer _downloadTimer;
 
         private ObservableCollection<TwitchVideo> _videos;
         private ObservableCollection<TwitchVideoDownload> _downloads;
@@ -82,12 +80,10 @@ namespace TwitchLeecher.Services.Services
         public TwitchService(
             IPreferencesService preferencesService,
             IProcessingService processingService,
-            IRuntimeDataService runtimeDataService,
             IEventAggregator eventAggregator)
         {
             _preferencesService = preferencesService;
             _processingService = processingService;
-            _runtimeDataService = runtimeDataService;
             _eventAggregator = eventAggregator;
 
             _videos = new ObservableCollection<TwitchVideo>();
@@ -379,7 +375,7 @@ namespace TwitchLeecher.Services.Services
 
             ObservableCollection<TwitchVideo> videos = new ObservableCollection<TwitchVideo>();
 
-            string broadcastTypeParam = null;
+            string broadcastTypeParam;
 
             if (videoType == VideoType.Broadcast)
             {

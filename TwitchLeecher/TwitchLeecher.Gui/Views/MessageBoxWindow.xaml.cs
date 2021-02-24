@@ -68,8 +68,6 @@ namespace TwitchLeecher.Gui.Views
 
         public MessageBoxResult Result { get; set; }
 
-        private MessageBoxResult DefaultResult { get; set; }
-
         public string Caption
         {
             get

@@ -13,7 +13,7 @@ namespace TwitchLeecher.Shared.Native
     {
         #region Constructor
 
-        private NativeDisplay(IntPtr hMonitor, IntPtr hdc)
+        private NativeDisplay(IntPtr hMonitor)
         {
             MonitorInfoEx info = new MonitorInfoEx();
             GetMonitorInfoNative(new HandleRef(null, hMonitor), info);
@@ -53,10 +53,17 @@ namespace TwitchLeecher.Shared.Native
 
         public static IEnumerable<NativeDisplay> GetAllDisplays()
         {
-            DisplayEnumCallback closure = new DisplayEnumCallback();
-            MonitorEnumProc proc = new MonitorEnumProc(closure.Callback);
+            ArrayList displays = new ArrayList();
+
+            MonitorEnumProc proc = new MonitorEnumProc((IntPtr hMonitor, IntPtr hdcMonitor, IntPtr lprcMonitor, IntPtr dwData) =>
+            {
+                displays.Add(new NativeDisplay(hMonitor));
+                return true;
+            });
+
             EnumDisplayMonitorsNative(new HandleRef(null, IntPtr.Zero), IntPtr.Zero, proc, IntPtr.Zero);
-            return closure.Displays.Cast<NativeDisplay>();
+
+            return displays.Cast<NativeDisplay>();
         }
 
         public static NativeDisplay GetDisplayFromWindow(IntPtr handle)
@@ -67,37 +74,5 @@ namespace TwitchLeecher.Shared.Native
         }
 
         #endregion Methods
-
-        #region Classes
-
-        private class DisplayEnumCallback
-        {
-            #region Constructors
-
-            public DisplayEnumCallback()
-            {
-                Displays = new ArrayList();
-            }
-
-            #endregion Constructors
-
-            #region Properties
-
-            public ArrayList Displays { get; private set; }
-
-            #endregion Properties
-
-            #region Methods
-
-            public bool Callback(IntPtr hMonitor, IntPtr hdcMonitor, IntPtr lprcMonitor, IntPtr dwData)
-            {
-                Displays.Add(new NativeDisplay(hMonitor, hdcMonitor));
-                return true;
-            }
-
-            #endregion Methods
-        }
-
-        #endregion Classes
     }
 }

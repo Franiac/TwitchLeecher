@@ -11,7 +11,6 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
-using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -22,8 +21,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly ITwitchService _twitchService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
-        private readonly INotificationService _notificationsService;
-        private readonly IEventAggregator _eventAggregator;
         private readonly IPreferencesService _preferencesService;
         private readonly IFilenameService _filenameService;
 
@@ -41,16 +38,12 @@ namespace TwitchLeecher.Gui.ViewModels
             ITwitchService twitchService,
             IDialogService dialogService,
             INavigationService navigationService,
-            INotificationService notificationService,
-            IEventAggregator eventAggregator,
             IPreferencesService preferencesService,
             IFilenameService filenameService)
         {
             _twitchService = twitchService;
             _dialogService = dialogService;
             _navigationService = navigationService;
-            _notificationsService = notificationService;
-            _eventAggregator = eventAggregator;
             _preferencesService = preferencesService;
             _filenameService = filenameService;
 

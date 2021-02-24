@@ -69,12 +69,12 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_downloadParams != null)
                 {
-                    _downloadParams.PropertyChanged -= _downloadParams_PropertyChanged;
+                    _downloadParams.PropertyChanged -= DownloadParams_PropertyChanged;
                 }
 
                 SetProperty(ref _downloadParams, value, nameof(DownloadParams));
 
-                _downloadParams.PropertyChanged += _downloadParams_PropertyChanged;
+                _downloadParams.PropertyChanged += DownloadParams_PropertyChanged;
             }
         }
 
@@ -393,7 +393,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region EventHandlers
 
-        private void _downloadParams_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DownloadParams_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_useCustomFilename)
             {

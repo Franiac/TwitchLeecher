@@ -52,11 +52,11 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private IFolderService _folderService;
-        private IEventAggregator _eventAggregator;
+        private readonly IFolderService _folderService;
+        private readonly IEventAggregator _eventAggregator;
 
         private Preferences _currentPreferences;
-        private Version _tlVersion;
+        private readonly Version _tlVersion;
 
         private readonly object _commandLockObject;
 

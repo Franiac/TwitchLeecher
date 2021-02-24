@@ -19,9 +19,9 @@ namespace TwitchLeecher.Shared.Native
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [ResourceExposure(ResourceScope.None)]
-        private static extern bool GetMonitorInfo(HandleRef hMonitor, [In, Out]MonitorInfoEx lpmi);
+        private static extern bool GetMonitorInfo(HandleRef hMonitor, [In, Out] MonitorInfoEx lpmi);
 
-        public static bool GetMonitorInfoNative(HandleRef hMonitor, [In, Out]MonitorInfoEx lpmi)
+        public static bool GetMonitorInfoNative(HandleRef hMonitor, [In, Out] MonitorInfoEx lpmi)
         {
             return GetMonitorInfo(hMonitor, lpmi);
         }

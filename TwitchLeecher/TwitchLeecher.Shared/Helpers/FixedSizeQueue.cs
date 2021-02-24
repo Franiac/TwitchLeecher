@@ -35,7 +35,7 @@ namespace TwitchLeecher.Shared.Helpers
             {
                 while (Count > Size)
                 {
-                    base.TryDequeue(out T result);
+                    TryDequeue(out _);
                 }
             }
         }

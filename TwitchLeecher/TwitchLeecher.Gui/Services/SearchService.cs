@@ -13,11 +13,11 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
-        private IEventAggregator _eventAggregator;
-        private IDialogService _dialogService;
-        private ITwitchService _twitchService;
-        private INavigationService _navigationService;
-        private IPreferencesService _preferencesService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IDialogService _dialogService;
+        private readonly ITwitchService _twitchService;
+        private readonly INavigationService _navigationService;
+        private readonly IPreferencesService _preferencesService;
 
         private SearchParameters lastSearchParams;
 

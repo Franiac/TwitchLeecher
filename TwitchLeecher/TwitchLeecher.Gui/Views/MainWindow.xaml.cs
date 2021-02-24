@@ -11,7 +11,6 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Services.Interfaces;
-using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Native;
 using static TwitchLeecher.Shared.Native.NativeMethods;
 using static TwitchLeecher.Shared.Native.NativeStructs;
@@ -22,20 +21,18 @@ namespace TwitchLeecher.Gui.Views
     {
         #region Fields
 
-        private IEventAggregator _eventAggregator;
-        private IDialogService _dialogService;
-        private IRuntimeDataService _runtimeDataService;
+        private readonly IDialogService _dialogService;
+        private readonly IRuntimeDataService _runtimeDataService;
 
         #endregion Fields
 
         #region Constructors
 
-        public MainWindow(MainWindowVM viewModel,
-            IEventAggregator eventAggregator,
+        public MainWindow(
+            MainWindowVM viewModel,
             IDialogService dialogService,
             IRuntimeDataService runtimeDataService)
         {
-            _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             _runtimeDataService = runtimeDataService;
 

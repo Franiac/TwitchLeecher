@@ -26,7 +26,7 @@ namespace TwitchLeecher.Gui.Converters
                 throw new ApplicationException("Value has to be of type '" + typeof(bool).FullName + "'!");
             }
 
-            return (Visibility)value == Visibility.Visible ? false : true;
+            return (Visibility)value != Visibility.Visible;
         }
 
         #endregion IValueConverter Members

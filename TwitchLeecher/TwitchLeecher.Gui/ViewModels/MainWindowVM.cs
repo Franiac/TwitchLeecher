@@ -1,5 +1,4 @@
-﻿using Ninject;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
@@ -52,7 +51,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public MainWindowVM(IKernel kernel,
+        public MainWindowVM(
             IEventAggregator eventAggregator,
             ITwitchService twitchService,
             IDialogService dialogService,

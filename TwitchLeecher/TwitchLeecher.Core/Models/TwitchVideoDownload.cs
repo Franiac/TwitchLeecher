@@ -12,7 +12,7 @@ namespace TwitchLeecher.Core.Models
         private DownloadState _downloadState;
         private readonly object _downloadStateLockObject;
 
-        private StringBuilder _log;
+        private readonly StringBuilder _log;
         private readonly object _logLockObject;
 
         private double _progress;

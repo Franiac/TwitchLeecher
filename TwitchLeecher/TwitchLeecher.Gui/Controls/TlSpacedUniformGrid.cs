@@ -73,7 +73,6 @@ namespace TwitchLeecher.Gui.Controls
             UIElementCollection elements = InternalChildren;
 
             double availableWidth = availableSize.Width;
-            double availableHeight = availableSize.Height;
 
             double spacing = Spacing;
             double itemWidth = ItemWidth;
@@ -142,8 +141,6 @@ namespace TwitchLeecher.Gui.Controls
 
             for (int i = 0; i < elementCount; i++)
             {
-                UIElement element = elements[i];
-
                 if (i % columnCount == 0)
                 {
                     curX = 0;

@@ -24,10 +24,10 @@ namespace TwitchLeecher.Services.Services
 
         #region Fields
 
-        private IFolderService _folderService;
+        private readonly IFolderService _folderService;
 
         private RuntimeData _runtimeData;
-        private Version _tlVersion;
+        private readonly Version _tlVersion;
 
         private readonly object _commandLockObject;
 

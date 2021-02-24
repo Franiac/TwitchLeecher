@@ -74,11 +74,13 @@ namespace TwitchLeecher.Shared.Events
             {
                 return arguments =>
                 {
-                    TPayload argument = default(TPayload);
+                    TPayload argument = default;
+
                     if (arguments != null && arguments.Length > 0 && arguments[0] != null)
                     {
                         argument = (TPayload)arguments[0];
                     }
+
                     if (filter(argument))
                     {
                         InvokeAction(action, argument);
