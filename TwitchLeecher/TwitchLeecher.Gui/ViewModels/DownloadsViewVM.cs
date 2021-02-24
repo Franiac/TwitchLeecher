@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -233,20 +232,6 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
-        }
-
-        protected override List<MenuCommand> BuildMenu()
-        {
-            List<MenuCommand> menuCommands = base.BuildMenu();
-
-            if (menuCommands == null)
-            {
-                menuCommands = new List<MenuCommand>();
-            }
-
-            menuCommands.Add(new MenuCommand(OpenDownloadFolderCommand, "Open Download Folder", "FolderOpen", 230));
-
-            return menuCommands;
         }
 
         #endregion Methods

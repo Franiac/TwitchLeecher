@@ -15,8 +15,8 @@
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
                     <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
-                    <converters:DownloadStateToVisibilityConverter x:Key="downloadStateToVisibilityConverter" />
-                    <converters:DownloadStateToColorConverter x:Key="downloadStateToColorConverter" />
+                    <converters:DownloadStateToVisibilityConverter x:Key="DownloadStateToVisibilityConverter" />
+                    <converters:DownloadStateToColorConverter x:Key="DownloadStateToColorConverter" />
 
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -123,6 +123,17 @@
                                                 HorizontalAlignment="Stretch">
                                             <fa:ImageAwesome Icon="FileTextOutline" Width="16" Height="16" />
                                         </Button>
+                                        <Button Style="{StaticResource TlMiniButton}"
+                                                Command="{Binding Path=DataContext.OpenDownloadFolderCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding Id}"
+                                                Margin="5,0,0,0"
+                                                Padding="5"
+                                                ToolTip="Open Download Folder"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                Visibility="{Binding DownloadState, Converter={StaticResource ResourceKey='DownloadStateToVisibilityConverter'}, ConverterParameter={x:Static enums:DownloadState.Done}}">
+                                            <fa:ImageAwesome Icon="FolderOpen" Width="16" Height="16" />
+                                        </Button>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -161,7 +172,7 @@
                                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Status:" FontWeight="Bold" />
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Status}" FontWeight="Bold">
                                         <TextBlock.Foreground>
-                                            <SolidColorBrush Color="{Binding DownloadState, Converter={StaticResource downloadStateToColorConverter}}" />
+                                            <SolidColorBrush Color="{Binding DownloadState, Converter={StaticResource DownloadStateToColorConverter}}" />
                                         </TextBlock.Foreground>
                                     </TextBlock>
 
