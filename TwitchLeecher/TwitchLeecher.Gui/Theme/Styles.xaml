@@ -113,14 +113,6 @@
     </Style>
     <!-- /MultilineTextBox -->
 
-    <!-- ComboBox -->
-    <Style TargetType="{x:Type ComboBox}">
-        <Setter Property="Height" Value="27" />
-        <Setter Property="Padding" Value="3,0,3,0" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-    <!-- /ComboBox -->
-
     <!-- TlScrollingTextBox -->
     <SolidColorBrush x:Key="TlScrollingTextBox.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
     <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{StaticResource Global.Theme.Border.Color}" />

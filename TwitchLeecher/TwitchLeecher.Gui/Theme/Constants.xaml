@@ -31,9 +31,9 @@
     <Color x:Key="TextControl.Background.Error.Color">#FFFF8080</Color>
     <Color x:Key="TextControl.Border.Color">#FFABADB3</Color>
     <Color x:Key="TextControl.Border.Disabled.Color">#FFBCBCBC</Color>
-    <Color x:Key="TextControl.Border.MouseOver.Color">#FF75A7FF</Color>
-    <Color x:Key="TextControl.Border.Pressed.Color">#FF3A81FF</Color>
-    <Color x:Key="TextControl.Border.Focus.Color">#FF5693FF</Color>
+    <Color x:Key="TextControl.Border.MouseOver.Color">#FFFFDB9A</Color>
+    <Color x:Key="TextControl.Border.Pressed.Color">#FFBF4C</Color>
+    <Color x:Key="TextControl.Border.Focus.Color">#FFFFC864</Color>
 
     <Color x:Key="Button.Background.Disabled.Color">#FFFFE1AA</Color>
     <Color x:Key="Button.Background.MouseOver.Color">#FFFFE1AA</Color>
