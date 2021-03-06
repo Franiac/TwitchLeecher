@@ -30,6 +30,14 @@ namespace TwitchLeecher.Core.Models
 
         public Version NewVersion { get; }
 
+        public string NewVersionStr
+        {
+            get
+            {
+                return NewVersion.ToString(3);
+            }
+        }
+
         public DateTime ReleaseDate { get; }
 
         public string DownloadUrl { get; }

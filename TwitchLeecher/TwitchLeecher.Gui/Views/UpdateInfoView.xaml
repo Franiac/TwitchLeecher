@@ -34,7 +34,7 @@
 
             <TextBlock Grid.Row="2">
                 <Run Text="Twitch Leecher" />
-                <Run Text="{Binding UpdateInfo.NewVersion, Mode=OneWay, FallbackValue='X.Y.Z'}" />
+                <Run Text="{Binding UpdateInfo.NewVersionStr, Mode=OneWay, FallbackValue='X.Y.Z'}" />
                 <Run Text="has been released on" />
                 <Run Text="{Binding UpdateInfo.ReleaseDate, Mode=OneWay, FallbackValue='04/21/2016', StringFormat=d}" />
             </TextBlock>
