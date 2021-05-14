@@ -183,7 +183,7 @@ namespace TwitchLeecher.Gui.ViewModels
                             string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
                             filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
+                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion) { CropStartTime = video.StartTime, CropStart = video.StartTime != TimeSpan.Zero };
 
                             _navigationService.ShowDownload(downloadParams);
                         }

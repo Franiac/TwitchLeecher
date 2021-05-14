@@ -108,6 +108,8 @@ namespace TwitchLeecher.Core.Models
 
         public Uri Url { get; }
 
+        public TimeSpan StartTime { get; set; }
+
         #endregion Properties
     }
 }
