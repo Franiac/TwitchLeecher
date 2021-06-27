@@ -20,7 +20,7 @@ namespace TwitchLeecher.Gui.Controls
         #region PadZeros
 
         public static readonly DependencyProperty PadZerosProperty = DependencyProperty.Register(
-                "PadZeros",
+                nameof(PadZeros),
                 typeof(bool),
                 typeof(TlIntegerUpDown), new FrameworkPropertyMetadata(defaultValue: false));
 
@@ -35,7 +35,7 @@ namespace TwitchLeecher.Gui.Controls
         #region Loop
 
         public static readonly DependencyProperty LoopProperty = DependencyProperty.Register(
-                "Loop",
+                nameof(Loop),
                 typeof(bool),
                 typeof(TlIntegerUpDown), new FrameworkPropertyMetadata(defaultValue: false));
 
