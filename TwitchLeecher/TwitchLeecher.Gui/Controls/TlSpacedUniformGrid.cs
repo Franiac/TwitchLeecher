@@ -21,7 +21,7 @@ namespace TwitchLeecher.Gui.Controls
         #region Spacing
 
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
-                "Spacing",
+                nameof(Spacing),
                 typeof(double),
                 typeof(TlSpacedUniformGrid), new FrameworkPropertyMetadata(
                         defaultValue: 10.0,
@@ -38,7 +38,7 @@ namespace TwitchLeecher.Gui.Controls
         #region ItemWidth
 
         public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(
-                "ItemWidth",
+                nameof(ItemWidth),
                 typeof(double),
                 typeof(TlSpacedUniformGrid), new FrameworkPropertyMetadata(
                         defaultValue: 320.0,
