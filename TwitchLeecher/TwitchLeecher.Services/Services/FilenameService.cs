@@ -35,6 +35,9 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.GAME, video.Game);
             result = result.Replace(FilenameWildcards.DATE, recorded.ToString("yyyyMMdd"));
+            result = result.Replace(FilenameWildcards.YEAR, recorded.ToString("yyyy"));
+            result = result.Replace(FilenameWildcards.MONTH, recorded.ToString("MM"));
+            result = result.Replace(FilenameWildcards.DAY, recorded.ToString("dd"));
             result = result.Replace(FilenameWildcards.TIME, recorded.ToString("hhmmsstt", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.ID, video.Id);

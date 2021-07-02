@@ -8,6 +8,12 @@
 
         public static string DATE = "{date}";
 
+        public static string YEAR = "{year}";
+
+        public static string MONTH = "{month}";
+
+        public static string DAY = "{day}";
+
         public static string TIME = "{time}";
 
         public static string TIME24 = "{time24}";
