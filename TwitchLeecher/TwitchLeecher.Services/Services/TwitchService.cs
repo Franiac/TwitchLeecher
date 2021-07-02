@@ -499,6 +499,10 @@ namespace TwitchLeecher.Services.Services
 
                         if (video != null)
                         {
+                            if (TryGetStartTimeFromUrl( url, out var startTime ))
+                            {
+                                video.StartTime = startTime;
+                            }
                             videos.Add(video);
                             addedIds.Add(id.Value);
                         }
@@ -507,6 +511,28 @@ namespace TwitchLeecher.Services.Services
             }
 
             Videos = videos;
+        }
+
+        private bool TryGetStartTimeFromUrl(string url, out TimeSpan startTime)
+        {
+            startTime = TimeSpan.Zero;
+            if (string.IsNullOrWhiteSpace( url ) || !Uri.TryCreate( url, UriKind.Absolute, out var validUrl ))
+            {
+                return false;
+            }
+            var query = HttpUtility.ParseQueryString(validUrl.Query);
+            if (!query.ContainsKey( "t" ))
+            {
+                return false;
+            }
+            var rawStartTime = query["t"];
+            // TODO parse other formats, too, like "10m15s" or "3h10m12s" (not just "1496s")
+            if (!rawStartTime.EndsWith( "s" ) || !int.TryParse( rawStartTime.TrimEnd( 's' ), out var seconds ))
+            {
+                return false;
+            }
+            startTime = TimeSpan.FromSeconds(seconds);
+            return true;
         }
 
         private void SearchIds(string ids)
