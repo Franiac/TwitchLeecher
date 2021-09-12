@@ -47,6 +47,8 @@ namespace TwitchLeecher.Core.Models
 
         private string _miscExternalPlayer;
 
+        private string _authToken;
+
         #endregion Fields
 
         #region Properties
@@ -269,6 +271,18 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public string AuthToken
+        {
+            get
+            {
+                return _authToken;
+            }
+            set
+            {
+                SetProperty(ref _authToken, value);
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -385,7 +399,8 @@ namespace TwitchLeecher.Core.Models
                 DownloadFileName = DownloadFileName,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
-                DownloadDisableConversion = DownloadDisableConversion
+                DownloadDisableConversion = DownloadDisableConversion,
+                AuthToken = AuthToken
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);

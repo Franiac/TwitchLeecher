@@ -47,6 +47,7 @@ namespace TwitchLeecher.Services.Services
         private const string MISC_EL = "Misc";
         private const string MISC_USEEXTERNALPLAYER_EL = "UseExternalPlayer";
         private const string MISC_EXTERNALPLAYER_EL = "ExternalPlayer";
+        private const string MISC_AUTHTOKEN_EL = "AuthToken";
 
         #endregion Constants
 
@@ -230,6 +231,13 @@ namespace TwitchLeecher.Services.Services
                     XElement miscExternalPlayerEl = new XElement(MISC_EXTERNALPLAYER_EL);
                     miscExternalPlayerEl.SetValue(preferences.MiscExternalPlayer);
                     miscEl.Add(miscExternalPlayerEl);
+                }
+
+                if (!string.IsNullOrWhiteSpace(preferences.AuthToken))
+                {
+                    XElement miscAuthTokenEl = new XElement(MISC_AUTHTOKEN_EL);
+                    miscAuthTokenEl.SetValue(preferences.AuthToken.Trim());
+                    miscEl.Add(miscAuthTokenEl);
                 }
 
                 string appDataFolder = _folderService.GetAppDataFolder();
@@ -540,6 +548,20 @@ namespace TwitchLeecher.Services.Services
                                 try
                                 {
                                     preferences.MiscExternalPlayer = miscExternalPlayerEl.GetValueAsString();
+                                }
+                                catch
+                                {
+                                    // Value from config file could not be loaded, use default value
+                                }
+                            }
+
+                            XElement miscAuthTokenEl = miscEl.Element(MISC_AUTHTOKEN_EL);
+
+                            if (miscAuthTokenEl != null)
+                            {
+                                try
+                                {
+                                    preferences.AuthToken = miscAuthTokenEl.GetValueAsString();
                                 }
                                 catch
                                 {

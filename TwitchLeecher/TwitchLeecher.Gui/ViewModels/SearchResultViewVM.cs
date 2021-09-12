@@ -165,7 +165,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
-                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id);
+                            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+
+                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id, currentPrefs.AuthToken);
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
@@ -173,8 +175,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
                                 return;
                             }
-
-                            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
                             string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
                                 ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)

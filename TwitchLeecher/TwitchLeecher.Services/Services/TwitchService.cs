@@ -175,7 +175,7 @@ namespace TwitchLeecher.Services.Services
             return wc;
         }
 
-        public VodAuthInfo RetrieveVodAuthInfo(string id)
+        public VodAuthInfo RetrieveVodAuthInfo(string id, string authToken)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -184,6 +184,12 @@ namespace TwitchLeecher.Services.Services
 
             using (WebClient webClient = CreatePrivateApiWebClient())
             {
+                // Add auth token for sub only VODs
+                if (!string.IsNullOrWhiteSpace(authToken))
+                {
+                    webClient.Headers.Add("Authorization", "OAuth " + authToken);
+                }
+
                 string accessTokenStr = webClient.UploadString(ACCESS_TOKEN_URL, CreateGqlPlaybackAccessToken(id));
 
                 JObject accessTokenJson = JObject.Parse(accessTokenStr);
