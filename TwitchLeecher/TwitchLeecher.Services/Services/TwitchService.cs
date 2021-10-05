@@ -1101,6 +1101,7 @@ namespace TwitchLeecher.Services.Services
             Uri url = new Uri(videoJson.Value<string>("url"));
             Uri thumbnail = new Uri(videoJson.Value<JObject>("preview").Value<string>("large"));
             Uri gameThumbnail = GetGameThumbnail(game);
+            bool subOnly = RetrieveVodAuthInfo(id).SubOnly;
 
             string dateStr = videoJson.Value<string>("published_at");
 
@@ -1116,7 +1117,7 @@ namespace TwitchLeecher.Services.Services
                 id = id.Substring(1);
             }
 
-            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, gameThumbnail, url);
+            return new TwitchVideo(channel, title, id, game, views, length, qualities, recordedDate, thumbnail, gameThumbnail, url, subOnly);
         }
 
         public Uri GetGameThumbnail(string game)

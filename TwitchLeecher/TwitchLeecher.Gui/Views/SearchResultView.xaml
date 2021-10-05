@@ -100,6 +100,11 @@
                                         <TextBlock Text="{Binding BestQuality}" FontSize="11" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
+                                <Border Background="#78000000" HorizontalAlignment="Left" VerticalAlignment="Bottom" CornerRadius="3" Margin="3,0,0,3" Padding="5,1,5,1" Visibility="{Binding SubOnlyVis}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding SubOnlyStr}" FontSize="11" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
                             </Grid>
                         </DockPanel>
                     </Border>

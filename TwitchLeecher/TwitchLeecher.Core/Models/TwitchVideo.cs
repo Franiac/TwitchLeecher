@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Core.Models
@@ -17,7 +18,7 @@ namespace TwitchLeecher.Core.Models
         #region Constructors
 
         public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
-            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri gameThumbnail, Uri url)
+            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri gameThumbnail, Uri url, bool subOnly)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -59,6 +60,8 @@ namespace TwitchLeecher.Core.Models
             Thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
             GameThumbnail = gameThumbnail ?? throw new ArgumentNullException(nameof(gameThumbnail));
             Url = url ?? throw new ArgumentNullException(nameof(url));
+            SubOnlyVis = subOnly ? Visibility.Visible : Visibility.Hidden;
+            SubOnlyStr = subOnly ? "SUB ONLY" : "";
         }
 
         #endregion Constructors
@@ -107,6 +110,10 @@ namespace TwitchLeecher.Core.Models
         public Uri GameThumbnail { get; }
 
         public Uri Url { get; }
+
+        public Visibility SubOnlyVis { get; }
+
+        public string SubOnlyStr { get; }
 
         #endregion Properties
     }
