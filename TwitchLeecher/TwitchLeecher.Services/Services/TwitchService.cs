@@ -837,20 +837,26 @@ namespace TwitchLeecher.Services.Services
                 webClient.Headers.Add("Accept", "*/*");
                 webClient.Headers.Add("Accept-Encoding", "gzip, deflate, br");
 
-                log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-                string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, vodId, vodAuthInfo.Signature, vodAuthInfo.Token));
-                log(" done!");
+                log(Environment.NewLine + Environment.NewLine + "Determining m3u8 playlist url for selected quality " + quality.DisplayString);
 
-                List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
-
-                allPlaylistsList.ForEach(url =>
-                {
-                    log(Environment.NewLine + url);
-                });
-
-                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + quality.QualityId + "/")).First();
+                string playlistUrl = DeterminePlaylistUrl(vodId, quality.QualityId);
 
                 log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + quality.DisplayString + " is " + playlistUrl);
+
+                return playlistUrl;
+            }
+        }
+
+        private string DeterminePlaylistUrl(string vodId, string qualityId)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
+                wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
+
+                string playlistUrl = JObject.Parse(wc.DownloadString(string.Format(VIDEO_URL, vodId))).Value<string>("animated_preview_url");
+                playlistUrl = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/storyboards/"));
+                playlistUrl += "/" + qualityId + "/index-dvr.m3u8";
 
                 return playlistUrl;
             }

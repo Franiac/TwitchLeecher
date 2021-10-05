@@ -167,13 +167,6 @@ namespace TwitchLeecher.Gui.ViewModels
                         {
                             VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id);
 
-                            if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
-                            {
-                                _dialogService.ShowMessageBox("This video is sub-only! Twitch removed the ability for 3rd party software to download such videos, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-
-                                return;
-                            }
-
                             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
                             string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
