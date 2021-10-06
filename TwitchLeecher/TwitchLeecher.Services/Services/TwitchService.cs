@@ -854,9 +854,20 @@ namespace TwitchLeecher.Services.Services
                 wc.Headers.Add(TWITCH_V5_ACCEPT_HEADER, TWITCH_V5_ACCEPT);
                 wc.Headers.Add(TWITCH_CLIENT_ID_HEADER, TWITCH_CLIENT_ID);
 
-                string playlistUrl = JObject.Parse(wc.DownloadString(string.Format(VIDEO_URL, vodId))).Value<string>("animated_preview_url");
+                JObject vodMetadata = JObject.Parse(wc.DownloadString(string.Format(VIDEO_URL, vodId)));
+                string vodType = vodMetadata.Value<string>("broadcast_type");
+
+                string playlistUrl = vodMetadata.Value<string>("animated_preview_url");
                 playlistUrl = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/storyboards/"));
-                playlistUrl += "/" + qualityId + "/index-dvr.m3u8";
+
+                if (vodType == "highlight")
+                {
+                    playlistUrl += "/" + qualityId + "/highlight-" + vodId + ".m3u8";
+                }
+                else
+                {
+                    playlistUrl += "/" + qualityId + "/index-dvr.m3u8";
+                }
 
                 return playlistUrl;
             }
