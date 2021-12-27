@@ -6,7 +6,7 @@ If you are looking for an extremely fast and easy to use Twitch VOD downloader, 
 
 ## Is this project alive?????
 
-Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was and still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I dicide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
+Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was and still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I decide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
 
 ## Download & Requirements
 - Requires .NET Framework 4.8
