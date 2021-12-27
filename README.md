@@ -1,3 +1,11 @@
+# CAUTION!!! FAKE TWITCH LEECHER WEBSITE!!!
+
+**There is a FAKE website [https://tleecher.com](https://tleecher.com) providing a download link for Twitch Leecher.**
+
+**This site has nothing to do with Twitch Leecher and only provides MALWARE!**
+
+**DO NOT DOWNLOAD ANYTHING FROM THIS WEBSITE!!!**
+
 # Twitch Leecher
 
 If you are looking for an extremely fast and easy to use Twitch VOD downloader, this is your tool!
