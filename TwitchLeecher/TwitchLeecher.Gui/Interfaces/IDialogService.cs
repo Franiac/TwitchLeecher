@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Windows;
+using TwitchLeecher.Core.Models;
 
 namespace TwitchLeecher.Gui.Interfaces
 {
@@ -19,6 +20,8 @@ namespace TwitchLeecher.Gui.Interfaces
         void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback);
 
         void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder, Action<bool, string> dialogCompleteCallback);
+
+        void ShowUpdateInfoDialog(UpdateInfo updateInfo);
 
         void SetBusy();
     }

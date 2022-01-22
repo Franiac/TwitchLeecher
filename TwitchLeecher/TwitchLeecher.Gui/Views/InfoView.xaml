@@ -30,7 +30,6 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
-                <RowDefinition />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -97,11 +96,6 @@
             <TextBlock Grid.Row="13" Margin="15,5,0,0">
             <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
                 http://www.youtube.com/fakesmilerevolution
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Grid.Row="14" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.facebook.com/fakesmilerevolution">
-                http://www.facebook.com/fakesmilerevolution
             </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Row="15" Margin="15,5,0,0">

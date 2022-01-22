@@ -252,8 +252,9 @@
     <SolidColorBrush x:Key="MainWindow.Background" Color="{StaticResource Window.Background.Color}" />
     <SolidColorBrush x:Key="MainWindow.Border" Color="{StaticResource Global.Theme.Border.Color}" />
 
-    <Style x:Key="TlMainWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
+    <Style x:Key="TlWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
         <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Icon" Value="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico" />
         <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{StaticResource MainWindow.Foreground}" />
@@ -263,10 +264,6 @@
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="840" />
-        <Setter Property="Height" Value="800" />
-        <Setter Property="MinWidth" Value="840" />
-        <Setter Property="MinHeight" Value="570" />
     </Style>
     <!-- /Window -->
 </ResourceDictionary>

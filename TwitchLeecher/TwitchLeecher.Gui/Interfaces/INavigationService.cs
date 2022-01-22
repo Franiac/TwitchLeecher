@@ -4,6 +4,10 @@ namespace TwitchLeecher.Gui.Interfaces
 {
     public interface INavigationService
     {
+        void ShowAuth();
+
+        void ShowLogin();
+
         void ShowWelcome();
 
         void ShowLoading();
@@ -21,8 +25,6 @@ namespace TwitchLeecher.Gui.Interfaces
         void ShowInfo();
 
         void ShowLog(TwitchVideoDownload download);
-
-        void ShowUpdateInfo(UpdateInfo updateInfo);
 
         void NavigateBack();
     }

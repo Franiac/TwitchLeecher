@@ -37,6 +37,16 @@ namespace TwitchLeecher.Gui.Services
 
         #region Methods
 
+        public void ShowAuth()
+        {
+            Navigate(_kernel.Get<AuthViewVM>());
+        }
+
+        public void ShowLogin()
+        {
+            Navigate(_kernel.Get<LoginViewVM>());
+        }
+
         public void ShowWelcome()
         {
             Navigate(_kernel.Get<WelcomeViewVM>());
@@ -96,14 +106,6 @@ namespace TwitchLeecher.Gui.Services
         {
             LogViewVM vm = _kernel.Get<LogViewVM>();
             vm.Download = download ?? throw new ArgumentNullException(nameof(download));
-
-            Navigate(vm);
-        }
-
-        public void ShowUpdateInfo(UpdateInfo updateInfo)
-        {
-            UpdateInfoViewVM vm = _kernel.Get<UpdateInfoViewVM>();
-            vm.UpdateInfo = updateInfo ?? throw new ArgumentNullException(nameof(updateInfo));
 
             Navigate(vm);
         }

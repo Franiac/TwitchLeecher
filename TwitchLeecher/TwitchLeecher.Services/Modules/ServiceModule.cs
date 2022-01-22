@@ -10,6 +10,8 @@ namespace TwitchLeecher.Services.Modules
 
         public override void Load()
         {
+            Bind<IApiService>().To<ApiService>().InSingletonScope();
+            Bind<IAuthService>().To<AuthService>().InSingletonScope();
             Bind<IFilenameService>().To<FilenameService>().InSingletonScope();
             Bind<IFolderService>().To<FolderService>().InSingletonScope();
             Bind<ILogService>().To<LogService>().InSingletonScope();

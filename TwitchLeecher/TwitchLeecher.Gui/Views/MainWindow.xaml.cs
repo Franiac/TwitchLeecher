@@ -24,6 +24,8 @@ namespace TwitchLeecher.Gui.Views
         private readonly IDialogService _dialogService;
         private readonly IRuntimeDataService _runtimeDataService;
 
+        private bool _shown = false;
+
         #endregion Fields
 
         #region Constructors
@@ -83,6 +85,15 @@ namespace TwitchLeecher.Gui.Views
                 }
 
                 LoadWindowState();
+            };
+
+            Activated += (s, e) =>
+            {
+                if (viewModel != null && !_shown)
+                {
+                    _shown = true;
+                    viewModel.Shown();
+                }
             };
 
             Closed += (s, e) =>

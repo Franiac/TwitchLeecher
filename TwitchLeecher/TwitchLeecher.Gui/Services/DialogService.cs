@@ -1,9 +1,12 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using Ninject;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
+using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using Cursors = System.Windows.Input.Cursors;
@@ -14,6 +17,7 @@ namespace TwitchLeecher.Gui.Services
     {
         #region Fields
 
+        private readonly IKernel _kernel;
         private readonly ILogService _logService;
 
         private bool _busy;
@@ -22,8 +26,9 @@ namespace TwitchLeecher.Gui.Services
 
         #region Constructor
 
-        public DialogService(ILogService logService)
+        public DialogService(IKernel kernel, ILogService logService)
         {
+            _kernel = kernel;
             _logService = logService;
         }
 
@@ -116,6 +121,17 @@ namespace TwitchLeecher.Gui.Services
 
                 dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
             }
+        }
+
+        public void ShowUpdateInfoDialog(UpdateInfo updateInfo)
+        {            
+            UpdateInfoViewVM vm = _kernel.Get<UpdateInfoViewVM>();
+            vm.UpdateInfo = updateInfo;
+
+            UpdateInfoView view = new UpdateInfoView();
+            view.DataContext = vm;
+
+            view.ShowDialog();
         }
 
         public void SetBusy()

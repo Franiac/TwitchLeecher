@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CefSharp;
+using CefSharp.Wpf;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
@@ -10,6 +14,7 @@ using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Extensions;
+using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 using TwitchLeecher.Shared.Reflection;
 
@@ -20,6 +25,7 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private bool _showDonationButton;
+        private bool _isAuthenticated;
 
         private int _videosCount;
         private int _downloadsCount;
@@ -27,10 +33,13 @@ namespace TwitchLeecher.Gui.ViewModels
         private ViewModelBase _mainView;
 
         private readonly IEventAggregator _eventAggregator;
+        private readonly IAuthService _authService;
         private readonly ITwitchService _twitchService;
         private readonly IDialogService _dialogService;
         private readonly IDonationService _donationService;
+        private readonly IFolderService _folderService;
         private readonly INavigationService _navigationService;
+        private readonly IRuntimeDataService _runtimeDataService;
         private readonly ISearchService _searchService;
         private readonly IPreferencesService _preferencesService;
         private readonly IUpdateService _updateService;
@@ -40,6 +49,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _showPreferencesCommand;
         private ICommand _donateCommand;
         private ICommand _showInfoCommand;
+        private ICommand _revokeCommand;
         private ICommand _doMinimizeCommand;
         private ICommand _doMmaximizeRestoreCommand;
         private ICommand _doCloseCommand;
@@ -53,10 +63,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public MainWindowVM(
             IEventAggregator eventAggregator,
+            IAuthService authService,
             ITwitchService twitchService,
             IDialogService dialogService,
             IDonationService donationService,
+            IFolderService folderService,
             INavigationService navigationService,
+            IRuntimeDataService runtimeDataService,
             ISearchService searchService,
             IPreferencesService preferencesService,
             IUpdateService updateService)
@@ -66,20 +79,25 @@ namespace TwitchLeecher.Gui.ViewModels
             Title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
 
             _eventAggregator = eventAggregator;
+            _authService = authService;
             _twitchService = twitchService;
             _dialogService = dialogService;
             _donationService = donationService;
+            _folderService = folderService;
             _navigationService = navigationService;
+            _runtimeDataService = runtimeDataService;
             _searchService = searchService;
             _preferencesService = preferencesService;
             _updateService = updateService;
 
             _commandLockObject = new object();
 
-            _eventAggregator.GetEvent<ShowViewEvent>().Subscribe(ShowView);
+            _eventAggregator.GetEvent<AuthenticatedChangedEvent>().Subscribe(AuthenticatedChanged);
+            _eventAggregator.GetEvent<AuthenticationResultEvent>().Subscribe(AuthenticationResultAction);
             _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
             _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
             _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
+            _eventAggregator.GetEvent<ShowViewEvent>().Subscribe(ShowView);
 
             _showDonationButton = _preferencesService.CurrentPreferences.AppShowDonationButton;
         }
@@ -124,6 +142,19 @@ namespace TwitchLeecher.Gui.ViewModels
             private set
             {
                 SetProperty(ref _showDonationButton, value, nameof(ShowDonationButton));
+            }
+        }
+
+        public bool IsAuthenticated
+        {
+            get
+            {
+                return _isAuthenticated;
+            }
+
+            private set
+            {
+                SetProperty(ref _isAuthenticated, value, nameof(IsAuthenticated));
             }
         }
 
@@ -201,6 +232,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showInfoCommand;
+            }
+        }
+
+        public ICommand RevokeCommand
+        {
+            get
+            {
+                if (_revokeCommand == null)
+                {
+                    _revokeCommand = new DelegateCommand(RevokeAuthentication);
+                }
+
+                return _revokeCommand;
             }
         }
 
@@ -342,6 +386,27 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void RevokeAuthentication()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    MessageBoxResult res = _dialogService.ShowMessageBox($"You are currently logged in as \"{ _authService.GetUsername() }\". Do you really want to logout?", "Logout", MessageBoxButton.YesNo);
+
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        _authService.RevokeAuthentication();
+                        _navigationService.ShowAuth();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
         private void DoMinimize(Window window)
         {
             try
@@ -402,6 +467,11 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        private void AuthenticatedChanged(bool isAuthenticated)
+        {
+            this.IsAuthenticated = isAuthenticated;
+        }
+
         private void ShowView(ViewModelBase contentVM)
         {
             if (contentVM != null)
@@ -436,55 +506,124 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+                InitializeCef();
 
-                bool updateAvailable = false;
-
-                if (currentPrefs.AppCheckForUpdates)
+                if (!CheckAuthentication())
                 {
-                    UpdateInfo updateInfo = _updateService.CheckForUpdate();
-
-                    if (updateInfo != null)
-                    {
-                        updateAvailable = true;
-                        _navigationService.ShowUpdateInfo(updateInfo);
-                    }
+                    _navigationService.ShowAuth();
                 }
-
-                bool searchOnStartup = false;
-
-                if (!updateAvailable && currentPrefs.SearchOnStartup)
+                else
                 {
-                    currentPrefs.Validate();
-
-                    if (!currentPrefs.HasErrors)
-                    {
-                        searchOnStartup = true;
-
-                        SearchParameters searchParams = new SearchParameters(SearchType.Channel)
-                        {
-                            Channel = currentPrefs.SearchChannelName,
-                            VideoType = currentPrefs.SearchVideoType,
-                            LoadLimitType = currentPrefs.SearchLoadLimitType,
-                            LoadFrom = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
-                            LoadFromDefault = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
-                            LoadTo = DateTime.Now.Date,
-                            LoadToDefault = DateTime.Now.Date,
-                            LoadLastVods = currentPrefs.SearchLoadLastVods
-                        };
-
-                        _searchService.PerformSearch(searchParams);
-                    }
-                }
-
-                if (!updateAvailable && !searchOnStartup)
-                {
-                    _navigationService.ShowWelcome();
+                    ShowWelcomeOrSearch();
                 }
             }
             catch (Exception ex)
             {
                 _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        public void Shown()
+        {
+            ShowUpdateDialog();
+        }
+
+        private void InitializeCef()
+        {
+            Cef.EnableHighDPISupport();
+
+            if (!Cef.IsInitialized)
+            {
+                string cachePath = Path.Combine(_folderService.GetAppDataFolder(), "CefCache");
+
+                FileSystem.CreateDirectory(cachePath);
+
+                CefSettings settings = new CefSettings()
+                {
+                    RemoteDebuggingPort = 9222,
+                    CachePath = cachePath
+                };
+
+                Cef.Initialize(settings);
+            }
+        }
+
+        private bool CheckAuthentication()
+        {
+            string accessToken = _runtimeDataService.RuntimeData.AccessToken;
+
+            if (!string.IsNullOrWhiteSpace(accessToken))
+            {
+                return _authService.ValidateAuthentication(accessToken);
+            }
+
+            return false;
+        }
+
+        private void AuthenticationResultAction(bool success)
+        {
+            if (success)
+            {
+                ShowWelcomeOrSearch();
+            }
+            else
+            {
+                _navigationService.ShowAuth();
+            }
+        }
+
+        private void ShowWelcomeOrSearch()
+        {
+            if (!SearchOnStartup())
+            {
+                _navigationService.ShowWelcome();
+            }
+        }
+
+        private bool SearchOnStartup()
+        {
+            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+
+            if (currentPrefs.SearchOnStartup)
+            {
+                currentPrefs.Validate();
+
+                if (!currentPrefs.HasErrors)
+                {
+                    SearchParameters searchParams = new SearchParameters(SearchType.Channel)
+                    {
+                        Channel = currentPrefs.SearchChannelName,
+                        VideoType = currentPrefs.SearchVideoType,
+                        LoadLimitType = currentPrefs.SearchLoadLimitType,
+                        LoadFrom = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
+                        LoadFromDefault = DateTime.Now.Date.AddDays(-currentPrefs.SearchLoadLastDays),
+                        LoadTo = DateTime.Now.Date,
+                        LoadToDefault = DateTime.Now.Date,
+                        LoadLastVods = currentPrefs.SearchLoadLastVods
+                    };
+
+                    _searchService.PerformSearch(searchParams);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ShowUpdateDialog()
+        {
+            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+
+            if (currentPrefs.AppCheckForUpdates)
+            {
+                Task.Run(() => _updateService.CheckForUpdate()).ContinueWith(t =>
+                {
+                    if (!t.IsFaulted && t.Result != null)
+                    {
+                        _dialogService.ShowUpdateInfoDialog(t.Result);
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
 
