@@ -392,7 +392,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    MessageBoxResult res = _dialogService.ShowMessageBox($"You are currently logged in as \"{ _authService.GetUsername() }\". Do you really want to logout?", "Logout", MessageBoxButton.YesNo);
+                    MessageBoxResult res = _dialogService.ShowMessageBox($"You are currently logged in as \"{ _authService.GetUsername() }\". Do you really want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                     if (res == MessageBoxResult.Yes)
                     {

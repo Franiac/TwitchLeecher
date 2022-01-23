@@ -39,30 +39,30 @@ namespace TwitchLeecher.Gui.Services
         public MessageBoxResult ShowMessageBox(string message)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message);
-            msg.ShowDialog();
-
-            return msg.Result;
+            return SetOwnerAndShow(msg);
         }
 
         public MessageBoxResult ShowMessageBox(string message, string caption)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message, caption);
-            msg.ShowDialog();
-
-            return msg.Result;
+            return SetOwnerAndShow(msg);
         }
 
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons);
-            msg.ShowDialog();
-
-            return msg.Result;
+            return SetOwnerAndShow(msg);
         }
 
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons, icon);
+            return SetOwnerAndShow(msg);
+        }
+
+        private MessageBoxResult SetOwnerAndShow(MessageBoxWindow msg)
+        {
+            msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -129,6 +129,7 @@ namespace TwitchLeecher.Gui.Services
             vm.UpdateInfo = updateInfo;
 
             UpdateInfoView view = new UpdateInfoView();
+            view.Owner = Application.Current.MainWindow;
             view.DataContext = vm;
 
             view.ShowDialog();

@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Style="{DynamicResource TlPopupWindow}"
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
-        MinWidth="300"
-        Loaded="Window_Loaded">
+        WindowStartupLocation="CenterOwner"
+        MinWidth="300">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -47,7 +47,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Name="imgIcon" Style="{StaticResource TlNonStretchingImage}" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" />
-                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
                     <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
                 </ScrollViewer>
             </Grid>

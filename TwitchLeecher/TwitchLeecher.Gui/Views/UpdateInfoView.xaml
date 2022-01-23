@@ -1,14 +1,14 @@
 ﻿<Window x:Class="TwitchLeecher.Gui.Views.UpdateInfoView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"        
+        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
         Style="{DynamicResource TlWindow}"
         WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterOwner"
         Width="580"
         Height="480"
         MinWidth="450"
-        MinHeight="300"
-        Loaded="Window_Loaded">
+        MinHeight="300">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
