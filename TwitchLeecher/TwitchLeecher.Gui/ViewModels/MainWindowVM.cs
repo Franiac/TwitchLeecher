@@ -392,12 +392,28 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    MessageBoxResult res = _dialogService.ShowMessageBox($"You are currently logged in as \"{ _authService.GetUsername() }\". Do you really want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    _twitchService.Pause();
 
-                    if (res == MessageBoxResult.Yes)
+                    MessageBoxResult? result = null;
+
+                    if (_twitchService.CanShutdown())
                     {
+                        result = _dialogService.ShowMessageBox("Do you really want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    }
+                    else
+                    {
+                        result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    }
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        _twitchService.Shutdown();
                         _authService.RevokeAuthentication();
                         _navigationService.ShowAuth();
+                    }
+                    else
+                    {
+                        _twitchService.Resume();
                     }
                 }
             }
