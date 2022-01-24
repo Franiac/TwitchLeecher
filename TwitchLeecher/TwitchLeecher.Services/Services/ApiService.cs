@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using TwitchLeecher.Core;
 using TwitchLeecher.Core.Enums;
@@ -38,6 +39,8 @@ namespace TwitchLeecher.Services.Services
         private readonly Regex _rxName = new Regex("NAME\\=\"(?<name>.*?)\\\"");
         private readonly Regex _rxResolution = new Regex("RESOLUTION\\=(?<resolution>.*?),");
 
+        private DateTime? _nextRequest;
+
         #endregion Fields
 
         #region Constructors
@@ -66,6 +69,31 @@ namespace TwitchLeecher.Services.Services
             wc.Headers.Add("Client-ID", Constants.ClientIdWeb);
 
             return wc;
+        }
+
+        private void SetNextRequestTime(WebClient wc)
+        {
+            string resetStr = wc.ResponseHeaders["Ratelimit-Reset"];
+
+            if (!string.IsNullOrWhiteSpace(resetStr) && long.TryParse(resetStr, out long reset))
+            {
+                _nextRequest = DateTimeOffset.FromUnixTimeSeconds(reset).DateTime;
+            }
+        }
+
+        private void WaitForNextRequest()
+        {
+            if (_nextRequest == null)
+            {
+                return;
+            }
+
+            DateTime utcNow = DateTime.UtcNow;
+
+            if (utcNow < _nextRequest.Value)
+            {
+                Thread.Sleep((int)Math.Ceiling((_nextRequest.Value - utcNow).TotalMilliseconds));
+            }
         }
 
         public TwitchAuthInfo ValidateAuthentication(string accessToken)
@@ -157,7 +185,11 @@ namespace TwitchLeecher.Services.Services
 
                 try
                 {
+                    WaitForNextRequest();
+
                     result = webClient.DownloadString(USERS_URL);
+
+                    SetNextRequestTime(webClient);
                 }
                 catch (WebException)
                 {
@@ -186,7 +218,12 @@ namespace TwitchLeecher.Services.Services
 
                                     try
                                     {
+                                        WaitForNextRequest();
+
                                         _ = webClientChannel.DownloadString(CHANNELS_URL);
+
+                                        SetNextRequestTime(webClient);
+
                                         return id;
                                     }
                                     catch (WebException)
@@ -286,7 +323,11 @@ namespace TwitchLeecher.Services.Services
                         webClient.QueryString.Add("after", cursor);
                     }
 
+                    WaitForNextRequest();
+
                     string result = webClient.DownloadString(VIDEOS_URL);
+
+                    SetNextRequestTime(webClient);
 
                     JObject videosResponseJson = JObject.Parse(result);
 
