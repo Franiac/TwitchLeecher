@@ -336,6 +336,12 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "Please specify a temporary download folder!");
                 }
+
+                // Assume max length of .ts filename in playlist is '99999999.ts' => 11 characters
+                if (DownloadTempFolder.Length + 11 > 250)
+                {
+                    AddError(currentProperty, "The length of this folder path must be shorter than 239 characters!");
+                }
             }
 
             currentProperty = nameof(DownloadFolder);
