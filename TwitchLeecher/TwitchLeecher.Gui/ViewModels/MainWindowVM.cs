@@ -34,7 +34,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IAuthService _authService;
-        private readonly ITwitchService _twitchService;
+        private readonly IDownloadService _twitchService;
         private readonly IDialogService _dialogService;
         private readonly IDonationService _donationService;
         private readonly IFolderService _folderService;
@@ -64,7 +64,7 @@ namespace TwitchLeecher.Gui.ViewModels
         public MainWindowVM(
             IEventAggregator eventAggregator,
             IAuthService authService,
-            ITwitchService twitchService,
+            IDownloadService twitchService,
             IDialogService dialogService,
             IDonationService donationService,
             IFolderService folderService,

@@ -569,7 +569,7 @@ namespace TwitchLeecher.Services.Services
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
-                DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.ID + "_" + FilenameWildcards.GAME,
+                DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.CHANNEL + "_" + FilenameWildcards.ID,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
                 MiscUseExternalPlayer = false,

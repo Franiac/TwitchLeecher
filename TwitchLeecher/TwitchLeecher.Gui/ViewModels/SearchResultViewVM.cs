@@ -18,10 +18,11 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private readonly ITwitchService _twitchService;
+        private readonly IApiService _apiService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
         private readonly IPreferencesService _preferencesService;
+        private readonly ISearchService _searchService;
         private readonly IFilenameService _filenameService;
 
         private readonly object _commandLockObject;
@@ -35,19 +36,21 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Constructors
 
         public SearchResultViewVM(
-            ITwitchService twitchService,
+            IApiService apiService,
             IDialogService dialogService,
             INavigationService navigationService,
             IPreferencesService preferencesService,
+            ISearchService searchService,
             IFilenameService filenameService)
         {
-            _twitchService = twitchService;
+            _apiService = apiService;
             _dialogService = dialogService;
             _navigationService = navigationService;
             _preferencesService = preferencesService;
+            _searchService = searchService;
             _filenameService = filenameService;
 
-            _twitchService.PropertyChanged += TwitchService_PropertyChanged;
+            _searchService.PropertyChanged += SearchService_PropertyChanged;
 
             _commandLockObject = new object();
         }
@@ -62,7 +65,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return _twitchService.Videos;
+                return _searchService.Videos;
             }
         }
 
@@ -161,32 +164,32 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
+                        //TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
 
-                        if (video != null)
-                        {
-                            VodAuthInfo vodAuthInfo = _twitchService.RetrieveVodAuthInfo(video.Id);
+                        //if (video != null)
+                        //{
+                        //    VodAuthInfo vodAuthInfo = _apiService.RetrieveVodAuthInfo(video.Id);
 
-                            if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
-                            {
-                                _dialogService.ShowMessageBox("This video is sub-only! Twitch removed the ability for 3rd party software to download such videos, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        //    if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
+                        //    {
+                        //        _dialogService.ShowMessageBox("This video is sub-only! Twitch removed the ability for 3rd party software to download such videos, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                                return;
-                            }
+                        //        return;
+                        //    }
 
-                            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+                        //    Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
-                            string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
-                                ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
-                                : currentPrefs.DownloadFolder;
+                        //    string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
+                        //        ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
+                        //        : currentPrefs.DownloadFolder;
 
-                            string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
-                            filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
+                        //    string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
+                        //    filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
 
-                            DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
+                        //    DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
 
-                            _navigationService.ShowDownload(downloadParams);
-                        }
+                        //    _navigationService.ShowDownload(downloadParams);
+                        //}
                     }
                 }
             }
@@ -229,7 +232,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region EventHandlers
 
-        private void TwitchService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void SearchService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             string propertyName = e.PropertyName;
 

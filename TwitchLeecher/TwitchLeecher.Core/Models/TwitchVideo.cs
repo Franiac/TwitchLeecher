@@ -10,14 +10,12 @@ namespace TwitchLeecher.Core.Models
         #region Constatnts
 
         private const string UNTITLED_BROADCAST = "Untitled Broadcast";
-        private const string UNKNOWN_GAME = "Unknown";
 
         #endregion Constatnts
 
         #region Constructors
 
-        public TwitchVideo(string channel, string title, string id, string game, int views, TimeSpan length,
-            List<TwitchVideoQuality> qualities, DateTime recordedDate, Uri thumbnail, Uri gameThumbnail, Uri url)
+        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -29,11 +27,6 @@ namespace TwitchLeecher.Core.Models
                 throw new ArgumentNullException(nameof(id));
             }
 
-            if (qualities == null || qualities.Count == 0)
-            {
-                throw new ArgumentNullException(nameof(qualities));
-            }
-
             if (string.IsNullOrWhiteSpace(title))
             {
                 title = UNTITLED_BROADCAST;
@@ -42,23 +35,12 @@ namespace TwitchLeecher.Core.Models
             Channel = channel;
             Title = title;
             Id = id;
-
-            if (string.IsNullOrWhiteSpace(game))
-            {
-                Game = UNKNOWN_GAME;
-            }
-            else
-            {
-                Game = game;
-            }
-
             Views = views;
             Length = length;
-            Qualities = qualities;
             RecordedDate = recordedDate;
             Thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
-            GameThumbnail = gameThumbnail ?? throw new ArgumentNullException(nameof(gameThumbnail));
             Url = url ?? throw new ArgumentNullException(nameof(url));
+            Viewable = viewable;
         }
 
         #endregion Constructors
@@ -70,8 +52,6 @@ namespace TwitchLeecher.Core.Models
         public string Title { get; }
 
         public string Id { get; }
-
-        public string Game { get; }
 
         public TimeSpan Length { get; }
 
@@ -85,28 +65,13 @@ namespace TwitchLeecher.Core.Models
 
         public int Views { get; }
 
-        public List<TwitchVideoQuality> Qualities { get; }
-
-        public string BestQuality
-        {
-            get
-            {
-                if (Qualities == null || Qualities.Count == 0)
-                {
-                    return TwitchVideoQuality.UNKNOWN;
-                }
-
-                return Qualities.First().ResFpsString;
-            }
-        }
-
         public DateTime RecordedDate { get; }
 
         public Uri Thumbnail { get; }
 
-        public Uri GameThumbnail { get; }
-
         public Uri Url { get; }
+
+        public bool Viewable { get; }
 
         #endregion Properties
     }

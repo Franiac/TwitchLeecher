@@ -50,7 +50,6 @@
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\IRuntimeDataService.cs" />
     <Compile Include="Interfaces\IPreferencesService.cs" />
-    <Compile Include="Interfaces\ITwitchService.cs" />
     <Compile Include="Interfaces\IUpdateService.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,7 +61,7 @@
     <Compile Include="Services\ProcessingService.cs" />
     <Compile Include="Services\RuntimeDataService.cs" />
     <Compile Include="Services\PreferencesService.cs" />
-    <Compile Include="Services\TwitchService.cs" />
+    <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\UpdateService.cs" />
   </ItemGroup>
   <ItemGroup>

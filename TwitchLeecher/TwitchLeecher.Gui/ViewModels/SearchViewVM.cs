@@ -21,7 +21,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _searchCommand;
         private ICommand _cancelCommand;
 
-        private readonly ITwitchService _twitchService;
+        private readonly IApiService _apiService;
         private readonly ISearchService _searchService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
@@ -34,13 +34,13 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Constructors
 
         public SearchViewVM(
-            ITwitchService twitchService,
+            IApiService apiService,
             ISearchService searchService,
             IDialogService dialogService,
             INavigationService navigationService,
             IPreferencesService preferencesService)
         {
-            _twitchService = twitchService;
+            _apiService = apiService;
             _searchService = searchService;
             _dialogService = dialogService;
             _navigationService = navigationService;
@@ -212,7 +212,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (SearchParams.SearchType == SearchType.Channel &&
                     !string.IsNullOrWhiteSpace(SearchParams.Channel) &&
-                    !_twitchService.ChannelExists(SearchParams.Channel))
+                    !_apiService.ChannelExists(SearchParams.Channel))
                 {
                     SearchParams.AddError(nameof(SearchParams.Channel), "The specified channel does not exist on Twitch!");
                 }

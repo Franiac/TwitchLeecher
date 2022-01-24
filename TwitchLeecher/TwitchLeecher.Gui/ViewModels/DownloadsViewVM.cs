@@ -16,7 +16,7 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private readonly ITwitchService _twitchService;
+        private readonly IDownloadService _twitchService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
 
@@ -33,7 +33,7 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Constructors
 
         public DownloadsViewVM(
-            ITwitchService twitchService,
+            IDownloadService twitchService,
             IDialogService dialogService,
             INavigationService navigationService)
         {

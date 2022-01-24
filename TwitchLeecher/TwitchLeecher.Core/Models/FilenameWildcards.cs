@@ -4,8 +4,6 @@
     {
         public static string CHANNEL = "{channel}";
 
-        public static string GAME = "{game}";
-
         public static string DATE = "{date}";
 
         public static string TIME = "{time}";

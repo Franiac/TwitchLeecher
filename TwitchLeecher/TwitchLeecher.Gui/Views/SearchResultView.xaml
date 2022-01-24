@@ -53,25 +53,25 @@
                             </LinearGradientBrush>
                         </Border.Background>
                         <DockPanel>
-                            <Grid DockPanel.Dock="Bottom" Height="60" Margin="0,5,0,0">
+                            <Grid DockPanel.Dock="Bottom" Margin="0,5,0,0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Image Grid.Column="0" Source="{Binding GameThumbnail}" ToolTip="{Binding Game}" />
-                                <Grid Grid.Column="1" Margin="5,0,0,0">
+                                <Grid Name="txtGrid" Grid.Column="0" Margin="0,0,5,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
-                                    <DockPanel Grid.Row="1">
-                                        <Button DockPanel.Dock="Right" Style="{StaticResource TlDownloadButton}" Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" />
-                                        <TextBlock Opacity=".75" FontSize="12" Text="{Binding RecordedDate, StringFormat='D'}" VerticalAlignment="Center" />
-                                    </DockPanel>
+                                    <TextBlock Grid.Row="0" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Row="1" Margin="0,3,0,0" Opacity=".75" FontSize="12" Text="{Binding RecordedDate, StringFormat='D'}" />
                                 </Grid>
+
+                                <Button Grid.Column="1" Padding="8" Width="40" Height="{Binding ActualHeight, ElementName=txtGrid, Mode=OneWay}" Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}">
+                                    <fa:ImageAwesome Icon="Download" RenderTransformOrigin="0.5,0.5" />
+                                </Button>
                             </Grid>
                             <Grid Cursor="Hand">
                                 <Grid.InputBindings>
@@ -93,11 +93,6 @@
                                 <Border Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="3" Margin="0,3,3,0" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding LengthStr}" FontSize="12" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Bottom" CornerRadius="3" Margin="0,0,3,3" Padding="5,1,5,1">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding BestQuality}" FontSize="11" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
                             </Grid>
