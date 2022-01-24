@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.IO;
@@ -11,9 +12,9 @@ namespace TwitchLeecher.Core.Models
         #region Fields
 
         private readonly TwitchVideo _video;
-        private readonly VodAuthInfo _vodAuthInfo;
+        private readonly List<TwitchVideoQuality> _qualities;
 
-        private TwitchVideoQuality _quality;
+        private TwitchVideoQuality _selectedQuality;
 
         private string _folder;
         private string _filename;
@@ -29,7 +30,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public DownloadParameters(TwitchVideo video, VodAuthInfo vodAuthInfo, TwitchVideoQuality quality, string folder, string filename, bool disableConversion)
+        public DownloadParameters(TwitchVideo video, List<TwitchVideoQuality> qualities, TwitchVideoQuality selectedQuality, string folder, string filename, bool disableConversion)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
@@ -42,8 +43,8 @@ namespace TwitchLeecher.Core.Models
             }
 
             _video = video ?? throw new ArgumentNullException(nameof(video));
-            _quality = quality ?? throw new ArgumentNullException(nameof(quality));
-            _vodAuthInfo = vodAuthInfo ?? throw new ArgumentNullException(nameof(vodAuthInfo));
+            _qualities = qualities ?? throw new ArgumentNullException(nameof(qualities));
+            _selectedQuality = selectedQuality ?? throw new ArgumentNullException(nameof(selectedQuality));
 
             _folder = folder;
             _filename = filename;
@@ -64,23 +65,23 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
-        public TwitchVideoQuality Quality
+        public List<TwitchVideoQuality> Qualities
         {
             get
             {
-                return _quality;
-            }
-            set
-            {
-                SetProperty(ref _quality, value, nameof(Quality));
+                return _qualities;
             }
         }
 
-        public VodAuthInfo VodAuthInfo
+        public TwitchVideoQuality SelectedQuality
         {
             get
             {
-                return _vodAuthInfo;
+                return _selectedQuality;
+            }
+            set
+            {
+                SetProperty(ref _selectedQuality, value, nameof(SelectedQuality));
             }
         }
 
@@ -221,11 +222,11 @@ namespace TwitchLeecher.Core.Models
         {
             base.Validate(propertyName);
 
-            string currentProperty = nameof(Quality);
+            string currentProperty = nameof(SelectedQuality);
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_quality == null)
+                if (_selectedQuality == null)
                 {
                     AddError(currentProperty, "Please select a quality!");
                 }

@@ -25,9 +25,9 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _cancelCommand;
 
         private readonly IDialogService _dialogService;
+        private readonly IDownloadService _downloadService;
         private readonly IFilenameService _filenameService;
         private readonly IPreferencesService _preferencesService;
-        private readonly IDownloadService _twitchService;
         private readonly INavigationService _navigationService;
         private readonly INotificationService _notificationService;
 
@@ -39,16 +39,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public DownloadViewVM(
             IDialogService dialogService,
+            IDownloadService downloadService,
             IFilenameService filenameService,
             IPreferencesService preferencesService,
-            IDownloadService twitchService,
             INavigationService navigationService,
             INotificationService notificationService)
         {
             _dialogService = dialogService;
+            _downloadService = downloadService;
             _filenameService = filenameService;
             _preferencesService = preferencesService;
-            _twitchService = twitchService;
             _navigationService = navigationService;
             _notificationService = notificationService;
 
@@ -273,15 +273,15 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void UpdateFilenameFromTemplate()
         {
-            //Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
-            //TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
-            //TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
+            TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
+            TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
-            //string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video, _downloadParams.Quality, cropStartTime, cropEndTime);
-            //fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
+            string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video, _downloadParams.SelectedQuality, cropStartTime, cropEndTime);
+            fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
 
-            //_downloadParams.Filename = fileName;
+            _downloadParams.Filename = fileName;
         }
 
         private void Download()
@@ -304,7 +304,7 @@ namespace TwitchLeecher.Gui.ViewModels
                             }
                         }
 
-                        _twitchService.Enqueue(_downloadParams);
+                        _downloadService.Enqueue(_downloadParams);
                         _navigationService.NavigateBack();
                         _notificationService.ShowNotification("Download added");
                     }
@@ -346,7 +346,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     DownloadParams.AddError(nameof(DownloadParams.Filename), "The full filename (directory + filename) must be shorter than 250 characters!");
                 }
 
-                if (_twitchService.IsFileNameUsed(_downloadParams.FullPath))
+                if (_downloadService.IsFileNameUsed(_downloadParams.FullPath))
                 {
                     DownloadParams.AddError(nameof(DownloadParams.Filename), "Another video is already being downloaded to this file!");
                 }
@@ -400,7 +400,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 return;
             }
 
-            if (e.PropertyName == nameof(DownloadParameters.Quality)
+            if (e.PropertyName == nameof(DownloadParameters.SelectedQuality)
                 || e.PropertyName == nameof(DownloadParameters.CropStart)
                 || e.PropertyName == nameof(DownloadParameters.CropEnd)
                 || e.PropertyName == nameof(DownloadParameters.CropStartTime)

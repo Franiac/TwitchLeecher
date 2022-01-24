@@ -2,11 +2,11 @@
 
 namespace TwitchLeecher.Core.Models
 {
-    public class VodPlaylistPart
+    public class TwitchPlaylistPart
     {
         #region Constructors
 
-        public VodPlaylistPart(double length, string remoteFile, string localFile)
+        public TwitchPlaylistPart(double length, string remoteFile, string localFile)
         {
             if (string.IsNullOrWhiteSpace(remoteFile))
             {

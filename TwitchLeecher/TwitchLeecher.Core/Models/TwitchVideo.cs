@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Core.Models
@@ -15,7 +13,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable)
+        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable, bool muted)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -41,6 +39,7 @@ namespace TwitchLeecher.Core.Models
             Thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
             Url = url ?? throw new ArgumentNullException(nameof(url));
             Viewable = viewable;
+            Muted = muted;
         }
 
         #endregion Constructors
@@ -72,6 +71,8 @@ namespace TwitchLeecher.Core.Models
         public Uri Url { get; }
 
         public bool Viewable { get; }
+
+        public bool Muted { get; }
 
         #endregion Properties
     }

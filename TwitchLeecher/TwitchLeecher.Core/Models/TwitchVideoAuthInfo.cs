@@ -2,11 +2,11 @@
 
 namespace TwitchLeecher.Core.Models
 {
-    public class VodAuthInfo
+    public class TwitchVideoAuthInfo
     {
         #region Constructors
 
-        public VodAuthInfo(string token, string signature, bool privileged, bool subOnly)
+        public TwitchVideoAuthInfo(string token, string signature, bool privileged, bool subOnly)
         {
             if (string.IsNullOrWhiteSpace(token))
             {

@@ -169,9 +169,7 @@ namespace TwitchLeecher.Services.Services
                         TimeSpan cropStartTime = downloadParams.CropStartTime;
                         TimeSpan cropEndTime = downloadParams.CropEndTime;
 
-                        TwitchVideoQuality quality = downloadParams.Quality;
-
-                        VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
+                        TwitchVideoQuality quality = downloadParams.SelectedQuality;
 
                         Action<DownloadState> setDownloadState = download.SetDownloadState;
                         Action<string> log = download.AppendLog;
@@ -273,7 +271,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, string ffmpegFile, string tempDir)
+        private void WriteDownloadInfo(Action<string> log, DownloadParameters downloadParams, TwitchVideoAuthInfo vodAuthInfo, string ffmpegFile, string tempDir)
         {
             log(Environment.NewLine + Environment.NewLine + "TWITCH LEECHER INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
@@ -282,7 +280,7 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + Environment.NewLine + "VOD INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
             log(Environment.NewLine + "VOD ID: " + downloadParams.Video.Id);
-            log(Environment.NewLine + "Selected Quality: " + downloadParams.Quality.DisplayString);
+            log(Environment.NewLine + "Selected Quality: " + downloadParams.SelectedQuality.DisplayString);
             log(Environment.NewLine + "Download Url: " + downloadParams.Video.Url);
             log(Environment.NewLine + "Crop Start: " + (downloadParams.CropStart ? "Yes (" + downloadParams.CropStartTime.ToDaylessString() + ")" : "No"));
             log(Environment.NewLine + "Crop End: " + (downloadParams.CropEnd ? "Yes (" + downloadParams.CropEndTime.ToDaylessString() + ")" : "No"));
@@ -293,8 +291,6 @@ namespace TwitchLeecher.Services.Services
             log(Environment.NewLine + "Output File: " + downloadParams.FullPath);
             log(Environment.NewLine + "FFMPEG Path: " + ffmpegFile);
             log(Environment.NewLine + "Temporary Download Folder: " + tempDir);
-
-            VodAuthInfo vodAuthInfo = downloadParams.VodAuthInfo;
 
             log(Environment.NewLine + Environment.NewLine + "ACCESS INFO");
             log(Environment.NewLine + "--------------------------------------------------------------------------------------------");
@@ -319,7 +315,7 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        private CropInfo CropVodPlaylist(VodPlaylist vodPlaylist, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
+        private CropInfo CropVodPlaylist(TwitchPlaylist vodPlaylist, bool cropStart, bool cropEnd, TimeSpan cropStartTime, TimeSpan cropEndTime)
         {
             double start = cropStartTime.TotalMilliseconds;
             double end = cropEndTime.TotalMilliseconds;
@@ -334,14 +330,14 @@ namespace TwitchLeecher.Services.Services
             end = Math.Round(end / 1000, 3);
             length = Math.Round(length / 1000, 3);
 
-            List<VodPlaylistPart> deleteStart = new List<VodPlaylistPart>();
-            List<VodPlaylistPart> deleteEnd = new List<VodPlaylistPart>();
+            List<TwitchPlaylistPart> deleteStart = new List<TwitchPlaylistPart>();
+            List<TwitchPlaylistPart> deleteEnd = new List<TwitchPlaylistPart>();
 
             if (cropStart)
             {
                 double lengthSum = 0;
 
-                foreach (VodPlaylistPart part in vodPlaylist)
+                foreach (TwitchPlaylistPart part in vodPlaylist)
                 {
                     double partLength = part.Length;
 
@@ -362,7 +358,7 @@ namespace TwitchLeecher.Services.Services
             {
                 double lengthSum = 0;
 
-                foreach (VodPlaylistPart part in vodPlaylist)
+                foreach (TwitchPlaylistPart part in vodPlaylist)
                 {
                     if (lengthSum >= end)
                     {
@@ -387,7 +383,7 @@ namespace TwitchLeecher.Services.Services
         }
 
         private void DownloadParts(Action<string> log, Action<string> setStatus, Action<double> setProgress,
-            VodPlaylist vodPlaylist, CancellationToken cancellationToken)
+            TwitchPlaylist vodPlaylist, CancellationToken cancellationToken)
         {
             int partsCount = vodPlaylist.Count;
             int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;

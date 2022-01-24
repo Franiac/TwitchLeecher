@@ -61,7 +61,7 @@
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\MainWindowInfo.cs" />
     <Compile Include="Models\TwitchAuthInfo.cs" />
-    <Compile Include="Models\VodAuthInfo.cs" />
+    <Compile Include="Models\TwitchVideoAuthInfo.cs" />
     <Compile Include="Models\DownloadParameters.cs" />
     <Compile Include="Models\FilenameWildcards.cs" />
     <Compile Include="Models\MenuCommand.cs" />
@@ -72,8 +72,8 @@
     <Compile Include="Models\TwitchVideoDownload.cs" />
     <Compile Include="Models\TwitchVideoQuality.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
-    <Compile Include="Models\VodPlaylist.cs" />
-    <Compile Include="Models\VodPlaylistPart.cs" />
+    <Compile Include="Models\TwitchPlaylist.cs" />
+    <Compile Include="Models\TwitchPlaylistPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using TwitchLeecher.Core;
 using TwitchLeecher.Core.Enums;
@@ -17,13 +18,13 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
+        private const string GQL_URL = "https://gql.twitch.tv/gql";
         private const string USERS_URL = "https://api.twitch.tv/helix/users";
-        private const string CHANNEL_URL = "https://api.twitch.tv/helix/channels";
         private const string VIDEOS_URL = "https://api.twitch.tv/helix/videos";
-        private const string GAMES_URL = "https://api.twitch.tv/kraken/games/top";
-        private const string ACCESS_TOKEN_URL = "https://gql.twitch.tv/gql";
-        private const string ALL_PLAYLISTS_URL = "https://usher.ttvnw.net/vod/{0}.m3u8?nauthsig={1}&nauth={2}&allow_source=true&player=twitchweb&allow_spectre=true&allow_audio_only=true";
-        private const string UNKNOWN_GAME_URL = "https://static-cdn.jtvnw.net/ttv-boxart/404_boxart.png";
+        private const string CHANNELS_URL = "https://api.twitch.tv/helix/channels";
+        private const string PLAYLISTS_URL = "https://usher.ttvnw.net/vod/{0}.m3u8";
+
+        private const string PROCESSING_THUMBNAIL = "https://vod-secure.twitch.tv/_404/404_processing_320x180.png";
 
         private const int TWITCH_MAX_LOAD_LIMIT = 100;
 
@@ -32,6 +33,10 @@ namespace TwitchLeecher.Services.Services
         #region Fields
 
         private readonly IRuntimeDataService _runtimeDataService;
+
+        private readonly Regex _rxGroup = new Regex("GROUP-ID\\=\"(?<group>.*?)\\\"");
+        private readonly Regex _rxName = new Regex("NAME\\=\"(?<name>.*?)\\\"");
+        private readonly Regex _rxResolution = new Regex("RESOLUTION\\=(?<resolution>.*?),");
 
         #endregion Fields
 
@@ -49,8 +54,16 @@ namespace TwitchLeecher.Services.Services
         private WebClient CreateApiWebClient()
         {
             WebClient wc = new WebClient();
-            wc.Headers.Add("Client-Id", Constants.ClientId);
+            wc.Headers.Add("Client-ID", Constants.ClientId);
             wc.Headers.Add("Authorization", $"Bearer { _runtimeDataService.RuntimeData.AccessToken }");
+
+            return wc;
+        }
+
+        private WebClient CreateGqlWebClient()
+        {
+            WebClient wc = new WebClient();
+            wc.Headers.Add("Client-ID", Constants.ClientIdWeb);
 
             return wc;
         }
@@ -173,7 +186,7 @@ namespace TwitchLeecher.Services.Services
 
                                     try
                                     {
-                                        _ = webClientChannel.DownloadString(CHANNEL_URL);
+                                        _ = webClientChannel.DownloadString(CHANNELS_URL);
                                         return id;
                                     }
                                     catch (WebException)
@@ -402,16 +415,16 @@ namespace TwitchLeecher.Services.Services
             return videos;
         }
 
-        public VodAuthInfo RetrieveVodAuthInfo(string id)
+        public TwitchVideoAuthInfo RetrieveVodAuthInfo(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            using (WebClient webClient = new WebClient())
+            using (WebClient webClient = CreateGqlWebClient())
             {
-                string accessTokenStr = webClient.UploadString(ACCESS_TOKEN_URL, CreateGqlPlaybackAccessToken(id));
+                string accessTokenStr = webClient.UploadString(GQL_URL, CreateGqlPlaybackAccessToken(id));
 
                 JObject accessTokenJson = JObject.Parse(accessTokenStr);
 
@@ -468,7 +481,7 @@ namespace TwitchLeecher.Services.Services
                     }
                 }
 
-                return new VodAuthInfo(token, signature, privileged, subOnly);
+                return new TwitchVideoAuthInfo(token, signature, privileged, subOnly);
             }
         }
 
@@ -494,33 +507,51 @@ namespace TwitchLeecher.Services.Services
             return "{\"operationName\": \"PlaybackAccessToken\",\"variables\": {\"isLive\": false,\"login\": \"\",\"isVod\": true,\"vodID\": \"" + id + "\",\"playerType\": \"channel_home_live\"},\"extensions\": {\"persistedQuery\": {\"version\": 1,\"sha256Hash\": \"0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712\"}}}";
         }
 
-        private string RetrievePlaylistUrlForQuality(Action<string> log, TwitchVideoQuality quality, string vodId, VodAuthInfo vodAuthInfo)
+        public Dictionary<TwitchVideoQuality, string> GetPlaylistSummaray(string vodId, TwitchVideoAuthInfo vodAuthInfo)
         {
             using (WebClient webClient = new WebClient())
             {
                 webClient.Headers.Add("Accept", "*/*");
-                webClient.Headers.Add("Accept-Encoding", "gzip, deflate, br");
 
-                log(Environment.NewLine + Environment.NewLine + "Retrieving m3u8 playlist urls for all VOD qualities...");
-                string allPlaylistsStr = webClient.DownloadString(string.Format(ALL_PLAYLISTS_URL, vodId, vodAuthInfo.Signature, vodAuthInfo.Token));
-                log(" done!");
+                webClient.QueryString.Add("allow_source", "true");
+                webClient.QueryString.Add("token", vodAuthInfo.Token);
+                webClient.QueryString.Add("sig", vodAuthInfo.Signature);
 
-                List<string> allPlaylistsList = allPlaylistsStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.StartsWith("#")).ToList();
+                string playlist = webClient.DownloadString(string.Format(PLAYLISTS_URL, vodId));
 
-                allPlaylistsList.ForEach(url =>
+                List<string> lines = playlist.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                Dictionary<TwitchVideoQuality, string> summaryDict = new Dictionary<TwitchVideoQuality, string>();
+
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    log(Environment.NewLine + url);
-                });
+                    string line = lines[i];
 
-                string playlistUrl = allPlaylistsList.Where(s => s.ToLowerInvariant().Contains("/" + quality.QualityId + "/")).First();
+                    if (!line.StartsWith("#"))
+                    {
+                        string mediaInfo = lines[i - 2];
+                        string streamInfo = lines[i - 1];
 
-                log(Environment.NewLine + Environment.NewLine + "Playlist url for selected quality " + quality.DisplayString + " is " + playlistUrl);
+                        Match groupMatch = _rxGroup.Match(mediaInfo);
+                        string id = groupMatch.Groups["group"].Value;
 
-                return playlistUrl;
+                        Match nameMatch = _rxName.Match(mediaInfo);
+                        string name = nameMatch.Groups["name"].Value;
+
+                        Match resolutionMatch = _rxResolution.Match(streamInfo);
+                        string resolution = resolutionMatch.Groups["resolution"].Value;
+
+                        TwitchVideoQuality quality = new TwitchVideoQuality(id, name, resolution);
+
+                        summaryDict.Add(quality, line);
+                    }
+                }
+
+                return summaryDict;
             }
         }
 
-        private VodPlaylist RetrieveVodPlaylist(Action<string> log, string tempDir, string playlistUrl)
+        private TwitchPlaylist RetrieveVodPlaylist(Action<string> log, string tempDir, string playlistUrl)
         {
             using (WebClient webClient = new WebClient())
             {
@@ -536,7 +567,7 @@ namespace TwitchLeecher.Services.Services
                 string urlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
 
                 log(Environment.NewLine + "Parsing playlist...");
-                VodPlaylist vodPlaylist = VodPlaylist.Parse(tempDir, playlistStr, urlPrefix);
+                TwitchPlaylist vodPlaylist = TwitchPlaylist.Parse(tempDir, playlistStr, urlPrefix);
                 log(" done!");
 
                 log(Environment.NewLine + "Number of video chunks: " + vodPlaylist.Count());
@@ -644,10 +675,20 @@ namespace TwitchLeecher.Services.Services
             string thumbnail = videoJson.Value<string>("thumbnail_url");
             TimeSpan length = ParseTwitchDuration(videoJson.Value<string>("duration"));
             DateTime recordedDate = DateTime.Parse(videoJson.Value<string>("published_at"), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+            JArray mutedSegments = videoJson.Value<JArray>("muted_segments");
 
-            thumbnail = thumbnail.Replace("%{width}", "320").Replace("%{height}", "180");
+            bool muted = mutedSegments != null && mutedSegments.Count > 0;
 
-            return new TwitchVideo(channel, title, id, views, length, recordedDate, new Uri(thumbnail), new Uri(url), viewable);
+            if (string.IsNullOrWhiteSpace(thumbnail))
+            {
+                thumbnail = PROCESSING_THUMBNAIL;
+            }
+            else
+            {
+                thumbnail = thumbnail.Replace("%{width}", "320").Replace("%{height}", "180");
+            }
+
+            return new TwitchVideo(channel, title, id, views, length, recordedDate, new Uri(thumbnail), new Uri(url), viewable, muted);
         }
 
         private TimeSpan ParseTwitchDuration(string durationStr)

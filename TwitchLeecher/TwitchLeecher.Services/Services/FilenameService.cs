@@ -36,8 +36,7 @@ namespace TwitchLeecher.Services.Services
             result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.ID, video.Id);
             result = result.Replace(FilenameWildcards.TITLE, video.Title);
-            result = result.Replace(FilenameWildcards.RES, !string.IsNullOrWhiteSpace(quality.Resolution) ? quality.Resolution : TwitchVideoQuality.UNKNOWN);
-            result = result.Replace(FilenameWildcards.FPS, quality.Fps.HasValue ? quality.Fps.ToString() : TwitchVideoQuality.UNKNOWN);
+            result = result.Replace(FilenameWildcards.RES, quality.Resolution);
             result = result.Replace(FilenameWildcards.START, selectedCropStart.ToShortDaylessString());
             result = result.Replace(FilenameWildcards.END, selectedCropEnd.ToShortDaylessString());
 

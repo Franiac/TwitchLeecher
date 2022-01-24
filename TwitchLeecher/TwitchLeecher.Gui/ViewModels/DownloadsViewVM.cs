@@ -16,8 +16,8 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
-        private readonly IDownloadService _twitchService;
         private readonly IDialogService _dialogService;
+        private readonly IDownloadService _downloadService;
         private readonly INavigationService _navigationService;
 
         private ICommand _retryDownloadCommand;
@@ -33,15 +33,15 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Constructors
 
         public DownloadsViewVM(
-            IDownloadService twitchService,
             IDialogService dialogService,
+            IDownloadService downloadService,
             INavigationService navigationService)
         {
-            _twitchService = twitchService;
             _dialogService = dialogService;
+            _downloadService = downloadService;
             _navigationService = navigationService;
 
-            _twitchService.PropertyChanged += TwitchService_PropertyChanged;
+            _downloadService.PropertyChanged += DownloadService_PropertyChanged;
 
             _commandLockObject = new object();
         }
@@ -56,7 +56,7 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get
             {
-                return _twitchService.Downloads;
+                return _downloadService.Downloads;
             }
         }
 
@@ -137,7 +137,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        _twitchService.Retry(id);
+                        _downloadService.Retry(id);
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        _twitchService.Cancel(id);
+                        _downloadService.Cancel(id);
                     }
                 }
             }
@@ -173,7 +173,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        _twitchService.Remove(id);
+                        _downloadService.Remove(id);
                     }
                 }
             }
@@ -238,7 +238,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region EventHandlers
 
-        private void TwitchService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DownloadService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             FirePropertyChanged(e.PropertyName);
         }

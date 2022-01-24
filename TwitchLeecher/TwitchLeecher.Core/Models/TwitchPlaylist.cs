@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace TwitchLeecher.Core.Models
 {
-    public class VodPlaylist : List<VodPlaylistPart>
+    public class TwitchPlaylist : List<TwitchPlaylistPart>
     {
         #region Static Methods
 
-        public static VodPlaylist Parse(string tempDir, string playlistStr, string urlPrefix)
+        public static TwitchPlaylist Parse(string tempDir, string playlistStr, string urlPrefix)
         {
-            VodPlaylist playlist = new VodPlaylist();
+            TwitchPlaylist playlist = new TwitchPlaylist();
 
             List<string> lines = playlistStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -38,9 +38,9 @@ namespace TwitchLeecher.Core.Models
             return playlist;
         }
 
-        private static VodPlaylist ParseV3(string tempDir, List<string> lines, string urlPrefix)
+        private static TwitchPlaylist ParseV3(string tempDir, List<string> lines, string urlPrefix)
         {
-            VodPlaylist playlist = new VodPlaylist();
+            TwitchPlaylist playlist = new TwitchPlaylist();
 
             int partCounter = 0;
 
@@ -52,7 +52,7 @@ namespace TwitchLeecher.Core.Models
                 {
                     double length = Math.Max(double.Parse(line.Substring(line.LastIndexOf(":") + 1).TrimEnd(','), NumberStyles.Any, CultureInfo.InvariantCulture), 0);
 
-                    playlist.Add(new VodPlaylistPart(length, urlPrefix + lines[i + 1], Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
+                    playlist.Add(new TwitchPlaylistPart(length, urlPrefix + lines[i + 1], Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
                     partCounter++;
                     i++;
                 }
@@ -61,9 +61,9 @@ namespace TwitchLeecher.Core.Models
             return playlist;
         }
 
-        private static VodPlaylist ParseV4(string tempDir, List<string> lines, string urlPrefix)
+        private static TwitchPlaylist ParseV4(string tempDir, List<string> lines, string urlPrefix)
         {
-            VodPlaylist playlist = new VodPlaylist();
+            TwitchPlaylist playlist = new TwitchPlaylist();
 
             int partCounter = 0;
             double lengthBuffer = 0;
@@ -84,7 +84,7 @@ namespace TwitchLeecher.Core.Models
 
                     if (!currentPartStr.Equals(partStr))
                     {
-                        playlist.Add(new VodPlaylistPart(lengthBuffer, urlPrefix + currentPartStr, Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
+                        playlist.Add(new TwitchPlaylistPart(lengthBuffer, urlPrefix + currentPartStr, Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
                         currentPartStr = partStr;
                         lengthBuffer = 0;
                         partCounter++;
@@ -98,7 +98,7 @@ namespace TwitchLeecher.Core.Models
 
             if (!string.IsNullOrWhiteSpace(currentPartStr) && lengthBuffer > 0)
             {
-                playlist.Add(new VodPlaylistPart(lengthBuffer, urlPrefix + currentPartStr, Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
+                playlist.Add(new TwitchPlaylistPart(lengthBuffer, urlPrefix + currentPartStr, Path.Combine(tempDir, partCounter.ToString("D8") + ".ts")));
             }
 
             return playlist;

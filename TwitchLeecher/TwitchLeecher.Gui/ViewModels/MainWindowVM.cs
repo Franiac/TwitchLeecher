@@ -34,7 +34,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IAuthService _authService;
-        private readonly IDownloadService _twitchService;
+        private readonly IDownloadService _downloadService;
         private readonly IDialogService _dialogService;
         private readonly IDonationService _donationService;
         private readonly IFolderService _folderService;
@@ -64,7 +64,7 @@ namespace TwitchLeecher.Gui.ViewModels
         public MainWindowVM(
             IEventAggregator eventAggregator,
             IAuthService authService,
-            IDownloadService twitchService,
+            IDownloadService downloadService,
             IDialogService dialogService,
             IDonationService donationService,
             IFolderService folderService,
@@ -80,7 +80,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
             _eventAggregator = eventAggregator;
             _authService = authService;
-            _twitchService = twitchService;
+            _downloadService = downloadService;
             _dialogService = dialogService;
             _donationService = donationService;
             _folderService = folderService;
@@ -392,11 +392,11 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    _twitchService.Pause();
+                    _downloadService.Pause();
 
                     MessageBoxResult? result = null;
 
-                    if (_twitchService.CanShutdown())
+                    if (_downloadService.CanShutdown())
                     {
                         result = _dialogService.ShowMessageBox("Do you really want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     }
@@ -407,13 +407,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        _twitchService.Shutdown();
+                        _downloadService.Shutdown();
                         _authService.RevokeAuthentication();
                         _navigationService.ShowAuth();
                     }
                     else
                     {
-                        _twitchService.Resume();
+                        _downloadService.Resume();
                     }
                 }
             }
@@ -647,20 +647,20 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                _twitchService.Pause();
+                _downloadService.Pause();
 
-                if (!_twitchService.CanShutdown())
+                if (!_downloadService.CanShutdown())
                 {
                     MessageBoxResult result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                     if (result == MessageBoxResult.No)
                     {
-                        _twitchService.Resume();
+                        _downloadService.Resume();
                         return false;
                     }
                 }
 
-                _twitchService.Shutdown();
+                _downloadService.Shutdown();
             }
             catch (Exception ex)
             {

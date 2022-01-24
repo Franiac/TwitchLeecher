@@ -37,7 +37,7 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
-        public void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress, VodPlaylist vodPlaylist, string concatFile)
+        public void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress, TwitchPlaylist vodPlaylist, string concatFile)
         {
             setStatus("Merging files");
             setProgress(0);
@@ -50,7 +50,7 @@ namespace TwitchLeecher.Services.Services
 
                 for (int i = 0; i < partsCount; i++)
                 {
-                    VodPlaylistPart part = vodPlaylist[i];
+                    TwitchPlaylistPart part = vodPlaylist[i];
 
                     using (FileStream partStream = new FileStream(part.LocalFile, FileMode.Open, FileAccess.Read))
                     {

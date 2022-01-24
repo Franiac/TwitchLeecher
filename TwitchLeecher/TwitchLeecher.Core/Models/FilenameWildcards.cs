@@ -14,8 +14,6 @@
 
         public static string RES = "{res}";
 
-        public static string FPS = "{fps}";
-
         public static string ID = "{id}";
 
         public static string START = "{start}";

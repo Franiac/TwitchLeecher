@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TwitchLeecher.Core.Models;
 
 namespace TwitchLeecher.Services.Interfaces
@@ -9,8 +10,10 @@ namespace TwitchLeecher.Services.Interfaces
 
         void RevokeAuthentication(string accessToken);
 
-        VodAuthInfo RetrieveVodAuthInfo(string id);
-        
+        TwitchVideoAuthInfo RetrieveVodAuthInfo(string id);
+
+        Dictionary<TwitchVideoQuality, string> GetPlaylistSummaray(string vodId, TwitchVideoAuthInfo vodAuthInfo);
+
         bool ChannelExists(string channel);
 
         string GetChannelIdByName(string channel);

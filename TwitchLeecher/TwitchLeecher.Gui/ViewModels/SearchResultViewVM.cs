@@ -164,32 +164,36 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        //TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
+                        TwitchVideo video = Videos.Where(v => v.Id == id).FirstOrDefault();
 
-                        //if (video != null)
-                        //{
-                        //    VodAuthInfo vodAuthInfo = _apiService.RetrieveVodAuthInfo(video.Id);
+                        if (video != null)
+                        {
+                            TwitchVideoAuthInfo vodAuthInfo = _apiService.RetrieveVodAuthInfo(video.Id);
 
-                        //    if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
-                        //    {
-                        //        _dialogService.ShowMessageBox("This video is sub-only! Twitch removed the ability for 3rd party software to download such videos, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
+                            {
+                                _dialogService.ShowMessageBox("This video is sub-only! Twitch Leecher does not support sub-only video downloads (yet), sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                        //        return;
-                        //    }
+                                return;
+                            }
 
-                        //    Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+                            Dictionary<TwitchVideoQuality, string> summary = _apiService.GetPlaylistSummaray(id, vodAuthInfo);
+                            List<TwitchVideoQuality> qualities = summary.Keys.OrderBy(q => q).ToList();
+                            TwitchVideoQuality selectedQuality = qualities.First();
 
-                        //    string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
-                        //        ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
-                        //        : currentPrefs.DownloadFolder;
+                            Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
-                        //    string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video);
-                        //    filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
+                            string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
+                                ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
+                                : currentPrefs.DownloadFolder;
 
-                        //    DownloadParameters downloadParams = new DownloadParameters(video, vodAuthInfo, video.Qualities.First(), folder, filename, currentPrefs.DownloadDisableConversion);
+                            string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video, selectedQuality);
+                            filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
 
-                        //    _navigationService.ShowDownload(downloadParams);
-                        //}
+                            DownloadParameters downloadParams = new DownloadParameters(video, qualities, selectedQuality, folder, filename, currentPrefs.DownloadDisableConversion);
+
+                            _navigationService.ShowDownload(downloadParams);
+                        }
                     }
                 }
             }
