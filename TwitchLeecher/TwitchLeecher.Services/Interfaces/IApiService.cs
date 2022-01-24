@@ -10,9 +10,9 @@ namespace TwitchLeecher.Services.Interfaces
 
         void RevokeAuthentication(string accessToken);
 
-        TwitchVideoAuthInfo RetrieveVodAuthInfo(string id);
+        TwitchVideoAuthInfo GetVodAuthInfo(string id);
 
-        Dictionary<TwitchVideoQuality, string> GetPlaylistSummaray(string vodId, TwitchVideoAuthInfo vodAuthInfo);
+        Dictionary<TwitchVideoQuality, string> GetPlaylistInfo(string vodId, TwitchVideoAuthInfo vodAuthInfo);
 
         bool ChannelExists(string channel);
 

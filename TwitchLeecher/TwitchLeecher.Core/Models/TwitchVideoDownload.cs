@@ -30,7 +30,7 @@ namespace TwitchLeecher.Core.Models
 
         public TwitchVideoDownload(DownloadParameters downloadParams)
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString("N");
             DownloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
 
             _log = new StringBuilder();

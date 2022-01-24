@@ -69,6 +69,18 @@ namespace TwitchLeecher.Core.Models
             return VerticalResolution > other.VerticalResolution ? -1 : 1;
         }
 
+        public override bool Equals(object obj)
+        {
+            TwitchVideoQuality other = obj as TwitchVideoQuality;
+
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Id.Equals(other.Id, StringComparison.OrdinalIgnoreCase);
+        }
+
         public override string ToString()
         {
             return DisplayString;

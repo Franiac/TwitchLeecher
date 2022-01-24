@@ -415,7 +415,7 @@ namespace TwitchLeecher.Services.Services
             return videos;
         }
 
-        public TwitchVideoAuthInfo RetrieveVodAuthInfo(string id)
+        public TwitchVideoAuthInfo GetVodAuthInfo(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -507,7 +507,7 @@ namespace TwitchLeecher.Services.Services
             return "{\"operationName\": \"PlaybackAccessToken\",\"variables\": {\"isLive\": false,\"login\": \"\",\"isVod\": true,\"vodID\": \"" + id + "\",\"playerType\": \"channel_home_live\"},\"extensions\": {\"persistedQuery\": {\"version\": 1,\"sha256Hash\": \"0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712\"}}}";
         }
 
-        public Dictionary<TwitchVideoQuality, string> GetPlaylistSummaray(string vodId, TwitchVideoAuthInfo vodAuthInfo)
+        public Dictionary<TwitchVideoQuality, string> GetPlaylistInfo(string vodId, TwitchVideoAuthInfo vodAuthInfo)
         {
             using (WebClient webClient = new WebClient())
             {
@@ -521,7 +521,7 @@ namespace TwitchLeecher.Services.Services
 
                 List<string> lines = playlist.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                Dictionary<TwitchVideoQuality, string> summaryDict = new Dictionary<TwitchVideoQuality, string>();
+                Dictionary<TwitchVideoQuality, string> playlistInfo = new Dictionary<TwitchVideoQuality, string>();
 
                 for (int i = 0; i < lines.Count; i++)
                 {
@@ -543,36 +543,11 @@ namespace TwitchLeecher.Services.Services
 
                         TwitchVideoQuality quality = new TwitchVideoQuality(id, name, resolution);
 
-                        summaryDict.Add(quality, line);
+                        playlistInfo.Add(quality, line);
                     }
                 }
 
-                return summaryDict;
-            }
-        }
-
-        private TwitchPlaylist RetrieveVodPlaylist(Action<string> log, string tempDir, string playlistUrl)
-        {
-            using (WebClient webClient = new WebClient())
-            {
-                log(Environment.NewLine + Environment.NewLine + "Retrieving playlist...");
-                string playlistStr = webClient.DownloadString(playlistUrl);
-                log(" done!");
-
-                if (string.IsNullOrWhiteSpace(playlistStr))
-                {
-                    throw new ApplicationException("The playlist is empty!");
-                }
-
-                string urlPrefix = playlistUrl.Substring(0, playlistUrl.LastIndexOf("/") + 1);
-
-                log(Environment.NewLine + "Parsing playlist...");
-                TwitchPlaylist vodPlaylist = TwitchPlaylist.Parse(tempDir, playlistStr, urlPrefix);
-                log(" done!");
-
-                log(Environment.NewLine + "Number of video chunks: " + vodPlaylist.Count());
-
-                return vodPlaylist;
+                return playlistInfo;
             }
         }
 

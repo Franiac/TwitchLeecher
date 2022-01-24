@@ -168,7 +168,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (video != null)
                         {
-                            TwitchVideoAuthInfo vodAuthInfo = _apiService.RetrieveVodAuthInfo(video.Id);
+                            TwitchVideoAuthInfo vodAuthInfo = _apiService.GetVodAuthInfo(video.Id);
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
@@ -177,8 +177,8 @@ namespace TwitchLeecher.Gui.ViewModels
                                 return;
                             }
 
-                            Dictionary<TwitchVideoQuality, string> summary = _apiService.GetPlaylistSummaray(id, vodAuthInfo);
-                            List<TwitchVideoQuality> qualities = summary.Keys.OrderBy(q => q).ToList();
+                            Dictionary<TwitchVideoQuality, string> playlistInfo = _apiService.GetPlaylistInfo(id, vodAuthInfo);
+                            List<TwitchVideoQuality> qualities = playlistInfo.Keys.OrderBy(q => q).ToList();
                             TwitchVideoQuality selectedQuality = qualities.First();
 
                             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
