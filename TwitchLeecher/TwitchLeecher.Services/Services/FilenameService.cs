@@ -30,13 +30,18 @@ namespace TwitchLeecher.Services.Services
             TimeSpan selectedCropStart = cropStart ?? TimeSpan.Zero;
             TimeSpan selectedCropEnd = cropEnd ?? video.Length;
 
-            result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
-            result = result.Replace(FilenameWildcards.DATE, recorded.ToString("yyyyMMdd"));
-            result = result.Replace(FilenameWildcards.TIME, recorded.ToString("hhmmsstt", CultureInfo.InvariantCulture));
-            result = result.Replace(FilenameWildcards.TIME24, recorded.ToString("HHmmss", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.ID, video.Id);
+            result = result.Replace(FilenameWildcards.CHANNEL, video.Channel);
             result = result.Replace(FilenameWildcards.TITLE, video.Title);
             result = result.Replace(FilenameWildcards.RES, quality.Resolution);
+            result = result.Replace(FilenameWildcards.YEAR, recorded.ToString("yyyy", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.MONTH, recorded.ToString("MM", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.DAY, recorded.ToString("dd", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.HOUR24, recorded.ToString("HH", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.HOUR, recorded.ToString("hh", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.MINUTES, recorded.ToString("mm", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.SECONDS, recorded.ToString("ss", CultureInfo.InvariantCulture));
+            result = result.Replace(FilenameWildcards.AMPM, recorded.ToString("tt", CultureInfo.InvariantCulture));
             result = result.Replace(FilenameWildcards.START, selectedCropStart.ToShortDaylessString());
             result = result.Replace(FilenameWildcards.END, selectedCropEnd.ToShortDaylessString());
 

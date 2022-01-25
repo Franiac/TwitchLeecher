@@ -457,14 +457,10 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    string fileName = downloadFileNameEl.GetValueAsString();
-
-                                    if (preferences.Version < new Version(1, 6, 0) && !string.IsNullOrEmpty(fileName) && fileName.EndsWith(".mp4"))
+                                    if (preferences.Version.Pad() >= new Version(2, 0, 0, 0))
                                     {
-                                        fileName = fileName.Substring(0, fileName.Length - 4);
+                                        preferences.DownloadFileName = downloadFileNameEl.GetValueAsString();
                                     }
-
-                                    preferences.DownloadFileName = fileName;
                                 }
                                 catch
                                 {
@@ -569,7 +565,7 @@ namespace TwitchLeecher.Services.Services
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
-                DownloadFileName = FilenameWildcards.DATE + "_" + FilenameWildcards.CHANNEL + "_" + FilenameWildcards.ID,
+                DownloadFileName = FilenameWildcards.YEAR + FilenameWildcards.MONTH + FilenameWildcards.DAY + "_" + FilenameWildcards.CHANNEL + "_" + FilenameWildcards.ID,
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
                 MiscUseExternalPlayer = false,
