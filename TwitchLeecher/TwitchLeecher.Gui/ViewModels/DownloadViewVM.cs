@@ -95,6 +95,14 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public bool ShowMutedPartsWarning
+        {
+            get
+            {
+                return _downloadParams.Video.Muted && !_downloadParams.DisableConversion;
+            }
+        }
+
         public int CropStartHours
         {
             get

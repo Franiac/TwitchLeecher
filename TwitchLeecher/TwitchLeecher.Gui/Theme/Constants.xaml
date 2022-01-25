@@ -20,6 +20,7 @@
     <Color x:Key="Text.Foreground.Dark.Color">#FF000000</Color>
     <Color x:Key="Text.Foreground.Dark.Disabled.Color">#FF757575</Color>
     <Color x:Key="Text.Foreground.Watermark.Color">#FFCCCCCC</Color>
+    <Color x:Key="Text.Foreground.Error.Color">#FFD20000</Color>
 
     <Color x:Key="Hyperlink.Foreground.Color">#FF2994FF</Color>
 
