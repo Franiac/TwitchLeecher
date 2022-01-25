@@ -313,6 +313,12 @@
                                         <RowDefinition SharedSizeGroup="r2" />
                                         <RowDefinition Height="5" />
                                         <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -326,49 +332,61 @@
                                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Description" FontWeight="Bold" />
                                     <TextBlock Grid.Row="0" Grid.Column="4" Text="Example" FontWeight="Bold" />
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{}{channel}" />
-                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Name of the channel" />
-                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="FakeSmileRevolution" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{}{id}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Twitch Video ID" />
+                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="54869708" />
+                                    
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{}{channel}" />
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="Channel Name" />
+                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="FakeSmileRevolution" />                                    
 
-                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{}{game}" />
-                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="Name of the game" />
-                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="Dark Souls" />
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="{}{title}" />
+                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="Video Title" />
+                                    <TextBlock Grid.Row="6" Grid.Column="4" Text="Best Strim Evr!!!" />
 
-                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="{}{date}" />
-                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="Recording date (yyyyMMdd)" />
-                                    <TextBlock Grid.Row="6" Grid.Column="4" Text="20160418" />
+                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="{}{res}" />
+                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="Video Resolution" />
+                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="1920x1080" />
 
-                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="{}{time}" />
-                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="Recording time" />
-                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="034622PM" />
+                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{year}" />
+                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Year" />
+                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="2022" />
 
-                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{time24}" />
-                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Recording time (24 hours)" />
-                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="174622" />
+                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{month}" />
+                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Month" />
+                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="07" />
 
-                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{id}" />
-                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Twitch video ID" />
-                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="54869708" />
+                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{day}" />
+                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Day" />
+                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="25" />
 
-                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{title}" />
-                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Video Title" />
-                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="Best Strim Evr!!!" />
+                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{hr24}" />
+                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Hour (00-23)" />
+                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="07" />
 
-                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{res}" />
-                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Video Resolution" />
-                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="1280x720" />
+                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{hr}" />
+                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Hour (00-11)" />
+                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="19" />
 
-                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{fps}" />
-                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Video Framerate" />
-                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="60" />
+                                    <TextBlock Grid.Row="20" Grid.Column="0" Text="{}{min}" />
+                                    <TextBlock Grid.Row="20" Grid.Column="2" Text="Minutes" />
+                                    <TextBlock Grid.Row="20" Grid.Column="4" Text="47" />
 
-                                    <TextBlock Grid.Row="20" Grid.Column="0" Text="{}{start}" />
-                                    <TextBlock Grid.Row="20" Grid.Column="2" Text="Crop start time (HHmmss)" />
-                                    <TextBlock Grid.Row="20" Grid.Column="4" Text="012744" />
+                                    <TextBlock Grid.Row="22" Grid.Column="0" Text="{}{sec}" />
+                                    <TextBlock Grid.Row="22" Grid.Column="2" Text="Seconds" />
+                                    <TextBlock Grid.Row="22" Grid.Column="4" Text="55" />
 
-                                    <TextBlock Grid.Row="22" Grid.Column="0" Text="{}{end}" />
-                                    <TextBlock Grid.Row="22" Grid.Column="2" Text="Crop end time (HHmmss)" />
-                                    <TextBlock Grid.Row="22" Grid.Column="4" Text="025317" />
+                                    <TextBlock Grid.Row="24" Grid.Column="0" Text="{}{apm}" />
+                                    <TextBlock Grid.Row="24" Grid.Column="2" Text="AM/PM" />
+                                    <TextBlock Grid.Row="24" Grid.Column="4" Text="PM" />
+
+                                    <TextBlock Grid.Row="26" Grid.Column="0" Text="{}{start}" />
+                                    <TextBlock Grid.Row="26" Grid.Column="2" Text="Crop start time (HHmmss)" />
+                                    <TextBlock Grid.Row="26" Grid.Column="4" Text="012744" />
+
+                                    <TextBlock Grid.Row="28" Grid.Column="0" Text="{}{end}" />
+                                    <TextBlock Grid.Row="28" Grid.Column="2" Text="Crop end time (HHmmss)" />
+                                    <TextBlock Grid.Row="28" Grid.Column="4" Text="025317" />
                                 </Grid>
                             </StackPanel>
                         </ToolTip>
