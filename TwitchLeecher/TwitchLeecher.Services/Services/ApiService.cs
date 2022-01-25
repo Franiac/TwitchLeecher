@@ -528,24 +528,19 @@ namespace TwitchLeecher.Services.Services
 
         private string CreateGqlPlaybackAccessToken(string id)
         {
-            // {
-            //   "operationName": "PlaybackAccessToken",
-            //   "variables": {
-            //       "isLive": false,
-            //       "login": "",
-            //       "isVod": true,
-            //       "vodID": "870835569",
-            //       "playerType": "channel_home_live"
-            //   },
-            //   "extensions": {
-            //     "persistedQuery": {
-            //       "version": 1,
-            //       "sha256Hash": "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712"
-            //     }
-            //   }
-            // }
+            //{
+            //  "operationName": "PlaybackAccessToken_Template",
+            //  "query": "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}",
+            //  "variables": {
+            //    "isLive": false,
+            //    "login": "",
+            //    "isVod": true,
+            //    "vodID": "1058435233",
+            //    "playerType": "site"
+            //  }
+            //}
 
-            return "{\"operationName\": \"PlaybackAccessToken\",\"variables\": {\"isLive\": false,\"login\": \"\",\"isVod\": true,\"vodID\": \"" + id + "\",\"playerType\": \"channel_home_live\"},\"extensions\": {\"persistedQuery\": {\"version\": 1,\"sha256Hash\": \"0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712\"}}}";
+            return "{\"operationName\": \"PlaybackAccessToken_Template\", \"query\": \"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) { streamPlaybackAccessToken(channelName: $login, params: {platform: \\\"web\\\", playerBackend: \\\"mediaplayer\\\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\\"web\\\", playerBackend: \\\"mediaplayer\\\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\", \"variables\": { \"isLive\": false, \"login\": \"\", \"isVod\": true, \"vodID\": \"" + id + "\", \"playerType\": \"site\" }}";
         }
 
         public Dictionary<TwitchVideoQuality, string> GetPlaylistInfo(string vodId, TwitchVideoAuthInfo vodAuthInfo)
