@@ -62,7 +62,7 @@
     <Compile Include="Controls\TlDateTimePicker.cs" />
     <Compile Include="Converters\DownloadStateToVisibilityConverter.cs" />
     <Compile Include="Converters\DownloadStateToColorConverter.cs" />
-    <Compile Include="Converters\InverseBooleanyConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\SearchTypeToBooleanConverter.cs" />
     <Compile Include="Converters\LoadLimitToBooleanConverter.cs" />

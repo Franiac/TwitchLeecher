@@ -13,7 +13,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable, bool muted)
+        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable, bool muted, bool live)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -40,6 +40,7 @@ namespace TwitchLeecher.Core.Models
             Url = url ?? throw new ArgumentNullException(nameof(url));
             Viewable = viewable;
             Muted = muted;
+            Live = live;
         }
 
         #endregion Constructors
@@ -73,6 +74,8 @@ namespace TwitchLeecher.Core.Models
         public bool Viewable { get; }
 
         public bool Muted { get; }
+
+        public bool Live { get; }
 
         #endregion Properties
     }

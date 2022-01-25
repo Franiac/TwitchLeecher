@@ -694,17 +694,19 @@ namespace TwitchLeecher.Services.Services
             JArray mutedSegments = videoJson.Value<JArray>("muted_segments");
 
             bool muted = mutedSegments != null && mutedSegments.Count > 0;
+            bool live = false;
 
             if (string.IsNullOrWhiteSpace(thumbnail))
             {
                 thumbnail = PROCESSING_THUMBNAIL;
+                live = true;
             }
             else
             {
                 thumbnail = thumbnail.Replace("%{width}", "320").Replace("%{height}", "180");
             }
 
-            return new TwitchVideo(channel, title, id, views, length, recordedDate, new Uri(thumbnail), new Uri(url), viewable, muted);
+            return new TwitchVideo(channel, title, id, views, length, recordedDate, new Uri(thumbnail), new Uri(url), viewable, muted, live);
         }
 
         private TimeSpan ParseTwitchDuration(string durationStr)

@@ -244,7 +244,7 @@
                             <Setter Property="Background" TargetName="Border" Value="{StaticResource Button.Pressed.Background}" />
                             <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource Button.Pressed.Border}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
+                        <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" TargetName="Border" Value="{StaticResource Button.Disabled.Background}" />
                             <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource Button.Disabled.Border}" />
                             <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />

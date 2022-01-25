@@ -35,7 +35,7 @@
     <Color x:Key="TextControl.Border.Pressed.Color">#FFBF4C</Color>
     <Color x:Key="TextControl.Border.Focus.Color">#FFFFC864</Color>
 
-    <Color x:Key="Button.Background.Disabled.Color">#FFFFE1AA</Color>
+    <Color x:Key="Button.Background.Disabled.Color">#FFE6E6E6</Color>
     <Color x:Key="Button.Background.MouseOver.Color">#FFFFE1AA</Color>
     <Color x:Key="Button.Background.Pressed.Color">#FFFFFFFF</Color>
     <Color x:Key="Button.FocusVisual.Border.Color">#FF000000</Color>
