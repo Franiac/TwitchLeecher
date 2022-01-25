@@ -71,14 +71,17 @@ namespace TwitchLeecher.Core.Models
 
         public override bool Equals(object obj)
         {
-            TwitchVideoQuality other = obj as TwitchVideoQuality;
-
-            if (other == null)
+            if (!(obj is TwitchVideoQuality other))
             {
                 return false;
             }
 
             return Id.Equals(other.Id, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         public override string ToString()

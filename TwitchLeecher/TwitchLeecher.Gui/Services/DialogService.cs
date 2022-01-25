@@ -124,13 +124,15 @@ namespace TwitchLeecher.Gui.Services
         }
 
         public void ShowUpdateInfoDialog(UpdateInfo updateInfo)
-        {            
+        {
             UpdateInfoViewVM vm = _kernel.Get<UpdateInfoViewVM>();
             vm.UpdateInfo = updateInfo;
 
-            UpdateInfoView view = new UpdateInfoView();
-            view.Owner = Application.Current.MainWindow;
-            view.DataContext = vm;
+            UpdateInfoView view = new UpdateInfoView
+            {
+                Owner = Application.Current.MainWindow,
+                DataContext = vm
+            };
 
             view.ShowDialog();
         }
