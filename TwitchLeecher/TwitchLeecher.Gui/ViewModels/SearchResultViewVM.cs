@@ -172,7 +172,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
-                                _dialogService.ShowMessageBox("This video is sub-only! Twitch Leecher does not support sub-only video downloads (yet), sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                _dialogService.ShowMessageBox("This video is sub-only! Twitch Leecher does not support sub-only video downloads, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                                 return;
                             }
