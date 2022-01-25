@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using TwitchLeecher.Core;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
@@ -341,14 +340,6 @@ namespace TwitchLeecher.Gui.ViewModels
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
                 DownloadParams?.Validate();
-
-                string tempDir = Path.Combine(_preferencesService.CurrentPreferences.DownloadTempFolder, Guid.NewGuid().ToString("N"));
-
-                // Assume max length of .ts filename in playlist is '99999999.ts' => 11 characters
-                if (tempDir.Length + 11 > 250)
-                {
-                    DownloadParams.AddError(nameof(DownloadParams.Folder), "The length of the temporary folder path set in the preferences must be shorter than 239 characters!");
-                }
 
                 if (_downloadParams.FullPath.Length > 250)
                 {

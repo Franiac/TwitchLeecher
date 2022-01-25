@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.PreferencesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
-             xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
-             xmlns:fa="http://schemas.fontawesome.io/icons/">
+             xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -335,10 +335,10 @@
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{}{id}" />
                                     <TextBlock Grid.Row="2" Grid.Column="2" Text="Twitch Video ID" />
                                     <TextBlock Grid.Row="2" Grid.Column="4" Text="54869708" />
-                                    
+
                                     <TextBlock Grid.Row="4" Grid.Column="0" Text="{}{channel}" />
                                     <TextBlock Grid.Row="4" Grid.Column="2" Text="Channel Name" />
-                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="FakeSmileRevolution" />                                    
+                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="FakeSmileRevolution" />
 
                                     <TextBlock Grid.Row="6" Grid.Column="0" Text="{}{title}" />
                                     <TextBlock Grid.Row="6" Grid.Column="2" Text="Video Title" />
