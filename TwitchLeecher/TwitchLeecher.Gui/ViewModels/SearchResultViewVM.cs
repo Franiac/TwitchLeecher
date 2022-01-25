@@ -179,9 +179,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             Dictionary<TwitchVideoQuality, string> playlistInfo = _apiService.GetPlaylistInfo(id, vodAuthInfo);
                             List<TwitchVideoQuality> qualities = playlistInfo.Keys.OrderBy(q => q).ToList();
-                            TwitchVideoQuality selectedQuality = qualities.First();
 
                             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+
+                            TwitchVideoQuality selectedQuality = GetSelectedQuality(qualities, currentPrefs.DownloadDefaultQuality);
 
                             string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
                                 ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
@@ -201,6 +202,46 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 _dialogService.ShowAndLogException(ex);
             }
+        }
+
+        private TwitchVideoQuality GetSelectedQuality(List<TwitchVideoQuality> qualities, DefaultQuality defaultQuality)
+        {
+            if (defaultQuality.IsSource)
+            {
+                return qualities.First();
+            }
+
+            int defaultRes = defaultQuality.VerticalResolution;
+
+            TwitchVideoQuality selectedQuality = null;
+
+            foreach (TwitchVideoQuality quality in qualities)
+            {
+                if (quality.VerticalResolution <= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution < quality.VerticalResolution))
+                {
+                    selectedQuality = quality;
+                }
+            }
+
+            if (selectedQuality != null)
+            {
+                return selectedQuality;
+            }
+
+            foreach (TwitchVideoQuality quality in qualities)
+            {
+                if (quality.VerticalResolution >= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution > quality.VerticalResolution))
+                {
+                    selectedQuality = quality;
+                }
+            }
+
+            if (selectedQuality != null)
+            {
+                return selectedQuality;
+            }
+
+            return qualities.First();
         }
 
         public void ShowSearch()

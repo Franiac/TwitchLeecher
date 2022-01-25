@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Shared.Helpers;
@@ -9,6 +10,18 @@ namespace TwitchLeecher.Core.Models
 {
     public class Preferences : BindableBase
     {
+        #region Static Fields
+
+        public static List<DefaultQuality> DefaultQualities = new List<DefaultQuality>() {
+            new DefaultQuality(1080, "Source", true),
+            new DefaultQuality(720, "720p", false),
+            new DefaultQuality(480, "480p", false),
+            new DefaultQuality(360, "360p", false),
+            new DefaultQuality(160, "160p", false)
+        };
+
+        #endregion Static Fields
+
         #region Fields
 
         private Version _version;
@@ -36,6 +49,8 @@ namespace TwitchLeecher.Core.Models
         private string _downloadFolder;
 
         private string _downloadFileName;
+
+        private DefaultQuality _downloadDefaultQuality;
 
         private bool _downloadSubfoldersForFav;
 
@@ -233,6 +248,26 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public DefaultQuality DownloadDefaultQuality
+        {
+            get
+            {
+                return _downloadDefaultQuality;
+            }
+            set
+            {
+                SetProperty(ref _downloadDefaultQuality, value);
+            }
+        }
+
+        public List<DefaultQuality> DownloadDefaultQualities
+        {
+            get
+            {
+                return DefaultQualities;
+            }
+        }
+
         public bool DownloadSubfoldersForFav
         {
             get
@@ -389,6 +424,7 @@ namespace TwitchLeecher.Core.Models
                 DownloadTempFolder = DownloadTempFolder,
                 DownloadFolder = DownloadFolder,
                 DownloadFileName = DownloadFileName,
+                DownloadDefaultQuality = _downloadDefaultQuality,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
                 DownloadDisableConversion = DownloadDisableConversion

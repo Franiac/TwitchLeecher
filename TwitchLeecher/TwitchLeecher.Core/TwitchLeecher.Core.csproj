@@ -58,6 +58,7 @@
     <Compile Include="Events\RemoveDownloadEvent.cs" />
     <Compile Include="Events\PreferencesSavedEvent.cs" />
     <Compile Include="Models\CropInfo.cs" />
+    <Compile Include="Models\DefaultQuality.cs" />
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\MainWindowInfo.cs" />
     <Compile Include="Models\TwitchAuthInfo.cs" />
