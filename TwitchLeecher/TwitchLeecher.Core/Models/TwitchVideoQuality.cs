@@ -6,7 +6,7 @@ namespace TwitchLeecher.Core.Models
     {
         #region Constructors
 
-        public TwitchVideoQuality(string id, string name, string resolution)
+        public TwitchVideoQuality(string id, string name, string resolution = null)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -16,11 +16,6 @@ namespace TwitchLeecher.Core.Models
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
-            }
-
-            if (string.IsNullOrWhiteSpace(resolution))
-            {
-                throw new ArgumentNullException(nameof(resolution));
             }
 
             Initialize(id, name, resolution);
@@ -49,13 +44,28 @@ namespace TwitchLeecher.Core.Models
             Id = id;
             Name = name;
             Resolution = resolution;
-            DisplayString = $"{Name} ({Resolution})";
+
+            string displayString = Name;
+
+            if (!string.IsNullOrWhiteSpace(resolution))
+            {
+                displayString += $" ({resolution})";
+            }
+
+            DisplayString = displayString;
+
             VerticalResolution = GetVerticalResolution(resolution);
         }
 
         private int GetVerticalResolution(string resolution)
         {
+            if (string.IsNullOrWhiteSpace(resolution))
+            {
+                return 0;
+            }
+
             int start = resolution.IndexOf("x") + 1;
+
             return int.Parse(resolution.Substring(start, resolution.Length - start));
         }
 

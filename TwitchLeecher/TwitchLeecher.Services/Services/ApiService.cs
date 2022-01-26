@@ -558,6 +558,7 @@ namespace TwitchLeecher.Services.Services
                 webClient.Headers.Add("Accept", "*/*");
 
                 webClient.QueryString.Add("allow_source", "true");
+                webClient.QueryString.Add("allow_audio_only", "true");
                 webClient.QueryString.Add("token", vodAuthInfo.Token);
                 webClient.QueryString.Add("sig", vodAuthInfo.Signature);
 
@@ -582,8 +583,14 @@ namespace TwitchLeecher.Services.Services
                         Match nameMatch = _rxName.Match(mediaInfo);
                         string name = nameMatch.Groups["name"].Value;
 
+                        string resolution = null;
+
                         Match resolutionMatch = _rxResolution.Match(streamInfo);
-                        string resolution = resolutionMatch.Groups["resolution"].Value;
+
+                        if (resolutionMatch.Success)
+                        {
+                            resolution = resolutionMatch.Groups["resolution"].Value;
+                        }
 
                         TwitchVideoQuality quality = new TwitchVideoQuality(id, name, resolution);
 
