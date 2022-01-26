@@ -77,6 +77,8 @@ namespace TwitchLeecher.Core.Models
 
         public bool Live { get; }
 
+        public TimeSpan? StartTime { get; set; }
+
         #endregion Properties
     }
 }

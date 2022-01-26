@@ -193,6 +193,11 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             DownloadParameters downloadParams = new DownloadParameters(video, qualities, selectedQuality, folder, filename, currentPrefs.DownloadDisableConversion);
 
+                            if (video.StartTime.HasValue)
+                            {
+                                downloadParams.CropStartTime = video.StartTime.Value;
+                            }
+
                             _navigationService.ShowDownload(downloadParams);
                         }
                     }

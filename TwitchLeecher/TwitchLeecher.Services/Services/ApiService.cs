@@ -12,6 +12,7 @@ using TwitchLeecher.Core;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Services.Services
 {
@@ -413,6 +414,13 @@ namespace TwitchLeecher.Services.Services
 
                         if (video != null)
                         {
+                            TimeSpan? startTime = GetStartTimeFromUrl(url);
+
+                            if (startTime.HasValue)
+                            {
+                                video.StartTime = startTime;
+                            }
+
                             videos.Add(video);
                             addedIds.Add(id);
                         }
@@ -632,6 +640,38 @@ namespace TwitchLeecher.Services.Services
             return null;
         }
 
+        private TimeSpan? GetStartTimeFromUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return null;
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validUrl))
+            {
+                return null;
+            }
+
+            string query = validUrl.Query;
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var queryParams = HttpUtility.ParseQueryString(validUrl.Query);
+
+                if (queryParams.ContainsKey("t"))
+                {
+                    string durationStr = queryParams["t"];
+
+                    if (!string.IsNullOrWhiteSpace(durationStr) && TimeSpanExtensions.TryParseTwitchFormat(durationStr, out TimeSpan startTime))
+                    {
+                        return startTime;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private TwitchVideo GetTwitchVideoFromId(string id)
         {
             using (WebClient webClient = CreateApiWebClient())
@@ -684,7 +724,7 @@ namespace TwitchLeecher.Services.Services
             bool viewable = videoJson.Value<string>("viewable").Equals("public", StringComparison.OrdinalIgnoreCase);
             string url = videoJson.Value<string>("url");
             string thumbnail = videoJson.Value<string>("thumbnail_url");
-            TimeSpan length = ParseTwitchDuration(videoJson.Value<string>("duration"));
+            TimeSpan length = TimeSpanExtensions.ParseTwitchFormat(videoJson.Value<string>("duration"));
             DateTime recordedDate = DateTime.Parse(videoJson.Value<string>("published_at"), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             JArray mutedSegments = videoJson.Value<JArray>("muted_segments");
 
@@ -702,67 +742,6 @@ namespace TwitchLeecher.Services.Services
             }
 
             return new TwitchVideo(channel, title, id, views, length, recordedDate, new Uri(thumbnail), new Uri(url), viewable, muted, live);
-        }
-
-        private TimeSpan ParseTwitchDuration(string durationStr)
-        {
-            if (string.IsNullOrWhiteSpace(durationStr))
-            {
-                throw new ArgumentException("The string to parse is null or empty!", nameof(durationStr));
-            }
-
-            int hourIndex = durationStr.IndexOf("h");
-            int minIndex = durationStr.IndexOf("m");
-            int secIndex = durationStr.IndexOf("s");
-
-            bool hasHour = hourIndex >= 0;
-            bool hasMin = minIndex >= 0;
-            bool hasSec = secIndex >= 0;
-
-            string hourStr = null;
-            string minStr = null;
-            string secStr = null;
-
-            if (hasHour)
-            {
-                hourStr = durationStr.Substring(0, hourIndex);
-            }
-
-            if (hasMin)
-            {
-                minStr = durationStr.Substring(hasHour ? hourIndex + 1 : 0, hasHour ? minIndex - hourIndex - 1 : minIndex);
-            }
-
-            if (hasSec)
-            {
-                secStr = durationStr.Substring(hasMin ? minIndex + 1 : 0, hasMin ? secIndex - minIndex - 1 : secIndex);
-            }
-
-            int? hour = null;
-            int? min = null;
-            int? sec = null;
-
-            if (int.TryParse(hourStr, out int parsedHour))
-            {
-                hour = parsedHour;
-            }
-
-            if (int.TryParse(minStr, out int parsedMin))
-            {
-                min = parsedMin;
-            }
-
-            if (int.TryParse(secStr, out int parsedSec))
-            {
-                sec = parsedSec;
-            }
-
-            if (hour == null && min == null && sec == null)
-            {
-                throw new ArgumentException($"Cannot parse string '{durationStr}'!", nameof(durationStr));
-            }
-
-            return new TimeSpan(hour ?? 0, min ?? 0, sec ?? 0);
         }
 
         #endregion Methods

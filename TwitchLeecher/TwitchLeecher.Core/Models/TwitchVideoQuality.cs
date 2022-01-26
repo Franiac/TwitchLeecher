@@ -66,7 +66,18 @@ namespace TwitchLeecher.Core.Models
                 return -1;
             }
 
-            return VerticalResolution > other.VerticalResolution ? -1 : 1;
+            if (VerticalResolution > other.VerticalResolution)
+            {
+                return -1;
+            }
+            else if (VerticalResolution < other.VerticalResolution)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public override bool Equals(object obj)
