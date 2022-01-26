@@ -46,7 +46,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Constants\Constants.cs" />
     <Compile Include="Enums\DownloadState.cs" />
     <Compile Include="Enums\LoadLimitType.cs" />
     <Compile Include="Enums\SearchType.cs" />

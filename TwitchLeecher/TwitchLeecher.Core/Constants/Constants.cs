@@ -1,4 +1,4 @@
-﻿namespace TwitchLeecher.Core
+﻿namespace TwitchLeecher.Core.Constants
 {
     public static class Constants
     {

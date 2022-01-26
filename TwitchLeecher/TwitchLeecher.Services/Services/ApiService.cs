@@ -8,7 +8,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
-using TwitchLeecher.Core;
+using TwitchLeecher.Core.Constants;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;

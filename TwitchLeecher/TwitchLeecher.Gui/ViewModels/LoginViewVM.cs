@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Windows;
 using System.Windows.Input;
-using TwitchLeecher.Core;
+using TwitchLeecher.Core.Constants;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
