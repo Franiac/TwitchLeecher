@@ -21,6 +21,8 @@ namespace TwitchLeecher.Services.Services
         #region Constants
 
         private const string GQL_URL = "https://gql.twitch.tv/gql";
+        private const string AUTH_URL = "https://id.twitch.tv/oauth2/validate";
+        private const string REVOKE_URL = "https://id.twitch.tv/oauth2/revoke";
         private const string USERS_URL = "https://api.twitch.tv/helix/users";
         private const string VIDEOS_URL = "https://api.twitch.tv/helix/videos";
         private const string CHANNELS_URL = "https://api.twitch.tv/helix/channels";
@@ -104,15 +106,15 @@ namespace TwitchLeecher.Services.Services
                 return null;
             }
 
-            using (WebClient wc = new WebClient())
+            using (WebClient webClient = new WebClient())
             {
-                wc.Headers.Add(HttpRequestHeader.Authorization, $"Bearer { accessToken }");
+                webClient.Headers.Add(HttpRequestHeader.Authorization, $"Bearer { accessToken }");
 
                 string jsonStr = null;
 
                 try
                 {
-                    jsonStr = wc.DownloadString("https://id.twitch.tv/oauth2/validate");
+                    jsonStr = webClient.DownloadString(AUTH_URL);
                 }
                 catch (WebException)
                 {
@@ -148,11 +150,14 @@ namespace TwitchLeecher.Services.Services
                 return;
             }
 
-            using (WebClient wc = new WebClient())
+            using (WebClient webClient = new WebClient())
             {
+                webClient.QueryString.Add("client_id", Constants.ClientId);
+                webClient.QueryString.Add("token", accessToken);
+
                 try
                 {
-                    _ = wc.UploadString($"https://id.twitch.tv/oauth2/revoke?client_id={ Constants.ClientId }&token={ accessToken }", string.Empty);
+                    _ = webClient.UploadString(REVOKE_URL, string.Empty);
                 }
                 catch (WebException)
                 {
