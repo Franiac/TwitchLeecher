@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading;
 using System.Web;
 using System.Windows;
 using System.Windows.Input;
@@ -25,8 +26,12 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly INotificationService _notificationService;
 
         private readonly object _commandLockObject;
+        private readonly object _checkAuthTokenLockObject;
 
-        private ICommand _navigatingCommand;
+        private bool _subOnly;
+
+        private ICommand _checkWebsiteAuthTokenCommand;
+        private ICommand _checkRedirectUrlCommand;
         private ICommand _cancelCommand;
 
         #endregion Fields
@@ -45,22 +50,48 @@ namespace TwitchLeecher.Gui.ViewModels
             _notificationService = notificationService;
 
             _commandLockObject = new object();
+            _checkAuthTokenLockObject = new object();
         }
 
         #endregion Constructor
 
         #region Properties
 
-        public ICommand NavigatingCommand
+        public bool SubOnly
         {
             get
             {
-                if (_navigatingCommand == null)
+                return _subOnly;
+            }
+            set
+            {
+                SetProperty(ref _subOnly, value);
+            }
+        }
+
+        public ICommand CheckWebsiteAuthTokenCommand
+        {
+            get
+            {
+                if (_checkWebsiteAuthTokenCommand == null)
                 {
-                    _navigatingCommand = new DelegateCommand<Uri>(Navigating);
+                    _checkWebsiteAuthTokenCommand = new DelegateCommand<string>(CheckWebsiteAuthToken);
                 }
 
-                return _navigatingCommand;
+                return _checkWebsiteAuthTokenCommand;
+            }
+        }
+
+        public ICommand CheckRedirectUrlCommand
+        {
+            get
+            {
+                if (_checkRedirectUrlCommand == null)
+                {
+                    _checkRedirectUrlCommand = new DelegateCommand<Uri>(CheckRedirectUrl);
+                }
+
+                return _checkRedirectUrlCommand;
             }
         }
 
@@ -83,10 +114,46 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public string GetLoginUrl()
         {
-            return $"https://id.twitch.tv/oauth2/authorize?client_id={ Constants.ClientId }&redirect_uri={ Constants.RedirectUrl }&response_type=token&scope=user:read:subscriptions&force_verify=true";
+            if (_subOnly)
+            {
+                return "https://www.twitch.tv/login";
+            }
+            else
+            {
+                return $"https://id.twitch.tv/oauth2/authorize?client_id={ Constants.ClientId }&redirect_uri={ Constants.RedirectUrl }&response_type=token&scope=user:read:subscriptions&force_verify=true";
+            }
         }
 
-        private void Navigating(Uri url)
+        private void CheckWebsiteAuthToken(string authToken)
+        {
+            if (Monitor.TryEnter(_checkAuthTokenLockObject))
+            {
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(authToken))
+                    {
+                        return;
+                    }
+
+                    if (_authService.ValidateAuthentication(authToken, true))
+                    {
+                        FireSubOnlyAuthenticationSuccess();
+                        _notificationService.ShowNotification("Sub-Only support successfully enabled!");
+                    }
+                    else
+                    {
+                        FireSubOnlyAuthenticationFailed();
+                        _dialogService.ShowMessageBox("Access Token could not be verified! Authentication aborted!", "Error", MessageBoxButton.OK);
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(_checkAuthTokenLockObject);
+                }
+            }
+        }
+
+        private void CheckRedirectUrl(Uri url)
         {
             try
             {
@@ -94,97 +161,95 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     string urlStr = url?.OriginalString;
 
-                    if (string.IsNullOrWhiteSpace(urlStr) || !urlStr.StartsWith(Constants.RedirectUrl, StringComparison.OrdinalIgnoreCase))
+                    if (!SubOnly && !string.IsNullOrWhiteSpace(urlStr) && urlStr.StartsWith(Constants.RedirectUrl, StringComparison.OrdinalIgnoreCase))
                     {
-                        return;
-                    }
+                        NameValueCollection urlParams = HttpUtility.ParseQueryString(url.Query);
 
-                    NameValueCollection urlParams = HttpUtility.ParseQueryString(url.Query);
+                        int tokenIndex = urlStr.IndexOf("#access_token=");
 
-                    int tokenIndex = urlStr.IndexOf("#access_token=");
-
-                    if (tokenIndex >= 0)
-                    {
-                        tokenIndex += 14; // #access_token= -> 14 chars
-
-                        int paramIndex = urlStr.IndexOf("&");
-
-                        string accessToken = null;
-
-                        if (paramIndex >= 0)
+                        if (tokenIndex >= 0)
                         {
-                            accessToken = urlStr.Substring(tokenIndex, paramIndex - tokenIndex);
-                        }
-                        else
-                        {
-                            accessToken = urlStr.Substring(tokenIndex);
-                        }
+                            tokenIndex += 14; // #access_token= -> 14 chars
 
-                        if (string.IsNullOrWhiteSpace(accessToken))
-                        {
-                            _dialogService.ShowMessageBox("Twitch did not respond with an access token! Authentication aborted!", "Error", MessageBoxButton.OK);
-                            FireFailed();
-                        }
-                        else
-                        {
-                            if (_authService.ValidateAuthentication(accessToken))
+                            int paramIndex = urlStr.IndexOf("&");
+
+                            string accessToken = null;
+
+                            if (paramIndex >= 0)
                             {
-                                FireSuccess();
-                                _notificationService.ShowNotification("Twitch authentication successful!");
+                                accessToken = urlStr.Substring(tokenIndex, paramIndex - tokenIndex);
                             }
                             else
                             {
-                                _dialogService.ShowMessageBox("Access Token '" + accessToken + "' could not be verified! Authentication aborted!", "Error", MessageBoxButton.OK);
-                                FireFailed();
-                            }
-                        }
-                    }
-                    else if (urlParams.ContainsKey("error"))
-                    {
-                        string error = urlParams.Get("error");
-
-                        if (!string.IsNullOrWhiteSpace(error) && error.Equals("access_denied", StringComparison.OrdinalIgnoreCase))
-                        {
-                            FireFailed();
-                            _notificationService.ShowNotification("Twitch authentication has been canceled!");
-                        }
-                        else
-                        {
-                            void UnspecifiedError()
-                            {
-                                _dialogService.ShowMessageBox("Twitch responded with an unspecified error! Authentication aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                FireFailed();
+                                accessToken = urlStr.Substring(tokenIndex);
                             }
 
-                            if (urlParams.ContainsKey("error_description"))
+                            if (string.IsNullOrWhiteSpace(accessToken))
                             {
-                                string errorDesc = urlParams.Get("error_description");
-
-                                if (string.IsNullOrWhiteSpace(errorDesc))
+                                _dialogService.ShowMessageBox("Twitch did not respond with an access token! Authentication aborted!", "Error", MessageBoxButton.OK);
+                                FireAuthenticationFailed();
+                            }
+                            else
+                            {
+                                if (_authService.ValidateAuthentication(accessToken, false))
                                 {
-                                    UnspecifiedError();
+                                    FireAuthenticationSuccess();
+                                    _notificationService.ShowNotification("Twitch authentication successful!");
                                 }
                                 else
                                 {
-                                    _dialogService.ShowMessageBox(
-                                        "Twitch responded with an error:" +
-                                        Environment.NewLine + Environment.NewLine +
-                                        "\"" + errorDesc + "\"" +
-                                        Environment.NewLine + Environment.NewLine +
-                                        "Authentication aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    FireFailed();
+                                    FireAuthenticationFailed();
+                                    _dialogService.ShowMessageBox("Access Token could not be verified! Authentication aborted!", "Error", MessageBoxButton.OK);
                                 }
+                            }
+                        }
+                        else if (urlParams.ContainsKey("error"))
+                        {
+                            string error = urlParams.Get("error");
+
+                            if (!string.IsNullOrWhiteSpace(error) && error.Equals("access_denied", StringComparison.OrdinalIgnoreCase))
+                            {
+                                FireAuthenticationFailed();
+                                _notificationService.ShowNotification("Twitch authentication has been canceled!");
                             }
                             else
                             {
-                                UnspecifiedError();
+                                void UnspecifiedError()
+                                {
+                                    _dialogService.ShowMessageBox("Twitch responded with an unspecified error! Authentication aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    FireAuthenticationFailed();
+                                }
+
+                                if (urlParams.ContainsKey("error_description"))
+                                {
+                                    string errorDesc = urlParams.Get("error_description");
+
+                                    if (string.IsNullOrWhiteSpace(errorDesc))
+                                    {
+                                        UnspecifiedError();
+                                    }
+                                    else
+                                    {
+                                        _dialogService.ShowMessageBox(
+                                            "Twitch responded with an error:" +
+                                            Environment.NewLine + Environment.NewLine +
+                                            "\"" + errorDesc + "\"" +
+                                            Environment.NewLine + Environment.NewLine +
+                                            "Authentication aborted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        FireAuthenticationFailed();
+                                    }
+                                }
+                                else
+                                {
+                                    UnspecifiedError();
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        _dialogService.ShowMessageBox("Twitch responded neither with an access token nor an error! Authentication aborted!", "Error", MessageBoxButton.OK);
-                        FireFailed();
+                        else
+                        {
+                            _dialogService.ShowMessageBox("Twitch responded neither with an access token nor an error! Authentication aborted!", "Error", MessageBoxButton.OK);
+                            FireAuthenticationFailed();
+                        }
                     }
                 }
             }
@@ -194,14 +259,24 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void FireSuccess()
+        private void FireAuthenticationSuccess()
         {
-            _eventAggregator.GetEvent<AuthenticationResultEvent>().Publish(true);
+            _eventAggregator.GetEvent<AuthResultEvent>().Publish(true);
         }
 
-        private void FireFailed()
+        private void FireAuthenticationFailed()
         {
-            _eventAggregator.GetEvent<AuthenticationResultEvent>().Publish(false);
+            _eventAggregator.GetEvent<AuthResultEvent>().Publish(false);
+        }
+
+        private void FireSubOnlyAuthenticationSuccess()
+        {
+            _eventAggregator.GetEvent<SubOnlyAuthResultEvent>().Publish(true);
+        }
+
+        private void FireSubOnlyAuthenticationFailed()
+        {
+            _eventAggregator.GetEvent<SubOnlyAuthResultEvent>().Publish(false);
         }
 
         private void Cancel()
@@ -210,7 +285,14 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    FireFailed();
+                    if (SubOnly)
+                    {
+                        FireSubOnlyAuthenticationFailed();
+                    }
+                    else
+                    {
+                        FireAuthenticationFailed();
+                    }
                 }
             }
             catch (Exception ex)

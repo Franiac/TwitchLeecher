@@ -25,7 +25,12 @@ namespace TwitchLeecher.Gui.ViewModels
         #region Fields
 
         private bool _showDonationButton;
+
         private bool _isAuthenticated;
+        private bool _isAuthenticatedSubOnly;
+
+        private bool _showAuthError;
+        private bool _showAuthSubOnlyError;
 
         private int _videosCount;
         private int _downloadsCount;
@@ -46,6 +51,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private ICommand _showSearchCommand;
         private ICommand _showDownloadsCommand;
+        private ICommand _showSubOnlyCommand;
         private ICommand _showPreferencesCommand;
         private ICommand _donateCommand;
         private ICommand _showInfoCommand;
@@ -92,8 +98,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
             _commandLockObject = new object();
 
-            _eventAggregator.GetEvent<AuthenticatedChangedEvent>().Subscribe(AuthenticatedChanged);
-            _eventAggregator.GetEvent<AuthenticationResultEvent>().Subscribe(AuthenticationResultAction);
+            _eventAggregator.GetEvent<AuthChangedEvent>().Subscribe(AuthChanged);
+            _eventAggregator.GetEvent<AuthResultEvent>().Subscribe(AuthResultAction);
+            _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Subscribe(SubOnlyAuthChanged);
+            _eventAggregator.GetEvent<SubOnlyAuthResultEvent>().Subscribe(SubOnlyAuthResultAction);
             _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
             _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
             _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
@@ -158,6 +166,19 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public bool IsAuthenticatedSubOnly
+        {
+            get
+            {
+                return _isAuthenticatedSubOnly;
+            }
+
+            private set
+            {
+                SetProperty(ref _isAuthenticatedSubOnly, value, nameof(IsAuthenticatedSubOnly));
+            }
+        }
+
         public ViewModelBase MainView
         {
             get
@@ -193,6 +214,19 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showDownloadsCommand;
+            }
+        }
+
+        public ICommand ShowSubOnlyCommand
+        {
+            get
+            {
+                if (_showSubOnlyCommand == null)
+                {
+                    _showSubOnlyCommand = new DelegateCommand(ShowSubOnly);
+                }
+
+                return _showSubOnlyCommand;
             }
         }
 
@@ -333,6 +367,28 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     _navigationService.ShowDownloads();
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowAndLogException(ex);
+            }
+        }
+
+        private void ShowSubOnly()
+        {
+            try
+            {
+                lock (_commandLockObject)
+                {
+                    if (IsAuthenticatedSubOnly)
+                    {
+                        _navigationService.ShowRevokeSubOnlyAuth();
+                    }
+                    else
+                    {
+                        _navigationService.ShowSubOnlyAuth();
+                    }
                 }
             }
             catch (Exception ex)
@@ -483,11 +539,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void AuthenticatedChanged(bool isAuthenticated)
-        {
-            this.IsAuthenticated = isAuthenticated;
-        }
-
         private void ShowView(ViewModelBase contentVM)
         {
             if (contentVM != null)
@@ -524,6 +575,8 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 InitializeCef();
 
+                CheckAuthenticationSubOnly();
+
                 if (!CheckAuthentication())
                 {
                     _navigationService.ShowAuth();
@@ -542,6 +595,16 @@ namespace TwitchLeecher.Gui.ViewModels
         public void Shown()
         {
             ShowUpdateDialog();
+
+            if (_showAuthError)
+            {
+                _dialogService.ShowMessageBox("Twitch could not validate the saved access token. Please try to log in again!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (_showAuthSubOnlyError)
+            {
+                _dialogService.ShowMessageBox("Twitch could not validate the saved access token for sub-only support. Please try to enable sub-only support again!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void InitializeCef()
@@ -556,7 +619,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 CefSettings settings = new CefSettings()
                 {
-                    RemoteDebuggingPort = 9222,
                     CachePath = cachePath
                 };
 
@@ -566,17 +628,36 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private bool CheckAuthentication()
         {
-            string accessToken = _runtimeDataService.RuntimeData.AccessToken;
+            AuthInfo authInfo = _runtimeDataService.RuntimeData.AuthInfo;
 
-            if (!string.IsNullOrWhiteSpace(accessToken))
+            if (authInfo != null && !string.IsNullOrWhiteSpace(authInfo.AccessToken))
             {
-                return _authService.ValidateAuthentication(accessToken);
+                bool valid = _authService.ValidateAuthentication(authInfo.AccessToken, false);
+
+                _showAuthError = !valid;
+
+                return valid;
             }
 
             return false;
         }
 
-        private void AuthenticationResultAction(bool success)
+        private void CheckAuthenticationSubOnly()
+        {
+            AuthInfo authInfo = _runtimeDataService.RuntimeData.AuthInfo;
+
+            if (authInfo != null && !string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly))
+            {
+                _showAuthSubOnlyError = !_authService.ValidateAuthentication(authInfo.AccessTokenSubOnly, true);
+            }
+        }
+
+        private void AuthChanged(bool isAuthenticated)
+        {
+            this.IsAuthenticated = isAuthenticated;
+        }
+
+        private void AuthResultAction(bool success)
         {
             if (success)
             {
@@ -585,6 +666,23 @@ namespace TwitchLeecher.Gui.ViewModels
             else
             {
                 _navigationService.ShowAuth();
+            }
+        }
+
+        private void SubOnlyAuthChanged(bool isAuthenticatedSubOnly)
+        {
+            this.IsAuthenticatedSubOnly = isAuthenticatedSubOnly;
+        }
+
+        private void SubOnlyAuthResultAction(bool success)
+        {
+            if (success)
+            {
+                _navigationService.ShowRevokeSubOnlyAuth();
+            }
+            else
+            {
+                _navigationService.ShowSubOnlyAuth();
             }
         }
 

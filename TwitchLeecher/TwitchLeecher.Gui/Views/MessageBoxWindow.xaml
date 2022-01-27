@@ -57,16 +57,16 @@
                     <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
                 </Border.BorderBrush>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="btnYes" Margin="0,0,3,0" Click="BtnYes_Click">
+                    <Button Name="btnYes" Margin="0,0,3,0" Click="BtnYes_Click" Width="80">
                         <TextBlock Name="btnYesContent" Text="Yes" />
                     </Button>
-                    <Button Name="btnNo" Margin="3,0,3,0" Click="BtnNo_Click">
+                    <Button Name="btnNo" Margin="3,0,3,0" Click="BtnNo_Click" Width="80">
                         <TextBlock Name="btnNoContent" Text="No" />
                     </Button>
-                    <Button Name="btnOk" Margin="3,0,3,0" Click="BtnOk_Click">
+                    <Button Name="btnOk" Margin="3,0,3,0" Click="BtnOk_Click" Width="80">
                         <TextBlock Name="btnOkContent" Text="Ok" />
                     </Button>
-                    <Button Name="btnCancel" Margin="3,0,0,0" Click="BtnCancel_Click">
+                    <Button Name="btnCancel" Margin="3,0,0,0" Click="BtnCancel_Click" Width="80">
                         <TextBlock Name="btnCancelContent" Text="Cancel" />
                     </Button>
                 </StackPanel>

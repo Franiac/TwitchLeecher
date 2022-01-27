@@ -1,16 +1,16 @@
 ﻿<Window x:Class="TwitchLeecher.Gui.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
         xmlns:vm="clr-namespace:TwitchLeecher.Gui.ViewModels"
         xmlns:view="clr-namespace:TwitchLeecher.Gui.Views"
-        xmlns:fa="http://schemas.fontawesome.io/icons/"
-        xmlns:b="clr-namespace:TwitchLeecher.Gui.Behaviors"
         Style="{DynamicResource TlWindow}"
-        Width="840"
+        Width="880"
         Height="920"
-        MinWidth="840"
-        MinHeight="570"
+        MinWidth="880"
+        MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Name="thisWindow"
         Title="{Binding Title}"
@@ -30,6 +30,12 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:LoginViewVM}">
                         <view:LoginView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SubOnlyAuthViewVM}">
+                        <view:SubOnlyAuthView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SubOnlyRevokeAuthViewVM}">
+                        <view:SubOnlyRevokeAuthView />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:WelcomeViewVM}">
                         <view:WelcomeView />
@@ -103,48 +109,49 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Visibility="{Binding IsAuthenticated, Converter={StaticResource BVConverter}}" Margin="10,0" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button FontWeight="Bold" Command="{Binding ShowSearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="150" Margin="0,0,5,0">
+                    <Button Command="{Binding ShowSearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="155">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Search" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5">
+                            <fa:ImageAwesome Icon="Search" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0">
                                 <Run Text="Search" /><Run Text="{Binding VideosCount, Mode=OneWay, StringFormat=' ({0})', FallbackValue=' (100)'}" />
                             </TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button FontWeight="Bold" Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="150">
+                    <Button Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True" Width="155" Margin="5,0,0,0">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Download" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5">
+                            <fa:ImageAwesome Icon="Download" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0">
                                 <Run Text="Downloads" /><Run Text="{Binding DownloadsCount, Mode=OneWay, StringFormat=' ({0})', FallbackValue=' (100)'}" />
                             </TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
-                <StackPanel Grid.Column="3" Visibility="{Binding IsAuthenticated, Converter={StaticResource BVConverter}}" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">                    
+                <StackPanel Grid.Column="3" Visibility="{Binding IsAuthenticated, Converter={StaticResource BVConverter}}" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SubOnlyButton}" Command="{Binding ShowSubOnlyCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowPreferencesCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
-                        <fa:ImageAwesome Icon="Cogs" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Icon="Cogs" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DonateCommand}" Visibility="{Binding ShowDonationButton, Converter={StaticResource BVConverter}}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Help me out with a bottle of beer if you like the program :)">
-                        <fa:ImageAwesome Icon="Usd" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Icon="Usd" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowInfoCommand}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="About &amp; Support">
-                        <fa:ImageAwesome Icon="QuestionCircle" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Icon="QuestionCircle" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding RevokeCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Logout">
-                        <fa:ImageAwesome Icon="SignOut" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Icon="SignOut" Margin="0,1,0,0" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Column="5" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMinimizeCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
                         <fa:ImageAwesome Icon="WindowMinimize" Margin="0,8,0,0" Width="12" Height="12" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMaximizeRestoreCommand}" CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
-                        <fa:ImageAwesome Style="{StaticResource Img_MaximizeRestore}" Margin="0,4,0,2" Width="12" Height="12" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Style="{StaticResource Img_MaximizeRestore}" Margin="0,1,0,0" Width="12" Height="12" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoCloseCommand}" CommandParameter="{Binding ElementName=thisWindow}" WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
-                        <fa:ImageAwesome Icon="Times" Margin="0,4,0,2" Width="12" Height="12" RenderTransformOrigin="0.5,0.5" />
+                        <fa:ImageAwesome Icon="Times" Margin="0,1,0,0" Width="12" Height="12" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
             </Grid>

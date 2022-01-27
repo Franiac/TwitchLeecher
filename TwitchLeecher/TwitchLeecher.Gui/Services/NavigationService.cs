@@ -42,9 +42,23 @@ namespace TwitchLeecher.Gui.Services
             Navigate(_kernel.Get<AuthViewVM>());
         }
 
-        public void ShowLogin()
+        public void ShowLogin(bool subOnly)
         {
-            Navigate(_kernel.Get<LoginViewVM>());
+            LoginViewVM vm = _kernel.Get<LoginViewVM>();
+
+            vm.SubOnly = subOnly;
+
+            Navigate(vm);
+        }
+
+        public void ShowSubOnlyAuth()
+        {
+            Navigate(_kernel.Get<SubOnlyAuthViewVM>());
+        }
+
+        public void ShowRevokeSubOnlyAuth()
+        {
+            Navigate(_kernel.Get<SubOnlyRevokeAuthViewVM>());
         }
 
         public void ShowWelcome()

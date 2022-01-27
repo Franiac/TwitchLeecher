@@ -7,10 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
+using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
@@ -18,6 +20,7 @@ namespace TwitchLeecher.Gui.ViewModels
     {
         #region Fields
 
+        private readonly IEventAggregator _eventAggregator;
         private readonly IApiService _apiService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
@@ -31,11 +34,14 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _downloadCommand;
         private ICommand _seachCommand;
 
+        private bool _isAuthenticatedSubOnly;
+
         #endregion Fields
 
         #region Constructors
 
         public SearchResultViewVM(
+            IEventAggregator eventAggregator,
             IApiService apiService,
             IDialogService dialogService,
             INavigationService navigationService,
@@ -43,6 +49,7 @@ namespace TwitchLeecher.Gui.ViewModels
             ISearchService searchService,
             IFilenameService filenameService)
         {
+            _eventAggregator = eventAggregator;
             _apiService = apiService;
             _dialogService = dialogService;
             _navigationService = navigationService;
@@ -53,6 +60,8 @@ namespace TwitchLeecher.Gui.ViewModels
             _searchService.PropertyChanged += SearchService_PropertyChanged;
 
             _commandLockObject = new object();
+
+            _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Subscribe(SubOnlyAuthChanged);
         }
 
         #endregion Constructors
@@ -111,6 +120,11 @@ namespace TwitchLeecher.Gui.ViewModels
         #endregion Properties
 
         #region Methods
+
+        private void SubOnlyAuthChanged(bool isAuthenticatedSubOnly)
+        {
+            _isAuthenticatedSubOnly = isAuthenticatedSubOnly;
+        }
 
         private void ViewVideo(string id)
         {
@@ -172,7 +186,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
                             if (!vodAuthInfo.Privileged && vodAuthInfo.SubOnly)
                             {
-                                _dialogService.ShowMessageBox("This video is sub-only! Twitch Leecher does not support sub-only video downloads, sorry :(", "SUB HYPE!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                if (_isAuthenticatedSubOnly)
+                                {
+                                    _dialogService.ShowMessageBox("This video is sub-only but you are not subscribed to the channel!", "Download", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                }
+                                else
+                                {
+                                    _dialogService.ShowMessageBox("This video is sub-only! You need to enable sub-only video download support first!", "Download", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                }
 
                                 return;
                             }

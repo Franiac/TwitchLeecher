@@ -2,7 +2,7 @@
 
 namespace TwitchLeecher.Core.Events
 {
-    public class AuthenticationResultEvent : PubSubEvent<bool>
+    public class SubOnlyAuthChangedEvent : PubSubEvent<bool>
     {
     }
 }

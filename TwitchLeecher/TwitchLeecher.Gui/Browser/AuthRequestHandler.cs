@@ -27,7 +27,7 @@ namespace TwitchLeecher.Gui.Browser
             {
                 void Navigate(Uri uri)
                 {
-                    _vm?.NavigatingCommand.Execute(uri);
+                    _vm?.CheckRedirectUrlCommand.Execute(uri);
                 }
 
                 if (!_dispatcher.CheckAccess())

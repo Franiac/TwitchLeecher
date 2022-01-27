@@ -13,8 +13,6 @@ namespace TwitchLeecher.Services.Services
         private readonly IEventAggregator _eventAggregator;
         private readonly IRuntimeDataService _runtimeDataService;
 
-        private TwitchAuthInfo _authInfo;
-
         #endregion Fields
 
         #region Constructors
@@ -33,55 +31,126 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
-        public string GetUsername()
+        private AuthInfo GetCurrentAuthInfo()
         {
-            return _authInfo?.Username;
+            AuthInfo curAuthInfo = _runtimeDataService.RuntimeData.AuthInfo;
+
+            if (curAuthInfo == null)
+            {
+                return new AuthInfo();
+            }
+
+            return curAuthInfo;
         }
 
-        public bool ValidateAuthentication(string accessToken)
+        public bool ValidateAuthentication(string accessToken, bool subOnly)
         {
+            AuthInfo authInfo = GetCurrentAuthInfo();
+
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
-                TwitchAuthInfo authInfo = _apiService.ValidateAuthentication(accessToken);
-
-                if (authInfo != null)
+                if (_apiService.ValidateAuthentication(accessToken, subOnly))
                 {
-                    _authInfo = authInfo;
+                    if (subOnly)
+                    {
+                        authInfo.AccessTokenSubOnly = accessToken;
+                    }
+                    else
+                    {
+                        authInfo.AccessToken = accessToken;
+                    }
 
-                    FireIsAuthorizedChanged();
+                    FireIsAuthorizedChanged(authInfo);
 
                     return true;
                 }
             }
 
-            RevokeAuthentication(accessToken);
+            _apiService.RevokeAuthentication(accessToken, subOnly);
+
+            if (subOnly)
+            {
+                RevokeAuthenticationSubOnly();
+            }
+            else
+            {
+                RevokeAuthentication();
+            }
 
             return false;
         }
 
         public void RevokeAuthentication()
         {
-            RevokeAuthentication(_authInfo?.AccessToken);
+            AuthInfo authInfo = GetCurrentAuthInfo();
+
+            if (!string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly))
+            {
+                RevokeAuthentication(authInfo, authInfo.AccessTokenSubOnly, true);
+            }
+
+            if (!string.IsNullOrWhiteSpace(authInfo.AccessToken))
+            {
+                RevokeAuthentication(authInfo, authInfo.AccessToken, false);
+            }
         }
 
-        public void RevokeAuthentication(string accessToken)
+        public void RevokeAuthenticationSubOnly()
+        {
+            AuthInfo authInfo = GetCurrentAuthInfo();
+
+            if (!string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly))
+            {
+                RevokeAuthentication(authInfo, authInfo.AccessTokenSubOnly, true);
+            }
+        }
+
+        private void RevokeAuthentication(AuthInfo authInfo, string accessToken, bool subOnly)
         {
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
-                _apiService.RevokeAuthentication(accessToken);
+                _apiService.RevokeAuthentication(accessToken, subOnly);
             }
 
-            _authInfo = null;
+            if (subOnly)
+            {
+                authInfo.AccessTokenSubOnly = null;
+            }
+            else
+            {
+                authInfo.AccessToken = null;
+            }
 
-            FireIsAuthorizedChanged();
+            FireIsAuthorizedChanged(authInfo);
         }
 
-        private void FireIsAuthorizedChanged()
+        private void FireIsAuthorizedChanged(AuthInfo authInfo)
         {
-            _runtimeDataService.RuntimeData.AccessToken = _authInfo?.AccessToken;
+            if (authInfo == null || (string.IsNullOrWhiteSpace(authInfo.AccessToken) && string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly)))
+            {
+                _runtimeDataService.RuntimeData.AuthInfo = null;
+            }
+            else
+            {
+                AuthInfo newAuthInfo = new AuthInfo();
+
+                if (!string.IsNullOrWhiteSpace(authInfo.AccessToken))
+                {
+                    newAuthInfo.AccessToken = authInfo.AccessToken;
+                }
+
+                if (!string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly))
+                {
+                    newAuthInfo.AccessTokenSubOnly = authInfo.AccessTokenSubOnly;
+                }
+
+                _runtimeDataService.RuntimeData.AuthInfo = newAuthInfo;
+            }
+
             _runtimeDataService.Save();
 
-            _eventAggregator.GetEvent<AuthenticatedChangedEvent>().Publish(_authInfo != null);
+            _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Publish(!string.IsNullOrWhiteSpace(authInfo.AccessTokenSubOnly));
+            _eventAggregator.GetEvent<AuthChangedEvent>().Publish(!string.IsNullOrWhiteSpace(authInfo.AccessToken));
         }
 
         #endregion Methods

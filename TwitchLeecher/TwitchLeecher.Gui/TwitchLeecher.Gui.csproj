@@ -54,6 +54,8 @@
     </Compile>
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
     <Compile Include="Browser\AuthRequestHandler.cs" />
+    <Compile Include="Browser\DeleteCookieVisitor.cs" />
+    <Compile Include="Browser\AuthCookieVisitor.cs" />
     <Compile Include="Controls\TlFadeContentControl.cs" />
     <Compile Include="Controls\TlIntegerUpDown.cs" />
     <Compile Include="Controls\TlScrollingTextBox.cs" />
@@ -82,6 +84,8 @@
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\SearchService.cs" />
+    <Compile Include="ViewModels\SubOnlyRevokeAuthViewVM.cs" />
+    <Compile Include="ViewModels\SubOnlyAuthViewVM.cs" />
     <Compile Include="ViewModels\AuthViewVM.cs" />
     <Compile Include="ViewModels\LogViewVM.cs" />
     <Compile Include="ViewModels\DownloadViewVM.cs" />
@@ -96,6 +100,12 @@
     <Compile Include="ViewModels\InfoViewVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WelcomeViewVM.cs" />
+    <Compile Include="Views\SubOnlyRevokeAuthView.xaml.cs">
+      <DependentUpon>SubOnlyRevokeAuthView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubOnlyAuthView.xaml.cs">
+      <DependentUpon>SubOnlyAuthView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
@@ -157,6 +167,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Theme\Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SubOnlyRevokeAuthView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SubOnlyAuthView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -261,11 +279,6 @@
     <PackageReference Include="WindowsAPICodePack-Shell">
       <Version>1.1.1</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Resources\Images\Connect.png">
-      <Link>Resources\Connect.png</Link>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\Resources\Images\Donate.png">

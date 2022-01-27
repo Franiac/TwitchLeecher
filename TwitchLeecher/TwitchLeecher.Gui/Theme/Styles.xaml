@@ -46,12 +46,47 @@
         <Setter Property="Width" Value="30" />
     </Style>
 
-    <Style x:Key="TlImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Width" Value="Auto" />
-        <Setter Property="Height" Value="Auto" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+    <ToolTip x:Key="AuthorizedToolTip">
+        <TextBlock Text="Sub-Ony video downlaod support is enabled" />
+    </ToolTip>
+
+    <ToolTip x:Key="UnauthorizedToolTip">
+        <TextBlock Text="Enable sub-ony video download support" />
+    </ToolTip>
+
+    <Style x:Key="SubOnlyButton" TargetType="Button" BasedOn="{StaticResource TlMiniButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" ToolTip="{StaticResource UnauthorizedToolTip}">
+                        <fa:ImageAwesome x:Name="icon" Icon="Star" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsAuthenticatedSubOnly}" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#FF00E600" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF00E600" />
+                            <Setter Property="ToolTip" TargetName="border" Value="{StaticResource AuthorizedToolTip}" />
+                        </DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsAuthenticatedSubOnly}" Value="True" />
+                                <Condition Binding="{Binding RelativeSource='{RelativeSource Self}', Path='IsMouseOver'}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="#FFAAFFAA" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FFAAFFAA" />
+                        </MultiDataTrigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <!-- /Button -->
 

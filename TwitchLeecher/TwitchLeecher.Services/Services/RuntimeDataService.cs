@@ -18,9 +18,6 @@ namespace TwitchLeecher.Services.Services
         private const string RUNTIMEDATA_EL = "RuntimeData";
         private const string RUNTIMEDATA_VERSION_ATTR = "Version";
 
-        private const string AUTH_EL = "Authentication";
-        private const string AUTH_ACCESSTOKEN_EL = "AccessToken";
-
         private const string APP_EL = "Application";
 
         #endregion Constants
@@ -78,14 +75,14 @@ namespace TwitchLeecher.Services.Services
                 runtimeDataEl.Add(new XAttribute(RUNTIMEDATA_VERSION_ATTR, _tlVersion));
                 doc.Add(runtimeDataEl);
 
-                if (!string.IsNullOrWhiteSpace(runtimeData.AccessToken))
+                if (runtimeData.AuthInfo != null)
                 {
-                    XElement authEl = new XElement(AUTH_EL);
-                    runtimeDataEl.Add(authEl);
+                    XElement authenticationEl = runtimeData.AuthInfo.GetXml();
 
-                    XElement accessTokenEl = new XElement(AUTH_ACCESSTOKEN_EL);
-                    accessTokenEl.SetValue(runtimeData.AccessToken);
-                    authEl.Add(accessTokenEl);
+                    if (authenticationEl.HasElements)
+                    {
+                        runtimeDataEl.Add(authenticationEl);
+                    }
                 }
 
                 if (runtimeData.MainWindowInfo != null)
@@ -107,6 +104,8 @@ namespace TwitchLeecher.Services.Services
                 string configFile = Path.Combine(appDataFolder, RUNTIMEDATA_FILE);
 
                 doc.Save(configFile);
+
+                _runtimeData = runtimeData;
             }
         }
 
@@ -140,22 +139,17 @@ namespace TwitchLeecher.Services.Services
                             runtimeData.Version = new Version(1, 0);
                         }
 
-                        XElement authEl = runtimeDataEl.Element(AUTH_EL);
+                        XElement authenticationEl = runtimeDataEl.Element(AuthInfo.AUTHENTICATION_EL);
 
-                        if (authEl != null)
+                        if (authenticationEl != null)
                         {
-                            XElement accessTokenEl = authEl.Element(AUTH_ACCESSTOKEN_EL);
-
-                            if (accessTokenEl != null)
+                            try
                             {
-                                try
-                                {
-                                    runtimeData.AccessToken = accessTokenEl.GetValueAsString();
-                                }
-                                catch
-                                {
-                                    // Value from config file could not be loaded, use default value
-                                }
+                                runtimeData.AuthInfo = AuthInfo.GetFromXml(authenticationEl);
+                            }
+                            catch
+                            {
+                                // Value from config file could not be loaded, use default value
                             }
                         }
 

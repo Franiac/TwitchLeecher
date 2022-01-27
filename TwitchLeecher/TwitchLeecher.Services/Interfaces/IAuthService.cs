@@ -2,10 +2,10 @@
 {
     public interface IAuthService
     {
-        string GetUsername();
-
-        bool ValidateAuthentication(string accessToken);
+        bool ValidateAuthentication(string accessToken, bool subOnly);
 
         void RevokeAuthentication();
+
+        void RevokeAuthenticationSubOnly();
     }
 }

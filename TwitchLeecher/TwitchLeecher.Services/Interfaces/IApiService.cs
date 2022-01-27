@@ -6,9 +6,9 @@ namespace TwitchLeecher.Services.Interfaces
 {
     public interface IApiService
     {
-        TwitchAuthInfo ValidateAuthentication(string accessToken);
+        bool ValidateAuthentication(string accessToken, bool subOnly);
 
-        void RevokeAuthentication(string accessToken);
+        void RevokeAuthentication(string accessToken, bool subOnly);
 
         TwitchVideoAuthInfo GetVodAuthInfo(string id);
 

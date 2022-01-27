@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Windows.Input;
 using TwitchLeecher.Gui.Interfaces;
+using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class AuthViewVM : ViewModelBase
+    public class SubOnlyRevokeAuthViewVM : ViewModelBase
     {
         #region Fields
 
+        private readonly IAuthService _authService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
 
-        private ICommand _connectCommand;
+        private ICommand _disableSubOnlyCommand;
 
         private readonly object _commandLockObject;
 
@@ -20,10 +22,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructor
 
-        public AuthViewVM(
+        public SubOnlyRevokeAuthViewVM(
+            IAuthService authService,
             IDialogService dialogService,
             INavigationService navigationService)
         {
+            _authService = authService;
             _dialogService = dialogService;
             _navigationService = navigationService;
 
@@ -34,16 +38,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public ICommand ConnectCommand
+        public ICommand DisableSubOnlyCommand
         {
             get
             {
-                if (_connectCommand == null)
+                if (_disableSubOnlyCommand == null)
                 {
-                    _connectCommand = new DelegateCommand(Connect);
+                    _disableSubOnlyCommand = new DelegateCommand(DisableSubOnly);
                 }
 
-                return _connectCommand;
+                return _disableSubOnlyCommand;
             }
         }
 
@@ -51,13 +55,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Methods
 
-        private void Connect()
+        private void DisableSubOnly()
         {
             try
             {
                 lock (_commandLockObject)
                 {
-                    _navigationService.ShowLogin(false);
+                    _authService.RevokeAuthenticationSubOnly();
+                    _navigationService.ShowSubOnlyAuth();
                 }
             }
             catch (Exception ex)

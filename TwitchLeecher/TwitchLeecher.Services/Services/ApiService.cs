@@ -61,7 +61,7 @@ namespace TwitchLeecher.Services.Services
         {
             WebClient wc = new WebClient();
             wc.Headers.Add("Client-ID", Constants.ClientId);
-            wc.Headers.Add("Authorization", $"Bearer { _runtimeDataService.RuntimeData.AccessToken }");
+            wc.Headers.Add("Authorization", $"Bearer { _runtimeDataService.RuntimeData.AuthInfo.AccessToken }");
 
             return wc;
         }
@@ -70,6 +70,13 @@ namespace TwitchLeecher.Services.Services
         {
             WebClient wc = new WebClient();
             wc.Headers.Add("Client-ID", Constants.ClientIdWeb);
+
+            string accessTokenSubOnly = _runtimeDataService.RuntimeData.AuthInfo.AccessTokenSubOnly;
+
+            if (!string.IsNullOrWhiteSpace(accessTokenSubOnly))
+            {
+                wc.Headers.Add("Authorization", $"OAuth { accessTokenSubOnly }");
+            }
 
             return wc;
         }
@@ -99,16 +106,16 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
-        public TwitchAuthInfo ValidateAuthentication(string accessToken)
+        public bool ValidateAuthentication(string accessToken, bool subOnly)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
-                return null;
+                return false;
             }
 
             using (WebClient webClient = new WebClient())
             {
-                webClient.Headers.Add(HttpRequestHeader.Authorization, $"Bearer { accessToken }");
+                webClient.Headers.Add("Authorization", $"Bearer { accessToken }");
 
                 string jsonStr = null;
 
@@ -119,7 +126,7 @@ namespace TwitchLeecher.Services.Services
                 catch (WebException)
                 {
                     // Any WebException indicates that the access token could not be verified
-                    return null;
+                    return false;
                 }
 
                 if (!string.IsNullOrWhiteSpace(jsonStr))
@@ -132,18 +139,20 @@ namespace TwitchLeecher.Services.Services
                         string userId = json.Value<string>("user_id");
                         string clientId = json.Value<string>("client_id");
 
-                        if (!string.IsNullOrWhiteSpace(login) && !string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(clientId) && clientId.Equals(Constants.ClientId, StringComparison.OrdinalIgnoreCase))
+                        string checkClientId = subOnly ? Constants.ClientIdWeb : Constants.ClientId;
+
+                        if (!string.IsNullOrWhiteSpace(login) && !string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(clientId) && clientId.Equals(checkClientId, StringComparison.OrdinalIgnoreCase))
                         {
-                            return new TwitchAuthInfo(accessToken, login, userId);
+                            return true;
                         }
                     }
                 }
             }
 
-            return null;
+            return false;
         }
 
-        public void RevokeAuthentication(string accessToken)
+        public void RevokeAuthentication(string accessToken, bool subOnly)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -152,7 +161,7 @@ namespace TwitchLeecher.Services.Services
 
             using (WebClient webClient = new WebClient())
             {
-                webClient.QueryString.Add("client_id", Constants.ClientId);
+                webClient.QueryString.Add("client_id", subOnly ? Constants.ClientIdWeb : Constants.ClientId);
                 webClient.QueryString.Add("token", accessToken);
 
                 try

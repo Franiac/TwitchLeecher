@@ -5,14 +5,14 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class AuthViewVM : ViewModelBase
+    public class SubOnlyAuthViewVM : ViewModelBase
     {
         #region Fields
 
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
 
-        private ICommand _connectCommand;
+        private ICommand _enableSubOnlyCommand;
 
         private readonly object _commandLockObject;
 
@@ -20,7 +20,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructor
 
-        public AuthViewVM(
+        public SubOnlyAuthViewVM(
             IDialogService dialogService,
             INavigationService navigationService)
         {
@@ -34,16 +34,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Properties
 
-        public ICommand ConnectCommand
+        public ICommand EnableSubOnlyCommand
         {
             get
             {
-                if (_connectCommand == null)
+                if (_enableSubOnlyCommand == null)
                 {
-                    _connectCommand = new DelegateCommand(Connect);
+                    _enableSubOnlyCommand = new DelegateCommand(EnableSubOnly);
                 }
 
-                return _connectCommand;
+                return _enableSubOnlyCommand;
             }
         }
 
@@ -51,13 +51,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Methods
 
-        private void Connect()
+        private void EnableSubOnly()
         {
             try
             {
                 lock (_commandLockObject)
                 {
-                    _navigationService.ShowLogin(false);
+                    _navigationService.ShowLogin(true);
                 }
             }
             catch (Exception ex)

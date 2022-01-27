@@ -6,7 +6,11 @@ namespace TwitchLeecher.Gui.Interfaces
     {
         void ShowAuth();
 
-        void ShowLogin();
+        void ShowLogin(bool subOnly);
+
+        void ShowSubOnlyAuth();
+
+        void ShowRevokeSubOnlyAuth();
 
         void ShowWelcome();
 
