@@ -19,9 +19,7 @@ namespace TwitchLeecher.Setup.Gui.Views
         {
             try
             {
-                CustomizeDlgVM installFolderDlgVM = DataContext as CustomizeDlgVM;
-
-                if (installFolderDlgVM == null)
+                if (!(DataContext is CustomizeDlgVM installFolderDlgVM))
                 {
                     throw new ApplicationException("DataContext is not set to an instance of type '" + typeof(CustomizeDlgVM).FullName + "'!");
                 }

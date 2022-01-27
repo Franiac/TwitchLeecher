@@ -10,9 +10,9 @@ namespace TwitchLeecher.Setup.Gui.Converters
         {
             bool flag = false;
 
-            if (value is bool)
+            if (value is bool boolean)
             {
-                flag = (bool)value;
+                flag = boolean;
             }
             else if (value is bool?)
             {
@@ -25,9 +25,9 @@ namespace TwitchLeecher.Setup.Gui.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is Visibility)
+            if (value is Visibility visibility)
             {
-                return ((Visibility)value) != Visibility.Visible;
+                return visibility != Visibility.Visible;
             }
             else
             {

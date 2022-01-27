@@ -14,10 +14,10 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
     {
         #region Fields
 
-        private SetupApplication _bootstrapper;
+        private readonly SetupApplication _bootstrapper;
 
-        private IGuiService _guiService;
-        private IUacService _uacService;
+        private readonly IGuiService _guiService;
+        private readonly IUacService _uacService;
 
         private Dictionary<Type, DlgBaseVM> _viewModels;
 

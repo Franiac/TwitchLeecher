@@ -2,7 +2,6 @@
 using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 using Microsoft.Win32;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,16 +31,14 @@ namespace TwitchLeecher.Setup.Gui
 
         #region Fields
 
-        private ConcurrentDictionary<string, BootstrapperProcess> _runningProcesses;
+        private readonly AutoResetEvent _detectCompleteHandle;
+        private readonly AutoResetEvent _applyCompleteHandle;
 
         private WizardWindow _wizardWindow;
         private WizardWindowVM _wizardWindowVM;
         private Dispatcher _uiThreadDispatcher;
         private IGuiService _guiService;
         private IUacService _uacService;
-
-        private AutoResetEvent _detectCompleteHandle;
-        private AutoResetEvent _applyCompleteHandle;
 
         private volatile bool _cancelProgressRequested;
 
@@ -77,8 +74,6 @@ namespace TwitchLeecher.Setup.Gui
 
         public SetupApplication()
         {
-            _runningProcesses = new ConcurrentDictionary<string, BootstrapperProcess>();
-
             _detectCompleteHandle = new AutoResetEvent(false);
             _applyCompleteHandle = new AutoResetEvent(false);
         }
@@ -576,7 +571,7 @@ namespace TwitchLeecher.Setup.Gui
             if (files != null || files.Count > 0)
             {
                 // Format 1
-                if (int.TryParse(files[0], out int tryInt))
+                if (int.TryParse(files[0], out _))
                 {
                     for (int i = 0; i < files.Count; i += 2)
                     {
@@ -589,7 +584,7 @@ namespace TwitchLeecher.Setup.Gui
                     }
                 }
                 // Format 2
-                else if (int.TryParse(files[1], out tryInt))
+                else if (int.TryParse(files[1], out _))
                 {
                     for (int i = 0; i < files.Count; i += 2)
                     {

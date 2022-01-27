@@ -47,11 +47,11 @@ namespace TwitchLeecher.Setup.Gui.Command
         {
             if (_canExecutePar == null)
             {
-                return _canExecute == null ? true : _canExecute();
+                return _canExecute == null || _canExecute();
             }
             else
             {
-                return _canExecutePar == null ? true : _canExecutePar(parameter);
+                return _canExecutePar == null || _canExecutePar(parameter);
             }
         }
 
