@@ -5,7 +5,7 @@ namespace TwitchLeecher.Gui.Browser
 {
     public class DeleteCookieVisitor : ICookieVisitor
     {
-        private static List<string> keep = new List<string>()
+        private static readonly List<string> keep = new List<string>()
         {
             "api_token",
             "server_session_id",
