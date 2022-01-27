@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using TwitchLeecher.Shared.Extensions;
+using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -8,6 +10,10 @@ namespace TwitchLeecher.Gui.Views
         public StartupErrorView()
         {
             InitializeComponent();
+
+            AssemblyUtil au = AssemblyUtil.Get;
+
+            Title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();
         }
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
