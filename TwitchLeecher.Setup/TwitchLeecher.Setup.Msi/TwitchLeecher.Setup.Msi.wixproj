@@ -13,13 +13,16 @@
     <OutputPath>bin\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
+    <SuppressIces>ICE03</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <SuppressIces>ICE03</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actions\CustomActions.wxs" />
+    <Compile Include="Features\FeatureVCRedist.wxs" />
     <Compile Include="Features\FeatureTL.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UI\Texts\Texts.wxs" />
