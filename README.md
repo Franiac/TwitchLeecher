@@ -12,15 +12,16 @@ If you are looking for an extremely fast and easy to use Twitch VOD downloader, 
 
 ![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14.jpg)
 
-## Is this project alive?????
+## Is this project alive?
 
 Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was and still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I decide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
 
 ## Download & Requirements
-- Requires .NET Framework 4.8
 - Requires Windows 7 SP1 64 Bit or higher
+- Requires [.NET Framework 4.8](https://support.microsoft.com/en-us/topic/microsoft-net-framework-4-8-offline-installer-for-windows-9d23f658-3b97-68ab-d013-aa3c3e7495e0)
+- Requires [Visual C++ 14 Runtime](https://aka.ms/vs/17/release/vc_redist.x64.exe) on Windows 8.1 or lower
 
-The Installer is available [HERE](https://github.com/Franiac/TwitchLeecher/releases)
+The latest Installer is available [HERE](https://github.com/Franiac/TwitchLeecher/releases)
 
 Once installed, future releases will automatically update current installations with a single click!
 
@@ -33,11 +34,14 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Very easy to use, no manual needed
 - Intuitive and stylish GUI
 - Up to 20 times faster download speed compared to direct download with FFMPEG
-- Browse your past broadcasts and highlights within the application
+- Browse your past broadcasts, uploads and highlights within the application
 - Search channels, VOD urls and VOD IDs
+- Sub-Only video download support
+- Audio-Only download support
 - Time Selection for VOD downloads
 - Queue multiple downloads
 - Specify default search parameters
+- Specify default download quality
 - Specify default download folders
 - Specify a filename template with wildcards for your downloads
 - Developed by an experienced Software Engineer
