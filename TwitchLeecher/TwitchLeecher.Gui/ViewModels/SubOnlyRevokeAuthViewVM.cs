@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
@@ -12,6 +13,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private readonly IAuthService _authService;
         private readonly IDialogService _dialogService;
+        private readonly IDownloadService _downloadService;
         private readonly INavigationService _navigationService;
 
         private ICommand _disableSubOnlyCommand;
@@ -25,10 +27,12 @@ namespace TwitchLeecher.Gui.ViewModels
         public SubOnlyRevokeAuthViewVM(
             IAuthService authService,
             IDialogService dialogService,
+            IDownloadService downloadService,
             INavigationService navigationService)
         {
             _authService = authService;
             _dialogService = dialogService;
+            _downloadService = downloadService;
             _navigationService = navigationService;
 
             _commandLockObject = new object();
@@ -61,6 +65,21 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
+                    _downloadService.Pause();
+
+                    if (!_downloadService.CanShutdown())
+                    {
+                        MessageBoxResult result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and disable sub-only support?", "Active Downloads", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                        if (result == MessageBoxResult.No)
+                        {
+                            _downloadService.Resume();
+                            return;
+                        }
+                    }
+
+                    _downloadService.Shutdown();
+
                     _authService.RevokeAuthenticationSubOnly();
                     _navigationService.ShowSubOnlyAuth();
                 }
