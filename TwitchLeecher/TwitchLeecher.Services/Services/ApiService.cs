@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -57,9 +58,17 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
+        private WebClient CreateWebClientWithEncoding()
+        {
+            return new WebClient()
+            {
+                Encoding = Encoding.UTF8
+            };
+        }
+
         private WebClient CreateApiWebClient()
         {
-            WebClient wc = new WebClient();
+            WebClient wc = CreateWebClientWithEncoding();
             wc.Headers.Add("Client-ID", Constants.ClientId);
             wc.Headers.Add("Authorization", $"Bearer { _runtimeDataService.RuntimeData.AuthInfo.AccessToken }");
 
@@ -68,7 +77,7 @@ namespace TwitchLeecher.Services.Services
 
         private WebClient CreateGqlWebClient()
         {
-            WebClient wc = new WebClient();
+            WebClient wc = CreateWebClientWithEncoding();
             wc.Headers.Add("Client-ID", Constants.ClientIdWeb);
 
             string accessTokenSubOnly = _runtimeDataService.RuntimeData.AuthInfo.AccessTokenSubOnly;
@@ -113,7 +122,7 @@ namespace TwitchLeecher.Services.Services
                 return false;
             }
 
-            using (WebClient webClient = new WebClient())
+            using (WebClient webClient = CreateWebClientWithEncoding())
             {
                 webClient.Headers.Add("Authorization", $"Bearer { accessToken }");
 
@@ -159,7 +168,7 @@ namespace TwitchLeecher.Services.Services
                 return;
             }
 
-            using (WebClient webClient = new WebClient())
+            using (WebClient webClient = CreateWebClientWithEncoding())
             {
                 webClient.QueryString.Add("client_id", subOnly ? Constants.ClientIdWeb : Constants.ClientId);
                 webClient.QueryString.Add("token", accessToken);
@@ -567,7 +576,7 @@ namespace TwitchLeecher.Services.Services
 
         public Dictionary<TwitchVideoQuality, string> GetPlaylistInfo(string vodId, TwitchVideoAuthInfo vodAuthInfo)
         {
-            using (WebClient webClient = new WebClient())
+            using (WebClient webClient = CreateWebClientWithEncoding())
             {
                 webClient.Headers.Add("Accept", "*/*");
 
