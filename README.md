@@ -1,6 +1,6 @@
 # CAUTION!!! FAKE TWITCH LEECHER WEBSITE!!!
 
-**There is a FAKE website [https://tleecher.com](https://tleecher.com) providing a download link for Twitch Leecher.**
+**There is a FAKE website https://tleecher.com providing a download link for Twitch Leecher.**
 
 **This site has nothing to do with Twitch Leecher and only provides MALWARE!**
 
