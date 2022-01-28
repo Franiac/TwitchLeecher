@@ -63,19 +63,6 @@
 
 		<!-- FEATURES -->
 		<Feature
-			Id="FeatureVCRedist"
-			Title="VCRedist"
-			Description="VCRedist"
-			Level="1"
-			AllowAdvertise="no"
-			InstallDefault="local"
-			TypicalDefault="install"
-			Absent="disallow"
-			Display="hidden">
-			<MergeRef Id="VCRedist" />
-		</Feature>
-
-		<Feature
 			Id="FeatureTL"
 			Title="$(var.TL_PRODUCT_NAME) $(var.TL_PRODUCT_VERSION_TRIMMED)"
 			Description="$(var.TL_PRODUCT_NAME) $(var.TL_PRODUCT_VERSION_TRIMMED)"
@@ -85,6 +72,7 @@
 			InstallDefault="local"
 			TypicalDefault="install"
 			Absent="disallow">
+			<ComponentGroupRef Id="FeatureVCRuntimeComponents" />
 			<ComponentGroupRef Id="FeatureTLStartMenuComponents" />
 			<ComponentGroupRef Id="FeatureTLRegistryComponents" />
 			<ComponentGroupRef Id="FeatureTLComponents" />

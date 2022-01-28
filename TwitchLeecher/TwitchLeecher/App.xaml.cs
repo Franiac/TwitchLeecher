@@ -1,7 +1,6 @@
 ﻿using Ninject;
 using System;
 using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,21 +47,8 @@ namespace TwitchLeecher
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.DefaultConnectionLimit = 10;
 
-            if (!CheckVCRuntime())
-            {
-                MainWindow = _kernel.Get<StartupErrorView>();
-                MainWindow.Show();
-            }
-            else
-            {
-                MainWindow = _kernel.Get<MainWindow>();
-                MainWindow.Show();
-            }
-        }
-
-        private bool CheckVCRuntime()
-        {
-            return File.Exists(Path.Combine(Environment.SystemDirectory, "ucrtbase.dll"));
+            MainWindow = _kernel.Get<MainWindow>();
+            MainWindow.Show();
         }
 
         private IKernel CreateKernel()

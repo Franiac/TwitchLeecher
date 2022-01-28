@@ -31,8 +31,11 @@ namespace TwitchLeecher.Shared.Events
             {
                 if (!_events.TryGetValue(typeof(TEventType), out EventBase existingEvent))
                 {
-                    TEventType newEvent = new TEventType();
-                    newEvent.SynchronizationContext = _syncContext;
+                    TEventType newEvent = new TEventType
+                    {
+                        SynchronizationContext = _syncContext
+                    };
+
                     _events[typeof(TEventType)] = newEvent;
 
                     return newEvent;
