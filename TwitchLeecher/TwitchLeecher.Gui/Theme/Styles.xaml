@@ -47,11 +47,11 @@
     </Style>
 
     <ToolTip x:Key="AuthorizedToolTip">
-        <TextBlock Text="Sub-Ony video downlaod support is enabled" />
+        <TextBlock Text="Sub-Only video download support is enabled" />
     </ToolTip>
 
     <ToolTip x:Key="UnauthorizedToolTip">
-        <TextBlock Text="Enable sub-ony video download support" />
+        <TextBlock Text="Enable sub-only video download support" />
     </ToolTip>
 
     <Style x:Key="SubOnlyButton" TargetType="Button" BasedOn="{StaticResource TlMiniButton}">
