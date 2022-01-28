@@ -19,7 +19,6 @@ Yes! Just because there are no commits for a longer period of time, does not mea
 ## Download & Requirements
 - Requires Windows 7 SP1 64 Bit or higher
 - Requires [.NET Framework 4.8](https://support.microsoft.com/en-us/topic/microsoft-net-framework-4-8-offline-installer-for-windows-9d23f658-3b97-68ab-d013-aa3c3e7495e0)
-- Requires [Visual C++ 14 Runtime](https://aka.ms/vs/17/release/vc_redist.x64.exe) on Windows 8.1 or lower
 
 The latest Installer is available [HERE](https://github.com/Franiac/TwitchLeecher/releases)
 
