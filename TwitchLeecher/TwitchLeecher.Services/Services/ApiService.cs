@@ -502,6 +502,11 @@ namespace TwitchLeecher.Services.Services
 
                 JToken vpaToken = accessTokenJson.SelectToken("$.data.videoPlaybackAccessToken", false);
 
+                if (vpaToken == null)
+                {
+                    throw new ApplicationException("The video playback access token is null!");
+                }
+
                 string token = Uri.EscapeDataString(vpaToken.Value<string>("value"));
                 string signature = vpaToken.Value<string>("signature");
 
