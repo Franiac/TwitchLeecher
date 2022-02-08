@@ -13,6 +13,8 @@ namespace TwitchLeecher.Services.Services
         private readonly IEventAggregator _eventAggregator;
         private readonly IRuntimeDataService _runtimeDataService;
 
+        private bool _isAuthenticatedSubOnly;
+
         #endregion Fields
 
         #region Constructors
@@ -25,11 +27,30 @@ namespace TwitchLeecher.Services.Services
             _apiService = apiService;
             _eventAggregator = eventAggregator;
             _runtimeDataService = runtimeDataService;
+
+            _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Subscribe(SubOnlyAuthChanged);
         }
 
         #endregion Constructors
 
+        #region Properties
+
+        public bool IsAuthenticatedSubOnly
+        {
+            get
+            {
+                return _isAuthenticatedSubOnly;
+            }
+        }
+
+        #endregion Properties
+
         #region Methods
+
+        private void SubOnlyAuthChanged(bool isAuthenticatedSubOnly)
+        {
+            _isAuthenticatedSubOnly = isAuthenticatedSubOnly;
+        }
 
         private AuthInfo GetCurrentAuthInfo()
         {

@@ -43,6 +43,7 @@ namespace TwitchLeecher.Gui.ViewModels
         public SearchResultViewVM(
             IEventAggregator eventAggregator,
             IApiService apiService,
+            IAuthService authService,
             IDialogService dialogService,
             INavigationService navigationService,
             IPreferencesService preferencesService,
@@ -62,6 +63,8 @@ namespace TwitchLeecher.Gui.ViewModels
             _commandLockObject = new object();
 
             _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Subscribe(SubOnlyAuthChanged);
+
+            _isAuthenticatedSubOnly = authService.IsAuthenticatedSubOnly;
         }
 
         #endregion Constructors
