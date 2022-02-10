@@ -619,7 +619,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 CefSettings settings = new CefSettings()
                 {
-                    CachePath = cachePath
+                    CachePath = cachePath,
+                    LogSeverity = LogSeverity.Disable
                 };
 
                 Cef.Initialize(settings);
