@@ -4,6 +4,13 @@ namespace TwitchLeecher.Core.Models
 {
     public class TwitchVideoQuality : IComparable<TwitchVideoQuality>
     {
+        #region Constants
+
+        private const string SOURCE_ID = "chunked";
+        private const string AUDIO_ONLY_ID = "audio_only";
+
+        #endregion Constants
+
         #region Constructors
 
         public TwitchVideoQuality(string id, string name, string resolution = null)
@@ -35,6 +42,10 @@ namespace TwitchLeecher.Core.Models
 
         public string DisplayString { get; private set; }
 
+        public bool IsSource { get; private set; }
+
+        public bool IsAudioOnly { get; private set; }
+
         #endregion Properties
 
         #region Methods
@@ -55,6 +66,9 @@ namespace TwitchLeecher.Core.Models
             DisplayString = displayString;
 
             VerticalResolution = GetVerticalResolution(resolution);
+
+            IsSource = id.Equals(SOURCE_ID, StringComparison.Ordinal);
+            IsAudioOnly = id.Equals(AUDIO_ONLY_ID, StringComparison.Ordinal);
         }
 
         private int GetVerticalResolution(string resolution)

@@ -4,9 +4,16 @@ namespace TwitchLeecher.Core.Models
 {
     public class DefaultQuality
     {
+        #region Static Fields
+
+        public static int SOURCE_RES = 1080;
+        public static int AUDIO_ONLY_RES = 0;
+
+        #endregion Static Fields
+
         #region Constructors
 
-        public DefaultQuality(int resolution, string displayString, bool isSource)
+        public DefaultQuality(int resolution, string displayString)
         {
             if (string.IsNullOrWhiteSpace(displayString))
             {
@@ -15,7 +22,8 @@ namespace TwitchLeecher.Core.Models
 
             VerticalResolution = resolution;
             DisplayString = displayString;
-            IsSource = isSource;
+            IsSource = resolution == SOURCE_RES;
+            IsAudioOnly = resolution == AUDIO_ONLY_RES;
         }
 
         #endregion Constructors
@@ -27,6 +35,8 @@ namespace TwitchLeecher.Core.Models
         public string DisplayString { get; }
 
         public bool IsSource { get; }
+
+        public bool IsAudioOnly { get; }
 
         #endregion Properties
 

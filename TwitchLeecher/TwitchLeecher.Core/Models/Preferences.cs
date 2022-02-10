@@ -13,11 +13,12 @@ namespace TwitchLeecher.Core.Models
         #region Static Fields
 
         public static List<DefaultQuality> DefaultQualities = new List<DefaultQuality>() {
-            new DefaultQuality(1080, "Source", true),
-            new DefaultQuality(720, "720p", false),
-            new DefaultQuality(480, "480p", false),
-            new DefaultQuality(360, "360p", false),
-            new DefaultQuality(160, "160p", false)
+            new DefaultQuality(DefaultQuality.SOURCE_RES, "Source"),
+            new DefaultQuality(720, "720p"),
+            new DefaultQuality(480, "480p"),
+            new DefaultQuality(360, "360p"),
+            new DefaultQuality(160, "160p"),
+            new DefaultQuality(DefaultQuality.AUDIO_ONLY_RES, "Audio Only")
         };
 
         #endregion Static Fields

@@ -235,16 +235,34 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private TwitchVideoQuality GetSelectedQuality(List<TwitchVideoQuality> qualities, DefaultQuality defaultQuality)
         {
+            TwitchVideoQuality sourceQuality = qualities.Find(q => q.IsSource);
+
             if (defaultQuality.IsSource)
             {
-                return qualities.First();
+                return sourceQuality;
             }
+
+            if (defaultQuality.IsAudioOnly)
+            {
+                TwitchVideoQuality audioOnlyQuality = qualities.FirstOrDefault(q => q.IsAudioOnly);
+
+                if (audioOnlyQuality != null)
+                {
+                    return audioOnlyQuality;
+                }
+                else
+                {
+                    return sourceQuality;
+                }
+            }
+
+            IEnumerable<TwitchVideoQuality> visualQualities = qualities.Where(q => !q.IsAudioOnly);
 
             int defaultRes = defaultQuality.VerticalResolution;
 
             TwitchVideoQuality selectedQuality = null;
 
-            foreach (TwitchVideoQuality quality in qualities)
+            foreach (TwitchVideoQuality quality in visualQualities)
             {
                 if (quality.VerticalResolution <= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution < quality.VerticalResolution))
                 {
@@ -257,7 +275,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 return selectedQuality;
             }
 
-            foreach (TwitchVideoQuality quality in qualities)
+            foreach (TwitchVideoQuality quality in visualQualities)
             {
                 if (quality.VerticalResolution >= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution > quality.VerticalResolution))
                 {
@@ -270,7 +288,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 return selectedQuality;
             }
 
-            return qualities.First();
+            return sourceQuality;
         }
 
         public void ShowSearch()
