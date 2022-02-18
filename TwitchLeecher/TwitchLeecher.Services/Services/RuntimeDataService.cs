@@ -120,58 +120,65 @@ namespace TwitchLeecher.Services.Services
                     Version = _tlVersion
                 };
 
-                if (File.Exists(configFile))
+                try
                 {
-                    XDocument doc = XDocument.Load(configFile);
-
-                    XElement runtimeDataEl = doc.Root;
-
-                    if (runtimeDataEl != null)
+                    if (File.Exists(configFile))
                     {
-                        XAttribute rtVersionAttr = runtimeDataEl.Attribute(RUNTIMEDATA_VERSION_ATTR);
+                        XDocument doc = XDocument.Load(configFile);
 
-                        if (rtVersionAttr != null && Version.TryParse(rtVersionAttr.Value, out Version rtVersion))
-                        {
-                            runtimeData.Version = rtVersion;
-                        }
-                        else
-                        {
-                            runtimeData.Version = new Version(1, 0);
-                        }
+                        XElement runtimeDataEl = doc.Root;
 
-                        XElement authenticationEl = runtimeDataEl.Element(AuthInfo.AUTHENTICATION_EL);
-
-                        if (authenticationEl != null)
+                        if (runtimeDataEl != null)
                         {
-                            try
+                            XAttribute rtVersionAttr = runtimeDataEl.Attribute(RUNTIMEDATA_VERSION_ATTR);
+
+                            if (rtVersionAttr != null && Version.TryParse(rtVersionAttr.Value, out Version rtVersion))
                             {
-                                runtimeData.AuthInfo = AuthInfo.GetFromXml(authenticationEl);
+                                runtimeData.Version = rtVersion;
                             }
-                            catch
+                            else
                             {
-                                // Value from config file could not be loaded, use default value
+                                runtimeData.Version = new Version(1, 0);
                             }
-                        }
 
-                        XElement applicationEl = runtimeDataEl.Element(APP_EL);
+                            XElement authenticationEl = runtimeDataEl.Element(AuthInfo.AUTHENTICATION_EL);
 
-                        if (applicationEl != null)
-                        {
-                            XElement mainWindowInfoEl = applicationEl.Element(MainWindowInfo.MAINWINDOW_EL);
-
-                            if (mainWindowInfoEl != null)
+                            if (authenticationEl != null)
                             {
                                 try
                                 {
-                                    runtimeData.MainWindowInfo = MainWindowInfo.GetFromXml(mainWindowInfoEl);
+                                    runtimeData.AuthInfo = AuthInfo.GetFromXml(authenticationEl);
                                 }
                                 catch
                                 {
                                     // Value from config file could not be loaded, use default value
                                 }
                             }
+
+                            XElement applicationEl = runtimeDataEl.Element(APP_EL);
+
+                            if (applicationEl != null)
+                            {
+                                XElement mainWindowInfoEl = applicationEl.Element(MainWindowInfo.MAINWINDOW_EL);
+
+                                if (mainWindowInfoEl != null)
+                                {
+                                    try
+                                    {
+                                        runtimeData.MainWindowInfo = MainWindowInfo.GetFromXml(mainWindowInfoEl);
+                                    }
+                                    catch
+                                    {
+                                        // Value from config file could not be loaded, use default value
+                                    }
+                                }
+                            }
                         }
                     }
+                }
+                catch
+                {
+                    // For whatever reason, the runtime.xml could not be loaded
                 }
 
                 return runtimeData;
