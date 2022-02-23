@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace TwitchLeecher.Shared.Communication
 {
@@ -17,9 +18,11 @@ namespace TwitchLeecher.Shared.Communication
 
         private readonly string _pipeName;
 
-        private bool _isRunning;
+        private bool _started;
 
-        private Thread _worker;
+        private Task _worker;
+
+        private CancellationTokenSource _cancellationTokenSource;
 
         #endregion Fields
 
@@ -47,46 +50,64 @@ namespace TwitchLeecher.Shared.Communication
 
         public void StartServer()
         {
-            _worker = new Thread((pipeName) =>
+            if (!_started)
             {
-                _isRunning = true;
+                _started = true;
 
-                while (true)
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                CancellationToken cancellationToken = _cancellationTokenSource.Token;
+
+                _worker = Task.Run(() =>
                 {
-                    string text;
-
-                    using (NamedPipeServerStream server = new NamedPipeServerStream(pipeName as string))
+                    while (true)
                     {
-                        server.WaitForConnection();
+                        string text;
 
-                        using (StreamReader reader = new StreamReader(server))
+                        using (NamedPipeServerStream server = new NamedPipeServerStream(_pipeName))
                         {
-                            text = reader.ReadToEnd();
+                            server.WaitForConnection();
+
+                            using (StreamReader reader = new StreamReader(server))
+                            {
+                                text = reader.ReadToEnd();
+                            }
+                        }
+
+                        if (text == SHUTDOWN_MESSAGE)
+                        {
+                            break;
+                        }
+
+                        OnMessage?.Invoke(text);
+
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
                         }
                     }
-
-                    if (text == SHUTDOWN_MESSAGE)
-                    {
-                        break;
-                    }
-
-                    OnMessage?.Invoke(text);
-
-                    if (_isRunning == false)
-                    {
-                        break;
-                    }
-                }
-            });
-
-            _worker.Start(_pipeName);
+                }, cancellationToken);
+            }
         }
 
         public void StopServer()
         {
-            _isRunning = false;
-            Write(SHUTDOWN_MESSAGE);
-            Thread.Sleep(100);
+            if (_started)
+            {
+                _started = false;
+
+                if (_cancellationTokenSource != null)
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+
+                Write(SHUTDOWN_MESSAGE);
+
+                if (_worker != null)
+                {
+                    _worker.Wait();
+                }
+            }
         }
 
         public bool Write(string text, int connectTimeout = 300)
