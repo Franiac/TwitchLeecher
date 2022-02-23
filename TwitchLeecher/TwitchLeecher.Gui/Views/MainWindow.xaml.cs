@@ -11,6 +11,7 @@ using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Shared.Communication;
 using TwitchLeecher.Shared.Native;
 using static TwitchLeecher.Shared.Native.NativeMethods;
 using static TwitchLeecher.Shared.Native.NativeStructs;
@@ -23,6 +24,7 @@ namespace TwitchLeecher.Gui.Views
 
         private readonly IDialogService _dialogService;
         private readonly IRuntimeDataService _runtimeDataService;
+        private readonly NamedPipeManager _namedPipeManager;
 
         private bool _shown = false;
 
@@ -51,6 +53,10 @@ namespace TwitchLeecher.Gui.Views
             };
 
             WindowChrome.SetWindowChrome(this, windowChrome);
+
+            _namedPipeManager = new NamedPipeManager("TwitchLeecher");
+            _namedPipeManager.OnMessage += OnPipeMessage;
+            _namedPipeManager.StartServer();
 
             // Hold reference to FontAwesome library
             ImageAwesome.CreateImageSource(FontAwesomeIcon.Times, Brushes.Black);
@@ -99,6 +105,8 @@ namespace TwitchLeecher.Gui.Views
             Closed += (s, e) =>
             {
                 SaveWindowState();
+
+                _namedPipeManager.StopServer();
             };
         }
 
@@ -117,6 +125,29 @@ namespace TwitchLeecher.Gui.Views
         #endregion Properties
 
         #region Methods
+
+        private void OnPipeMessage(string message)
+        {
+            if (message == "Activate")
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (WindowState == WindowState.Minimized)
+                    {
+                        WindowState = WindowState.Normal;
+                    }
+
+                    this.Topmost = true;
+
+                    this.Activate();
+
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        this.Topmost = false;
+                    }));
+                });
+            }
+        }
 
         public void LoadWindowState()
         {

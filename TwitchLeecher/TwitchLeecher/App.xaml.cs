@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -10,6 +11,7 @@ using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Modules;
+using TwitchLeecher.Shared.Communication;
 using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher
@@ -18,11 +20,39 @@ namespace TwitchLeecher
     {
         #region Fields
 
+        private readonly Mutex _singletonMutex;
+
         private IKernel _kernel;
 
         #endregion Fields
 
+        #region Constructors
+
+        public App()
+        {
+            _singletonMutex = new Mutex(true, "TwitchLeecher", out bool isOnlyInstance);
+
+            if (!isOnlyInstance)
+            {
+                new NamedPipeManager("TwitchLeecher").Write("Activate");
+
+                Environment.Exit(0);
+            }
+        }
+
+        #endregion Constructors
+
         #region Methods
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            if (_singletonMutex != null)
+            {
+                _singletonMutex.Dispose();
+            }
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {

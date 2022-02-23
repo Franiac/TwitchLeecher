@@ -41,6 +41,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Communication\NamedPipeManager.cs" />
     <Compile Include="Events\BackgroundEventSubscription.cs" />
     <Compile Include="Events\DataEventArgs.cs" />
     <Compile Include="Events\DelegateReference.cs" />
