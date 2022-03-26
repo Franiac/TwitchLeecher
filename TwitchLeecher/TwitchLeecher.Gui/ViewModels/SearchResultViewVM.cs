@@ -237,6 +237,11 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             TwitchVideoQuality sourceQuality = qualities.Find(q => q.IsSource);
 
+            if (sourceQuality == null)
+            {
+                sourceQuality = qualities[0];
+            }
+
             if (defaultQuality.IsSource)
             {
                 return sourceQuality;
