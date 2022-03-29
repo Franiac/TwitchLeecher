@@ -76,9 +76,7 @@ namespace TwitchLeecher.Services.Services
             Action<bool> setIsIndeterminate, string sourceFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Converting Video");
-            setIsIndeterminate(true);
-
-            CheckOutputDirectory(log, Path.GetDirectoryName(outputFile));
+            setIsIndeterminate(true);            
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + FFMPEGExe + "' on '" + sourceFile + "'...");
 
@@ -160,17 +158,7 @@ namespace TwitchLeecher.Services.Services
                     throw new ApplicationException("An error occured while converting the video!");
                 }
             }
-        }
-
-        private void CheckOutputDirectory(Action<string> log, string outputDir)
-        {
-            if (!Directory.Exists(outputDir))
-            {
-                log(Environment.NewLine + Environment.NewLine + "Creating output directory '" + outputDir + "'...");
-                FileSystem.CreateDirectory(outputDir);
-                log(" done!");
-            }
-        }
+        }        
 
         #endregion Methods
     }

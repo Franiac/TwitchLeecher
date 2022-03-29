@@ -224,10 +224,14 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
+                            CheckOutputDirectory(log, Path.GetDirectoryName(outputFile));
+
+                            cancellationToken.ThrowIfCancellationRequested();
+
                             _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, disableConversion ? outputFile : concatFile);
 
                             if (!disableConversion)
-                            {
+                            {                               
                                 cancellationToken.ThrowIfCancellationRequested();
                                 _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                             }
@@ -345,6 +349,16 @@ namespace TwitchLeecher.Services.Services
             if (Directory.EnumerateFileSystemEntries(tempDir).Any())
             {
                 throw new ApplicationException("Temporary download directory '" + tempDir + "' is not empty!");
+            }
+        }
+
+        private void CheckOutputDirectory(Action<string> log, string outputDir)
+        {
+            if (!Directory.Exists(outputDir))
+            {
+                log(Environment.NewLine + Environment.NewLine + "Creating output directory '" + outputDir + "'...");
+                FileSystem.CreateDirectory(outputDir);
+                log(" done!");
             }
         }
 
