@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("TwitchLeecher.Setup.Publish")]
+[assembly: AssemblyTitle("TwitchLeecher.Setup.Publish")] 
