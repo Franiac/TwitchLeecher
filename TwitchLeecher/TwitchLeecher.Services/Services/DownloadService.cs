@@ -231,7 +231,7 @@ namespace TwitchLeecher.Services.Services
                             _processingService.ConcatParts(log, setStatus, setProgress, vodPlaylist, disableConversion ? outputFile : concatFile);
 
                             if (!disableConversion)
-                            {                               
+                            {
                                 cancellationToken.ThrowIfCancellationRequested();
                                 _processingService.ConvertVideo(log, setStatus, setProgress, setIsIndeterminate, concatFile, outputFile, cropInfo);
                             }

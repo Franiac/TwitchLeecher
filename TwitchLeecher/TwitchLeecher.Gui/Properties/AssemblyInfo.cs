@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("TwitchLeecher.Gui")]
+[assembly: AssemblyTitle("TwitchLeecher.Gui")] 

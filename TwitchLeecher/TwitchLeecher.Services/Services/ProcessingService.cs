@@ -76,7 +76,7 @@ namespace TwitchLeecher.Services.Services
             Action<bool> setIsIndeterminate, string sourceFile, string outputFile, CropInfo cropInfo)
         {
             setStatus("Converting Video");
-            setIsIndeterminate(true);            
+            setIsIndeterminate(true);
 
             log(Environment.NewLine + Environment.NewLine + "Executing '" + FFMPEGExe + "' on '" + sourceFile + "'...");
 
@@ -158,7 +158,7 @@ namespace TwitchLeecher.Services.Services
                     throw new ApplicationException("An error occured while converting the video!");
                 }
             }
-        }        
+        }
 
         #endregion Methods
     }

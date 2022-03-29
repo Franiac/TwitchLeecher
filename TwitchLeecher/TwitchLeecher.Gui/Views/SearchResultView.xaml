@@ -104,7 +104,7 @@
                                         </fa:ImageAwesome>
                                         <TextBlock Text="Muted Parts" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center" />
                                     </StackPanel>
-                                </Border>                                
+                                </Border>
                                 <Border Background="#78000000" HorizontalAlignment="Left" VerticalAlignment="Bottom" CornerRadius="3" Margin="3,0,0,3" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Eye" Width="10" Height="10" VerticalAlignment="Center">
