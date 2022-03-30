@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-	<?define TL_PRODUCT_CODE="6CDE79A4-0713-4CBA-BB2D-836B74A93DCB"?>
+	<?define TL_PRODUCT_CODE="FE96584C-AB61-4212-99A3-790756CB7701"?>
 	<?define TL_UPGRADE_CODE="99A45D89-87D6-49C2-86C5-E895F027711C"?>
 
 	<?define TL_SOURCE_DIR="$(var.SolutionDir)..\TwitchLeecher\TwitchLeecher\bin\"?>
