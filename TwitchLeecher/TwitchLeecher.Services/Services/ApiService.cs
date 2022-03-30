@@ -760,8 +760,16 @@ namespace TwitchLeecher.Services.Services
             string url = videoJson.Value<string>("url");
             string thumbnail = videoJson.Value<string>("thumbnail_url");
             TimeSpan length = TimeSpanExtensions.ParseTwitchFormat(videoJson.Value<string>("duration"));
-            DateTime recordedDate = DateTime.Parse(videoJson.Value<string>("published_at"), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             JArray mutedSegments = videoJson.Value<JArray>("muted_segments");
+
+            string recorded = videoJson.Value<string>("published_at");
+
+            if (string.IsNullOrWhiteSpace(recorded))
+            {
+                recorded = videoJson.Value<string>("created_at");
+            }
+
+            DateTime recordedDate = DateTime.Parse(recorded, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             bool muted = mutedSegments != null && mutedSegments.Count > 0;
             bool live = false;
