@@ -378,6 +378,11 @@ namespace TwitchLeecher.Core.Models
                 {
                     AddError(currentProperty, "The length of this folder path must be shorter than 239 characters!");
                 }
+
+                if (!Directory.Exists(DownloadTempFolder))
+                {
+                    AddError(currentProperty, "The selected Temporary Folder does not exist!");
+                }
             }
 
             currentProperty = nameof(DownloadFolder);
@@ -387,6 +392,11 @@ namespace TwitchLeecher.Core.Models
                 if (string.IsNullOrWhiteSpace(_downloadFolder))
                 {
                     AddError(currentProperty, "Please specify a default download folder!");
+                }
+
+                if (!Directory.Exists(_downloadFolder))
+                {
+                    AddError(currentProperty, "The selected Download Folder does not exist!");
                 }
             }
 

@@ -241,7 +241,7 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CurrentPreferences.DownloadTempFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CurrentPreferences.DownloadTempFolder, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" />
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
                 <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
@@ -264,7 +264,7 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CurrentPreferences.DownloadFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CurrentPreferences.DownloadFolder, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" />
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadFolderCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
                 <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
