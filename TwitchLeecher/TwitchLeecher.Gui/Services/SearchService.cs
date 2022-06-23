@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
@@ -21,6 +24,7 @@ namespace TwitchLeecher.Gui.Services
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
         private readonly IPreferencesService _preferencesService;
+        private readonly IFilenameService _filenameService;
 
         private ObservableCollection<TwitchVideo> _videos;
 
@@ -35,13 +39,15 @@ namespace TwitchLeecher.Gui.Services
             IApiService apiService,
             IDialogService dialogService,
             INavigationService navigationService,
-            IPreferencesService preferencesService)
+            IPreferencesService preferencesService,
+            IFilenameService filenameService)
         {
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             _apiService = apiService;
             _navigationService = navigationService;
             _preferencesService = preferencesService;
+            _filenameService = filenameService;
 
             _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
 
@@ -123,8 +129,93 @@ namespace TwitchLeecher.Gui.Services
                 }
 
                 Videos = task.Result;
+                // halts spinner
+                if (Videos != null && Videos.Count > 0)
+                {
+                    Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
+
+                    foreach (var video in Videos)
+                    {
+                        TwitchVideoAuthInfo vodAuthInfo = _apiService.GetVodAuthInfo(video.Id);
+                        Dictionary<TwitchVideoQuality, string> playlistInfo = _apiService.GetPlaylistInfo(video.Id, vodAuthInfo);
+                        List<TwitchVideoQuality> qualities = playlistInfo.Keys.OrderBy(q => q).ToList();
+
+                        string folder = currentPrefs.DownloadSubfoldersForFav && _preferencesService.IsChannelInFavourites(video.Channel)
+                            ? Path.Combine(currentPrefs.DownloadFolder, video.Channel)
+                            : currentPrefs.DownloadFolder;
+                        TwitchVideoQuality selectedQuality = GetSelectedQuality(qualities, currentPrefs.DownloadDefaultQuality);
+
+                        string filename = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, video, selectedQuality);
+                        filename = _filenameService.EnsureExtension(filename, currentPrefs.DownloadDisableConversion);
+                        video.IsDownloaded = File.Exists(Path.Combine(folder, filename));
+                    }
+                }
+
                 _navigationService.ShowSearchResults();
             }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private TwitchVideoQuality GetSelectedQuality(List<TwitchVideoQuality> qualities, DefaultQuality defaultQuality)
+        {
+            TwitchVideoQuality sourceQuality = qualities.Find(q => q.IsSource);
+
+            if (sourceQuality == null)
+            {
+                sourceQuality = qualities[0];
+            }
+
+            if (defaultQuality.IsSource)
+            {
+                return sourceQuality;
+            }
+
+            if (defaultQuality.IsAudioOnly)
+            {
+                TwitchVideoQuality audioOnlyQuality = qualities.FirstOrDefault(q => q.IsAudioOnly);
+
+                if (audioOnlyQuality != null)
+                {
+                    return audioOnlyQuality;
+                }
+                else
+                {
+                    return sourceQuality;
+                }
+            }
+
+            IEnumerable<TwitchVideoQuality> visualQualities = qualities.Where(q => !q.IsAudioOnly);
+
+            int defaultRes = defaultQuality.VerticalResolution;
+
+            TwitchVideoQuality selectedQuality = null;
+
+            foreach (TwitchVideoQuality quality in visualQualities)
+            {
+                if (quality.VerticalResolution <= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution < quality.VerticalResolution))
+                {
+                    selectedQuality = quality;
+                }
+            }
+
+            if (selectedQuality != null)
+            {
+                return selectedQuality;
+            }
+
+            foreach (TwitchVideoQuality quality in visualQualities)
+            {
+                if (quality.VerticalResolution >= defaultRes && (selectedQuality == null || selectedQuality.VerticalResolution > quality.VerticalResolution))
+                {
+                    selectedQuality = quality;
+                }
+            }
+
+            if (selectedQuality != null)
+            {
+                return selectedQuality;
+            }
+
+            return sourceQuality;
         }
 
         private void PreferencesSaved()

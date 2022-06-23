@@ -13,7 +13,7 @@ namespace TwitchLeecher.Core.Models
 
         #region Constructors
 
-        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable, bool muted, bool live)
+        public TwitchVideo(string channel, string title, string id, int views, TimeSpan length, DateTime recordedDate, Uri thumbnail, Uri url, bool viewable, bool muted, bool live, bool isDownloaded = false, bool isQueued = false)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
@@ -41,6 +41,8 @@ namespace TwitchLeecher.Core.Models
             Viewable = viewable;
             Muted = muted;
             Live = live;
+            IsDownloaded = isDownloaded;
+            IsQueued = isQueued;
         }
 
         #endregion Constructors
@@ -78,6 +80,8 @@ namespace TwitchLeecher.Core.Models
         public bool Live { get; }
 
         public TimeSpan? StartTime { get; set; }
+        public bool IsDownloaded { get; set; }
+        public bool IsQueued { get; set; }
 
         #endregion Properties
     }
