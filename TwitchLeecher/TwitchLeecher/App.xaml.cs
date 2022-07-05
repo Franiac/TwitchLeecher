@@ -58,12 +58,7 @@ namespace TwitchLeecher
         {
             base.OnStartup(e);
 
-            if (CultureInfo.CurrentCulture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase) ||
-                CultureInfo.CurrentUICulture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase))
-            {
-                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("en-US");
-                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-            }
+            SetCulture();
 
             _kernel = CreateKernel();
 
@@ -79,6 +74,29 @@ namespace TwitchLeecher
 
             MainWindow = _kernel.Get<MainWindow>();
             MainWindow.Show();
+        }
+
+        private void SetCulture()
+        {
+            if (CultureInfo.CurrentCulture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase) ||
+    CultureInfo.CurrentUICulture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase))
+            {
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("en-US");
+                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            }
+
+            // Override the default WPF culture of en-US with the culture of the current computer (only required if it's not en-US)
+            if (CultureInfo.CurrentCulture.IetfLanguageTag != "en-US")
+            {
+                var currentXmlLanguage = System.Windows.Markup.XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.TextElement), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.TableColumn), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.FlowDocument), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.FixedDocumentSequence), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.FixedDocument), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Controls.DefinitionBase), new FrameworkPropertyMetadata(currentXmlLanguage));
+                FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(currentXmlLanguage));
+            }
         }
 
         private IKernel CreateKernel()
