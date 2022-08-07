@@ -27,6 +27,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _openDownloadFolderCommand;
 
         private readonly object _commandLockObject;
+        private readonly ProcessStartInfo _explorerInfo;
 
         #endregion Fields
 
@@ -44,6 +45,7 @@ namespace TwitchLeecher.Gui.ViewModels
             _downloadService.PropertyChanged += DownloadService_PropertyChanged;
 
             _commandLockObject = new object();
+            _explorerInfo = new ProcessStartInfo("explorer.exe");
         }
 
         #endregion Constructors
@@ -218,11 +220,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
                         if (download != null)
                         {
-                            string folder = download.DownloadParams.Folder;
+                            DownloadParameters dparams = download.DownloadParams;
 
-                            if (Directory.Exists(folder))
+                            if (Directory.Exists(dparams.Folder))
                             {
-                                Process.Start(folder);
+                                _explorerInfo.Arguments = $"/select,\"{dparams.FullPath}\"";
+                                Process.Start(_explorerInfo);
                             }
                         }
                     }
