@@ -85,7 +85,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Ninject">
-      <Version>3.3.4</Version>
+      <Version>3.3.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
