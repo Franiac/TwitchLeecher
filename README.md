@@ -1,19 +1,20 @@
 The is a new Maintained and developed Fork of [Twitch Leecher](https://github.com/Franiac/TwitchLeecher)
+Don't forget to leve a star if you like it!
 
 # Twitch Leecher
 If you are looking for an extremely fast and easy to use Twitch VOD downloader, this is your tool!
-![Twitch Leecher Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14.jpg)
+
 ## Is this project alive?
-Yes! Just because there are no commits for a longer period of time, does not mean the project is dead. I am a human being with a life and TL never was and still is not my top priority. I will always try to keep it running if there are breaking changes, but new features can take time. If I decide to discontinue TL (which is very unlikely) you WILL be informed very clearly.
+Yes! After the original project was discontinued, I decided to start maintaining and develop this Fork!
+Note that this project is not my highest priority; I will keep is working, but new features might take some time
+
 ## Download & Requirements
 - Requires Windows 7 SP1 64 Bit or higher
 - Requires [.NET Framework 4.8](https://support.microsoft.com/en-us/topic/microsoft-net-framework-4-8-offline-installer-for-windows-9d23f658-3b97-68ab-d013-aa3c3e7495e0)
 
-The latest Installer is available [HERE](https://github.com/Franiac/TwitchLeecher/releases)
-
-Once installed, future releases will automatically update current installations with a single click!
 ## What is the difference compared to other VOD downloaders?
 Nearly all of the well known VOD downloaders execute the download process via FFMPEG's integrated download capabilities. However, this is extremely slow. The download speed rarely exceeds 1.5Mbit even if the internet connection is 100 times faster. Twitch Leecher does not use FFMPEG for download tasks at all. It downloads thousands of small video chunks in parallel while using all of the available bandwidth of your internet connection. As soon as all video chunks are downloaded, FFMPEG is only used to merge those chunks together in order to create a single video file again.
+
 ## Features
 - Very easy to use, no manual needed
 - Intuitive and stylish GUI
@@ -30,6 +31,7 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Specify a filename template with wildcards for your downloads
 - Developed by an experienced Software Engineer
 - Free and Open Source
+- 
 ## Support & Issues
 **IMPORTANT:** Help me be efficient, please! I am developing Twitch Leecher in my free time for no money. Contribute to the project by posting complete, structured and helpful issues which I can reproduce quickly without asking for missing information. When creating a new issue please follow the below checklist:
 - Windows Insider Builds are NOT supported!
@@ -41,5 +43,10 @@ Nearly all of the well known VOD downloaders execute the download process via FF
 - Is there any additional information about the issue that might be interesting for me? Write it down!
 - When you have a problem with a download, provide the download log created by Twitch Leecher (see screenshot below)
 ![Twitch Leecher Log Screenshot](http://www.fakesmilerevolution.com/files/fsr/twitchleecher/tl14log.jpg)
+
+# Donate
+
+If you wan't to support me, you might donate here: [Tipeeestream](https://www.tipeeestream.com/brainyxs/donation)
+
 ## LICENSE
 [MIT License](https://github.com/Franiac/TwitchLeecher/blob/master/LICENSE)
