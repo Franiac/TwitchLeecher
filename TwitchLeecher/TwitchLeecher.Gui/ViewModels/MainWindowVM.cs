@@ -101,7 +101,6 @@ namespace TwitchLeecher.Gui.ViewModels
             _eventAggregator.GetEvent<AuthChangedEvent>().Subscribe(AuthChanged);
             _eventAggregator.GetEvent<AuthResultEvent>().Subscribe(AuthResultAction);
             _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Subscribe(SubOnlyAuthChanged);
-            _eventAggregator.GetEvent<SubOnlyAuthResultEvent>().Subscribe(SubOnlyAuthResultAction);
             _eventAggregator.GetEvent<PreferencesSavedEvent>().Subscribe(PreferencesSaved);
             _eventAggregator.GetEvent<VideosCountChangedEvent>().Subscribe(VideosCountChanged);
             _eventAggregator.GetEvent<DownloadsCountChangedEvent>().Subscribe(DownloadsCountChanged);
@@ -214,19 +213,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showDownloadsCommand;
-            }
-        }
-
-        public ICommand ShowSubOnlyCommand
-        {
-            get
-            {
-                if (_showSubOnlyCommand == null)
-                {
-                    _showSubOnlyCommand = new DelegateCommand(ShowSubOnly);
-                }
-
-                return _showSubOnlyCommand;
             }
         }
 
@@ -367,28 +353,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     _navigationService.ShowDownloads();
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
-
-        private void ShowSubOnly()
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (IsAuthenticatedSubOnly)
-                    {
-                        _navigationService.ShowRevokeSubOnlyAuth();
-                    }
-                    else
-                    {
-                        _navigationService.ShowSubOnlyAuth();
-                    }
                 }
             }
             catch (Exception ex)
@@ -609,8 +573,6 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void InitializeCef()
         {
-            Cef.EnableHighDPISupport();
-
             if (!Cef.IsInitialized)
             {
                 string cachePath = Path.Combine(_folderService.GetAppDataFolder(), "CefCache");
@@ -673,18 +635,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private void SubOnlyAuthChanged(bool isAuthenticatedSubOnly)
         {
             this.IsAuthenticatedSubOnly = isAuthenticatedSubOnly;
-        }
-
-        private void SubOnlyAuthResultAction(bool success)
-        {
-            if (success)
-            {
-                _navigationService.ShowRevokeSubOnlyAuth();
-            }
-            else
-            {
-                _navigationService.ShowSubOnlyAuth();
-            }
         }
 
         private void ShowWelcomeOrSearch()

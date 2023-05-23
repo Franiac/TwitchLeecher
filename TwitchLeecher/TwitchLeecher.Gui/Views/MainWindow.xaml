@@ -28,15 +28,6 @@
                     <DataTemplate DataType="{x:Type vm:AuthViewVM}">
                         <view:AuthView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:LoginViewVM}">
-                        <view:LoginView />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:SubOnlyAuthViewVM}">
-                        <view:SubOnlyAuthView />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:SubOnlyRevokeAuthViewVM}">
-                        <view:SubOnlyRevokeAuthView />
-                    </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:WelcomeViewVM}">
                         <view:WelcomeView />
                     </DataTemplate>

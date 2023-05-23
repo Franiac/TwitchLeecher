@@ -53,9 +53,6 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\RequestClosingBehavior.cs" />
-    <Compile Include="Browser\AuthRequestHandler.cs" />
-    <Compile Include="Browser\DeleteCookieVisitor.cs" />
-    <Compile Include="Browser\AuthCookieVisitor.cs" />
     <Compile Include="Controls\TlFadeContentControl.cs" />
     <Compile Include="Controls\TlIntegerUpDown.cs" />
     <Compile Include="Controls\TlScrollingTextBox.cs" />
@@ -84,8 +81,6 @@
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\SearchService.cs" />
-    <Compile Include="ViewModels\SubOnlyRevokeAuthViewVM.cs" />
-    <Compile Include="ViewModels\SubOnlyAuthViewVM.cs" />
     <Compile Include="ViewModels\AuthViewVM.cs" />
     <Compile Include="ViewModels\LogViewVM.cs" />
     <Compile Include="ViewModels\DownloadViewVM.cs" />
@@ -93,19 +88,12 @@
     <Compile Include="ViewModels\PreferencesViewVM.cs" />
     <Compile Include="ViewModels\SearchViewVM.cs" />
     <Compile Include="ViewModels\DownloadsViewVM.cs" />
-    <Compile Include="ViewModels\LoginViewVM.cs" />
     <Compile Include="ViewModels\UpdateInfoViewVM.cs" />
     <Compile Include="ViewModels\LoadingViewVM.cs" />
     <Compile Include="ViewModels\SearchResultViewVM.cs" />
     <Compile Include="ViewModels\InfoViewVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WelcomeViewVM.cs" />
-    <Compile Include="Views\SubOnlyRevokeAuthView.xaml.cs">
-      <DependentUpon>SubOnlyRevokeAuthView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SubOnlyAuthView.xaml.cs">
-      <DependentUpon>SubOnlyAuthView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
@@ -114,9 +102,6 @@
     </Compile>
     <Compile Include="Views\NotificationStrip.xaml.cs">
       <DependentUpon>NotificationStrip.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UpdateInfoView.xaml.cs">
       <DependentUpon>UpdateInfoView.xaml</DependentUpon>
@@ -170,14 +155,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SubOnlyRevokeAuthView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\SubOnlyAuthView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\AuthView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -189,10 +166,6 @@
     <Page Include="Views\NotificationStrip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LoginView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UpdateInfoView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -265,7 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CefSharp.Wpf">
-      <Version>105.3.390</Version>
+      <Version>113.1.40</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>

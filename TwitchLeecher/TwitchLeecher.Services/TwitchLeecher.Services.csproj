@@ -42,6 +42,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Interfaces\IApiService.cs" />
+    <Compile Include="Interfaces\IAuthListener.cs" />
     <Compile Include="Interfaces\IAuthService.cs" />
     <Compile Include="Interfaces\IDownloadService.cs" />
     <Compile Include="Interfaces\IProcessingService.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApiService.cs" />
+    <Compile Include="Services\AuthListener.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\FilenameService.cs" />
     <Compile Include="Services\FolderService.cs" />
@@ -82,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="Ninject">
       <Version>3.3.6</Version>
