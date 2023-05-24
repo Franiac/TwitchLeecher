@@ -22,10 +22,8 @@ namespace TwitchLeecher.Setup.Gui.Converters
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
     }
 }

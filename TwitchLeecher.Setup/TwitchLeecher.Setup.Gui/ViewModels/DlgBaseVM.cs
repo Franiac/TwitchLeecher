@@ -122,9 +122,10 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
             {
                 return _currentErrors.Values.ToList();
             }
-            else if (_currentErrors.ContainsKey(propertyName))
+
+            if (_currentErrors.ContainsKey(propertyName))
             {
-                return new List<string>() { _currentErrors[propertyName] };
+                return new List<string> { _currentErrors[propertyName] };
             }
 
             return null;

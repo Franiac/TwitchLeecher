@@ -1,6 +1,7 @@
-﻿using Microsoft.Deployment.WindowsInstaller;
-using System;
+﻿using System;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace TwitchLeecher.Setup.Custom
 {
@@ -31,7 +32,7 @@ namespace TwitchLeecher.Setup.Custom
             }
             catch (Exception ex)
             {
-                session.Log(logName + ex.ToString());
+                session.Log(logName + ex);
             }
 
             return ActionResult.Success;
@@ -81,7 +82,7 @@ namespace TwitchLeecher.Setup.Custom
         {
             if (File.Exists(file))
             {
-                File.SetAttributes(file, System.IO.FileAttributes.Normal);
+                File.SetAttributes(file, FileAttributes.Normal);
             }
         }
     }

@@ -8,16 +8,15 @@ namespace TwitchLeecher.Setup.Gui
         {
             if (version.Build < 0 && version.Revision < 0)
             {
-                return Version.Parse(version.ToString() + ".0.0");
+                return Version.Parse(version + ".0.0");
             }
-            else if (version.Revision < 0)
+
+            if (version.Revision < 0)
             {
-                return Version.Parse(version.ToString() + ".0");
+                return Version.Parse(version + ".0");
             }
-            else
-            {
-                return version;
-            }
+
+            return version;
         }
 
         public static Version Trim(this Version version)
@@ -26,14 +25,13 @@ namespace TwitchLeecher.Setup.Gui
             {
                 return version;
             }
-            else if (version.Build > 0)
+
+            if (version.Build > 0)
             {
                 return Version.Parse(version.ToString(3));
             }
-            else
-            {
-                return Version.Parse(version.ToString(2));
-            }
+
+            return Version.Parse(version.ToString(2));
         }
     }
 }

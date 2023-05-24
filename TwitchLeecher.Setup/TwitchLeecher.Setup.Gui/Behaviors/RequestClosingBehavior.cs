@@ -10,7 +10,7 @@ namespace TwitchLeecher.Setup.Gui.Behaviors
 
         public static readonly DependencyProperty RequestClosingProperty = DependencyProperty.RegisterAttached(
             "RequestClosing", typeof(ICommand), typeof(RequestClosingBehavior),
-            new UIPropertyMetadata(new PropertyChangedCallback(RequestClosingChanged)));
+            new UIPropertyMetadata(RequestClosingChanged));
 
         public static ICommand GetRequestClosing(DependencyObject obj)
         {

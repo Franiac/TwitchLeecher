@@ -1,7 +1,4 @@
-﻿using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -13,9 +10,14 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Xml.Linq;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
+using Microsoft.Win32;
 using TwitchLeecher.Setup.Gui.Services;
 using TwitchLeecher.Setup.Gui.ViewModels;
 using TwitchLeecher.Setup.Gui.Views;
+using ErrorEventArgs = Microsoft.Tools.WindowsInstallerXml.Bootstrapper.ErrorEventArgs;
+using InstallMessage = Microsoft.Tools.WindowsInstallerXml.Bootstrapper.InstallMessage;
 
 namespace TwitchLeecher.Setup.Gui
 {
@@ -321,7 +323,7 @@ namespace TwitchLeecher.Setup.Gui
                     _wizardWindowVM = new WizardWindowVM(this, _guiService, _uacService);
 
                     Log("Initializing main application window");
-                    _wizardWindow = new WizardWindow() { DataContext = _wizardWindowVM };
+                    _wizardWindow = new WizardWindow { DataContext = _wizardWindowVM };
 
                     _wizardWindow.Closed += (a, b) => _uiThreadDispatcher.InvokeShutdown();
 
@@ -336,7 +338,7 @@ namespace TwitchLeecher.Setup.Gui
             }
             catch (Exception ex)
             {
-                Log("An error occured while executing the Bootstrapper Application!" + Environment.NewLine + ex.ToString());
+                Log("An error occured while executing the Bootstrapper Application!" + Environment.NewLine + ex);
                 Engine.Quit((int)ActionResult.Failure);
             }
         }
@@ -366,11 +368,11 @@ namespace TwitchLeecher.Setup.Gui
 
             Log(logName + "Retrieving product version in padded format");
             _productVersionPadded = Version.Parse(Engine.StringVariables["BUNDLE_PRODUCT_VERSION_PADDED"]);
-            Log(logName + "Product version in padded format is '" + _productVersionPadded.ToString() + "'");
+            Log(logName + "Product version in padded format is '" + _productVersionPadded + "'");
 
             Log(logName + "Retrieving product version in trimmed format");
             _productVersionTrimmed = Version.Parse(Engine.StringVariables["BUNDLE_PRODUCT_VERSION_TRIMMED"]);
-            Log(logName + "Product version in trimmed format is '" + _productVersionTrimmed.ToString() + "'");
+            Log(logName + "Product version in trimmed format is '" + _productVersionTrimmed + "'");
         }
 
         private void InitializeMsiProperties()
@@ -516,12 +518,10 @@ namespace TwitchLeecher.Setup.Gui
         {
             if (!_uiThreadDispatcher.CheckAccess())
             {
-                return _uiThreadDispatcher.Invoke<TResult>(func);
+                return _uiThreadDispatcher.Invoke(func);
             }
-            else
-            {
-                return func();
-            }
+
+            return func();
         }
 
         public void SetCancelledByUser()
@@ -659,7 +659,7 @@ namespace TwitchLeecher.Setup.Gui
 
             if (IsInstalled && !HasRelatedBundle)
             {
-                Log(logName + "Current bundle is already installed and no related bundle was found. Setting launch action to '" + LaunchAction.Uninstall.ToString() + "'");
+                Log(logName + "Current bundle is already installed and no related bundle was found. Setting launch action to '" + LaunchAction.Uninstall + "'");
                 _launchAction = LaunchAction.Uninstall;
             }
 
@@ -692,7 +692,7 @@ namespace TwitchLeecher.Setup.Gui
 
         #region Apply
 
-        private void SetupApplication_Error(object sender, Microsoft.Tools.WindowsInstallerXml.Bootstrapper.ErrorEventArgs e)
+        private void SetupApplication_Error(object sender, ErrorEventArgs e)
         {
             string logName = "Engine hook SetupApplication_Error: ";
 
@@ -715,7 +715,7 @@ namespace TwitchLeecher.Setup.Gui
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        sb.Append(", Data [" + i.ToString() + "]: ");
+                        sb.Append(", Data [" + i + "]: ");
                         sb.Append(data[i]);
                     }
                 }
@@ -724,7 +724,7 @@ namespace TwitchLeecher.Setup.Gui
             }
             catch (Exception ex)
             {
-                Log(logName + "Exception occured!" + Environment.NewLine + ex.ToString());
+                Log(logName + "Exception occured!" + Environment.NewLine + ex);
             }
         }
 
@@ -760,7 +760,7 @@ namespace TwitchLeecher.Setup.Gui
 
                 bool? showFilesInUseWindow()
                 {
-                    FilesInUseWindow filesInUseWindow = new FilesInUseWindow() { DataContext = new FilesInUseWindowVM(filesFormated) };
+                    FilesInUseWindow filesInUseWindow = new FilesInUseWindow { DataContext = new FilesInUseWindowVM(filesFormated) };
 
                     return filesInUseWindow.ShowDialog();
                 }
@@ -806,7 +806,7 @@ namespace TwitchLeecher.Setup.Gui
 
         private void SetupApplication_ExecuteMsiMessage(object sender, ExecuteMsiMessageEventArgs e)
         {
-            if (e.MessageType == Microsoft.Tools.WindowsInstallerXml.Bootstrapper.InstallMessage.ActionStart
+            if (e.MessageType == InstallMessage.ActionStart
                     && !string.IsNullOrWhiteSpace(e.Message)
                     && e.Data.Count > 1)
             {
@@ -831,7 +831,7 @@ namespace TwitchLeecher.Setup.Gui
                     _wizardWindowVM.ShowFinishedDialog();
                 }
 
-                Log(logName + "Execution phase ended successfully. Setting exit action to '" + ActionResult.Success.ToString() + "'");
+                Log(logName + "Execution phase ended successfully. Setting exit action to '" + ActionResult.Success + "'");
                 _exitAction = ActionResult.Success;
             }
             else
@@ -848,7 +848,7 @@ namespace TwitchLeecher.Setup.Gui
                     }
                 }
 
-                Log(logName + "Execution phase failed. Setting exit action to '" + ActionResult.Failure.ToString() + "'");
+                Log(logName + "Execution phase failed. Setting exit action to '" + ActionResult.Failure + "'");
                 _exitAction = ActionResult.Failure;
             }
 

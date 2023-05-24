@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -6,7 +7,7 @@ namespace TwitchLeecher.Setup.Gui.Converters
 {
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool flag = false;
 
@@ -23,16 +24,14 @@ namespace TwitchLeecher.Setup.Gui.Converters
             return flag ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is Visibility visibility)
             {
                 return visibility != Visibility.Visible;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
     }
 }

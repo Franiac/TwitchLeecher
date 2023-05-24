@@ -34,7 +34,7 @@ namespace TwitchLeecher.Setup.Gui
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occured!" + Environment.NewLine + Environment.NewLine + ex.ToString(), "Error", MessageBoxButton.OK);
+                MessageBox.Show("An error occured!" + Environment.NewLine + Environment.NewLine + ex, "Error", MessageBoxButton.OK);
             }
         }
     }

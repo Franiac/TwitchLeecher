@@ -1,10 +1,10 @@
-﻿using Microsoft.Win32;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using static TwitchLeecher.Setup.Gui.NativeMethods;
 
 namespace TwitchLeecher.Setup.Gui.Services

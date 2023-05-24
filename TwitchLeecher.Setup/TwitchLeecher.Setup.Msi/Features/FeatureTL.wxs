@@ -345,12 +345,12 @@
 				<File Id="TL_Locales_zh_TW.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-TW.pak" />
 			</Component>
 
-			<Component Directory="ShaderDir">
-				<File Id="TL_Shader_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libEGL.dll" />
-			</Component>
-			<Component Directory="ShaderDir">
-				<File Id="TL_Shader_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libGLESv2.dll" />
-			</Component>
+<!--			<Component Directory="ShaderDir">-->
+			<!--				<File Id="TL_Shader_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libEGL.dll" />-->
+			<!--			</Component>-->
+			<!--			<Component Directory="ShaderDir">-->
+			<!--				<File Id="TL_Shader_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libGLESv2.dll" />-->
+			<!--			</Component>-->
 
 			<Component Directory="INSTALLDIR">
 				<File Id="TL_LICENSE" KeyPath="yes" Source="$(var.SolutionDir)..\LICENSE" />

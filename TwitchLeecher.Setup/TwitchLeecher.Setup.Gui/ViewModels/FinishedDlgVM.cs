@@ -1,5 +1,5 @@
-﻿using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using System;
+﻿using System;
+using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 using TwitchLeecher.Setup.Gui.Services;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels
@@ -19,7 +19,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
         {
             if (_bootstrapper.IsUpgrade)
             {
-                _headline = "Successfully upgraded " + _bootstrapper.ProductName + " " + _bootstrapper.RelatedBundleVersion.ToString() + " to version " + _bootstrapper.ProductVersionTrimmed.ToString();
+                _headline = "Successfully upgraded " + _bootstrapper.ProductName + " " + _bootstrapper.RelatedBundleVersion + " to version " + _bootstrapper.ProductVersionTrimmed;
             }
             else
             {
@@ -34,7 +34,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction + "'!");
                 }
             }
         }

@@ -1,5 +1,5 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
+using Microsoft.Win32;
 
 namespace TwitchLeecher.Setup.Gui
 {
@@ -11,10 +11,8 @@ namespace TwitchLeecher.Setup.Gui
             {
                 return RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry64);
             }
-            else
-            {
-                return RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry32);
-            }
+
+            return RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry32);
         }
     }
 }

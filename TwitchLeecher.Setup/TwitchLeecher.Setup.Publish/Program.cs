@@ -31,7 +31,7 @@ namespace TwitchLeecher.Setup.Publish
 
                 string src = Path.Combine(solutionDir, "TwitchLeecher.Setup.Bootstrapper", "bin", "TwitchLeecher.exe");
 
-                string tgtFilename = "TwitchLeecher_" + version.ToString() + ".exe";
+                string tgtFilename = "TwitchLeecher_" + version + ".exe";
 
                 string publishDir = Path.Combine(solutionDir, "..", "TwitchLeecher.Setup.Publish");
 
@@ -127,14 +127,13 @@ namespace TwitchLeecher.Setup.Publish
             {
                 return version;
             }
-            else if (version.Build > 0)
+
+            if (version.Build > 0)
             {
                 return Version.Parse(version.ToString(3));
             }
-            else
-            {
-                return Version.Parse(version.ToString(2));
-            }
+
+            return Version.Parse(version.ToString(2));
         }
     }
 }

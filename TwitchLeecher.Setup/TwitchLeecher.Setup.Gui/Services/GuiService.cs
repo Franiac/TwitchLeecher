@@ -50,7 +50,7 @@ namespace TwitchLeecher.Setup.Gui.Services
 
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton button, MessageBoxImage image)
         {
-            return _bootstrapper.InvokeOnUiThread<MessageBoxResult>(() =>
+            return _bootstrapper.InvokeOnUiThread(() =>
             {
                 return MessageBox.Show(message, caption, button, image);
             });

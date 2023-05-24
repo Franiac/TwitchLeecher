@@ -1,6 +1,6 @@
-﻿using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 using TwitchLeecher.Setup.Gui;
 
 [assembly: AssemblyTitle("TwitchLeecher.Setup.Gui")]

@@ -1,8 +1,8 @@
 using System.Reflection;
 
-[assembly: AssemblyProduct("Twitch Leecher Installer")]
-[assembly: AssemblyDescription("Installer for Twitch Leecher Broadcast Downloader")]
-[assembly: AssemblyCompany("Franiac")]
-[assembly: AssemblyCopyright("Copyright © 2016 Dominik Rebitzer")]
+[assembly: AssemblyProduct("Twitch Leecher DX Installer")]
+[assembly: AssemblyDescription("Installer for Twitch Leecher Broadcast Downloader DX")]
+[assembly: AssemblyCompany("BrainySoftware")]
+[assembly: AssemblyCopyright("Copyright ï¿½ 2023 Manuel Schneider")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")] 
+[assembly: AssemblyFileVersion("1.0.0.0")]

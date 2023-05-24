@@ -17,7 +17,7 @@ namespace TwitchLeecher.Setup.Gui.Views
             if (e.NewValue is FilesInUseWindowVM filesInUseWindowVM)
             {
                 filesInUseWindowVM.SetWindowCloseAction(Close);
-                filesInUseWindowVM.SetSetDialogResultAction((result) => DialogResult = result);
+                filesInUseWindowVM.SetSetDialogResultAction(result => DialogResult = result);
             }
         }
     }

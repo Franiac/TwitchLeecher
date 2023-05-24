@@ -1,10 +1,10 @@
-﻿using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 using TwitchLeecher.Setup.Gui.Command;
 using TwitchLeecher.Setup.Gui.Services;
 
@@ -237,7 +237,7 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                         break;
 
                     default:
-                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction.ToString() + "'!");
+                        throw new ApplicationException("Unsupported LaunchAction '" + _bootstrapper.LaunchAction + "'!");
                 }
             }
         }
@@ -372,38 +372,39 @@ namespace TwitchLeecher.Setup.Gui.ViewModels
                 RequestCancelProgress();
                 return false;
             }
-            else if (currentVM is BitErrorDlgVM)
+
+            if (currentVM is BitErrorDlgVM)
             {
                 return true;
             }
-            else if (currentVM is DowngradeDlgVM)
+
+            if (currentVM is DowngradeDlgVM)
             {
                 return true;
             }
-            else if (currentVM is FinishedDlgVM)
+
+            if (currentVM is FinishedDlgVM)
             {
                 return true;
             }
-            else if (currentVM is UserCancelDlgVM)
+
+            if (currentVM is UserCancelDlgVM)
             {
                 return true;
             }
-            else if (currentVM is ErrorDlgVM)
+
+            if (currentVM is ErrorDlgVM)
             {
                 return true;
             }
-            else
+
+            if (_bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
             {
-                if (_bootstrapper.ShowCloseMessageMox() == MessageBoxResult.OK)
-                {
-                    _bootstrapper.SetCancelledByUser();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                _bootstrapper.SetCancelledByUser();
+                return true;
             }
+
+            return false;
         }
 
         public void CancelWizard()
