@@ -21,11 +21,7 @@ namespace TwitchLeecher.Gui.Services
 
         private string GetDonationLink()
         {
-            CultureInfo ci = CultureInfo.CurrentUICulture;
-
-            string culture = ci == null ? "en_US" : ci.Name.Replace("-", "_");
-
-            return donationLink + "&lc=" + culture;
+            return donationLink;
         }
 
         #endregion Methods
