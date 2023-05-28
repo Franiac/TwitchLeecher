@@ -30,33 +30,41 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Width="27" Margin="0,1,5,0" VerticalAlignment="Center" />
-                <TextBlock  Text="{Binding ProductName, Mode=OneTime, FallbackValue='Twitch Leecher X.Y'}" FontWeight="Bold" FontSize="20" VerticalAlignment="Top" />
+                <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Width="27" Margin="0,1,5,0"
+                       VerticalAlignment="Center" />
+                <TextBlock Text="{Binding ProductName, Mode=OneTime, FallbackValue='Twitch Leecher X.Y'}"
+                           FontWeight="Bold" FontSize="20" VerticalAlignment="Top" />
             </StackPanel>
 
-            <TextBlock Grid.Row="1" Text="Developer" FontWeight="Bold"  Margin="0,15,0,0" />
+            <TextBlock Grid.Row="1" Text="Developers" FontWeight="Bold" Margin="0,15,0,0" />
             <TextBlock Grid.Row="2" Text="Dominik &quot;Franiac&quot; Rebitzer" Margin="15,5,0,0" />
+            <TextBlock Grid.Row="3" Text="Manuel &quot;Brainy&quot; Schneider" Margin="15,5,0,0" />
 
-            <TextBlock Grid.Row="3" Text="Support &amp; Issues" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="4" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/Franiac/TwitchLeecher/issues">
-                https://github.com/Franiac/TwitchLeecher/issues
-            </Hyperlink>
+            <TextBlock Grid.Row="4" Text="Support &amp; Issues" FontWeight="Bold" Margin="0,15,0,0" />
+            <TextBlock Grid.Row="5" Margin="15,5,0,0">
+                <Hyperlink Command="{Binding OpenLinkCommand}"
+                           CommandParameter="https://github.com/schneidermanuel/TwitchLeecher-Dx/issues">
+                    https://github.com/schneidermanuel/TwitchLeecher-Dx/issues
+                </Hyperlink>
             </TextBlock>
 
-            <TextBlock Grid.Row="5" Text="Source Code &amp; Documentation" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="6" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://github.com/Franiac/TwitchLeecher">
-                http://github.com/Franiac/TwitchLeecher
-            </Hyperlink>
+            <TextBlock Grid.Row="6" Text="Source Code &amp; Documentation" FontWeight="Bold" Margin="0,15,0,0" />
+            <TextBlock Grid.Row="7" Margin="15,5,0,0">
+                <Hyperlink Command="{Binding OpenLinkCommand}"
+                           CommandParameter="http://github.com/schneidermanuel/TwitchLeecher-Dx">
+                    http://github.com/Franiac/TwitchLeecher
+                </Hyperlink>
             </TextBlock>
 
-            <TextBlock Grid.Row="7" Text="Donate" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="8" Text="Help me out with a bottle of beer if you like the program :)" Margin="15,5,0,0" />
-            <Button Grid.Row="9" Command="{Binding DonateCommand}" HorizontalAlignment="Left" Height="Auto" Margin="15,5,0,0" Cursor="Hand">
+            <TextBlock Grid.Row="8" Text="Donate" FontWeight="Bold" Margin="0,15,0,0" />
+            <TextBlock Grid.Row="9" Text="Help me out with a bottle of beer if you like the program :)"
+                       Margin="15,5,0,0" />
+            <Button Grid.Row="10" Command="{Binding DonateCommand}" HorizontalAlignment="Left" Height="Auto"
+                    Margin="15,5,0,0" Cursor="Hand">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -71,8 +79,14 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
-                                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                        <ContentPresenter x:Name="contentPresenter" Focusable="False"
+                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -81,28 +95,6 @@
                 </Button.Style>
                 <Image Style="{StaticResource Img_Donate}" />
             </Button>
-
-            <TextBlock Grid.Row="10" Text="My One-Man Metal Band Project" FontWeight="Bold"  Margin="0,15,0,0" />
-            <TextBlock Grid.Row="11" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.fakesmilerevolution.com">
-                http://www.fakesmilerevolution.com
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Grid.Row="12" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.twitch.tv/fakesmilerevolution">
-                http://www.twitch.tv/fakesmilerevolution
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Grid.Row="13" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.youtube.com/fakesmilerevolution">
-                http://www.youtube.com/fakesmilerevolution
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Grid.Row="15" Margin="15,5,0,0">
-            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://www.soundcloud.com/fakesmilerevolution">
-                http://www.soundcloud.com/fakesmilerevolution
-            </Hyperlink>
-            </TextBlock>
         </Grid>
     </ScrollViewer>
 </UserControl>

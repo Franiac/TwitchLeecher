@@ -14,8 +14,8 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string latestReleaseUrl = "https://github.com/Franiac/TwitchLeecher/releases/tag/v{0}";
-        private const string releasesApiUrl = "https://api.github.com/repos/Franiac/TwitchLeecher/releases";
+        private const string LatestReleaseUrl = "https://github.com/schneidermanuel/TwitchLeecher-dx/releases/tag/v{0}";
+        private const string ReleasesApiUrl = "https://api.github.com/repos/schneidermanuel/TwitchLeecher-dx/releases";
 
         #endregion Constants
 
@@ -29,7 +29,7 @@ namespace TwitchLeecher.Services.Services
                 {
                     webClient.Headers.Add(HttpRequestHeader.UserAgent, "TwitchLeecher");
 
-                    string result = webClient.DownloadString(releasesApiUrl);
+                    string result = webClient.DownloadString(ReleasesApiUrl);
 
                     JToken releasesJson = JToken.Parse(result);
 
@@ -51,7 +51,7 @@ namespace TwitchLeecher.Services.Services
 
                             if (releaseVersion > localVersion)
                             {
-                                return new UpdateInfo(releaseVersion, released, string.Format(latestReleaseUrl, releaseVersion.ToString(3)), infoStr);
+                                return new UpdateInfo(releaseVersion, released, string.Format(LatestReleaseUrl, releaseVersion.ToString(3)), infoStr);
                             }
                             else
                             {

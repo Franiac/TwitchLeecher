@@ -115,79 +115,43 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int VideosCount
         {
-            get
-            {
-                return _videosCount;
-            }
-            private set
-            {
-                SetProperty(ref _videosCount, value, nameof(VideosCount));
-            }
+            get { return _videosCount; }
+            private set { SetProperty(ref _videosCount, value, nameof(VideosCount)); }
         }
 
         public int DownloadsCount
         {
-            get
-            {
-                return _downloadsCount;
-            }
-            private set
-            {
-                SetProperty(ref _downloadsCount, value, nameof(DownloadsCount));
-            }
+            get { return _downloadsCount; }
+            private set { SetProperty(ref _downloadsCount, value, nameof(DownloadsCount)); }
         }
 
         public string Title { get; }
 
         public bool ShowDonationButton
         {
-            get
-            {
-                return _showDonationButton;
-            }
+            get { return _showDonationButton; }
 
-            private set
-            {
-                SetProperty(ref _showDonationButton, value, nameof(ShowDonationButton));
-            }
+            private set { SetProperty(ref _showDonationButton, value, nameof(ShowDonationButton)); }
         }
 
         public bool IsAuthenticated
         {
-            get
-            {
-                return _isAuthenticated;
-            }
+            get { return _isAuthenticated; }
 
-            private set
-            {
-                SetProperty(ref _isAuthenticated, value, nameof(IsAuthenticated));
-            }
+            private set { SetProperty(ref _isAuthenticated, value, nameof(IsAuthenticated)); }
         }
 
         public bool IsAuthenticatedSubOnly
         {
-            get
-            {
-                return _isAuthenticatedSubOnly;
-            }
+            get { return _isAuthenticatedSubOnly; }
 
-            private set
-            {
-                SetProperty(ref _isAuthenticatedSubOnly, value, nameof(IsAuthenticatedSubOnly));
-            }
+            private set { SetProperty(ref _isAuthenticatedSubOnly, value, nameof(IsAuthenticatedSubOnly)); }
         }
 
         public ViewModelBase MainView
         {
-            get
-            {
-                return _mainView;
-            }
-            set
-            {
-                SetProperty(ref _mainView, value, nameof(MainView));
-            }
+            get { return _mainView; }
+            set { SetProperty(ref _mainView, value, nameof(MainView)); }
         }
 
         public ICommand ShowSearchCommand
@@ -418,11 +382,13 @@ namespace TwitchLeecher.Gui.ViewModels
 
                     if (_downloadService.CanShutdown())
                     {
-                        result = _dialogService.ShowMessageBox("Do you really want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        result = _dialogService.ShowMessageBox("Do you really want to logout?", "Logout",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
                     }
                     else
                     {
-                        result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and logout?",
+                            "Logout", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     }
 
                     if (result == MessageBoxResult.Yes)
@@ -474,7 +440,9 @@ namespace TwitchLeecher.Gui.ViewModels
                         throw new ArgumentNullException(nameof(window));
                     }
 
-                    window.WindowState = window.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+                    window.WindowState = window.WindowState == WindowState.Normal
+                        ? WindowState.Maximized
+                        : WindowState.Normal;
                 }
             }
             catch (Exception ex)
@@ -562,12 +530,16 @@ namespace TwitchLeecher.Gui.ViewModels
 
             if (_showAuthError)
             {
-                _dialogService.ShowMessageBox("Twitch could not validate the saved access token. Please try to log in again!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _dialogService.ShowMessageBox(
+                    "Twitch could not validate the saved access token. Please try to log in again!", "Login Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             if (_showAuthSubOnlyError)
             {
-                _dialogService.ShowMessageBox("Twitch could not validate the saved access token for sub-only support. Please try to enable sub-only support again!", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _dialogService.ShowMessageBox(
+                    "Twitch could not validate the saved access token for sub-only support. Please try to enable sub-only support again!",
+                    "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -700,7 +672,9 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (!_downloadService.CanShutdown())
                 {
-                    MessageBoxResult result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and exit the application?", "Exit Application", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    MessageBoxResult result = _dialogService.ShowMessageBox(
+                        "Do you want to abort all running downloads and exit the application?", "Exit Application",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                     if (result == MessageBoxResult.No)
                     {
