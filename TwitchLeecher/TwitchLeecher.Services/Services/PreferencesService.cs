@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -24,6 +25,8 @@ namespace TwitchLeecher.Services.Services
         private const string PREFERENCES_VERSION_ATTR = "Version";
 
         private const string APP_EL = "Application";
+
+        private const string APP_THEME = "Theme";
         private const string APP_CHECKFORUPDATES_EL = "CheckForUpdates";
         private const string APP_SHOWDONATIONBUTTON_EL = "ShowDonationButton";
 
@@ -91,6 +94,8 @@ namespace TwitchLeecher.Services.Services
             }
         }
 
+        public IEnumerable<string> AvailableThemes => new[] { "Original", "New" };
+
         #endregion Properties
 
         #region Methods
@@ -104,12 +109,15 @@ namespace TwitchLeecher.Services.Services
 
             string searchChannelName = CurrentPreferences.SearchChannelName;
 
-            if (!string.IsNullOrWhiteSpace(searchChannelName) && searchChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(searchChannelName) &&
+                searchChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
-            string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(c => c.Equals(channel, StringComparison.OrdinalIgnoreCase));
+            string existingEntry =
+                CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(c =>
+                    c.Equals(channel, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(existingEntry))
             {
@@ -145,6 +153,10 @@ namespace TwitchLeecher.Services.Services
                 XElement appCheckForUpdatesEl = new XElement(APP_CHECKFORUPDATES_EL);
                 appCheckForUpdatesEl.SetValue(preferences.AppCheckForUpdates);
                 appEl.Add(appCheckForUpdatesEl);
+
+                XElement themeEl = new XElement(APP_THEME);
+                themeEl.SetValue(preferences.Theme);
+                appEl.Add(themeEl);
 
                 XElement appShowDonationButtonEl = new XElement(APP_SHOWDONATIONBUTTON_EL);
                 appShowDonationButtonEl.SetValue(preferences.AppShowDonationButton);
@@ -309,6 +321,23 @@ namespace TwitchLeecher.Services.Services
                                     // Value from config file could not be loaded, use default value
                                 }
                             }
+
+                            var themeEl = appEl.Element(APP_THEME);
+                            if (themeEl != null)
+                            {
+                                try
+                                {
+                                    preferences.Theme = themeEl.GetValueAsString();
+                                    if (!AvailableThemes.Contains(preferences.Theme))
+                                    {
+                                        preferences.Theme = "New";
+                                    }
+                                }
+                                catch
+                                {
+                                    preferences.Theme = "New";
+                                }
+                            }
                         }
 
                         XElement searchEl = preferencesEl.Element(SEARCH_EL);
@@ -325,7 +354,8 @@ namespace TwitchLeecher.Services.Services
 
                                     if (!string.IsNullOrWhiteSpace(favChannelsStr))
                                     {
-                                        string[] channelList = favChannelsStr.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                        string[] channelList = favChannelsStr.Split(new char[] { ';' },
+                                            StringSplitOptions.RemoveEmptyEntries);
 
                                         if (channelList.Length > 0)
                                         {
@@ -373,7 +403,8 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.SearchLoadLimitType = searchLoadLimitTypeEl.GetValueAsEnum<LoadLimitType>();
+                                    preferences.SearchLoadLimitType =
+                                        searchLoadLimitTypeEl.GetValueAsEnum<LoadLimitType>();
                                 }
                                 catch
                                 {
@@ -479,7 +510,8 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.DownloadDefaultQuality = Preferences.DefaultQualities.Find(q => q.VerticalResolution == downloadDefaultQualityEl.GetValueAsInt());
+                                    preferences.DownloadDefaultQuality = Preferences.DefaultQualities.Find(q =>
+                                        q.VerticalResolution == downloadDefaultQualityEl.GetValueAsInt());
                                 }
                                 catch
                                 {
@@ -521,7 +553,8 @@ namespace TwitchLeecher.Services.Services
                             {
                                 try
                                 {
-                                    preferences.DownloadDisableConversion = donwloadDisableConversionEl.GetValueAsBool();
+                                    preferences.DownloadDisableConversion =
+                                        donwloadDisableConversionEl.GetValueAsBool();
                                 }
                                 catch
                                 {
@@ -584,12 +617,14 @@ namespace TwitchLeecher.Services.Services
                 SearchOnStartup = false,
                 DownloadTempFolder = _folderService.GetTempFolder(),
                 DownloadFolder = _folderService.GetDownloadFolder(),
-                DownloadFileName = FilenameWildcards.YEAR + FilenameWildcards.MONTH + FilenameWildcards.DAY + "_" + FilenameWildcards.CHANNEL + "_" + FilenameWildcards.ID,
+                DownloadFileName = FilenameWildcards.YEAR + FilenameWildcards.MONTH + FilenameWildcards.DAY + "_" +
+                                   FilenameWildcards.CHANNEL + "_" + FilenameWildcards.ID,
                 DownloadDefaultQuality = Preferences.DefaultQualities.First(),
                 DownloadRemoveCompleted = false,
                 DownloadDisableConversion = false,
                 MiscUseExternalPlayer = false,
-                MiscExternalPlayer = null
+                MiscExternalPlayer = null,
+                Theme = "New"
             };
 
             return preferences;

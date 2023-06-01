@@ -4,7 +4,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
                 <ResourceDictionary>
                     <Storyboard x:Key="NotificationStoryboard">
                         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.5" />
@@ -19,7 +18,7 @@
     </UserControl.RenderTransform>
     <TextBlock Name="txtNotification" Text="Test" HorizontalAlignment="Center" Padding="0,10" FontWeight="Bold">
         <TextBlock.Foreground>
-            <SolidColorBrush Color="{StaticResource Text.Foreground.Dark.Color}" />
+            <SolidColorBrush Color="{DynamicResource Text.Foreground.Dark.Color}" />
         </TextBlock.Foreground>
     </TextBlock>
 </UserControl>

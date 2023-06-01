@@ -1,6 +1,8 @@
 ﻿using Ninject;
 using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows;
@@ -11,6 +13,7 @@ using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Services.Modules;
+using TwitchLeecher.Services.Services;
 using TwitchLeecher.Shared.Communication;
 using TwitchLeecher.Shared.Events;
 
@@ -71,15 +74,40 @@ namespace TwitchLeecher
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject),
+                new FrameworkPropertyMetadata(int.MaxValue));
 
-            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; };
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls |
+                                                   SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.DefaultConnectionLimit = 10;
+
+            var themeService = _kernel.Get<IThemeService>();
+            themeService.StyleChanged += (sender, args) => { SetTheme(themeService.GetTheme()); };
+            var preferencesService = _kernel.Get<IPreferencesService>();
+            SetTheme(string.IsNullOrEmpty(preferencesService.CurrentPreferences.Theme)
+                ? "New"
+                : preferencesService.CurrentPreferences.Theme);
 
             MainWindow = _kernel.Get<MainWindow>();
             MainWindow.Show();
         }
+
+        private void SetTheme(string name)
+        {
+            var currentStyle = Styles.FirstOrDefault();
+            Styles.Add(new ResourceDictionary
+            {
+                Source = new Uri($"pack://application:,,,/TwitchLeecher.Gui;component/Theme/{name}/Style.xaml",
+                    UriKind.Absolute)
+            });
+            Styles.Remove(currentStyle);
+        }
+
+        private Collection<ResourceDictionary> Styles => Resources.MergedDictionaries[0].MergedDictionaries;
 
         private IKernel CreateKernel()
         {
@@ -118,8 +146,8 @@ namespace TwitchLeecher
                 string logFile = logService.LogException(ex);
 
                 MessageBox.Show("An unhandled UI exception occured and was written to log file"
-                    + Environment.NewLine + Environment.NewLine + logFile
-                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
+                                + Environment.NewLine + Environment.NewLine + logFile
+                                + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal UI Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Current?.Shutdown();
@@ -129,8 +157,8 @@ namespace TwitchLeecher
                 try
                 {
                     MessageBox.Show("An unhandled UI exception occured but could not be written to a log file!"
-                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
-                    "Fatal UI Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
+                        "Fatal UI Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {
@@ -149,8 +177,8 @@ namespace TwitchLeecher
                 string logFile = logService.LogException(ex);
 
                 MessageBox.Show("An unhandled exception occured and was written to a log file!"
-                    + Environment.NewLine + Environment.NewLine + logFile
-                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
+                                + Environment.NewLine + Environment.NewLine + logFile
+                                + Environment.NewLine + Environment.NewLine + "Application will now exit...",
                     "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Current?.Shutdown();
@@ -160,8 +188,8 @@ namespace TwitchLeecher
                 try
                 {
                     MessageBox.Show("An unhandled exception occured but could not be written to a log file!"
-                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
-                    "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    + Environment.NewLine + Environment.NewLine + "Application will now exit...",
+                        "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {

@@ -59,11 +59,13 @@
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\FilenameService.cs" />
     <Compile Include="Services\FolderService.cs" />
+    <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\ProcessingService.cs" />
     <Compile Include="Services\RuntimeDataService.cs" />
     <Compile Include="Services\PreferencesService.cs" />
     <Compile Include="Services\DownloadService.cs" />
+    <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Services\UpdateService.cs" />
   </ItemGroup>
   <ItemGroup>

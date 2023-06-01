@@ -8,10 +8,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
                     <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
@@ -23,7 +19,7 @@
                             <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
                             <fa:ImageAwesome Icon="Download" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
                                 <fa:ImageAwesome.Foreground>
-                                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+                                    <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
                                 </fa:ImageAwesome.Foreground>
                             </fa:ImageAwesome>
                         </StackPanel>
@@ -46,13 +42,10 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="20, 20, 20, 0" Padding="10" BorderThickness="1" CornerRadius="5">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                        </Border.BorderBrush>
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="0" />
-                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Top.Color}" Offset="0" />
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid>
@@ -62,9 +55,6 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
-                                <Border.BorderBrush>
-                                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                                </Border.BorderBrush>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -179,9 +169,6 @@
                                 </Grid>
                             </Grid>
                             <Border Grid.Row="2" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,10,0,0">
-                                <Border.BorderBrush>
-                                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                                </Border.BorderBrush>
                                 <Grid Height="26">
                                     <ProgressBar Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="{Binding IsIndeterminate}" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsIndeterminate, Converter={StaticResource ResourceKey='InverseBVConverter'}}">

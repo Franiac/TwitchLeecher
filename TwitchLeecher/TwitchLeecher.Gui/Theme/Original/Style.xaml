@@ -6,26 +6,35 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Constants.xaml" />
         <ResourceDictionary Source="Templates.xaml" />
+        <ResourceDictionary Source="Images.xaml" />
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BVConverter" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
     <!-- TextBlock -->
     <Style x:Key="TlDropShadowText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect ShadowDepth="1" Color="{StaticResource Global.Theme.Color}" BlurRadius="2" RenderingBias="Quality" Opacity="0.5" />
+                <DropShadowEffect ShadowDepth="1" Color="{DynamicResource Global.Theme.Color}" BlurRadius="2"
+                                  RenderingBias="Quality" Opacity="0.5" />
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="TlTitleText"  TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
+    <Style x:Key="TlTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
-    <Style x:Key="SubTitleText"  TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
+    <Style x:Key="SubTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TlDropShadowText}">
         <Setter Property="FontStyle" Value="Italic" />
     </Style>
 
@@ -34,7 +43,7 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
-    <SolidColorBrush x:Key="TlTabItemText.Foreground" Color="{StaticResource Text.Foreground.Dark.Color}" />
+    <SolidColorBrush x:Key="TlTabItemText.Foreground" Color="{DynamicResource Text.Foreground.Dark.Color}" />
 
     <Style x:Key="TlTabItemText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground" Value="{StaticResource TlTabItemText.Foreground}" />
@@ -58,8 +67,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" ToolTip="{StaticResource UnauthorizedToolTip}">
-                        <fa:ImageAwesome x:Name="icon" Icon="Star" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" SnapsToDevicePixels="true"
+                            ToolTip="{StaticResource UnauthorizedToolTip}">
+                        <fa:ImageAwesome x:Name="icon" Icon="Star" Width="16" Height="16"
+                                         RenderTransformOrigin="0.5,0.5" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsAuthenticatedSubOnly}" Value="True">
@@ -68,20 +81,26 @@
                             <Setter Property="ToolTip" TargetName="border" Value="{StaticResource AuthorizedToolTip}" />
                         </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                            <Setter Property="Background" TargetName="border"
+                                    Value="{DynamicResource Button.MouseOver.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border"
+                                    Value="{DynamicResource Button.MouseOver.Border}" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsAuthenticatedSubOnly}" Value="True" />
-                                <Condition Binding="{Binding RelativeSource='{RelativeSource Self}', Path='IsMouseOver'}" Value="True" />
+                                <Condition
+                                    Binding="{Binding RelativeSource='{RelativeSource Self}', Path='IsMouseOver'}"
+                                    Value="True" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Background" TargetName="border" Value="#FFAAFFAA" />
                             <Setter Property="BorderBrush" TargetName="border" Value="#FFAAFFAA" />
                         </MultiDataTrigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                            <Setter Property="Background" TargetName="border"
+                                    Value="{DynamicResource Button.Pressed.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border"
+                                    Value="{DynamicResource Button.Pressed.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -91,8 +110,9 @@
     <!-- /Button -->
 
     <!-- MultilineTextBox -->
-    <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border" Color="{StaticResource TextControl.Border.MouseOver.Color}" />
-    <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{StaticResource TextControl.Border.Focus.Color}" />
+    <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border"
+                     Color="{DynamicResource TextControl.Border.MouseOver.Color}" />
+    <SolidColorBrush x:Key="MultilineTextBox.Focus.Border" Color="{DynamicResource TextControl.Border.Focus.Color}" />
 
     <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
         <Grid x:Name="Grid" Background="{TemplateBinding Background}">
@@ -105,9 +125,22 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Rectangle x:Name="Corner" Grid.Column="1" Fill="Transparent" Grid.Row="1" />
-            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0" />
-            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" />
-            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" />
+            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                    CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False"
+                                    CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    Content="{TemplateBinding Content}" Grid.Column="0"
+                                    Margin="{TemplateBinding Padding}" Grid.Row="0" />
+            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar"
+                       Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0"
+                       Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                       Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                       ViewportSize="{TemplateBinding ViewportHeight}" />
+            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar"
+                       Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0"
+                       Orientation="Horizontal" Grid.Row="1"
+                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                       Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                       ViewportSize="{TemplateBinding ViewportWidth}" />
         </Grid>
     </ControlTemplate>
 
@@ -120,18 +153,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
-                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                        <ScrollViewer x:Name="PART_ContentHost" Template="{StaticResource TlScrollViewerTpl}" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" Template="{StaticResource TlScrollViewerTpl}"
+                                      Focusable="False" HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" TargetName="border" Value="0.56" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultilineTextBox.MouseOver.Border}" />
+                            <Setter Property="BorderBrush" TargetName="border"
+                                    Value="{StaticResource MultilineTextBox.MouseOver.Border}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultilineTextBox.Focus.Border}" />
+                            <Setter Property="BorderBrush" TargetName="border"
+                                    Value="{StaticResource MultilineTextBox.Focus.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -141,10 +180,10 @@
     <!-- /MultilineTextBox -->
 
     <!-- TlScrollingTextBox -->
-    <SolidColorBrush x:Key="TlScrollingTextBox.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
-    <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{StaticResource Global.Theme.Border.Color}" />
+    <SolidColorBrush x:Key="TlScrollingTextBox.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
 
-    <Style x:Key="TlScrollingTextBox" TargetType="{x:Type TextBox}"  BasedOn="{StaticResource {x:Type TextBox}}">
+    <Style x:Key="TlScrollingTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="Height" Value="Auto" />
@@ -161,7 +200,8 @@
     <!-- /TlScrollingTextBox -->
 
     <!-- TlIntegerUpDown -->
-    <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:TlIntegerUpDown}"  BasedOn="{StaticResource {x:Type ctrl:TlIntegerUpDown}}">
+    <Style x:Key="TlTimeUpDown" TargetType="{x:Type ctrl:TlIntegerUpDown}"
+           BasedOn="{StaticResource {x:Type ctrl:TlIntegerUpDown}}">
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -174,7 +214,8 @@
     <!-- /TlIntegerUpDown -->
 
     <!-- TlDateTimePicker -->
-    <Style x:Key="TlDatePicker" TargetType="{x:Type ctrl:TlDateTimePicker}"  BasedOn="{StaticResource {x:Type ctrl:TlDateTimePicker}}">
+    <Style x:Key="TlDatePicker" TargetType="{x:Type ctrl:TlDateTimePicker}"
+           BasedOn="{StaticResource {x:Type ctrl:TlDateTimePicker}}">
         <Setter Property="Format" Value="Custom" />
         <Setter Property="FormatString" Value="d" />
         <Setter Property="AutoCloseCalendar" Value="True" />
@@ -185,7 +226,7 @@
     <!-- /TlDateTimePicker -->
 
     <!-- TlFadeContentControl -->
-    <SolidColorBrush x:Key="TlFadeContentControl.Border" Color="{StaticResource Global.Theme.Color}" />
+    <SolidColorBrush x:Key="TlFadeContentControl.Border" Color="{DynamicResource Global.Theme.Color}" />
 
     <Style x:Key="TlFadeContentControl" TargetType="ContentControl">
         <Setter Property="Validation.ErrorTemplate">
@@ -197,8 +238,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
                     <Grid>
-                        <Rectangle x:Name="Tpl_Part_PaintArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" />
-                        <ContentControl Content="{TemplateBinding Content}" x:Name="Tpl_Part_MainContent" Visibility="Hidden">
+                        <Rectangle x:Name="Tpl_Part_PaintArea" HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch" Visibility="Hidden" />
+                        <ContentControl Content="{TemplateBinding Content}" x:Name="Tpl_Part_MainContent"
+                                        Visibility="Hidden">
                             <ContentControl.Template>
                                 <ControlTemplate TargetType="ContentControl">
                                     <Grid>
@@ -209,14 +252,19 @@
 
                                         <ContentPresenter Grid.Row="0" Content="{TemplateBinding Content}" />
 
-                                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" Visibility="{Binding HasMenu, Converter={StaticResource BVConverter}}">
+                                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}"
+                                                          Visibility="{Binding HasMenu, Converter={StaticResource BVConverter}}">
                                             <ContentPresenter.ContentTemplate>
                                                 <DataTemplate>
-                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0" BorderBrush="{StaticResource TlFadeContentControl.Border}">
+                                                    <Border Grid.Row="1" Padding="0,15,0,15" BorderThickness="0,1,0,0">
                                                         <Border.Background>
                                                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="1" />
-                                                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="0" />
+                                                                <GradientStop
+                                                                    Color="{DynamicResource Window.Background.Gradient.Top.Color}"
+                                                                    Offset="1" />
+                                                                <GradientStop
+                                                                    Color="{DynamicResource Window.Background.Gradient.Bottom.Color}"
+                                                                    Offset="0" />
                                                             </LinearGradientBrush>
                                                         </Border.Background>
                                                         <Grid>
@@ -226,7 +274,8 @@
                                                                 <ColumnDefinition />
                                                             </Grid.ColumnDefinitions>
 
-                                                            <ItemsControl Grid.Column="1" ItemsSource="{Binding MenuCommands}">
+                                                            <ItemsControl Grid.Column="1"
+                                                                          ItemsSource="{Binding MenuCommands}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <StackPanel Orientation="Horizontal" />
@@ -234,10 +283,18 @@
                                                                 </ItemsControl.ItemsPanel>
                                                                 <ItemsControl.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <Button Command="{Binding Command}" FontWeight="Bold" Width="{Binding Width}" Margin="0,0,5,0">
+                                                                        <Button Command="{Binding Command}"
+                                                                            FontWeight="Bold" Width="{Binding Width}"
+                                                                            Margin="0,0,5,0">
                                                                             <StackPanel Orientation="Horizontal">
-                                                                                <fa:ImageAwesome Icon="{Binding Icon}" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
-                                                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
+                                                                                <fa:ImageAwesome Icon="{Binding Icon}"
+                                                                                    Margin="0,4,0,2" Width="16"
+                                                                                    Height="16"
+                                                                                    RenderTransformOrigin="0.5,0.5" />
+                                                                                <TextBlock Text="{Binding Label}"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Margin="5,0,0,0" FontSize="14.667"
+                                                                                    RenderTransformOrigin="0.5,0.5" />
                                                                             </StackPanel>
                                                                         </Button>
                                                                     </DataTemplate>
@@ -260,13 +317,13 @@
     <!-- /TlFadeContentControl -->
 
     <!-- Popup -->
-    <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
 
     <Style x:Key="TlPopupWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="AllowsTransparency" Value="True" />
         <Setter Property="Foreground" Value="{StaticResource PopupWindow.Foreground}" />
-        <Setter Property="FontSize" Value="{StaticResource Global.Font.Size}" />
+        <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="SizeToContent" Value="WidthAndHeight" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -275,19 +332,18 @@
     <!-- /Popup -->
 
     <!-- Window -->
-    <SolidColorBrush x:Key="MainWindow.Foreground" Color="{StaticResource Text.Foreground.Light.Color}" />
-    <SolidColorBrush x:Key="MainWindow.Background" Color="{StaticResource Window.Background.Color}" />
-    <SolidColorBrush x:Key="MainWindow.Border" Color="{StaticResource Global.Theme.Border.Color}" />
+    <SolidColorBrush x:Key="MainWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
+    <SolidColorBrush x:Key="MainWindow.Background" Color="{DynamicResource Window.Background.Color}" />
+    <SolidColorBrush x:Key="MainWindow.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
 
     <Style x:Key="TlWindow" TargetType="{x:Type Window}" BasedOn="{StaticResource {x:Type Window}}">
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="Icon" Value="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico" />
-        <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{StaticResource MainWindow.Foreground}" />
         <Setter Property="Background" Value="{StaticResource MainWindow.Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource MainWindow.Border}" />
-        <Setter Property="FontSize" Value="{StaticResource Global.Font.Size}" />
+        <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="SnapsToDevicePixels" Value="True" />

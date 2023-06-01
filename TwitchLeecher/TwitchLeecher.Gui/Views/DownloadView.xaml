@@ -7,10 +7,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
                     <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
@@ -26,9 +22,6 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-            <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
-            </Border.BorderBrush>
             <TextBlock  Text="Download Video" FontSize="21.333" FontWeight="Bold" />
         </Border>
 
@@ -89,9 +82,6 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.Column="0" BorderThickness="0,0,0,1" Padding="0,0,0,5" Margin="0,0,0,5">
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                    </Border.BorderBrush>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
@@ -140,10 +130,10 @@
 
             <Border Grid.Row="11" Grid.Column="2" Visibility="{Binding ShowMutedPartsWarning, Converter={StaticResource BVConverter}}" Margin="0,10,0,0" Padding="5" BorderThickness="1" CornerRadius="5">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource Text.Foreground.Error.Color}" />
+                    <SolidColorBrush Color="{DynamicResource Text.Foreground.Error.Color}" />
                 </Border.BorderBrush>
                 <Border.Background>
-                    <SolidColorBrush Color="{StaticResource Text.Foreground.Error.Color}" Opacity="0.3" />
+                    <SolidColorBrush Color="{DynamicResource Text.Foreground.Error.Color}" Opacity="0.3" />
                 </Border.Background>
                 <TextBlock FontSize="11" Text="The video contains muted parts! This may cause problems during mp4 conversion. In case of a conversion error or audio issues, please try disabling mp4 converion in the preferences." />
             </Border>

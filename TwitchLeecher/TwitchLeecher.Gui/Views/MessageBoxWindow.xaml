@@ -5,20 +5,7 @@
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         WindowStartupLocation="CenterOwner"
         MinWidth="300">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Border Padding="20" BorderThickness="1">
-        <Border.BorderBrush>
-            <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
-        </Border.BorderBrush>
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF2E2E2E" Offset="0" />
@@ -33,9 +20,6 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Name="rowCaption" Padding="0,0,0,10" Margin="0,0,0,10" BorderThickness="0,0,0,1">
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                </Border.BorderBrush>
                 <TextBlock Name="txtCaption" Text="Caption" FontWeight="Bold" />
             </Border>
 
@@ -53,9 +37,6 @@
             </Grid>
 
             <Border Grid.Row="3" Padding="0,10,0,0" Margin="0,10,0,0" BorderThickness="0,1,0,0">
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                </Border.BorderBrush>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Name="btnYes" Margin="0,0,3,0" Click="BtnYes_Click" Width="80">
                         <TextBlock Name="btnYesContent" Text="Yes" />

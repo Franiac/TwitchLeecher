@@ -7,6 +7,7 @@ using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
+using TwitchLeecher.Services.Services;
 using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
@@ -18,6 +19,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly IDialogService _dialogService;
         private readonly INotificationService _notificationService;
         private readonly IPreferencesService _preferencesService;
+        private readonly IThemeService _themeService;
 
         private Preferences _currentPreferences;
 
@@ -40,11 +42,13 @@ namespace TwitchLeecher.Gui.ViewModels
         public PreferencesViewVM(
             IDialogService dialogService,
             INotificationService notificationService,
-            IPreferencesService preferencesService)
+            IPreferencesService preferencesService,
+            IThemeService themeService)
         {
             _dialogService = dialogService;
             _notificationService = notificationService;
             _preferencesService = preferencesService;
+            _themeService = themeService;
 
             _commandLockObject = new object();
         }
@@ -65,11 +69,10 @@ namespace TwitchLeecher.Gui.ViewModels
                 return _currentPreferences;
             }
 
-            private set
-            {
-                SetProperty(ref _currentPreferences, value);
-            }
+            private set { SetProperty(ref _currentPreferences, value); }
         }
+
+        public IEnumerable<string> AvailableThemes => _preferencesService.AvailableThemes;
 
         public ICommand AddFavouriteChannelCommand
         {
@@ -202,7 +205,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
                     if (!string.IsNullOrWhiteSpace(currentChannel))
                     {
-                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel => channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
+                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel =>
+                            channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
 
                         if (!string.IsNullOrWhiteSpace(existingEntry))
                         {
@@ -231,12 +235,14 @@ namespace TwitchLeecher.Gui.ViewModels
 
                     if (!string.IsNullOrWhiteSpace(currentChannel))
                     {
-                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel => channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
+                        string existingEntry = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault(channel =>
+                            channel.Equals(currentChannel, StringComparison.OrdinalIgnoreCase));
 
                         if (!string.IsNullOrWhiteSpace(existingEntry))
                         {
                             CurrentPreferences.SearchFavouriteChannels.Remove(existingEntry);
-                            CurrentPreferences.SearchChannelName = CurrentPreferences.SearchFavouriteChannels.FirstOrDefault();
+                            CurrentPreferences.SearchChannelName =
+                                CurrentPreferences.SearchFavouriteChannels.FirstOrDefault();
                         }
                     }
                 }
@@ -253,7 +259,8 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadTempFolder, ChooseDownloadTempFolderCallback);
+                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadTempFolder,
+                        ChooseDownloadTempFolderCallback);
                 }
             }
             catch (Exception ex)
@@ -283,7 +290,8 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadFolder, ChooseDownloadFolderCallback);
+                    _dialogService.ShowFolderBrowserDialog(CurrentPreferences.DownloadFolder,
+                        ChooseDownloadFolderCallback);
                 }
             }
             catch (Exception ex)
@@ -314,7 +322,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     var filter = new CommonFileDialogFilter("Executables", "*.exe");
-                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.MiscExternalPlayer, ChooseExternalPlayerCallback);
+                    _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.MiscExternalPlayer,
+                        ChooseExternalPlayerCallback);
                 }
             }
             catch (Exception ex)
@@ -365,6 +374,7 @@ namespace TwitchLeecher.Gui.ViewModels
                     if (!HasErrors)
                     {
                         _preferencesService.Save(_currentPreferences);
+                        _themeService.SetTheme(_currentPreferences.Theme);
                         CurrentPreferences = null;
                         _notificationService.ShowNotification("Preferences saved");
                     }
@@ -382,7 +392,9 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    MessageBoxResult result = _dialogService.ShowMessageBox("Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = _dialogService.ShowMessageBox(
+                        "Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
                     {
@@ -403,12 +415,14 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    MessageBoxResult result = _dialogService.ShowMessageBox("Load default preferences?", "Defaults", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = _dialogService.ShowMessageBox("Load default preferences?", "Defaults",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
                     {
                         _dialogService.SetBusy();
                         _preferencesService.Save(_preferencesService.CreateDefault());
+                       _themeService.SetTheme(_preferencesService.CurrentPreferences.Theme); 
                         CurrentPreferences = null;
                     }
                 }

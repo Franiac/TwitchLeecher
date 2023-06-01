@@ -8,10 +8,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:SearchTypeToBooleanConverter x:Key="searchTypeToBooleanConverter" />
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
@@ -28,9 +24,6 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-            <Border.BorderBrush>
-                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
-            </Border.BorderBrush>
             <TextBlock  Text="Search" FontSize="21.333" FontWeight="Bold" />
         </Border>
 

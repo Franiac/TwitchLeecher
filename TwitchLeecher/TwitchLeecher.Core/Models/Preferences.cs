@@ -12,7 +12,8 @@ namespace TwitchLeecher.Core.Models
     {
         #region Static Fields
 
-        public static List<DefaultQuality> DefaultQualities = new List<DefaultQuality>() {
+        public static List<DefaultQuality> DefaultQualities = new List<DefaultQuality>()
+        {
             new DefaultQuality(DefaultQuality.SOURCE_RES, "Source"),
             new DefaultQuality(720, "720p"),
             new DefaultQuality(480, "480p"),
@@ -62,6 +63,7 @@ namespace TwitchLeecher.Core.Models
         private bool _miscUseExternalPlayer;
 
         private string _miscExternalPlayer;
+        private string _theme;
 
         #endregion Fields
 
@@ -69,63 +71,39 @@ namespace TwitchLeecher.Core.Models
 
         public Version Version
         {
-            get
-            {
-                return _version;
-            }
-            set
-            {
-                SetProperty(ref _version, value);
-            }
+            get { return _version; }
+            set { SetProperty(ref _version, value); }
         }
 
         public bool AppCheckForUpdates
         {
-            get
-            {
-                return _appCheckForUpdates;
-            }
-            set
-            {
-                SetProperty(ref _appCheckForUpdates, value);
-            }
+            get { return _appCheckForUpdates; }
+            set { SetProperty(ref _appCheckForUpdates, value); }
         }
 
         public bool AppShowDonationButton
         {
-            get
-            {
-                return _appShowDonationButton;
-            }
-            set
-            {
-                SetProperty(ref _appShowDonationButton, value);
-            }
+            get { return _appShowDonationButton; }
+            set { SetProperty(ref _appShowDonationButton, value); }
         }
 
         public bool MiscUseExternalPlayer
         {
-            get
-            {
-                return _miscUseExternalPlayer;
-            }
-            set
-            {
-                SetProperty(ref _miscUseExternalPlayer, value);
-            }
+            get { return _miscUseExternalPlayer; }
+            set { SetProperty(ref _miscUseExternalPlayer, value); }
         }
 
         public string MiscExternalPlayer
         {
-            get
-            {
-                return _miscExternalPlayer;
-            }
+            get { return _miscExternalPlayer; }
 
-            set
-            {
-                SetProperty(ref _miscExternalPlayer, value);
-            }
+            set { SetProperty(ref _miscExternalPlayer, value); }
+        }
+
+        public string Theme
+        {
+            get { return _theme; }
+            set { SetProperty(ref _theme, value); }
         }
 
         public RangeObservableCollection<string> SearchFavouriteChannels
@@ -143,166 +121,85 @@ namespace TwitchLeecher.Core.Models
 
         public string SearchChannelName
         {
-            get
-            {
-                return _searchChannelName;
-            }
-            set
-            {
-                SetProperty(ref _searchChannelName, value);
-            }
+            get { return _searchChannelName; }
+            set { SetProperty(ref _searchChannelName, value); }
         }
 
         public VideoType SearchVideoType
         {
-            get
-            {
-                return _searchVideoType;
-            }
-            set
-            {
-                SetProperty(ref _searchVideoType, value);
-            }
+            get { return _searchVideoType; }
+            set { SetProperty(ref _searchVideoType, value); }
         }
 
         public LoadLimitType SearchLoadLimitType
         {
-            get
-            {
-                return _searchLoadLimitType;
-            }
-            set
-            {
-                SetProperty(ref _searchLoadLimitType, value);
-            }
+            get { return _searchLoadLimitType; }
+            set { SetProperty(ref _searchLoadLimitType, value); }
         }
 
         public int SearchLoadLastDays
         {
-            get
-            {
-                return _searchLoadLastDays;
-            }
-            set
-            {
-                SetProperty(ref _searchLoadLastDays, value);
-            }
+            get { return _searchLoadLastDays; }
+            set { SetProperty(ref _searchLoadLastDays, value); }
         }
 
         public int SearchLoadLastVods
         {
-            get
-            {
-                return _searchLoadLastVods;
-            }
-            set
-            {
-                SetProperty(ref _searchLoadLastVods, value);
-            }
+            get { return _searchLoadLastVods; }
+            set { SetProperty(ref _searchLoadLastVods, value); }
         }
 
         public bool SearchOnStartup
         {
-            get
-            {
-                return _searchOnStartup;
-            }
-            set
-            {
-                SetProperty(ref _searchOnStartup, value);
-            }
+            get { return _searchOnStartup; }
+            set { SetProperty(ref _searchOnStartup, value); }
         }
 
         public string DownloadTempFolder
         {
-            get
-            {
-                return _downloadTempFolder;
-            }
-            set
-            {
-                SetProperty(ref _downloadTempFolder, value);
-            }
+            get { return _downloadTempFolder; }
+            set { SetProperty(ref _downloadTempFolder, value); }
         }
 
         public string DownloadFolder
         {
-            get
-            {
-                return _downloadFolder;
-            }
-            set
-            {
-                SetProperty(ref _downloadFolder, value);
-            }
+            get { return _downloadFolder; }
+            set { SetProperty(ref _downloadFolder, value); }
         }
 
         public string DownloadFileName
         {
-            get
-            {
-                return _downloadFileName;
-            }
-            set
-            {
-                SetProperty(ref _downloadFileName, value);
-            }
+            get { return _downloadFileName; }
+            set { SetProperty(ref _downloadFileName, value); }
         }
 
         public DefaultQuality DownloadDefaultQuality
         {
-            get
-            {
-                return _downloadDefaultQuality;
-            }
-            set
-            {
-                SetProperty(ref _downloadDefaultQuality, value);
-            }
+            get { return _downloadDefaultQuality; }
+            set { SetProperty(ref _downloadDefaultQuality, value); }
         }
 
         public List<DefaultQuality> DownloadDefaultQualities
         {
-            get
-            {
-                return DefaultQualities;
-            }
+            get { return DefaultQualities; }
         }
 
         public bool DownloadSubfoldersForFav
         {
-            get
-            {
-                return _downloadSubfoldersForFav;
-            }
-            set
-            {
-                SetProperty(ref _downloadSubfoldersForFav, value);
-            }
+            get { return _downloadSubfoldersForFav; }
+            set { SetProperty(ref _downloadSubfoldersForFav, value); }
         }
 
         public bool DownloadRemoveCompleted
         {
-            get
-            {
-                return _downloadRemoveCompleted;
-            }
-            set
-            {
-                SetProperty(ref _downloadRemoveCompleted, value);
-            }
+            get { return _downloadRemoveCompleted; }
+            set { SetProperty(ref _downloadRemoveCompleted, value); }
         }
 
         public bool DownloadDisableConversion
         {
-            get
-            {
-                return _downloadDisableConversion;
-            }
-            set
-            {
-                SetProperty(ref _downloadDisableConversion, value);
-            }
+            get { return _downloadDisableConversion; }
+            set { SetProperty(ref _downloadDisableConversion, value); }
         }
 
         #endregion Properties
@@ -340,7 +237,8 @@ namespace TwitchLeecher.Core.Models
             {
                 if (_searchOnStartup && string.IsNullOrWhiteSpace(_searchChannelName))
                 {
-                    AddError(currentProperty, "If 'Search on Startup' is enabled, you need to specify a default channel name!");
+                    AddError(currentProperty,
+                        "If 'Search on Startup' is enabled, you need to specify a default channel name!");
                 }
             }
 
@@ -348,7 +246,8 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchLoadLimitType == LoadLimitType.Timespan && (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
+                if (_searchLoadLimitType == LoadLimitType.Timespan &&
+                    (_searchLoadLastDays < 1 || _searchLoadLastDays > 999))
                 {
                     AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
@@ -358,7 +257,8 @@ namespace TwitchLeecher.Core.Models
 
             if (string.IsNullOrWhiteSpace(propertyName) || propertyName == currentProperty)
             {
-                if (_searchLoadLimitType == LoadLimitType.LastVods && (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
+                if (_searchLoadLimitType == LoadLimitType.LastVods &&
+                    (_searchLoadLastVods < 1 || _searchLoadLastVods > 999))
                 {
                     AddError(currentProperty, "Value has to be between 1 and 999!");
                 }
@@ -428,7 +328,8 @@ namespace TwitchLeecher.Core.Models
                 DownloadDefaultQuality = _downloadDefaultQuality,
                 DownloadSubfoldersForFav = DownloadSubfoldersForFav,
                 DownloadRemoveCompleted = DownloadRemoveCompleted,
-                DownloadDisableConversion = DownloadDisableConversion
+                DownloadDisableConversion = DownloadDisableConversion,
+                Theme = Theme
             };
 
             clone.SearchFavouriteChannels.AddRange(SearchFavouriteChannels);

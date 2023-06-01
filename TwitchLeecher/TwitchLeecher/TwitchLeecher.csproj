@@ -70,6 +70,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TwitchLeecher.Core\TwitchLeecher.Core.csproj">
+      <Project>{ee50464e-7667-4223-9fde-05b0ae0d90cd}</Project>
+      <Name>TwitchLeecher.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwitchLeecher.Services\TwitchLeecher.Services.csproj">
       <Project>{d99faad3-7131-4f91-9d92-0d434a9f4385}</Project>
       <Name>TwitchLeecher.Services</Name>

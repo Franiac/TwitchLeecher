@@ -8,20 +8,18 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
                 <ResourceDictionary>
                     <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
                     <BooleanToVisibilityConverter x:Key="BVConverter" />
 
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
-                            <fa:ImageAwesome Icon="VideoCamera" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
+                            <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24"
+                                       FontWeight="Bold" />
+                            <fa:ImageAwesome Icon="VideoCamera" Margin="0,20,0,20" Width="150" Height="150"
+                                             Opacity="0.5">
                                 <fa:ImageAwesome.Foreground>
-                                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+                                    <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
                                 </fa:ImageAwesome.Foreground>
                             </fa:ImageAwesome>
                         </StackPanel>
@@ -48,13 +46,11 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="10" BorderThickness="1" CornerRadius="5">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                        </Border.BorderBrush>
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{StaticResource Window.Background.Gradient.Top.Color}" Offset="0" />
-                                <GradientStop Color="{StaticResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Top.Color}" Offset="0" />
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Bottom.Color}"
+                                              Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <DockPanel>
@@ -71,51 +67,71 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Row="1" Margin="0,3,0,0" Opacity=".75" FontSize="12" Text="{Binding RecordedDate, StringFormat='D'}" />
+                                    <TextBlock Grid.Row="1" Margin="0,3,0,0" Opacity=".75" FontSize="12"
+                                               Text="{Binding RecordedDate, StringFormat='D'}" />
                                 </Grid>
 
-                                <Button Grid.Column="1" IsEnabled="{Binding Live, Converter={StaticResource InverseBoolConverter}}" Padding="8" Width="40" Height="{Binding ActualHeight, ElementName=txtGrid, Mode=OneWay}" Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}">
+                                <Button Grid.Column="1"
+                                        IsEnabled="{Binding Live, Converter={StaticResource InverseBoolConverter}}"
+                                        Padding="8" Width="40"
+                                        Height="{Binding ActualHeight, ElementName=txtGrid, Mode=OneWay}"
+                                        Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding Id}">
                                     <fa:ImageAwesome Icon="Download" RenderTransformOrigin="0.5,0.5" />
                                 </Button>
                             </Grid>
                             <Grid Cursor="Hand">
                                 <Grid.InputBindings>
-                                    <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Id}" />
+                                    <MouseBinding Gesture="LeftClick"
+                                                  Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                                  CommandParameter="{Binding Id}" />
                                 </Grid.InputBindings>
                                 <Canvas MinWidth="280" MinHeight="158" x:Name="canvas">
-                                    <Image Source="{Binding Thumbnail}" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" Stretch="Fill" />
+                                    <Image Source="{Binding Thumbnail}"
+                                           Width="{Binding ElementName=canvas, Path=ActualWidth}"
+                                           Height="{Binding ElementName=canvas, Path=ActualHeight}" Stretch="Fill" />
                                 </Canvas>
-                                <Border Visibility="{Binding Live, Converter={StaticResource BVConverter}}" Background="#FFEB0400" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="3" Margin="3,3,0,0" Padding="5,0,5,1">
+                                <Border Visibility="{Binding Live, Converter={StaticResource BVConverter}}"
+                                        Background="#FFEB0400" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                        CornerRadius="3" Margin="3,3,0,0" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Play" Width="10" Height="10" VerticalAlignment="Center">
                                             <fa:ImageAwesome.Foreground>
-                                                <SolidColorBrush Color="{StaticResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
                                             </fa:ImageAwesome.Foreground>
                                         </fa:ImageAwesome>
-                                        <TextBlock Text="LIVE" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="LIVE" FontSize="12" Margin="4,0,0,0"
+                                                   VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
-                                <Border Visibility="{Binding Muted, Converter={StaticResource BVConverter}}" Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="3" Margin="0,3,3,0" Padding="5,0,5,1">
+                                <Border Visibility="{Binding Muted, Converter={StaticResource BVConverter}}"
+                                        Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        CornerRadius="3" Margin="0,3,3,0" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
-                                        <fa:ImageAwesome Icon="MicrophoneSlash" Width="10" Height="10" VerticalAlignment="Center">
+                                        <fa:ImageAwesome Icon="MicrophoneSlash" Width="10" Height="10"
+                                                         VerticalAlignment="Center">
                                             <fa:ImageAwesome.Foreground>
-                                                <SolidColorBrush Color="{StaticResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
                                             </fa:ImageAwesome.Foreground>
                                         </fa:ImageAwesome>
-                                        <TextBlock Text="Muted Parts" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Muted Parts" FontSize="12" Margin="4,0,0,0"
+                                                   VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#78000000" HorizontalAlignment="Left" VerticalAlignment="Bottom" CornerRadius="3" Margin="3,0,0,3" Padding="5,0,5,1">
+                                <Border Background="#78000000" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                        CornerRadius="3" Margin="3,0,0,3" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Eye" Width="10" Height="10" VerticalAlignment="Center">
                                             <fa:ImageAwesome.Foreground>
-                                                <SolidColorBrush Color="{StaticResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
                                             </fa:ImageAwesome.Foreground>
                                         </fa:ImageAwesome>
-                                        <TextBlock Text="{Binding Views}" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Views}" FontSize="12" Margin="4,0,0,0"
+                                                   VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Bottom" CornerRadius="3" Margin="0,0,3,3" Padding="5,0,5,1">
+                                <Border Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        CornerRadius="3" Margin="0,0,3,3" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding LengthStr}" FontSize="12" VerticalAlignment="Center" />
                                     </StackPanel>

@@ -21,6 +21,7 @@ namespace TwitchLeecher.Services.Modules
             Bind<IRuntimeDataService>().To<RuntimeDataService>().InSingletonScope();
             Bind<IUpdateService>().To<UpdateService>().InSingletonScope();
             Bind<IAuthListener>().To<AuthListener>().InSingletonScope();
+            Bind<IThemeService>().To<ThemeService>().InSingletonScope();
         }
 
         #endregion Methods

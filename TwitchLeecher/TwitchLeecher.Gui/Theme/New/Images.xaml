@@ -24,7 +24,7 @@
         <Setter Property="SpinDuration" Value="3" />
         <Setter Property="Foreground">
             <Setter.Value>
-                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+                <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -45,7 +45,7 @@
         <Setter Property="Icon" Value="QuestionCircle" />
         <Setter Property="Foreground">
             <Setter.Value>
-                <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
+                <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
             </Setter.Value>
         </Setter>
     </Style>

@@ -9,16 +9,6 @@
         Height="480"
         MinWidth="450"
         MinHeight="300">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Theme/Constants.xaml" />
-                <ResourceDictionary Source="../Theme/Templates.xaml" />
-                <ResourceDictionary Source="../Theme/Styles.xaml" />
-                <ResourceDictionary Source="../Theme/Images.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
 
     <Border Padding="20">
         <Grid>
@@ -33,9 +23,6 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource Global.Theme.Color}" />
-                </Border.BorderBrush>
                 <TextBlock  Text="Update Available" FontSize="21" FontWeight="Bold" />
             </Border>
 
@@ -53,9 +40,6 @@
             </TextBlock>
 
             <Border Grid.Row="6" BorderThickness="1">
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{StaticResource Global.Theme.Border.Color}" />
-                </Border.BorderBrush>
                 <ctrl:TlScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
             </Border>
         </Grid>
