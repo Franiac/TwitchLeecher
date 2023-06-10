@@ -65,7 +65,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     _ = _authListener.StartListenForToken();
                     Process.Start(
-                        $"https://id.twitch.tv/oauth2/authorize?client_id={Constants.ClientId}&redirect_uri={Constants.RedirectUrl}&response_type=token&scope=user:read:subscriptions&force_verify=true");
+                        $"https://id.twitch.tv/oauth2/authorize?client_id={Constants.ClientId}&redirect_uri={Constants.RedirectUrl}&response_type=token&scope=user:read:subscriptions user_subscriptions&force_verify=true");
                 }
             }
             catch (Exception ex)

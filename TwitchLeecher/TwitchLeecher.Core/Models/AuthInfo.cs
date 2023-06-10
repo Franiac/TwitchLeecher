@@ -40,13 +40,6 @@ namespace TwitchLeecher.Core.Models
                 authenticationEl.Add(accessTokenEl);
             }
 
-            if (!string.IsNullOrWhiteSpace(AccessTokenSubOnly))
-            {
-                XElement accessTokenSubOnlyEl = new XElement(AUTHENTICATION_ACCESSTOKENSUBONLY_EL);
-                accessTokenSubOnlyEl.SetValue(AccessTokenSubOnly);
-                authenticationEl.Add(accessTokenSubOnlyEl);
-            }
-
             return authenticationEl;
         }
 
@@ -69,22 +62,6 @@ namespace TwitchLeecher.Core.Models
                     try
                     {
                         runtimeAuthInfo.AccessToken = accessTokenEl.GetValueAsString();
-                        entryFound = true;
-                    }
-                    catch
-                    {
-                        // Malformed XML
-                        return null;
-                    }
-                }
-
-                XElement accessTokenSubOnlyEl = authenticationEl.Element(AUTHENTICATION_ACCESSTOKENSUBONLY_EL);
-
-                if (accessTokenSubOnlyEl != null)
-                {
-                    try
-                    {
-                        runtimeAuthInfo.AccessTokenSubOnly = accessTokenSubOnlyEl.GetValueAsString();
                         entryFound = true;
                     }
                     catch

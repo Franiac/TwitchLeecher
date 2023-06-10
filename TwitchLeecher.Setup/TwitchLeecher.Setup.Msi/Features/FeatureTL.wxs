@@ -1,467 +1,531 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<?include $(var.SolutionDir)TwitchLeecher.Setup.Msi\Variables.wxi?>
+    <?include $(var.SolutionDir)TwitchLeecher.Setup.Msi\Variables.wxi?>
 
-	<Fragment>
-		<ComponentGroup Id="FeatureVCRuntimeComponents">
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_console_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-console-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_console_l1_2_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-console-l1-2-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_datetime_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-datetime-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_debug_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-debug-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_errorhandling_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-errorhandling-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_fibers_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-fibers-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_file_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_file_l1_2_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l1-2-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_file_l2_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l2-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_handle_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-handle-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_heap_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-heap-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_interlocked_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-interlocked-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_libraryloader_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-libraryloader-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_localization_l1_2_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-localization-l1-2-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_memory_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-memory-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_namedpipe_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-namedpipe-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_processenvironment_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processenvironment-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_processthreads_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processthreads-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_processthreads_l1_1_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processthreads-l1-1-1.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_profile_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-profile-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_rtlsupport_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-rtlsupport-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_string_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-string-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_synch_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-synch-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_synch_l1_2_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-synch-l1-2-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_sysinfo_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-sysinfo-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_timezone_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-timezone-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_core_util_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-core-util-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_conio_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-conio-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_convert_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-convert-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_environment_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-environment-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_filesystem_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-filesystem-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_heap_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-heap-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_locale_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-locale-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_math_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-math-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_multibyte_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-multibyte-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_private_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-private-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_process_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-process-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_runtime_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-runtime-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_stdio_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-stdio-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_string_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-string-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_time_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-time-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_api_ms_win_crt_utility_l1_1_0.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-utility-l1-1-0.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_concrt140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)concrt140.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_msvcp140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_msvcp140_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_1.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_msvcp140_2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_2.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_msvcp140_atomic_wait.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_atomic_wait.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_msvcp140_codecvt_ids.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_codecvt_ids.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_ucrtbase.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ucrtbase.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vccorlib140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vccorlib140.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vcruntime140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vcruntime140.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vcruntime140_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vcruntime140_1.dll" />
-			</Component>
-		</ComponentGroup>
+    <Fragment>
+        <ComponentGroup Id="FeatureVCRuntimeComponents">
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_console_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-console-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_console_l1_2_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-console-l1-2-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_datetime_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-datetime-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_debug_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-debug-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_errorhandling_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-errorhandling-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_fibers_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-fibers-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_file_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_file_l1_2_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l1-2-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_file_l2_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-file-l2-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_handle_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-handle-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_heap_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-heap-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_interlocked_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-interlocked-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_libraryloader_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-libraryloader-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_localization_l1_2_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-localization-l1-2-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_memory_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-memory-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_namedpipe_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-namedpipe-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_processenvironment_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processenvironment-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_processthreads_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processthreads-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_processthreads_l1_1_1.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-processthreads-l1-1-1.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_profile_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-profile-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_rtlsupport_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-rtlsupport-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_string_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-string-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_synch_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-synch-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_synch_l1_2_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-synch-l1-2-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_sysinfo_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-sysinfo-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_timezone_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-timezone-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_core_util_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-core-util-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_conio_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-conio-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_convert_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-convert-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_environment_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-environment-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_filesystem_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-filesystem-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_heap_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-heap-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_locale_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-locale-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_math_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-math-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_multibyte_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-multibyte-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_private_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-private-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_process_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-process-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_runtime_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-runtime-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_stdio_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-stdio-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_string_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-string-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_time_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-time-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_api_ms_win_crt_utility_l1_1_0.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)api-ms-win-crt-utility-l1-1-0.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_concrt140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)concrt140.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_msvcp140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_msvcp140_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_1.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_msvcp140_2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)msvcp140_2.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_msvcp140_atomic_wait.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)msvcp140_atomic_wait.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_msvcp140_codecvt_ids.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)msvcp140_codecvt_ids.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_ucrtbase.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ucrtbase.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vccorlib140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vccorlib140.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vcruntime140.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vcruntime140.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vcruntime140_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vcruntime140_1.dll"/>
+            </Component>
+        </ComponentGroup>
 
-		<ComponentGroup Id="FeatureTLStartMenuComponents">
-			<Component Directory="ShortcutsFolder">
-				<RemoveFolder Id="ShortcutsFolderUninstall" On="uninstall" />
-				<RegistryKey Root="HKMU" Key="[TL_REGISTRY_PATH]">
-					<RegistryValue Name="Shortcuts" Type="string" Value="Installed" KeyPath="yes" />
-				</RegistryKey>
-			</Component>
-		</ComponentGroup>
+        <ComponentGroup Id="FeatureTLStartMenuComponents">
+            <Component Directory="ShortcutsFolder">
+                <RemoveFolder Id="ShortcutsFolderUninstall" On="uninstall"/>
+                <RegistryKey Root="HKMU" Key="[TL_REGISTRY_PATH]">
+                    <RegistryValue Name="Shortcuts" Type="string" Value="Installed" KeyPath="yes"/>
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
 
-		<ComponentGroup Id="FeatureTLRegistryComponents">
-			<Component Directory="INSTALLDIR">
-				<RegistryKey Root="HKMU" Key="[TL_REGISTRY_PATH]">
-					<RegistryValue Id="TL_INSTALLDIR_REGVALUE" Name="[TL_INSTALLDIR_REGVALUENAME]" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
-				</RegistryKey>
-			</Component>
-		</ComponentGroup>
+        <ComponentGroup Id="FeatureTLRegistryComponents">
+            <Component Directory="INSTALLDIR">
+                <RegistryKey Root="HKMU" Key="[TL_REGISTRY_PATH]">
+                    <RegistryValue Id="TL_INSTALLDIR_REGVALUE" Name="[TL_INSTALLDIR_REGVALUENAME]" Type="string"
+                                   Value="[INSTALLDIR]" KeyPath="yes"/>
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
 
-		<DirectoryRef Id="INSTALLDIR">
-			<Directory Id="LocalesDir" Name="locales" />
-			<Directory Id="ShaderDir" Name="swiftshader" />
-		</DirectoryRef>
+        <DirectoryRef Id="INSTALLDIR">
+            <Directory Id="LocalesDir" Name="locales"/>
+            <Directory Id="ShaderDir" Name="swiftshader"/>
+        </DirectoryRef>
 
-		<ComponentGroup Id="FeatureTLComponents">
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_am.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\am.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ar.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ar.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_bg.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bg.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_bn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bn.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ca.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ca.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_cs.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\cs.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_da.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\da.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_de.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\de.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_el.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\el.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_en_GB.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-GB.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_eb_US.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-US.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_es.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_es_419.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es-419.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_et.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\et.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_fa.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fa.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_fi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fi.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_fil.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fil.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_fr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fr.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_gu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\gu.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_he.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\he.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_hi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hi.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_hr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hr.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_hu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hu.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_id.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\id.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_it.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\it.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ja.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ja.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_kn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\kn.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ko.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ko.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_lt.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lt.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_lv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lv.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ml.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ml.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_mr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\mr.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ms.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ms.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_nb.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nb.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_nl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nl.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_pl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pl.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_pt_BR.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-BR.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_pt_PT.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-PT.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ro.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ro.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ru.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ru.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_sk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sk.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_sl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sl.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_sr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sr.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_sv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sv.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_sw.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sw.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_ta.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ta.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_te.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\te.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_th.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\th.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_tr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\tr.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_uk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\uk.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_vi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\vi.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_zh_CN.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-CN.pak" />
-			</Component>
-			<Component Directory="LocalesDir">
-				<File Id="TL_Locales_zh_TW.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-TW.pak" />
-			</Component>
+        <ComponentGroup Id="FeatureTLComponents">
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_am.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\am.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ar.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ar.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_bg.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bg.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_bn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\bn.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ca.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ca.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_cs.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\cs.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_da.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\da.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_de.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\de.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_el.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\el.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_en_GB.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-GB.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_eb_US.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\en-US.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_es.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_es_419.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\es-419.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_et.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\et.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_fa.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fa.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_fi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fi.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_fil.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fil.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_fr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\fr.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_gu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\gu.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_he.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\he.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_hi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hi.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_hr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hr.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_hu.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\hu.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_id.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\id.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_it.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\it.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ja.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ja.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_kn.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\kn.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ko.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ko.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_lt.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lt.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_lv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\lv.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ml.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ml.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_mr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\mr.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ms.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ms.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_nb.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nb.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_nl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\nl.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_pl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pl.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_pt_BR.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-BR.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_pt_PT.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\pt-PT.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ro.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ro.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ru.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ru.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_sk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sk.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_sl.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sl.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_sr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sr.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_sv.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sv.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_sw.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\sw.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_ta.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\ta.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_te.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\te.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_th.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\th.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_tr.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\tr.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_uk.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\uk.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_vi.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\vi.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_zh_CN.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-CN.pak"/>
+            </Component>
+            <Component Directory="LocalesDir">
+                <File Id="TL_Locales_zh_TW.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)locales\zh-TW.pak"/>
+            </Component>
 
-<!--			<Component Directory="ShaderDir">-->
-			<!--				<File Id="TL_Shader_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libEGL.dll" />-->
-			<!--			</Component>-->
-			<!--			<Component Directory="ShaderDir">-->
-			<!--				<File Id="TL_Shader_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libGLESv2.dll" />-->
-			<!--			</Component>-->
+            <!--			<Component Directory="ShaderDir">-->
+            <!--				<File Id="TL_Shader_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libEGL.dll" />-->
+            <!--			</Component>-->
+            <!--			<Component Directory="ShaderDir">-->
+            <!--				<File Id="TL_Shader_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)swiftshader\libGLESv2.dll" />-->
+            <!--			</Component>-->
 
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_LICENSE" KeyPath="yes" Source="$(var.SolutionDir)..\LICENSE" />
-			</Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_LICENSE" KeyPath="yes" Source="$(var.SolutionDir)..\LICENSE"/>
+            </Component>
 
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.BrowserSubprocess.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.Core.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.BrowserSubprocess.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.exe" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Core.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.Core.Runtime.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Core.Runtime.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_CefSharp.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Wpf.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_chrome_100_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_100_percent.pak" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_chrome_200_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_200_percent.pak" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_chrome_elf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_elf.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_d3dcompiler_47.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)d3dcompiler_47.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_ffmpeg.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg.exe" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_icudtl.dat" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)icudtl.dat" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_libcef.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libcef.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libEGL.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libGLESv2.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_Microsoft.WindowsAPICodePack.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_Microsoft.WindowsAPICodePack.Shell.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.Shell.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_Ninject.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Ninject.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_resources.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)resources.pak" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_snapshot_blob.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)snapshot_blob.bin" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe">
-					<Shortcut Id="TL_Shortcut"
-							  Name="Twitch Leecher"
-							  Directory="ShortcutsFolder"
-							  Icon="TL_Icon.exe"
-							  Advertise="yes">
-					</Shortcut>
-				</File>
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.exe.config" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe.config" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.Gui.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Gui.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.Services.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Services.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_TwitchLeecher.Shared.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Shared.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_v8_context_snapshot.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)v8_context_snapshot.bin" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vk_swiftshader.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vk_swiftshader.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vk_swiftshader_icd.json" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vk_swiftshader_icd.json" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_vulkan_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vulkan-1.dll" />
-			</Component>
-			<Component Directory="INSTALLDIR">
-				<File Id="TL_Xceed.Wpf.Toolkit.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Xceed.Wpf.Toolkit.dll" />
-			</Component>
-		</ComponentGroup>
-	</Fragment>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.BrowserSubprocess.Core.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.Core.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.BrowserSubprocess.exe" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)CefSharp.BrowserSubprocess.exe"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Core.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.Core.Runtime.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)CefSharp.Core.Runtime.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CefSharp.Wpf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CefSharp.Wpf.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_chrome_100_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_100_percent.pak"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_chrome_200_percent.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_200_percent.pak"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_chrome_elf.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)chrome_elf.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_d3dcompiler_47.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)d3dcompiler_47.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_ffmpeg.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)ffmpeg.exe"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_SQLite.Interop.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)x64\SQLite.Interop.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_System.Data.SQLite.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Data.SQLite.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_CockyGrabber.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CockyGrabber.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_icudtl.dat" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)icudtl.dat"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_libcef.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libcef.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_libEGL.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libEGL.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_libGLESv2.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)libGLESv2.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_Microsoft.WindowsAPICodePack.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_Microsoft.WindowsAPICodePack.Shell.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)Microsoft.WindowsAPICodePack.Shell.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_Newtonsoft.Json.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Newtonsoft.Json.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_Ninject.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Ninject.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_resources.pak" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)resources.pak"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_snapshot_blob.bin" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)snapshot_blob.bin"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.Core.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Core.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe">
+                    <Shortcut Id="TL_Shortcut"
+                              Name="Twitch Leecher"
+                              Directory="ShortcutsFolder"
+                              Icon="TL_Icon.exe"
+                              Advertise="yes">
+                    </Shortcut>
+                </File>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.exe.config" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe.config"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.Gui.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Gui.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.Services.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Services.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_TwitchLeecher.Shared.dll" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)TwitchLeecher.Shared.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_v8_context_snapshot.bin" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)v8_context_snapshot.bin"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vk_swiftshader.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vk_swiftshader.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vk_swiftshader_icd.json" KeyPath="yes"
+                      Source="$(var.TL_SOURCE_DIR)vk_swiftshader_icd.json"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_vulkan_1.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)vulkan-1.dll"/>
+            </Component>
+            <Component Directory="INSTALLDIR">
+                <File Id="TL_Xceed.Wpf.Toolkit.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)Xceed.Wpf.Toolkit.dll"/>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
 </Wix>

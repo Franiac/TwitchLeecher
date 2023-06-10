@@ -2,6 +2,7 @@
 using CefSharp.Wpf;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -48,6 +49,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly ISearchService _searchService;
         private readonly IPreferencesService _preferencesService;
         private readonly IUpdateService _updateService;
+        private readonly ICookieService _cookieService;
 
         private ICommand _showSearchCommand;
         private ICommand _showDownloadsCommand;
@@ -78,7 +80,8 @@ namespace TwitchLeecher.Gui.ViewModels
             IRuntimeDataService runtimeDataService,
             ISearchService searchService,
             IPreferencesService preferencesService,
-            IUpdateService updateService)
+            IUpdateService updateService,
+            ICookieService cookieService)
         {
             AssemblyUtil au = AssemblyUtil.Get;
 
@@ -95,6 +98,7 @@ namespace TwitchLeecher.Gui.ViewModels
             _searchService = searchService;
             _preferencesService = preferencesService;
             _updateService = updateService;
+            _cookieService = cookieService;
 
             _commandLockObject = new object();
 
@@ -166,6 +170,9 @@ namespace TwitchLeecher.Gui.ViewModels
                 return _showSearchCommand;
             }
         }
+
+        public ICommand ShowSubOnlyCommand =>
+            _showSubOnlyCommand ?? (_showSubOnlyCommand = new DelegateCommand(ShowSubOnly));
 
         public ICommand ShowDownloadsCommand
         {
@@ -369,6 +376,32 @@ namespace TwitchLeecher.Gui.ViewModels
                 _dialogService.ShowAndLogException(ex);
             }
         }
+
+
+        private void ShowSubOnly()
+        {
+            if (_isAuthenticatedSubOnly)
+            {
+                return;
+            }
+
+            var result = _dialogService.ShowMessageBox(
+                "Sub-only Mode works by grabbing your session token from the cookies of your default-browser!\nBy continuing, you agree that Twitch-Leecher DX is allowed to scan an read all your browser cookies on the system\n\nThose tokens are NOT stored anywhere and you need to re-enable subOnly mode after restarting Twtich-Leecher DX\n\nContinue only, if you understand and accept what is going to happen!",
+                "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Hand);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (_cookieService.GrabTwitchSessionToken())
+                {
+                    _dialogService.ShowMessageBox("Sub-only Mode activated");
+                    _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Publish(true);
+                    return;
+                }
+
+                _dialogService.ShowMessageBox(
+                    "Could not find a valid token. Make sure you are logged in to twitch.tv in you favorite Browser. ");
+            }
+        }
+
 
         private void RevokeAuthentication()
         {

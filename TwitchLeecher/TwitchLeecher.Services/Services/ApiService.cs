@@ -496,7 +496,8 @@ namespace TwitchLeecher.Services.Services
 
             using (WebClient webClient = CreateGqlWebClient())
             {
-                string accessTokenStr = webClient.UploadString(GQL_URL, CreateGqlPlaybackAccessToken(id));
+                var gqlPlaybackAccessToken = CreateGqlPlaybackAccessToken(id);
+                string accessTokenStr = webClient.UploadString(GQL_URL, gqlPlaybackAccessToken);
 
                 JObject accessTokenJson = JObject.Parse(accessTokenStr);
 
