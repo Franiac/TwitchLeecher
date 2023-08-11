@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using TwitchLeecher.Setup.Gui.Command;
 using TwitchLeecher.Setup.Gui.Services;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels

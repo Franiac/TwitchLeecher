@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using TwitchLeecher.Setup.Gui.Command;
 
 namespace TwitchLeecher.Setup.Gui.ViewModels
 {

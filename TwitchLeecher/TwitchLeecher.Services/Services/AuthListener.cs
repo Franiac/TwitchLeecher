@@ -13,11 +13,14 @@ namespace TwitchLeecher.Services.Services
     {
         private readonly IAuthService _authService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IRuntimeDataService _runtimeDataService;
 
-        public AuthListener(IAuthService authService, IEventAggregator eventAggregator)
+        public AuthListener(IAuthService authService, IEventAggregator eventAggregator,
+            IRuntimeDataService runtimeDataService)
         {
             _authService = authService;
             _eventAggregator = eventAggregator;
+            _runtimeDataService = runtimeDataService;
         }
 
         public async Task StartListenForToken()
@@ -41,6 +44,20 @@ namespace TwitchLeecher.Services.Services
                     {
                         FireSubOnlyAuthenticationSuccess();
                     }
+
+                    httpListener.Stop();
+                }
+                else if (context.Request.QueryString.ContainsKey("sub_token"))
+                {
+                    var accessToken = context.Request.QueryString["sub_token"];
+                    context.Response.StatusCode = 200;
+                    var buffer =
+                        Encoding.UTF8.GetBytes(
+                            "Token recieved, you can close this window!");
+                    await context.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+                    context.Response.Close();
+                    _runtimeDataService.RuntimeData.AuthInfo.AccessTokenSubOnly = accessToken;
+                    _eventAggregator.GetEvent<SubOnlyAuthChangedEvent>().Publish(true);
 
                     httpListener.Stop();
                 }

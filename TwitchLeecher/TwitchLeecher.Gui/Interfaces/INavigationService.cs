@@ -25,5 +25,6 @@ namespace TwitchLeecher.Gui.Interfaces
         void ShowLog(TwitchVideoDownload download);
 
         void NavigateBack();
+        void ShowAuthSubOnly();
     }
 }

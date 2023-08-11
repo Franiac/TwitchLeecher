@@ -88,9 +88,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CockyGrabber">
-      <Version>2.3.0</Version>
-    </PackageReference>
     <PackageReference Include="Ninject">
       <Version>3.3.6</Version>
     </PackageReference>

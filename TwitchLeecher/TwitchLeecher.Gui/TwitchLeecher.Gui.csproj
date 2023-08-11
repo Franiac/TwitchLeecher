@@ -88,6 +88,7 @@
     <Compile Include="ViewModels\PreferencesViewVM.cs" />
     <Compile Include="ViewModels\SearchViewVM.cs" />
     <Compile Include="ViewModels\DownloadsViewVM.cs" />
+    <Compile Include="ViewModels\SubOnlyViewVM.cs" />
     <Compile Include="ViewModels\UpdateInfoViewVM.cs" />
     <Compile Include="ViewModels\LoadingViewVM.cs" />
     <Compile Include="ViewModels\SearchResultViewVM.cs" />
@@ -102,6 +103,9 @@
     </Compile>
     <Compile Include="Views\NotificationStrip.xaml.cs">
       <DependentUpon>NotificationStrip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubOnlyView.xaml.cs">
+      <DependentUpon>SubOnlyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UpdateInfoView.xaml.cs">
       <DependentUpon>UpdateInfoView.xaml</DependentUpon>
@@ -183,6 +187,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SubOnlyView.xaml" />
     <Page Include="Views\UpdateInfoView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -255,9 +260,6 @@
   <ItemGroup>
     <PackageReference Include="CefSharp.Wpf">
       <Version>113.1.40</Version>
-    </PackageReference>
-    <PackageReference Include="CockyGrabber">
-      <Version>2.3.0</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>

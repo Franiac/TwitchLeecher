@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace TwitchLeecher.Setup.Gui.Command
+namespace TwitchLeecher.Setup.Gui
 {
     internal class DelegateCommand : ICommand
     {

@@ -444,9 +444,6 @@
                 <File Id="TL_System.Data.SQLite.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)System.Data.SQLite.dll"/>
             </Component>
             <Component Directory="INSTALLDIR">
-                <File Id="TL_CockyGrabber.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)CockyGrabber.dll"/>
-            </Component>
-            <Component Directory="INSTALLDIR">
                 <File Id="TL_FontAwesome.WPF.dll" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)FontAwesome.WPF.dll"/>
             </Component>
             <Component Directory="INSTALLDIR">
@@ -487,7 +484,7 @@
             <Component Directory="INSTALLDIR">
                 <File Id="TL_TwitchLeecher.exe" KeyPath="yes" Source="$(var.TL_SOURCE_DIR)TwitchLeecher.exe">
                     <Shortcut Id="TL_Shortcut"
-                              Name="Twitch Leecher"
+                              Name="Twitch Leecher DX"
                               Directory="ShortcutsFolder"
                               Icon="TL_Icon.exe"
                               Advertise="yes">

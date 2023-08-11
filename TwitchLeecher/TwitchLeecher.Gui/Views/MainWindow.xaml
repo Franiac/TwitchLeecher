@@ -51,6 +51,9 @@
                     <DataTemplate DataType="{x:Type vm:LogViewVM}">
                         <view:LogView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SubOnlyViewVM}">
+                        <view:SubOnlyView />
+                    </DataTemplate>
 
                     <Storyboard x:Key="FadeInStoryBoard">
                         <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />

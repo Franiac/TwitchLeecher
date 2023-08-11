@@ -114,6 +114,11 @@ namespace TwitchLeecher.Gui.Services
             }
         }
 
+        public void ShowAuthSubOnly()
+        {
+            Navigate(_kernel.Get<SubOnlyViewVM>());
+        }
+
         private void Navigate(ViewModelBase nextView)
         {
             if (nextView == null || (_currentView != null && _currentView.GetType() == nextView.GetType()))
