@@ -37,7 +37,8 @@ namespace TwitchLeecher.Services.Services
 
         #region Methods
 
-        public void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress, TwitchPlaylist vodPlaylist, string concatFile)
+        public void ConcatParts(Action<string> log, Action<string> setStatus, Action<double> setProgress,
+            TwitchPlaylist vodPlaylist, string concatFile)
         {
             setStatus("Merging files");
             setProgress(0);
@@ -51,6 +52,11 @@ namespace TwitchLeecher.Services.Services
                 for (int i = 0; i < partsCount; i++)
                 {
                     TwitchPlaylistPart part = vodPlaylist[i];
+
+                    if (!File.Exists(part.LocalFile))
+                    {
+                        continue;
+                    }
 
                     using (FileStream partStream = new FileStream(part.LocalFile, FileMode.Open, FileAccess.Read))
                     {
@@ -72,6 +78,7 @@ namespace TwitchLeecher.Services.Services
             setProgress(100);
         }
 
+
         public void ConvertVideo(Action<string> log, Action<string> setStatus, Action<double> setProgress,
             Action<bool> setIsIndeterminate, string sourceFile, string outputFile, CropInfo cropInfo)
         {
@@ -82,7 +89,14 @@ namespace TwitchLeecher.Services.Services
 
             ProcessStartInfo psi = new ProcessStartInfo(FFMPEGExe)
             {
-                Arguments = "-y" + (cropInfo.CropStart ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture) : null) + " -i \"" + sourceFile + "\" -analyzeduration " + int.MaxValue + " -probesize " + int.MaxValue + " -c:v copy -c:a copy" + (cropInfo.CropEnd ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture) : null) + " \"" + outputFile + "\"",
+                Arguments = "-y" +
+                            (cropInfo.CropStart
+                                ? " -ss " + cropInfo.Start.ToString(CultureInfo.InvariantCulture)
+                                : null) + " -i \"" + sourceFile + "\" -analyzeduration " + int.MaxValue +
+                            " -probesize " + int.MaxValue + " -c:v copy -c:a copy" +
+                            (cropInfo.CropEnd
+                                ? " -t " + cropInfo.Length.ToString(CultureInfo.InvariantCulture)
+                                : null) + " \"" + outputFile + "\"",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 StandardErrorEncoding = Encoding.UTF8,
@@ -109,7 +123,8 @@ namespace TwitchLeecher.Services.Services
 
                             logQueue.Enqueue(dataTrimmed);
 
-                            if (dataTrimmed.StartsWith("frame", StringComparison.OrdinalIgnoreCase) && duration != TimeSpan.Zero)
+                            if (dataTrimmed.StartsWith("frame", StringComparison.OrdinalIgnoreCase) &&
+                                duration != TimeSpan.Zero)
                             {
                                 string timeStr = dataTrimmed.Substring(dataTrimmed.IndexOf("time") + 4).Trim();
                                 timeStr = timeStr.Substring(timeStr.IndexOf("=") + 1).Trim();
@@ -129,7 +144,8 @@ namespace TwitchLeecher.Services.Services
                     }
                     catch (Exception ex)
                     {
-                        log(Environment.NewLine + "An error occured while reading '" + FFMPEGExe + "' output stream!" + Environment.NewLine + Environment.NewLine + ex.ToString());
+                        log(Environment.NewLine + "An error occured while reading '" + FFMPEGExe + "' output stream!" +
+                            Environment.NewLine + Environment.NewLine + ex.ToString());
                     }
                 });
 

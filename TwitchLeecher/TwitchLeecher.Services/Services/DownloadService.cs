@@ -26,7 +26,7 @@ namespace TwitchLeecher.Services.Services
 
         private const int TIMER_INTERVALL = 2;
         private const int DOWNLOAD_RETRIES = 3;
-        private const int DOWNLOAD_RETRY_TIME = 20;
+        private const int DOWNLOAD_RETRY_TIME = 5;
 
         #endregion Constants
 
@@ -220,7 +220,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            DownloadParts(log, setStatus, setProgress, vodPlaylist, cancellationToken);
+                            DownloadParts(log, setStatus, setProgress, vodPlaylist, quality, cancellationToken);
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -461,7 +461,7 @@ namespace TwitchLeecher.Services.Services
         }
 
         private void DownloadParts(Action<string> log, Action<string> setStatus, Action<double> setProgress,
-            TwitchPlaylist vodPlaylist, CancellationToken cancellationToken)
+            TwitchPlaylist vodPlaylist, TwitchVideoQuality twitchVideoQuality, CancellationToken cancellationToken)
         {
             int partsCount = vodPlaylist.Count;
             int maxConnectionCount = ServicePointManager.DefaultConnectionLimit;
@@ -505,16 +505,24 @@ namespace TwitchLeecher.Services.Services
                     }
                     catch (WebException ex)
                     {
+                        if (ex.Status == WebExceptionStatus.ProtocolError)
+                        {
+                            log($"{Environment.NewLine}File '{part.RemoteFile}' is not available, skipping");
+                            Interlocked.Increment(ref completedPartDownloads);
+
+                            long completed = Interlocked.Read(ref completedPartDownloads);
+
+                            setProgress((double)completed / partsCount * 100);
+
+                            success = true;
+                            continue;
+                        }
                         if (retryCounter < DOWNLOAD_RETRIES)
                         {
                             retryCounter++;
                             log(Environment.NewLine + Environment.NewLine + "Downloading file '" + part.RemoteFile + "' failed! Trying again in " + DOWNLOAD_RETRY_TIME + "s");
                             log(Environment.NewLine + ex.ToString());
                             Thread.Sleep(DOWNLOAD_RETRY_TIME * 1000);
-                        }
-                        else
-                        {
-                            throw new ApplicationException("Could not download file '" + part.RemoteFile + "' after " + DOWNLOAD_RETRIES + " retries!");
                         }
                     }
                 }
