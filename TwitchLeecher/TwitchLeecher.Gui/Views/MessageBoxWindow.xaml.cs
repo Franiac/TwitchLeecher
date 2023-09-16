@@ -33,11 +33,6 @@ namespace TwitchLeecher.Gui.Views
             rowCaption.Visibility = Visibility.Collapsed;
             imgIcon.Visibility = Visibility.Collapsed;
             SetButtons(MessageBoxButton.OK);
-
-            NativeDisplay display = NativeDisplay.GetDisplayFromWindow(new WindowInteropHelper(this).Handle);
-
-            MaxWidth = display.WorkingArea.Width * 0.9;
-            MaxHeight = display.WorkingArea.Height * 0.9;
         }
 
         public MessageBoxWindow(string message, string caption) : this(message)
@@ -56,7 +51,8 @@ namespace TwitchLeecher.Gui.Views
             SetIcon(image);
         }
 
-        public MessageBoxWindow(string message, string caption, MessageBoxButton buttons, MessageBoxImage image) : this(message, caption, buttons)
+        public MessageBoxWindow(string message, string caption, MessageBoxButton buttons, MessageBoxImage image) : this(
+            message, caption, buttons)
         {
             SetIcon(image);
         }
@@ -69,10 +65,7 @@ namespace TwitchLeecher.Gui.Views
 
         public string Caption
         {
-            get
-            {
-                return txtCaption.Text;
-            }
+            get { return txtCaption.Text; }
             set
             {
                 txtCaption.Text = value;
@@ -82,62 +75,32 @@ namespace TwitchLeecher.Gui.Views
 
         public string Message
         {
-            get
-            {
-                return txtMessage.Text;
-            }
-            set
-            {
-                txtMessage.Text = value;
-            }
+            get { return txtMessage.Text; }
+            set { txtMessage.Text = value; }
         }
 
         public string OkButtonText
         {
-            get
-            {
-                return btnOkContent.Text;
-            }
-            set
-            {
-                btnOkContent.Text = value;
-            }
+            get { return btnOkContent.Text; }
+            set { btnOkContent.Text = value; }
         }
 
         public string CancelButtonText
         {
-            get
-            {
-                return btnCancelContent.Text;
-            }
-            set
-            {
-                btnCancelContent.Text = value;
-            }
+            get { return btnCancelContent.Text; }
+            set { btnCancelContent.Text = value; }
         }
 
         public string YesButtonText
         {
-            get
-            {
-                return btnYesContent.Text;
-            }
-            set
-            {
-                btnYesContent.Text = value;
-            }
+            get { return btnYesContent.Text; }
+            set { btnYesContent.Text = value; }
         }
 
         public string NoButtonText
         {
-            get
-            {
-                return btnNoContent.Text;
-            }
-            set
-            {
-                btnNoContent.Text = value;
-            }
+            get { return btnNoContent.Text; }
+            set { btnNoContent.Text = value; }
         }
 
         #endregion Properties

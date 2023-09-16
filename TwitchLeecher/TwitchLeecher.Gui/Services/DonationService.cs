@@ -16,7 +16,12 @@ namespace TwitchLeecher.Gui.Services
 
         public void OpenDonationPage()
         {
-            Process.Start(GetDonationLink());
+            var psi = new ProcessStartInfo(GetDonationLink())
+            {
+                UseShellExecute = true,
+                Verb = "open"
+            };
+            Process.Start(psi);
         }
 
         private string GetDonationLink()

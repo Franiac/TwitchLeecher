@@ -516,8 +516,6 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             try
             {
-                InitializeCef();
-
                 CheckAuthenticationSubOnly();
 
                 if (!CheckAuthentication())
@@ -551,24 +549,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 _dialogService.ShowMessageBox(
                     "Twitch could not validate the saved access token for sub-only support. Please try to enable sub-only support again!",
                     "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void InitializeCef()
-        {
-            if (!Cef.IsInitialized)
-            {
-                string cachePath = Path.Combine(_folderService.GetAppDataFolder(), "CefCache");
-
-                FileSystem.CreateDirectory(cachePath);
-
-                CefSettings settings = new CefSettings()
-                {
-                    CachePath = cachePath,
-                    LogSeverity = LogSeverity.Disable
-                };
-
-                Cef.Initialize(settings);
             }
         }
 

@@ -83,7 +83,12 @@ namespace TwitchLeecher.Gui.ViewModels
                         throw new ArgumentNullException(nameof(link));
                     }
 
-                    Process.Start(link);
+                    var psi = new ProcessStartInfo(link)
+                    {
+                        UseShellExecute = true,
+                        Verb = "open"
+                    };
+                    Process.Start(psi);
                 }
             }
             catch (Exception ex)
