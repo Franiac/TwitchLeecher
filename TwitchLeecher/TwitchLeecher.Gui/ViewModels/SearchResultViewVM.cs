@@ -320,7 +320,7 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(SeachCommnad, "New Search", "Search"));
+            menuCommands.Add(new MenuCommand(SeachCommnad, "New Search", "Solid_MagnifyingGlass"));
 
             return menuCommands;
         }

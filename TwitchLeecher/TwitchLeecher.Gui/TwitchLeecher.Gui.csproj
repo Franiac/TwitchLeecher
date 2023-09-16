@@ -40,9 +40,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FontAwesome.WPF">
-      <Version>4.7.0.9</Version>
-    </PackageReference>
+    <PackageReference Include="FontAwesome6.Svg" Version="2.5.1" />
     <PackageReference Include="Ninject">
       <Version>3.3.6</Version>
     </PackageReference>

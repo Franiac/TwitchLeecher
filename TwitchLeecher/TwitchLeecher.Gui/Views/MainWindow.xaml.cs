@@ -1,5 +1,4 @@
-﻿using FontAwesome.WPF;
-using System;
+﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
+using FontAwesome6.Svg;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
@@ -57,9 +57,6 @@ namespace TwitchLeecher.Gui.Views
             _namedPipeManager = new NamedPipeManager("TwitchLeecher");
             _namedPipeManager.OnMessage += OnPipeMessage;
             _namedPipeManager.StartServer();
-
-            // Hold reference to FontAwesome library
-            ImageAwesome.CreateImageSource(FontAwesomeIcon.Times, Brushes.Black);
 
             SizeChanged += (s, e) =>
             {

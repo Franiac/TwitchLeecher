@@ -4,7 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
              xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
-             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters">
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -52,8 +53,8 @@
                 <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates"
                           IsChecked="{Binding CurrentPreferences.AppCheckForUpdates}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Check for Updates" />
@@ -63,14 +64,14 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button"
                           IsChecked="{Binding CurrentPreferences.AppShowDonationButton}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Show Donation Button" />
@@ -79,8 +80,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
                 <Grid Grid.Row="4" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -136,15 +137,15 @@
                               VerticalAlignment="Center" />
                     <Button Grid.Column="2" Style="{StaticResource TlMiniButton}"
                             Command="{Binding AddFavouriteChannelCommand}" Height="Auto">
-                        <fa:ImageAwesome Icon="Plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                        <fa6:ImageAwesome Icon="Solid_Plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Grid.Column="4" Style="{StaticResource TlMiniButton}"
                             Command="{Binding RemoveFavouriteChannelCommand}" Height="Auto">
-                        <fa:ImageAwesome Icon="Minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                        <fa6:ImageAwesome Icon="Solid_Minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </Grid>
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Favourite Channels" />
@@ -153,8 +154,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Type" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -169,8 +170,8 @@
                                  IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}"
                                  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                 </StackPanel>
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Type" />
@@ -179,8 +180,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Load Limit" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -195,9 +196,9 @@
                                           VerticalAlignment="Center" />
                     <TextBlock Text="days" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
-                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}"
+                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}"
                                  VerticalAlignment="Center">
-                    <fa:ImageAwesome.ToolTip>
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Load Limit" />
@@ -206,8 +207,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton GroupName="LoadLimit" Content="Last"
@@ -227,8 +228,8 @@
 
                 <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.SearchOnStartup}"
                           Content="Search on Start" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Search on Start" />
@@ -237,8 +238,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
             </Grid>
 
             <Border Grid.Row="4" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -283,8 +284,8 @@
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}"
                             Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Temporary Folder" />
@@ -293,8 +294,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -310,8 +311,8 @@
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadFolderCommand}"
                             Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
                 </Grid>
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download Folder" />
@@ -320,15 +321,15 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Filename Template" VerticalAlignment="Center" />
                 <TextBox Grid.Row="4" Grid.Column="2"
                          Text="{Binding CurrentPreferences.DownloadFileName, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center" />
-                <fa:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="415">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Filename Template" />
@@ -437,8 +438,8 @@
                                 </Grid>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Row="6" Grid.Column="0" Text="Default Quality" VerticalAlignment="Center" />
                 <ComboBox Grid.Row="6" Grid.Column="2"
@@ -450,8 +451,8 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <fa:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="415">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Default Quality" />
@@ -460,15 +461,15 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <CheckBox Grid.Row="8" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}"
                           Content="Create subfolders for favourite channels" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
@@ -478,15 +479,15 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <CheckBox Grid.Row="10" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}"
                           Content="Remove successful downloads from queue" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
@@ -496,15 +497,15 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <CheckBox Grid.Row="12" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}"
                           Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
@@ -514,8 +515,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
             </Grid>
 
             <Border Grid.Row="6" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -539,8 +540,8 @@
                 <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player"
                           IsChecked="{Binding CurrentPreferences.MiscUseExternalPlayer}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
@@ -550,8 +551,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Player" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -571,11 +572,11 @@
                             Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
                     <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}"
                             Command="{Binding ClearExternalPlayerCommand}" Height="Auto" ToolTip="Clear">
-                        <fa:ImageAwesome Icon="Eraser" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                        <fa6:ImageAwesome Icon="Solid_Eraser" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </Grid>
-                <fa:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa:ImageAwesome.ToolTip>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
                         <ToolTip Width="350">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
@@ -584,8 +585,8 @@
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa:ImageAwesome.ToolTip>
-                </fa:ImageAwesome>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
             </Grid>
         </Grid>
     </ScrollViewer>

@@ -391,8 +391,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(DownloadCommand, "Download", "Download"));
-            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Times"));
+            menuCommands.Add(new MenuCommand(DownloadCommand, "Download", "Solid_Download"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Solid_XMark"));
 
             return menuCommands;
         }
