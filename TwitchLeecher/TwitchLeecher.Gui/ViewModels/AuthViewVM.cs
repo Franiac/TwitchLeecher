@@ -64,8 +64,12 @@ namespace TwitchLeecher.Gui.ViewModels
                 lock (_commandLockObject)
                 {
                     _ = _authListener.StartListenForToken();
-                    Process.Start(
-                        $"https://id.twitch.tv/oauth2/authorize?client_id={Constants.ClientId}&redirect_uri={Constants.RedirectUrl}&response_type=token&scope=user:read:subscriptions user_subscriptions&force_verify=true");
+                    var psi = new ProcessStartInfo($"https://id.twitch.tv/oauth2/authorize?client_id={Constants.ClientId}&redirect_uri={Constants.RedirectUrl}&response_type=token&scope=user:read:subscriptions user_subscriptions&force_verify=true")
+                    {
+                        UseShellExecute = true,
+                        Verb = "open"
+                    };
+                    Process.Start(psi);
                 }
             }
             catch (Exception ex)
