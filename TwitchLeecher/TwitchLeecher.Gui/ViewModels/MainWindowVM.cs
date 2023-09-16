@@ -1,8 +1,4 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using System;
-using System.IO;
-using System.Net;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,7 +11,6 @@ using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Events;
 using TwitchLeecher.Shared.Extensions;
-using TwitchLeecher.Shared.IO;
 using TwitchLeecher.Shared.Notification;
 using TwitchLeecher.Shared.Reflection;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -321,7 +320,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    var filter = new CommonFileDialogFilter("Executables", "*.exe");
+                    var filter = new CommonFileDialogFilter(".exe", "Executables");
                     _dialogService.ShowFileBrowserDialog(filter, CurrentPreferences.MiscExternalPlayer,
                         ChooseExternalPlayerCallback);
                 }
