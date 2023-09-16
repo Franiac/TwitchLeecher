@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
              Style="{DynamicResource thisStyle}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -17,11 +18,11 @@
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
-                            <fa:ImageAwesome Icon="Download" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
-                                <fa:ImageAwesome.Foreground>
+                            <fa6:ImageAwesome Icon="Solid_Download" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
+                                <fa6:ImageAwesome.PrimaryColor>
                                     <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
-                                </fa:ImageAwesome.Foreground>
-                            </fa:ImageAwesome>
+                                </fa6:ImageAwesome.PrimaryColor>
+                            </fa6:ImageAwesome>
                         </StackPanel>
                     </DataTemplate>
 
@@ -71,7 +72,7 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch"
                                                 Visibility="{Binding CanRetry, Converter={StaticResource ResourceKey='BVConverter'}}">
-                                            <fa:ImageAwesome Icon="Refresh" Width="16" Height="16" />
+                                            <fa6:ImageAwesome Icon="Solid_ArrowsRotate" Width="16" Height="16" />
                                         </Button>
                                         <Button CommandParameter="{Binding Id}"
                                                 Margin="5,0,0,0"
@@ -90,18 +91,18 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Button.Style>
-                                            <fa:ImageAwesome Width="16" Height="16">
-                                                <fa:ImageAwesome.Style>
-                                                    <Style TargetType="{x:Type fa:ImageAwesome}">
-                                                        <Setter Property="Icon" Value="Times" />
+                                            <fa6:ImageAwesome Width="16" Height="16">
+                                                <fa6:ImageAwesome.Style>
+                                                    <Style TargetType="{x:Type fa6:ImageAwesome}">
+                                                        <Setter Property="Icon" Value="Solid_Xmark" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
-                                                                <Setter Property="Icon" Value="Ban" />
+                                                                <Setter Property="Icon" Value="Solid_Ban" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </fa:ImageAwesome.Style>
-                                            </fa:ImageAwesome>
+                                                </fa6:ImageAwesome.Style>
+                                            </fa6:ImageAwesome>
                                         </Button>
                                         <Button Style="{StaticResource TlMiniButton}"
                                                 Command="{Binding Path=DataContext.ShowLogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
@@ -111,7 +112,7 @@
                                                 ToolTip="Show Log"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch">
-                                            <fa:ImageAwesome Icon="FileTextOutline" Width="16" Height="16" />
+                                            <fa6:ImageAwesome Icon="Solid_FileLines" Width="16" Height="16" />
                                         </Button>
                                         <Button Style="{StaticResource TlMiniButton}"
                                                 Command="{Binding Path=DataContext.OpenDownloadFolderCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
@@ -122,7 +123,7 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch"
                                                 Visibility="{Binding DownloadState, Converter={StaticResource ResourceKey='DownloadStateToVisibilityConverter'}, ConverterParameter={x:Static enums:DownloadState.Done}}">
-                                            <fa:ImageAwesome Icon="FolderOpen" Width="16" Height="16" />
+                                            <fa6:ImageAwesome Icon="Solid_FolderOpen" Width="16" Height="16" />
                                         </Button>
                                     </StackPanel>
                                 </Grid>

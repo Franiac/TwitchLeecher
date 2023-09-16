@@ -4,7 +4,8 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
         xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
-        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls">
+        xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
+        xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -123,7 +124,7 @@
                     <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Urls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearUrlsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <fa6:ImageAwesome Icon="Solid_Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Clear" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
                     </Button>
@@ -150,7 +151,7 @@
                     <TextBox Grid.Row="4" Style="{StaticResource TlMultilineTextBox}" Text="{Binding SearchParams.Ids, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="140" />
                     <Button Grid.Row="6" Command="{Binding ClearIdsCommand}" Width="75" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                            <fa6:ImageAwesome Icon="Solid_Eraser" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
                             <TextBlock Text="Clear" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14.667" RenderTransformOrigin="0.5,0.5" />
                         </StackPanel>
                     </Button>

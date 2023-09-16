@@ -470,9 +470,9 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(SaveCommand, "Save", "Save"));
-            menuCommands.Add(new MenuCommand(UndoCommand, "Undo", "Undo"));
-            menuCommands.Add(new MenuCommand(DefaultsCommand, "Default", "Wrench"));
+            menuCommands.Add(new MenuCommand(SaveCommand, "Save", "Solid_FloppyDisk"));
+            menuCommands.Add(new MenuCommand(UndoCommand, "Undo", "Solid_RotateLeft"));
+            menuCommands.Add(new MenuCommand(DefaultsCommand, "Default", "Solid_Wrench"));
 
             return menuCommands;
         }

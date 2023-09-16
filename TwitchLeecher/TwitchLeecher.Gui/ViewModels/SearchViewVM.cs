@@ -233,8 +233,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(SearchCommand, "Search", "Search"));
-            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Times"));
+            menuCommands.Add(new MenuCommand(SearchCommand, "Search", "Solid_MagnifyingGlass"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Solid_XMark"));
 
             return menuCommands;
         }

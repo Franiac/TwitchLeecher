@@ -6,6 +6,7 @@
         xmlns:ctrl="clr-namespace:TwitchLeecher.Gui.Controls"
         xmlns:vm="clr-namespace:TwitchLeecher.Gui.ViewModels"
         xmlns:view="clr-namespace:TwitchLeecher.Gui.Views"
+        xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
         Style="{DynamicResource TlWindow}"
         Width="880"
         Height="920"
@@ -103,7 +104,7 @@
                     <Button Command="{Binding ShowSearchCommand}" WindowChrome.IsHitTestVisibleInChrome="True"
                             Width="155">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Search" Margin="0,1,0,0" Width="16" Height="16"
+                            <fa6:ImageAwesome Icon="Solid_MagnifyingGlass" Margin="0,1,0,0" Width="16" Height="16"
                                              RenderTransformOrigin="0.5,0.5" />
                             <TextBlock VerticalAlignment="Center" Margin="5,0,0,0">
                                 <Run Text="Search" />
@@ -115,7 +116,7 @@
                     <Button Command="{Binding ShowDownloadsCommand}" WindowChrome.IsHitTestVisibleInChrome="True"
                             Width="155" Margin="5,0,0,0">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Download" Margin="0,1,0,0" Width="16" Height="16"
+                            <fa6:ImageAwesome Icon="Solid_Download" Margin="0,1,0,0" Width="16" Height="16"
                                              RenderTransformOrigin="0.5,0.5" />
                             <TextBlock VerticalAlignment="Center" Margin="5,0,0,0">
                                 <Run Text="Downloads" />
@@ -133,24 +134,24 @@
                             Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowPreferencesCommand}"
                             Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Preferences">
-                        <fa:ImageAwesome Icon="Cogs" Margin="0,1,0,0" Width="16" Height="16"
+                        <fa6:ImageAwesome Icon="Solid_Gears" Margin="0,1,0,0" Width="16" Height="16"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DonateCommand}"
                             Visibility="{Binding ShowDonationButton, Converter={StaticResource BVConverter}}"
                             Margin="0,0,5,0" WindowChrome.IsHitTestVisibleInChrome="True"
                             ToolTip="Help me out with a bottle of beer if you like the program :)">
-                        <fa:ImageAwesome Icon="Usd" Margin="0,1,0,0" Width="16" Height="16"
+                        <fa6:ImageAwesome Icon="Solid_DollarSign" Margin="0,1,0,0" Width="16" Height="16"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding ShowInfoCommand}" Margin="0,0,5,0"
                             WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="About &amp; Support">
-                        <fa:ImageAwesome Icon="QuestionCircle" Margin="0,1,0,0" Width="16" Height="16"
+                        <fa6:ImageAwesome Icon="Solid_CircleQuestion" Margin="0,1,0,0" Width="16" Height="16"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding RevokeCommand}"
                             WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Logout">
-                        <fa:ImageAwesome Icon="SignOut" Margin="0,1,0,0" Width="16" Height="16"
+                        <fa6:ImageAwesome Icon="Solid_RightFromBracket" Margin="0,1,0,0" Width="16" Height="16"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
@@ -159,19 +160,19 @@
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMinimizeCommand}"
                             CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0"
                             WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
-                        <fa:ImageAwesome Icon="WindowMinimize" Margin="0,8,0,0" Width="12" Height="12"
+                        <fa6:ImageAwesome Icon="Regular_WindowMaximize" Margin="0,8,0,0" Width="12" Height="12"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoMaximizeRestoreCommand}"
                             CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0"
                             WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
-                        <fa:ImageAwesome Style="{StaticResource Img_MaximizeRestore}" Margin="0,1,0,0" Width="12"
+                        <fa6:ImageAwesome Style="{StaticResource Img_MaximizeRestore}" Margin="0,1,0,0" Width="12"
                                          Height="12" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Style="{StaticResource TlMiniButton}" Command="{Binding DoCloseCommand}"
                             CommandParameter="{Binding ElementName=thisWindow}"
                             WindowChrome.IsHitTestVisibleInChrome="True" Width="30">
-                        <fa:ImageAwesome Icon="Times" Margin="0,1,0,0" Width="12" Height="12"
+                        <fa6:ImageAwesome Icon="Solid_Xmark" Margin="0,1,0,0" Width="12" Height="12"
                                          RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
