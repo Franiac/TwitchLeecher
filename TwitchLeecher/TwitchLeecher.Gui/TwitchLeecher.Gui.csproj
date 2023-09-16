@@ -40,9 +40,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf">
-      <Version>113.1.40</Version>
-    </PackageReference>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
     </PackageReference>
@@ -51,12 +48,6 @@
     </PackageReference>
     <PackageReference Include="System.Data.SQLite">
       <Version>1.0.117</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Core">
-      <Version>1.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Shell">
-      <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>

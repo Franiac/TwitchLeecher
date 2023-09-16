@@ -1,7 +1,7 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using Ninject;
+﻿using Ninject;
 using System;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TwitchLeecher.Core.Models;
@@ -9,6 +9,7 @@ using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;
 using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Services.Interfaces;
+using Application = System.Windows.Application;
 using Cursors = System.Windows.Input.Cursors;
 
 namespace TwitchLeecher.Gui.Services
@@ -54,7 +55,8 @@ namespace TwitchLeecher.Gui.Services
             return SetOwnerAndShow(msg);
         }
 
-        public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon)
+        public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons,
+            MessageBoxImage icon)
         {
             MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons, icon);
             return SetOwnerAndShow(msg);
@@ -78,48 +80,42 @@ namespace TwitchLeecher.Gui.Services
             string logFile = _logService.LogException(ex);
 
             MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
-                + Environment.NewLine + Environment.NewLine + ex.Message
-                + Environment.NewLine + Environment.NewLine + "All details were written to log file"
-                + Environment.NewLine + Environment.NewLine + logFile,
+                                                        + Environment.NewLine + Environment.NewLine + ex.Message
+                                                        + Environment.NewLine + Environment.NewLine +
+                                                        "All details were written to log file"
+                                                        + Environment.NewLine + Environment.NewLine + logFile,
                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             msg.ShowDialog();
         }
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)
         {
-            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
+            using (var dialog = new FolderBrowserDialog())
             {
-                cofd.IsFolderPicker = true;
+                var result = dialog.ShowDialog();
 
-                if (!string.IsNullOrWhiteSpace(folder))
-                {
-                    cofd.InitialDirectory = folder;
-                }
-
-                CommonFileDialogResult result = cofd.ShowDialog();
-
-                bool canceled = result != CommonFileDialogResult.Ok;
-
-                dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
+                dialogCompleteCallback(result == DialogResult.OK, dialog.SelectedPath);
             }
         }
 
-        public void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder, Action<bool, string> dialogCompleteCallback)
+        public void ShowFileBrowserDialog(CommonFileDialogFilter filter, string folder,
+            Action<bool, string> dialogCompleteCallback)
         {
-            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
+            using (var fileDialog = new OpenFileDialog())
             {
-                cofd.Filters.Add(filter);
+                fileDialog.Filter = $"{filter.Name}|{filter.Extension}";
+                fileDialog.DefaultExt = filter.Extension;
 
                 if (!string.IsNullOrWhiteSpace(folder))
                 {
-                    cofd.InitialDirectory = folder;
+                    fileDialog.InitialDirectory = folder;
                 }
 
-                CommonFileDialogResult result = cofd.ShowDialog();
+                var result = fileDialog.ShowDialog();
 
-                bool canceled = result != CommonFileDialogResult.Ok;
+                var canceled = result != DialogResult.OK;
 
-                dialogCompleteCallback(canceled, canceled ? null : cofd.FileName);
+                dialogCompleteCallback(canceled, canceled ? null : fileDialog.FileName);
             }
         }
 
@@ -152,7 +148,8 @@ namespace TwitchLeecher.Gui.Services
 
                 if (_busy)
                 {
-                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, DispatcherTimer_Tick, Dispatcher.CurrentDispatcher);
+                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle,
+                        DispatcherTimer_Tick, Dispatcher.CurrentDispatcher);
                 }
             }
         }
