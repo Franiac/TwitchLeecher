@@ -22,6 +22,7 @@ namespace TwitchLeecher.Gui.Converters
             switch (valueEnum)
             {
                 case DownloadState.Queued:
+                case DownloadState.CompletedWithWarning:
                     return (Color)ColorConverter.ConvertFromString("#FFFFD400");
 
                 case DownloadState.Error:

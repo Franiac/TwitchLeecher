@@ -102,7 +102,7 @@ namespace TwitchLeecher.Core.Models
             {
                 if (_downloadState != DownloadState.Downloading)
                 {
-                    return _downloadState.ToString();
+                    return _downloadState.GetDescription();
                 }
 
                 return _status;
