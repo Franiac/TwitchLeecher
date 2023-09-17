@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
+using Avalonia.Data.Converters;
 using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Gui.Converters

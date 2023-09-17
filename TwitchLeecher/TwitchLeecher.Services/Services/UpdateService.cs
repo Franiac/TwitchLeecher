@@ -14,8 +14,8 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string LatestReleaseUrl = "https://github.com/schneidermanuel/TwitchLeecher-dx/releases/tag/v{0}";
-        private const string ReleasesApiUrl = "https://api.github.com/repos/schneidermanuel/TwitchLeecher-dx/releases";
+        private const string LatestReleaseUrl = "https://github.com/schneidermanuel/TwitchLeecher.Old-dx/releases/tag/v{0}";
+        private const string ReleasesApiUrl = "https://api.github.com/repos/schneidermanuel/TwitchLeecher.Old-dx/releases";
 
         #endregion Constants
 
@@ -27,7 +27,7 @@ namespace TwitchLeecher.Services.Services
             {
                 using (WebClient webClient = new WebClient() { Encoding = Encoding.UTF8 })
                 {
-                    webClient.Headers.Add(HttpRequestHeader.UserAgent, "TwitchLeecher");
+                    webClient.Headers.Add(HttpRequestHeader.UserAgent, "TwitchLeecher.Old");
 
                     string result = webClient.DownloadString(ReleasesApiUrl);
 

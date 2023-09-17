@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher", "TwitchLeecher\TwitchLeecher.csproj", "{33D2C480-6075-4354-8106-C9414181E7CA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher.Shared", "TwitchLeecher.Shared\TwitchLeecher.Shared.csproj", "{37AAC23F-DA34-4158-B32F-CA4A59AD71A9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher.Gui", "TwitchLeecher.Gui\TwitchLeecher.Gui.csproj", "{CC5119F2-B6E6-4C41-8090-DA3CD5FBCDF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher.Services", "TwitchLeecher.Services\TwitchLeecher.Services.csproj", "{D99FAAD3-7131-4F91-9D92-0D434A9F4385}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher.Core", "TwitchLeecher.Core\TwitchLeecher.Core.csproj", "{EE50464E-7667-4223-9FDE-05B0AE0D90CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher", "TwitchLeecher\TwitchLeecher.csproj", "{573D731B-6C90-4AB3-8685-723FFABC8AD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLeecher.Gui", "TwitchLeecher.Gui\TwitchLeecher.Gui.csproj", "{9F28AFE7-2AD7-43E1-BD52-76028538F6BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,18 +19,10 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{33D2C480-6075-4354-8106-C9414181E7CA}.Debug|x64.ActiveCfg = Debug|x64
-		{33D2C480-6075-4354-8106-C9414181E7CA}.Debug|x64.Build.0 = Debug|x64
-		{33D2C480-6075-4354-8106-C9414181E7CA}.Release|x64.ActiveCfg = Release|x64
-		{33D2C480-6075-4354-8106-C9414181E7CA}.Release|x64.Build.0 = Release|x64
 		{37AAC23F-DA34-4158-B32F-CA4A59AD71A9}.Debug|x64.ActiveCfg = Debug|x64
 		{37AAC23F-DA34-4158-B32F-CA4A59AD71A9}.Debug|x64.Build.0 = Debug|x64
 		{37AAC23F-DA34-4158-B32F-CA4A59AD71A9}.Release|x64.ActiveCfg = Release|x64
 		{37AAC23F-DA34-4158-B32F-CA4A59AD71A9}.Release|x64.Build.0 = Release|x64
-		{CC5119F2-B6E6-4C41-8090-DA3CD5FBCDF5}.Debug|x64.ActiveCfg = Debug|x64
-		{CC5119F2-B6E6-4C41-8090-DA3CD5FBCDF5}.Debug|x64.Build.0 = Debug|x64
-		{CC5119F2-B6E6-4C41-8090-DA3CD5FBCDF5}.Release|x64.ActiveCfg = Release|x64
-		{CC5119F2-B6E6-4C41-8090-DA3CD5FBCDF5}.Release|x64.Build.0 = Release|x64
 		{D99FAAD3-7131-4F91-9D92-0D434A9F4385}.Debug|x64.ActiveCfg = Debug|x64
 		{D99FAAD3-7131-4F91-9D92-0D434A9F4385}.Debug|x64.Build.0 = Debug|x64
 		{D99FAAD3-7131-4F91-9D92-0D434A9F4385}.Release|x64.ActiveCfg = Release|x64
@@ -39,6 +31,14 @@ Global
 		{EE50464E-7667-4223-9FDE-05B0AE0D90CD}.Debug|x64.Build.0 = Debug|x64
 		{EE50464E-7667-4223-9FDE-05B0AE0D90CD}.Release|x64.ActiveCfg = Release|x64
 		{EE50464E-7667-4223-9FDE-05B0AE0D90CD}.Release|x64.Build.0 = Release|x64
+		{573D731B-6C90-4AB3-8685-723FFABC8AD2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{573D731B-6C90-4AB3-8685-723FFABC8AD2}.Debug|x64.Build.0 = Debug|Any CPU
+		{573D731B-6C90-4AB3-8685-723FFABC8AD2}.Release|x64.ActiveCfg = Release|Any CPU
+		{573D731B-6C90-4AB3-8685-723FFABC8AD2}.Release|x64.Build.0 = Release|Any CPU
+		{9F28AFE7-2AD7-43E1-BD52-76028538F6BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F28AFE7-2AD7-43E1-BD52-76028538F6BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F28AFE7-2AD7-43E1-BD52-76028538F6BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F28AFE7-2AD7-43E1-BD52-76028538F6BD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

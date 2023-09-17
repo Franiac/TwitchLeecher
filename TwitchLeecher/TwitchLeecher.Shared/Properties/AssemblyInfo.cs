@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("TwitchLeecher.Shared")] 
+[assembly: AssemblyTitle("TwitchLeecher.Old.Shared")] 

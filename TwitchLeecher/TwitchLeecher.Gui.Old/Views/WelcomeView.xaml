@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-20,0,0">
+        <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold">
+            <Run Text="Welcome to " /><Run Text="{Binding ProductName, Mode=OneTime}" />
+        </TextBlock>
+        <Image Source="/TwitchLeecher.Old.Gui.Old;component/Resources/TL_Icon.png" Width="150" Margin="0,40,0,0" />
+    </StackPanel>
+</UserControl>

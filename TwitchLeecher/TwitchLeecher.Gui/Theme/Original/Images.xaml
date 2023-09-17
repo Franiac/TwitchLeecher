@@ -12,11 +12,11 @@
     </Style>
 
     <Style x:Key="Img_Connect" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
-        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Connect.png" />
+        <Setter Property="Source" Value="/TwitchLeecher.Old.Gui.Old;component/Resources/Connect.png" />
     </Style>
 
     <Style x:Key="Img_Donate" BasedOn="{StaticResource TlNonStretchingImage}" TargetType="{x:Type Image}">
-        <Setter Property="Source" Value="/TwitchLeecher.Gui;component/Resources/Donate.png" />
+        <Setter Property="Source" Value="/TwitchLeecher.Old.Gui.Old;component/Resources/Donate.png" />
     </Style>
 
     <Style x:Key="Img_Spinner" TargetType="{x:Type fa6:ImageAwesome}">

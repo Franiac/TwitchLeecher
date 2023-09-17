@@ -1,9 +1,7 @@
 ﻿using Ninject;
 using System;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Threading;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.ViewModels;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using Avalonia.Controls;
 
 namespace TwitchLeecher.Gui.Behaviors
 {
@@ -12,7 +13,7 @@ namespace TwitchLeecher.Gui.Behaviors
             "RequestClosing", typeof(ICommand), typeof(RequestClosingBehavior),
             new UIPropertyMetadata(new PropertyChangedCallback(RequestClosingChanged)));
 
-        public static ICommand GetRequestClosing(DependencyObject obj)
+        public static ICommand GetRequestClosing(Window? obj)
         {
             return (ICommand)obj.GetValue(RequestClosingProperty);
         }

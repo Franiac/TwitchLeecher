@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Input;
+using Avalonia;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Shared.Commands;
@@ -88,7 +88,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    Clipboard.SetDataObject(_download?.Log);
+                    Application.Current.Clipboard.SetDataObject(_download?.Log);
                 }
             }
             catch (Exception ex)

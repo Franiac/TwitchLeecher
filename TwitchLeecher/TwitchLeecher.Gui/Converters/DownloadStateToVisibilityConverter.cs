@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
+using Avalonia.Data.Converters;
 using TwitchLeecher.Core.Enums;
 
 namespace TwitchLeecher.Gui.Converters
@@ -25,7 +24,7 @@ namespace TwitchLeecher.Gui.Converters
             DownloadState valueEnum = (DownloadState)value;
             DownloadState parameterEnum = (DownloadState)parameter;
 
-            return valueEnum.Equals(parameterEnum) ? Visibility.Visible : Visibility.Collapsed;
+            return valueEnum.Equals(parameterEnum);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

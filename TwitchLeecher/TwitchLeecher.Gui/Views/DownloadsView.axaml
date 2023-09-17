@@ -1,0 +1,185 @@
+﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.DownloadsView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
+             xmlns:converters1="clr-namespace:TwitchLeecher.Gui.Converters"
+             Style="{DynamicResource thisStyle}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters1:DownloadStateToColorConverter x:Key="DownloadStateToColorConverter" />
+
+                    <DataTemplate x:Key="emptyView">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
+                            <fa6:ImageAwesome Icon="Solid_Download" Margin="0,20,0,20" Width="150" Height="150" Opacity="0.5">
+                                <fa6:ImageAwesome.PrimaryColor>
+                                    <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+                                </fa6:ImageAwesome.PrimaryColor>
+                            </fa6:ImageAwesome>
+                        </StackPanel>
+                    </DataTemplate>
+
+                    <Style x:Key="thisStyle" TargetType="{x:Type UserControl}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path='Downloads.Count'}" Value="0">
+                                <Setter Property="ContentTemplate" Value="{StaticResource emptyView}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer x:Name="scroller" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Downloads, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="20, 20, 20, 0" Padding="10" BorderThickness="1" CornerRadius="5">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Top.Color}" Offset="0" />
+                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Bottom.Color}" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding DownloadParams.Video.Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource TlMiniButton}"
+                                                Command="{Binding Path=DataContext.RetryDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding Id}"
+                                                Padding="5"
+                                                ToolTip="Retry"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                Visibility="{Binding CanRetry, Converter={StaticResource ResourceKey='BVConverter'}}">
+                                            <fa6:ImageAwesome Icon="Solid_ArrowsRotate" Width="16" Height="16" />
+                                        </Button>
+                                        <Button CommandParameter="{Binding Id}"
+                                                Margin="5,0,0,0"
+                                                Padding="5"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch">
+                                            <Button.Style>
+                                                <Style BasedOn="{StaticResource TlMiniButton}" TargetType="{x:Type Button}">
+                                                    <Setter Property="Command" Value="{Binding Path=DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
+                                                    <Setter Property="ToolTip" Value="Remove" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
+                                                            <Setter Property="Command" Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
+                                                            <Setter Property="ToolTip" Value="Cancel" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <fa6:ImageAwesome Width="16" Height="16">
+                                                <fa6:ImageAwesome.Style>
+                                                    <Style TargetType="{x:Type fa6:ImageAwesome}">
+                                                        <Setter Property="Icon" Value="Solid_Xmark" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DownloadState}" Value="{x:Static enums:DownloadState.Downloading}">
+                                                                <Setter Property="Icon" Value="Solid_Ban" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </fa6:ImageAwesome.Style>
+                                            </fa6:ImageAwesome>
+                                        </Button>
+                                        <Button Style="{StaticResource TlMiniButton}"
+                                                Command="{Binding Path=DataContext.ShowLogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding Id}"
+                                                Margin="5,0,0,0"
+                                                Padding="5"
+                                                ToolTip="Show Log"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch">
+                                            <fa6:ImageAwesome Icon="Solid_FileLines" Width="16" Height="16" />
+                                        </Button>
+                                        <Button Style="{StaticResource TlMiniButton}"
+                                                Command="{Binding Path=DataContext.OpenDownloadFolderCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding Id}"
+                                                Margin="5,0,0,0"
+                                                Padding="5"
+                                                ToolTip="Open Download Folder"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                Visibility="{Binding DownloadState, Converter={StaticResource ResourceKey='DownloadStateToVisibilityConverter'}, ConverterParameter={x:Static enums:DownloadState.Done}}">
+                                            <fa6:ImageAwesome Icon="Solid_FolderOpen" Width="16" Height="16" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Source="{Binding DownloadParams.Video.Thumbnail}" VerticalAlignment="Center" MaxWidth="195" MaxHeight="110" Width="195" Height="110" Stretch="Uniform" />
+                                <Grid Grid.Column="2"  Grid.IsSharedSizeScope="True" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="15" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition SharedSizeGroup="g1" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition SharedSizeGroup="g1" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition SharedSizeGroup="g1" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition SharedSizeGroup="g1" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Status:" FontWeight="Bold" />
+                                    <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Status}" FontWeight="Bold">
+                                        <TextBlock.Foreground>
+                                            <SolidColorBrush Color="{Binding DownloadState, Converter={StaticResource DownloadStateToColorConverter}}" />
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Length:" FontWeight="Bold" />
+                                    <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding DownloadParams.CroppedLengthStr}" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Quality:" FontWeight="Bold" />
+                                    <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding DownloadParams.SelectedQuality.DisplayString}" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Recorded:" FontWeight="Bold" />
+                                    <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding DownloadParams.Video.RecordedDate, StringFormat=G}" />
+                                </Grid>
+                            </Grid>
+                            <Border Grid.Row="2" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,10,0,0">
+                                <Grid Height="26">
+                                    <ProgressBar Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="{Binding IsIndeterminate}" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsIndeterminate, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
+                                        <TextBlock.Foreground>
+                                            <SolidColorBrush Color="Black" />
+                                        </TextBlock.Foreground>
+                                        <Run Text="{Binding Progress, Mode=OneWay, StringFormat=N1}" /><Run Text="%" />
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+</UserControl>

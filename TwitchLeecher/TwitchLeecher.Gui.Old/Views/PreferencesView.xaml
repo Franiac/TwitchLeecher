@@ -1,0 +1,593 @@
+﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.PreferencesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:enums="clr-namespace:TwitchLeecher.Old.Core.Enums;assembly=TwitchLeecher.Old.Core"
+             xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls"
+             xmlns:converters="clr-namespace:TwitchLeecher.Old.Gui.Old.Converters"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
+                    <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
+                    <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+        <Grid VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True"
+              Width="550">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+                <TextBlock Text="Application" FontSize="21.333" FontWeight="Bold" />
+            </Border>
+
+            <Grid Grid.Row="1" Margin="15,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates"
+                          IsChecked="{Binding CurrentPreferences.AppCheckForUpdates}" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Check for Updates" />
+                                <TextBlock TextAlignment="Justify">
+                                    You will automatically be informed if a new version
+                                    of Twitch Leecher is available for download.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button"
+                          IsChecked="{Binding CurrentPreferences.AppShowDonationButton}" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Show Donation Button" />
+                                <TextBlock TextAlignment="Justify">
+                                    Show or hide the donation button ($) in the titlebar
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Theme" VerticalAlignment="Center"
+                               HorizontalAlignment="Right" Margin="0 0 20 0" />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableThemes}"
+                              SelectedValue="{Binding CurrentPreferences.Theme}">
+                    </ComboBox>
+                </Grid>
+            </Grid>
+
+            <Border Grid.Row="2" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+                <TextBlock Text="Search" FontSize="21.333" FontWeight="Bold" />
+            </Border>
+
+            <Grid Grid.Row="3" Margin="15,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Favourite Channels" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" IsEditable="True"
+                              Text="{Binding CurrentPreferences.SearchChannelName, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}"
+                              VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Style="{StaticResource TlMiniButton}"
+                            Command="{Binding AddFavouriteChannelCommand}" Height="Auto">
+                        <fa6:ImageAwesome Icon="Solid_Plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                    <Button Grid.Column="4" Style="{StaticResource TlMiniButton}"
+                            Command="{Binding RemoveFavouriteChannelCommand}" Height="Auto">
+                        <fa6:ImageAwesome Icon="Solid_Minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                </Grid>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Favourite Channels" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a list of your favourite channels for the search dialog. The one selected here will be pre-selected in the search dialog. Use the +/- buttons in order to add/remove channels to/from the dropdown list.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Type" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                    <RadioButton GroupName="VideoType" Content="Broadcast"
+                                 IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <RadioButton GroupName="VideoType" Content="Highlight"
+                                 IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                    <RadioButton GroupName="VideoType" Content="Upload"
+                                 IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                </StackPanel>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Type" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a default video type to use in the search dialog.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Load Limit" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton GroupName="LoadLimit" Content="Last"
+                                 IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                 HorizontalAlignment="Left" />
+                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60"
+                                          IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                          Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0"
+                                          HorizontalContentAlignment="Center" HorizontalAlignment="Left"
+                                          VerticalAlignment="Center" />
+                    <TextBlock Text="days" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                </StackPanel>
+                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}"
+                                 VerticalAlignment="Center">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Load Limit" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a default video load limit to use in the search dialog.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton GroupName="LoadLimit" Content="Last"
+                                 IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
+                                 HorizontalAlignment="Left" />
+                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60"
+                                          IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
+                                          Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0"
+                                          HorizontalContentAlignment="Center" HorizontalAlignment="Left"
+                                          VerticalAlignment="Center" />
+                    <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                </StackPanel>
+
+                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="LoadLimit" Content="Only today"
+                             IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}"
+                             VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.SearchOnStartup}"
+                          Content="Search on Start" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Search on Start" />
+                                <TextBlock TextAlignment="Justify">
+                                    If enabled, Twitch Leecher performs a search with the above settings on application startup.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+            </Grid>
+
+            <Border Grid.Row="4" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+                <TextBlock Text="Download" FontSize="21.333" FontWeight="Bold" />
+            </Border>
+
+            <Grid Grid.Row="5" Margin="15,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Temporary Folder" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <Grid Grid.Column="2" Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Grid.Row="0"
+                             Text="{Binding CurrentPreferences.DownloadTempFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsReadOnly="True" />
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}"
+                            Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                </Grid>
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Temporary Folder" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a temporary download folder. This folder will be used to store temporary files during the download process. You need write permissions on this folder.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <Grid Grid.Column="2" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Grid.Row="0"
+                             Text="{Binding CurrentPreferences.DownloadFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsReadOnly="True" />
+                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadFolderCommand}"
+                            Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                </Grid>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download Folder" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a default download folder to use in the download dialog. You need write permissions on this folder.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Filename Template" VerticalAlignment="Center" />
+                <TextBox Grid.Row="4" Grid.Column="2"
+                         Text="{Binding CurrentPreferences.DownloadFileName, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" />
+                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="415">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Filename Template" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a default filename template for your downloads.
+                                </TextBlock>
+                                <Grid Margin="0,5,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition SharedSizeGroup="r2" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="15" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="15" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Wildcard" FontWeight="Bold" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Description" FontWeight="Bold" />
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Example" FontWeight="Bold" />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{}{id}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Twitch Video ID" />
+                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="54869708" />
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{}{channel}" />
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="Channel Name" />
+                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="FakeSmileRevolution" />
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="{}{title}" />
+                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="Video Title" />
+                                    <TextBlock Grid.Row="6" Grid.Column="4" Text="Best Strim Evr!!!" />
+
+                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="{}{res}" />
+                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="Video Resolution" />
+                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="1920x1080" />
+
+                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="{}{year}" />
+                                    <TextBlock Grid.Row="10" Grid.Column="2" Text="Year" />
+                                    <TextBlock Grid.Row="10" Grid.Column="4" Text="2022" />
+
+                                    <TextBlock Grid.Row="12" Grid.Column="0" Text="{}{month}" />
+                                    <TextBlock Grid.Row="12" Grid.Column="2" Text="Month" />
+                                    <TextBlock Grid.Row="12" Grid.Column="4" Text="07" />
+
+                                    <TextBlock Grid.Row="14" Grid.Column="0" Text="{}{day}" />
+                                    <TextBlock Grid.Row="14" Grid.Column="2" Text="Day" />
+                                    <TextBlock Grid.Row="14" Grid.Column="4" Text="25" />
+
+                                    <TextBlock Grid.Row="16" Grid.Column="0" Text="{}{hr24}" />
+                                    <TextBlock Grid.Row="16" Grid.Column="2" Text="Hour (00-23)" />
+                                    <TextBlock Grid.Row="16" Grid.Column="4" Text="07" />
+
+                                    <TextBlock Grid.Row="18" Grid.Column="0" Text="{}{hr}" />
+                                    <TextBlock Grid.Row="18" Grid.Column="2" Text="Hour (00-11)" />
+                                    <TextBlock Grid.Row="18" Grid.Column="4" Text="19" />
+
+                                    <TextBlock Grid.Row="20" Grid.Column="0" Text="{}{min}" />
+                                    <TextBlock Grid.Row="20" Grid.Column="2" Text="Minutes" />
+                                    <TextBlock Grid.Row="20" Grid.Column="4" Text="47" />
+
+                                    <TextBlock Grid.Row="22" Grid.Column="0" Text="{}{sec}" />
+                                    <TextBlock Grid.Row="22" Grid.Column="2" Text="Seconds" />
+                                    <TextBlock Grid.Row="22" Grid.Column="4" Text="55" />
+
+                                    <TextBlock Grid.Row="24" Grid.Column="0" Text="{}{apm}" />
+                                    <TextBlock Grid.Row="24" Grid.Column="2" Text="AM/PM" />
+                                    <TextBlock Grid.Row="24" Grid.Column="4" Text="PM" />
+
+                                    <TextBlock Grid.Row="26" Grid.Column="0" Text="{}{start}" />
+                                    <TextBlock Grid.Row="26" Grid.Column="2" Text="Crop start time (HHmmss)" />
+                                    <TextBlock Grid.Row="26" Grid.Column="4" Text="012744" />
+
+                                    <TextBlock Grid.Row="28" Grid.Column="0" Text="{}{end}" />
+                                    <TextBlock Grid.Row="28" Grid.Column="2" Text="Crop end time (HHmmss)" />
+                                    <TextBlock Grid.Row="28" Grid.Column="4" Text="025317" />
+                                </Grid>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Default Quality" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="6" Grid.Column="2"
+                          ItemsSource="{Binding CurrentPreferences.DownloadDefaultQualities}"
+                          SelectedItem="{Binding CurrentPreferences.DownloadDefaultQuality}" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <fa6:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="415">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Default Quality" />
+                                <TextBlock TextAlignment="Justify">
+                                    Specify a default quality you want to have pre-selected in the download dialog. If the desired quality is not available, the next lower quality will be selected. If there is no lower quality, the next higher quality will be selected.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <CheckBox Grid.Row="8" Grid.Column="2"
+                          IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}"
+                          Content="Create subfolders for favourite channels" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                           Text="Create subfolders for favourite channels" />
+                                <TextBlock TextAlignment="Justify">
+                                    If enabled, VODs of your favorite channels will be downloaded to their own subfolders within the download folder.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <CheckBox Grid.Row="10" Grid.Column="2"
+                          IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}"
+                          Content="Remove successful downloads from queue" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                           Text="Remove Successful Downloads" />
+                                <TextBlock TextAlignment="Justify">
+                                    If enabled, successfully downloaded VODs get removed from the download queue.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <CheckBox Grid.Row="12" Grid.Column="2"
+                          IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}"
+                          Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                           Text="Disable conversion to mp4" />
+                                <TextBlock TextAlignment="Justify">
+                                    Depending on the video containing muted parts, frame drops or the encoding settings of the streamer, the conversion to mp4 can introduce A/V desync in rare cases. If you want to download the raw .ts video file from Twitch, enable this option. Cropping is not available in this mode.
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+            </Grid>
+
+            <Border Grid.Row="6" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+                <TextBlock Text="Miscellaneous" FontSize="21.333" FontWeight="Bold" />
+            </Border>
+
+            <Grid Grid.Row="7" Margin="15,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition SharedSizeGroup="r1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player"
+                          IsChecked="{Binding CurrentPreferences.MiscUseExternalPlayer}" VerticalAlignment="Center"
+                          HorizontalAlignment="Left" />
+                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                           Text="Use external video player" />
+                                <TextBlock TextAlignment="Justify">
+                                    Use an external video player (e.g. VLC) to watch the videos instead of opening them in the browser
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Player" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                <Grid Grid.Row="2" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Row="0" Grid.Column="0"
+                             Text="{Binding CurrentPreferences.MiscExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsReadOnly="True" />
+                    <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TlMiniButton}"
+                            Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
+                    <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}"
+                            Command="{Binding ClearExternalPlayerCommand}" Height="Auto" ToolTip="Clear">
+                        <fa6:ImageAwesome Icon="Solid_Eraser" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    </Button>
+                </Grid>
+                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
+                    <fa6:ImageAwesome.ToolTip>
+                        <ToolTip Width="350">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
+                                <TextBlock TextAlignment="Justify">
+                                    The external video player to use (preferably VLC because it works great with Twitch streams)
+                                </TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </fa6:ImageAwesome.ToolTip>
+                </fa6:ImageAwesome>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

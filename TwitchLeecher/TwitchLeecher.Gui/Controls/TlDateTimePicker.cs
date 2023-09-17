@@ -1,24 +1,10 @@
-﻿using System.Windows.Input;
-using Xceed.Wpf.Toolkit;
+﻿using Avalonia.Controls;
 
 namespace TwitchLeecher.Gui.Controls
 {
-    public class TlDateTimePicker : DateTimePicker
+    public class TlDateTimePicker : DatePicker
     {
         #region Methods
-
-        protected override void OnSpin(SpinEventArgs e)
-        {
-            try
-            {
-                base.OnSpin(e);
-            }
-            catch
-            {
-                // Caused if non-spinable part of the string is selected
-            }
-        }
-
         protected override void OnIncrement()
         {
             base.OnIncrement();

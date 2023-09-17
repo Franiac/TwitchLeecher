@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.AuthView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
+
+    <Grid Width="450" Margin="0,-20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Padding="0,0,0,5" BorderThickness="0,0,0,1">
+            <TextBlock  Text="Connect with Twitch" FontSize="20" FontWeight="Bold" />
+        </Border>
+
+        <TextBlock Grid.Row="2" Text="In order to use the Twitch Leecher and search for videos, you need to connect it with your Twitch Account. This step generates a necessary authentication token. No user data or personal information gets collected or shared." />
+
+        <Button Grid.Row="4" Command="{Binding ConnectCommand}" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <fa6:ImageAwesome Icon="Solid_RightToBracket" Margin="0,4,0,2" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                <TextBlock Text="Connect" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
