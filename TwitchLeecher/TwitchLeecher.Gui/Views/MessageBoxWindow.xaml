@@ -1,6 +1,7 @@
 ﻿<Window x:Class="TwitchLeecher.Gui.Views.MessageBoxWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
         Style="{DynamicResource TlPopupWindow}"
         Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         WindowStartupLocation="CenterOwner"
@@ -30,7 +31,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Name="imgIcon" Style="{StaticResource TlNonStretchingImage}" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" />
+                <fa6:ImageAwesome Grid.Column="0" Name="FaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Height="32" Width="32"/>
                 <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
                     <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
                 </ScrollViewer>

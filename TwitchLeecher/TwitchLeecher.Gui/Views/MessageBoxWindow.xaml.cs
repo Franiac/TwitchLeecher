@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using System.Windows.Shell;
+using FontAwesome6;
 using TwitchLeecher.Gui.Extensions;
 using TwitchLeecher.Shared.Native;
+using Button = System.Windows.Controls.Button;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -31,7 +34,6 @@ namespace TwitchLeecher.Gui.Views
 
             Message = message;
             rowCaption.Visibility = Visibility.Collapsed;
-            imgIcon.Visibility = Visibility.Collapsed;
             SetButtons(MessageBoxButton.OK);
         }
 
@@ -110,36 +112,33 @@ namespace TwitchLeecher.Gui.Views
         private void SetIcon(MessageBoxImage image)
         {
             Icon icon;
-
+            
             switch (image)
             {
                 // MessageBoxImage.Exclamation also has value 48
                 case MessageBoxImage.Warning:
-                    icon = SystemIcons.Exclamation;
+                    FaIcon.Icon = EFontAwesomeIcon.Solid_TriangleExclamation;
                     break;
 
                 // MessageBoxImage.Hand also has value 16
                 // MessageBoxImage.Stop also has value 16
                 case MessageBoxImage.Error:
-                    icon = SystemIcons.Hand;
+                    FaIcon.Icon = EFontAwesomeIcon.Solid_Ban;
                     break;
 
                 // MessageBoxImage.Asterisk also has value 64
                 case MessageBoxImage.Information:
-                    icon = SystemIcons.Information;
+                    FaIcon.Icon = EFontAwesomeIcon.Solid_CircleInfo;
                     break;
 
                 case MessageBoxImage.Question:
-                    icon = SystemIcons.Question;
+                    FaIcon.Icon = EFontAwesomeIcon.Solid_CircleQuestion;
                     break;
 
                 default:
-                    icon = SystemIcons.Information;
+                    FaIcon.Icon = EFontAwesomeIcon.Solid_CircleInfo;
                     break;
             }
-
-            imgIcon.Source = icon.ToImageSource();
-            imgIcon.Visibility = Visibility.Visible;
         }
 
         private void SetButtons(MessageBoxButton buttons)
