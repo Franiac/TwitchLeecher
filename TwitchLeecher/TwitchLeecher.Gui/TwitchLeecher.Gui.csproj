@@ -6,6 +6,8 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>BrainySoftware.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
 
