@@ -1,49 +1,38 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.SearchResultView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.SearchResultView"
+             xmlns="https://github.com/avaloniaui"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls"
-             xmlns:converters="clr-namespace:TwitchLeecher.Old.Gui.Old.Converters"
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
-             Style="{DynamicResource thisStyle}">
+             xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             x:DataType="viewModels:SearchResultViewVM"
+             Classes="searchView">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
-                    <BooleanToVisibilityConverter x:Key="BVConverter" />
 
                     <DataTemplate x:Key="emptyView">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24"
                                        FontWeight="Bold" />
-                            <fa6:ImageAwesome Icon="Solid_Video" Margin="0,20,0,20" Width="150" Height="150"
-                                             Opacity="0.5">
-                                <fa6:ImageAwesome.PrimaryColor>
+                            <avalonia:Icon Value="fa-solid fa-video" Margin="0,20,0,20" Width="150" Height="150"
+                                           Opacity="0.5">
+                                <avalonia:Icon.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
-                                </fa6:ImageAwesome.PrimaryColor>
-                            </fa6:ImageAwesome>
+                                </avalonia:Icon.Foreground>
+                            </avalonia:Icon>
                         </StackPanel>
                     </DataTemplate>
 
-                    <Style x:Key="thisStyle" TargetType="{x:Type UserControl}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path='Videos.Count'}" Value="0">
-                                <Setter Property="ContentTemplate" Value="{StaticResource emptyView}" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <ScrollViewer x:Name="scroller" VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Videos, UpdateSourceTrigger=PropertyChanged}" Grid.IsSharedSizeScope="True">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ctrl:TlSpacedUniformGrid Margin="20" Spacing="10" IsItemsHost="True" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+        <ItemsControl ItemsSource="{Binding Videos}" Grid.IsSharedSizeScope="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="10" BorderThickness="1" CornerRadius="5">
@@ -75,46 +64,40 @@
                                 <Button Grid.Column="1"
                                         IsEnabled="{Binding Live, Converter={StaticResource InverseBoolConverter}}"
                                         Padding="8" Width="40"
-                                        Height="{Binding ActualHeight, ElementName=txtGrid, Mode=OneWay}"
-                                        Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:SearchResultViewVM)DataContext).DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                                         CommandParameter="{Binding Id}">
-                                    <fa6:ImageAwesome Icon="Solid_Download" RenderTransformOrigin="0.5,0.5" />
+                                    <avalonia:Icon Value="fa-solid fa-download" RenderTransformOrigin="0.5,0.5" />
                                 </Button>
                             </Grid>
                             <Grid Cursor="Hand">
-                                <Grid.InputBindings>
-                                    <MouseBinding Gesture="LeftClick"
-                                                  Command="{Binding Path=DataContext.ViewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                                                  CommandParameter="{Binding Id}" />
-                                </Grid.InputBindings>
                                 <Canvas MinWidth="280" MinHeight="158" x:Name="canvas">
                                     <Image Source="{Binding Thumbnail}"
-                                           Width="{Binding ElementName=canvas, Path=ActualWidth}"
-                                           Height="{Binding ElementName=canvas, Path=ActualHeight}" Stretch="Fill" />
+                                           Stretch="Fill" />
                                 </Canvas>
-                                <Border Visibility="{Binding Live, Converter={StaticResource BVConverter}}"
+                                <Border IsVisible="{Binding Live}"
                                         Background="#FFEB0400" HorizontalAlignment="Left" VerticalAlignment="Top"
                                         CornerRadius="3" Margin="3,3,0,0" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
-                                        <fa6:ImageAwesome Icon="Solid_Play" Width="10" Height="10" VerticalAlignment="Center">
-                                            <fa6:ImageAwesome.PrimaryColor>
+                                        <avalonia:Icon Value="fa-solid fa-play" Width="10" Height="10"
+                                                       VerticalAlignment="Center">
+                                            <avalonia:Icon.Foreground>
                                                 <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
-                                            </fa6:ImageAwesome.PrimaryColor>
-                                        </fa6:ImageAwesome>
+                                            </avalonia:Icon.Foreground>
+                                        </avalonia:Icon>
                                         <TextBlock Text="LIVE" FontSize="12" Margin="4,0,0,0"
                                                    VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
-                                <Border Visibility="{Binding Muted, Converter={StaticResource BVConverter}}"
+                                <Border IsVisible="{Binding Muted}"
                                         Background="#78000000" HorizontalAlignment="Right" VerticalAlignment="Top"
                                         CornerRadius="3" Margin="0,3,3,0" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
-                                        <fa6:ImageAwesome Icon="Solid_MicrophoneSlash" Width="10" Height="10"
-                                                         VerticalAlignment="Center">
-                                            <fa6:ImageAwesome.PrimaryColor>
+                                        <avalonia:Icon Value="fa-solid fa-microphone-slash" Width="10" Height="10"
+                                                       VerticalAlignment="Center">
+                                            <avalonia:Icon.Foreground>
                                                 <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
-                                            </fa6:ImageAwesome.PrimaryColor>
-                                        </fa6:ImageAwesome>
+                                            </avalonia:Icon.Foreground>
+                                        </avalonia:Icon>
                                         <TextBlock Text="Muted Parts" FontSize="12" Margin="4,0,0,0"
                                                    VerticalAlignment="Center" />
                                     </StackPanel>
@@ -122,11 +105,12 @@
                                 <Border Background="#78000000" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                         CornerRadius="3" Margin="3,0,0,3" Padding="5,0,5,1">
                                     <StackPanel Orientation="Horizontal">
-                                        <fa6:ImageAwesome Icon="Solid_Eye" Width="10" Height="10" VerticalAlignment="Center">
-                                            <fa6:ImageAwesome.Foreground>
+                                        <avalonia:Icon Value="fa-solid fa-eye" Width="10" Height="10"
+                                                       VerticalAlignment="Center">
+                                            <avalonia:Icon.Foreground>
                                                 <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
-                                            </fa6:ImageAwesome.Foreground>
-                                        </fa6:ImageAwesome>
+                                            </avalonia:Icon.Foreground>
+                                        </avalonia:Icon>
                                         <TextBlock Text="{Binding Views}" FontSize="12" Margin="4,0,0,0"
                                                    VerticalAlignment="Center" />
                                     </StackPanel>

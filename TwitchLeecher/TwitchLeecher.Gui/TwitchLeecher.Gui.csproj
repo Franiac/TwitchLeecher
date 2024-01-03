@@ -1,48 +1,190 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>BrainySoftware.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.2"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.2"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.2"/>
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2"/>
+        <Resource Include="..\Resources\Images\Donate.png">
+            <Link>Resources\Donate.png</Link>
+        </Resource>
+        <Resource Include="..\Resources\Images\TL_Icon.ico">
+            <Link>Resources\TL_Icon.ico</Link>
+        </Resource>
+        <Resource Include="..\Resources\Images\TL_Icon.png">
+            <Link>Resources\TL_Icon.png</Link>
+        </Resource>
     </ItemGroup>
 
-
     <ItemGroup>
-      <Resource Include="..\Resources\Images\Donate.png">
-        <Link>Resources\Donate.png</Link>
-      </Resource>
-      <Resource Include="..\Resources\Images\TL_Icon.ico">
-        <Link>Resources\TL_Icon.ico</Link>
-      </Resource>
-      <Resource Include="..\Resources\Images\TL_Icon.png">
-        <Link>Resources\TL_Icon.png</Link>
-      </Resource>
+        <Compile Update="Views\AuthView.axaml.cs">
+            <DependentUpon>AuthView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\DownloadsView.axaml.cs">
+            <DependentUpon>DownloadsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\DownloadView.axaml.cs">
+            <DependentUpon>DownloadView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\InfoView.axaml.cs">
+            <DependentUpon>InfoView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\LoadingView.axaml.cs">
+            <DependentUpon>LoadingView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\LogView.axaml.cs">
+            <DependentUpon>LogView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MessageBoxWindow.axaml.cs">
+            <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\NotificationStrip.axaml.cs">
+            <DependentUpon>NotificationStrip.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\PreferencesView.axaml.cs">
+            <DependentUpon>PreferencesView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SearchResultView.axaml.cs">
+            <DependentUpon>SearchResultView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SearchView.axaml.cs">
+            <DependentUpon>SearchView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SubOnlyView.axaml.cs">
+            <DependentUpon>SubOnlyView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\UpdateInfoView.axaml.cs">
+            <DependentUpon>UpdateInfoView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\WelcomeView.axaml.cs">
+            <DependentUpon>WelcomeView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\AuthView.axaml.cs">
+            <DependentUpon>AuthView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\DownloadsView.axaml.cs">
+            <DependentUpon>DownloadsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\DownloadView.axaml.cs">
+            <DependentUpon>DownloadView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\InfoView.axaml.cs">
+            <DependentUpon>InfoView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\LoadingView.axaml.cs">
+            <DependentUpon>LoadingView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\LogView.axaml.cs">
+            <DependentUpon>LogView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MessageBoxWindow.axaml.cs">
+            <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\NotificationStrip.axaml.cs">
+            <DependentUpon>NotificationStrip.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\PreferencesView.axaml.cs">
+            <DependentUpon>PreferencesView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SearchResultView.axaml.cs">
+            <DependentUpon>SearchResultView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SearchView.axaml.cs">
+            <DependentUpon>SearchView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\SubOnlyView.axaml.cs">
+            <DependentUpon>SubOnlyView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\UpdateInfoView.axaml.cs">
+            <DependentUpon>UpdateInfoView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\WelcomeView.axaml.cs">
+            <DependentUpon>WelcomeView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
-
     <ItemGroup>
-      <Compile Include="..\GlobalAssemblyInfo.cs">
-        <Link>GlobalAssemblyInfo.cs</Link>
-      </Compile>
+        <AdditionalFiles Include="Views\AuthView.axaml"/>
+        <AdditionalFiles Include="Views\DownloadsView.axaml"/>
+        <AdditionalFiles Include="Views\DownloadView.axaml"/>
+        <AdditionalFiles Include="Views\InfoView.axaml"/>
+        <AdditionalFiles Include="Views\LoadingView.axaml"/>
+        <AdditionalFiles Include="Views\LogView.axaml"/>
+        <AdditionalFiles Include="Views\MainWindow.axaml"/>
+        <AdditionalFiles Include="Views\MessageBoxWindow.axaml"/>
+        <AdditionalFiles Include="Views\NotificationStrip.axaml"/>
+        <AdditionalFiles Include="Views\PreferencesView.axaml"/>
+        <AdditionalFiles Include="Views\SearchResultView.axaml"/>
+        <AdditionalFiles Include="Views\SearchView.axaml"/>
+        <AdditionalFiles Include="Views\SubOnlyView.axaml"/>
+        <AdditionalFiles Include="Views\UpdateInfoView.axaml"/>
+        <AdditionalFiles Include="Views\WelcomeView.axaml"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Ninject">
+        <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
+      </Reference>
+      <Reference Include="Projektanker.Icons.Avalonia">
+        <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
+      </Reference>
+      <Reference Include="Projektanker.Icons.Avalonia">
+        <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Ninject">
+        <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TwitchLeecher.Core\TwitchLeecher.Core.csproj" />
       <ProjectReference Include="..\TwitchLeecher.Services\TwitchLeecher.Services.csproj" />
+      <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1" />
+    </ItemGroup>
+
 </Project>

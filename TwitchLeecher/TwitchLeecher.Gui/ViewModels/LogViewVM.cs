@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using Avalonia;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
+using TwitchLeecher.Gui.Views;
 using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
@@ -19,6 +19,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
+        private readonly MainWindow _window;
 
         private readonly object _commandLockObject;
 
@@ -28,10 +29,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public LogViewVM(
             IDialogService dialogService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            MainWindow window)
         {
             _dialogService = dialogService;
             _navigationService = navigationService;
+            _window = window;
 
             _commandLockObject = new object();
         }
@@ -42,14 +45,8 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public TwitchVideoDownload Download
         {
-            get
-            {
-                return _download;
-            }
-            set
-            {
-                SetProperty(ref _download, value, nameof(Download));
-            }
+            get { return _download; }
+            set { SetProperty(ref _download, value, nameof(Download)); }
         }
 
         public ICommand CopyCommand
@@ -88,7 +85,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 lock (_commandLockObject)
                 {
-                    Application.Current.Clipboard.SetDataObject(_download?.Log);
+                    _window.Clipboard?.SetTextAsync(_download?.Log).GetAwaiter().GetResult();
                 }
             }
             catch (Exception ex)

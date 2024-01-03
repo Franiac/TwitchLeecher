@@ -1,10 +1,11 @@
-﻿<Window x:Class="TwitchLeecher.Old.Gui.Old.Views.MessageBoxWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="TwitchLeecher.Gui.Views.MessageBoxWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
-        Style="{DynamicResource TlPopupWindow}"
-        Icon="/TwitchLeecher.Old.Gui.Old;component/Resources/TL_Icon.ico"
+        xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+        xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+        Icon="/TwitchLeecher.Gui;component/Resources/TL_Icon.ico"
         WindowStartupLocation="CenterOwner"
+        x:DataType="viewModels:MessageBoxViewModel"
         MinWidth="300">
     <Border Padding="20" BorderThickness="1">
         <Border.Background>
@@ -18,10 +19,11 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Name="rowCaption" Padding="0,0,0,10" Margin="0,0,0,10" BorderThickness="0,0,0,1">
-                <TextBlock Name="txtCaption" Text="Caption" FontWeight="Bold" />
+            <Border Grid.Row="0" Padding="0,0,0,10" Margin="0,0,0,10" BorderThickness="0,0,0,1">
+                <TextBlock Text="Caption" FontWeight="Bold" />
             </Border>
 
             <Grid Grid.Row="1">
@@ -31,25 +33,27 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <fa6:ImageAwesome Grid.Column="0" Name="FaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Height="32" Width="32"/>
-                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
-                    <TextBlock Name="txtMessage" Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Left" VerticalAlignment="Center" />
+                <avalonia:Icon Grid.Column="0" Name="FaIcon" HorizontalAlignment="Left" VerticalAlignment="Top"
+                               Height="32" Width="32" />
+                <ScrollViewer Grid.Column="2" >
+                    <TextBlock Text="Message" TextWrapping="Wrap" TextTrimming="WordEllipsis"
+                               TextAlignment="Left" VerticalAlignment="Center" />
                 </ScrollViewer>
             </Grid>
 
             <Border Grid.Row="3" Padding="0,10,0,0" Margin="0,10,0,0" BorderThickness="0,1,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="btnYes" Margin="0,0,3,0" Click="BtnYes_Click" Width="80">
-                        <TextBlock Name="btnYesContent" Text="Yes" />
+                    <Button Margin="0,0,3,0" Command="{Binding YesCommand}" Width="80">
+                        <TextBlock Text="Yes" />
                     </Button>
-                    <Button Name="btnNo" Margin="3,0,3,0" Click="BtnNo_Click" Width="80">
-                        <TextBlock Name="btnNoContent" Text="No" />
+                    <Button Margin="3,0,3,0" Command="{Binding NoCommand}" Width="80">
+                        <TextBlock Text="No" />
                     </Button>
-                    <Button Name="btnOk" Margin="3,0,3,0" Click="BtnOk_Click" Width="80">
-                        <TextBlock Name="btnOkContent" Text="Ok" />
+                    <Button Margin="3,0,3,0" Command="{Binding OkCommand}" Width="80">
+                        <TextBlock Text="Ok" />
                     </Button>
-                    <Button Name="btnCancel" Margin="3,0,0,0" Click="BtnCancel_Click" Width="80">
-                        <TextBlock Name="btnCancelContent" Text="Cancel" />
+                    <Button Margin="3,0,0,0" Command="{Binding CancelCommand}" Width="80">
+                        <TextBlock Text="Cancel" />
                     </Button>
                 </StackPanel>
             </Border>

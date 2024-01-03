@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
+using TwitchLeecher.Gui.Types;
 using TwitchLeecher.Services.Interfaces;
 using TwitchLeecher.Shared.Commands;
 using TwitchLeecher.Shared.Extensions;

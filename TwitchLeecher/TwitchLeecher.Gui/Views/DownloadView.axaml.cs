@@ -1,6 +1,4 @@
-﻿using System;
-using Avalonia.Controls;
-using Avalonia.Threading;
+﻿using Avalonia.Controls;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -9,19 +7,6 @@ namespace TwitchLeecher.Gui.Views
         public DownloadView()
         {
             InitializeComponent();
-
-            IsVisibleChanged += DownloadView_IsVisibleChanged;
-        }
-
-        private void DownloadView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-            {
-                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
-                {
-                    cmbQuality.Focus();
-                }));
-            }
         }
     }
 }

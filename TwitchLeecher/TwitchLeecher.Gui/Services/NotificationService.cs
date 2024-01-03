@@ -1,6 +1,5 @@
 ﻿using Ninject;
 using TwitchLeecher.Gui.Interfaces;
-using TwitchLeecher.Gui.Views;
 
 namespace TwitchLeecher.Gui.Services
 {
@@ -25,7 +24,7 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowNotification(string text)
         {
-            _kernel.Get<MainWindow>().ShowNotification(text);
+            //TODO: Reimplement
         }
 
         #endregion Methods

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Avalonia.Controls;
 using TwitchLeecher.Shared.Extensions;
 using TwitchLeecher.Shared.Reflection;
 
@@ -8,8 +9,6 @@ namespace TwitchLeecher.Gui.Views
     {
         public UpdateInfoView()
         {
-            InitializeComponent();
-
             AssemblyUtil au = AssemblyUtil.Get;
 
             Title = au.GetProductName() + " " + au.GetAssemblyVersion().Trim();

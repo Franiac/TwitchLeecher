@@ -1,20 +1,9 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.DownloadView"
-        x:Name="control"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.DownloadView"
+             x:Name="control"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls"
-             xmlns:converters="clr-namespace:TwitchLeecher.Old.Gui.Old.Converters">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
-                    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBVConverter" />
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
+             xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+             x:DataType="viewModels:DownloadViewVM">
     <Grid Margin="20" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,7 +11,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-            <TextBlock  Text="Download Video" FontSize="21.333" FontWeight="Bold" />
+            <TextBlock Text="Download Video" FontSize="21.333" FontWeight="Bold" />
         </Border>
 
         <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
@@ -47,11 +36,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding DownloadParams.Video.Title}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontWeight="Bold" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding DownloadParams.Video.Title}" TextWrapping="NoWrap"
+                       TextTrimming="CharacterEllipsis" FontWeight="Bold" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Quality:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            <ComboBox Name="cmbQuality" Grid.Row="2" Grid.Column="2" ItemsSource="{Binding DownloadParams.Qualities}" SelectedItem="{Binding DownloadParams.SelectedQuality}">
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Quality:" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" />
+            <ComboBox Name="cmbQuality" Grid.Row="2" Grid.Column="2" ItemsSource="{Binding DownloadParams.Qualities}"
+                      SelectedItem="{Binding DownloadParams.SelectedQuality}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" />
@@ -59,23 +52,33 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Folder:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Folder:" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" />
             <Grid Grid.Row="4" Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding DownloadParams.Folder, Mode=OneWay}" IsReadOnly="True" />
-                <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseCommand}" Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding DownloadParams.Folder, Mode=OneWay}"
+                         IsReadOnly="True" />
+                <Button Classes="TlMiniButton" Command="{Binding ChooseCommand}" Grid.Column="2"
+                        Grid.Row="0" Content="..." />
             </Grid>
 
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Filename:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="{Binding UseCustomFilename, Mode=OneWay, Converter={StaticResource InverseBoolConverter}}" Text="{Binding DownloadParams.Filename, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Filename:" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" />
+            <TextBox Grid.Row="6" Grid.Column="2"
+                     IsReadOnly="{Binding !UseCustomFilename, Mode=OneWay}"
+                     Text="{Binding DownloadParams.Filename}" />
 
-            <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding UseCustomFilename, UpdateSourceTrigger=PropertyChanged}" Content="Use Custom Filename" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-1,0,0,0" FontSize="12" />
+            <CheckBox Grid.Row="8" Grid.Column="2"
+                      IsChecked="{Binding UseCustomFilename}"
+                      Content="Use Custom Filename" HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Margin="-1,0,0,0" FontSize="12" />
 
-            <Grid Grid.Row="10" Grid.Column="2" Visibility="{Binding DownloadParams.DisableConversion, Converter={StaticResource ResourceKey='InverseBVConverter'}}">
+            <Grid Grid.Row="10" Grid.Column="2"
+                  IsVisible="{Binding !DownloadParams.DisableConversion}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -88,7 +91,9 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Crop Video" FontWeight="Bold" />
-                        <TextBlock Grid.Column="1" Text="{Binding DownloadParams.Video.LengthStr, StringFormat='Total Length: {0}', FallbackValue='Total Length: 00:00:00'}" HorizontalAlignment="Right" FontSize="12" VerticalAlignment="Bottom" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding DownloadParams.Video.LengthStr, StringFormat='Total Length: {0}', FallbackValue='Total Length: 00:00:00'}"
+                                   HorizontalAlignment="Right" FontSize="12" VerticalAlignment="Bottom" />
                     </Grid>
                 </Border>
 
@@ -112,30 +117,47 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding DownloadParams.CropStart}" Content="Start" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" Maximum="99" Loop="False" />
-                    <TextBlock Grid.Row="0" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" />
-                    <TextBlock Grid.Row="0" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="0" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropStartSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropStart}" />
+                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding DownloadParams.CropStart}"
+                              Content="Start" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="2" Classes="TlTimeUpDown"
+                                   Value="{Binding CropStartHours}"
+                                   IsEnabled="{Binding DownloadParams.CropStart}" Maximum="99" />
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text=":" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="6" Classes="TlTimeUpDown"
+                                   Value="{Binding CropStartMinutes}"
+                                   IsEnabled="{Binding DownloadParams.CropStart}" />
+                    <TextBlock Grid.Row="0" Grid.Column="8" Text=":" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="10" Classes="TlTimeUpDown"
+                                   Value="{Binding CropStartSeconds}"
+                                   IsEnabled="{Binding DownloadParams.CropStart}" />
 
-                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding  DownloadParams.CropEnd}" Content="End" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="2" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndHours, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" Loop="False" />
-                    <TextBlock Grid.Row="2" Grid.Column="4"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="6" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndMinutes, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
-                    <TextBlock Grid.Row="2" Grid.Column="8"  Text=":" VerticalAlignment="Center" />
-                    <ctrl:TlIntegerUpDown Grid.Row="2" Grid.Column="10" Style="{StaticResource TlTimeUpDown}" Value="{Binding CropEndSeconds, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding  DownloadParams.CropEnd}" Content="End"
+                              VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="2" Classes="TlTimeUpDown"
+                                   Value="{Binding CropEndHours}"
+                                   IsEnabled="{Binding DownloadParams.CropEnd}" Maximum="99" />
+                    <TextBlock Grid.Row="2" Grid.Column="4" Text=":" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="6" Classes="TlTimeUpDown"
+                                   Value="{Binding CropEndMinutes}"
+                                   IsEnabled="{Binding DownloadParams.CropEnd}" />
+                    <TextBlock Grid.Row="2" Grid.Column="8" Text=":" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="10" Classes="TlTimeUpDown"
+                                   Value="{Binding CropEndSeconds}"
+                                   IsEnabled="{Binding DownloadParams.CropEnd}" />
                 </Grid>
             </Grid>
 
-            <Border Grid.Row="11" Grid.Column="2" Visibility="{Binding ShowMutedPartsWarning, Converter={StaticResource BVConverter}}" Margin="0,10,0,0" Padding="5" BorderThickness="1" CornerRadius="5">
+            <Border Grid.Row="11" Grid.Column="2"
+                    IsVisible="{Binding ShowMutedPartsWarning}"
+                    Margin="0,10,0,0" Padding="5" BorderThickness="1" CornerRadius="5">
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource Text.Foreground.Error.Color}" />
                 </Border.BorderBrush>
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource Text.Foreground.Error.Color}" Opacity="0.3" />
                 </Border.Background>
-                <TextBlock FontSize="11" Text="The video contains muted parts! This may cause problems during mp4 conversion. In case of a conversion error or audio issues, please try disabling mp4 converion in the preferences." />
+                <TextBlock FontSize="11"
+                           Text="The video contains muted parts! This may cause problems during mp4 conversion. In case of a conversion error or audio issues, please try disabling mp4 converion in the preferences." />
             </Border>
         </Grid>
     </Grid>

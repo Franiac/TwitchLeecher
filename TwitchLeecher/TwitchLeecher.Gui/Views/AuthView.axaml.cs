@@ -1,12 +1,13 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
 namespace TwitchLeecher.Gui.Views
 {
-    public class AuthView : UserControl
+    public partial class AuthView : UserControl
     {
         public AuthView()
         {
-            InitializeComponent();
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

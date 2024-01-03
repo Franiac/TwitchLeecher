@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media.Animation;
+﻿using Avalonia.Controls;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -15,8 +14,6 @@ namespace TwitchLeecher.Gui.Views
             if (!string.IsNullOrWhiteSpace(text))
             {
                 txtNotification.Text = text;
-                Storyboard storyBoard = (Storyboard)FindResource("NotificationStoryboard");
-                BeginStoryboard(storyBoard);
             }
         }
     }

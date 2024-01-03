@@ -1,10 +1,13 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.LoadingView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.LoadingView"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
+             xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             x:DataType="viewModels:LoadingViewVM">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <fa6:ImageAwesome Style="{StaticResource Img_Spinner}" Opacity="0.5" Width="150" />
+        <avalonia:Icon Value="fa-solid fa-spinner" Opacity="0.5" Width="150" />
         <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5">
             <TextBlock.Foreground>
                 <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />

@@ -1,18 +1,19 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.PreferencesView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.PreferencesView"
+             xmlns="https://github.com/avaloniaui"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:enums="clr-namespace:TwitchLeecher.Old.Core.Enums;assembly=TwitchLeecher.Old.Core"
-             xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls"
-             xmlns:converters="clr-namespace:TwitchLeecher.Old.Gui.Old.Converters"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg">
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
+             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
+             xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
+             x:DataType="viewModels:PreferencesViewVM">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
                     <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
-                    <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -53,35 +54,35 @@
                 <CheckBox Grid.Row="0" Grid.Column="0" Content="Check for Updates"
                           IsChecked="{Binding CurrentPreferences.AppCheckForUpdates}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="0" Grid.Column="2" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="0" Grid.Column="2" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Check for Updates" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Check for Updates" />
                                 <TextBlock TextAlignment="Justify">
                                     You will automatically be informed if a new version
                                     of Twitch Leecher is available for download.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Donation Button"
                           IsChecked="{Binding CurrentPreferences.AppShowDonationButton}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="2" Grid.Column="2" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="2" Grid.Column="2" Value="Img_Help">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Show Donation Button" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Show Donation Button" />
                                 <TextBlock TextAlignment="Justify">
                                     Show or hide the donation button ($) in the titlebar
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
                 <Grid Grid.Row="4" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -112,6 +113,8 @@
                     <RowDefinition SharedSizeGroup="r1" />
                     <RowDefinition Height="10" />
                     <RowDefinition SharedSizeGroup="r1" />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="g2" />
@@ -131,31 +134,30 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" IsEditable="True"
-                              Text="{Binding CurrentPreferences.SearchChannelName, UpdateSourceTrigger=PropertyChanged}"
+                    <ComboBox Grid.Column="0" SelectedItem="{Binding CurrentPreferences.SearchChannelName}"
                               ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}"
                               VerticalAlignment="Center" />
-                    <Button Grid.Column="2" Style="{StaticResource TlMiniButton}"
-                            Command="{Binding AddFavouriteChannelCommand}" Height="Auto">
-                        <fa6:ImageAwesome Icon="Solid_Plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    <Button Grid.Column="2" Classes="TlMiniButton"
+                            Command="{Binding AddFavouriteChannelCommand}">
+                        <avalonia:Icon Value="fa-solid fa-plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
                     </Button>
-                    <Button Grid.Column="4" Style="{StaticResource TlMiniButton}"
-                            Command="{Binding RemoveFavouriteChannelCommand}" Height="Auto">
-                        <fa6:ImageAwesome Icon="Solid_Minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
+                    <Button Grid.Column="4" Classes="TlMiniButton"
+                            Command="{Binding RemoveFavouriteChannelCommand}">
+                        <avalonia:Icon Value="fa-solid fa-minus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </Grid>
-                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="0" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Favourite Channels" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Favourite Channels" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a list of your favourite channels for the search dialog. The one selected here will be pre-selected in the search dialog. Use the +/- buttons in order to add/remove channels to/from the dropdown list.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Type" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -170,18 +172,18 @@
                                  IsChecked="{Binding CurrentPreferences.SearchVideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}"
                                  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                 </StackPanel>
-                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="2" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Type" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Video Type" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a default video type to use in the search dialog.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Load Limit" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -189,36 +191,36 @@
                     <RadioButton GroupName="LoadLimit" Content="Last"
                                  IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
                                  HorizontalAlignment="Left" />
-                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60"
-                                          IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
-                                          Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0"
-                                          HorizontalContentAlignment="Center" HorizontalAlignment="Left"
-                                          VerticalAlignment="Center" />
+                    <NumericUpDown Minimum="1" Maximum="999" Width="60"
+                                   IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                   Value="{Binding CurrentPreferences.SearchLoadLastDays}" Margin="5,0,0,0"
+                                   HorizontalContentAlignment="Center" HorizontalAlignment="Left"
+                                   VerticalAlignment="Center" />
                     <TextBlock Text="days" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
-                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}"
-                                 VerticalAlignment="Center">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="4" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question"
+                               VerticalAlignment="Center">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Load Limit" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Load Limit" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a default video load limit to use in the search dialog.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton GroupName="LoadLimit" Content="Last"
                                  IsChecked="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
                                  HorizontalAlignment="Left" />
-                    <ctrl:TlIntegerUpDown Minimum="1" Maximum="999" Width="60"
-                                          IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
-                                          Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0"
-                                          HorizontalContentAlignment="Center" HorizontalAlignment="Left"
-                                          VerticalAlignment="Center" />
+                    <NumericUpDown Minimum="1" Maximum="999" Width="60"
+                                   IsEnabled="{Binding CurrentPreferences.SearchLoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
+                                   Value="{Binding CurrentPreferences.SearchLoadLastVods}" Margin="5,0,0,0"
+                                   HorizontalContentAlignment="Center" HorizontalAlignment="Left"
+                                   VerticalAlignment="Center" />
                     <TextBlock Text="VODs" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 </StackPanel>
 
@@ -228,18 +230,18 @@
 
                 <CheckBox Grid.Row="10" Grid.Column="2" IsChecked="{Binding CurrentPreferences.SearchOnStartup}"
                           Content="Search on Start" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="12" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Search on Start" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Search on Start" />
                                 <TextBlock TextAlignment="Justify">
                                     If enabled, Twitch Leecher performs a search with the above settings on application startup.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
             </Grid>
 
             <Border Grid.Row="4" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -279,23 +281,24 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Grid.Row="0"
-                             Text="{Binding CurrentPreferences.DownloadTempFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding CurrentPreferences.DownloadTempFolder, Mode=OneWay}"
                              IsReadOnly="True" />
-                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadTempFolderCommand}"
-                            Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                    <Button Classes="TlMiniButton" Command="{Binding ChooseDownloadTempFolderCommand}"
+                            Grid.Column="2" Grid.Row="0" Content="..." />
                 </Grid>
-                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="0" Grid.Column="4" Classes="Img_Help"
+                               Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Temporary Folder" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Temporary Folder" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a temporary download folder. This folder will be used to store temporary files during the download process. You need write permissions on this folder.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Download Folder" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -306,33 +309,33 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Grid.Row="0"
-                             Text="{Binding CurrentPreferences.DownloadFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding CurrentPreferences.DownloadFolder, Mode=OneWay}"
                              IsReadOnly="True" />
-                    <Button Style="{StaticResource TlMiniButton}" Command="{Binding ChooseDownloadFolderCommand}"
-                            Grid.Column="2" Grid.Row="0" Content="..." Height="Auto" />
+                    <Button Classes="TlMiniButton" Command="{Binding ChooseDownloadFolderCommand}"
+                            Grid.Column="2" Grid.Row="0" Content="..." />
                 </Grid>
-                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="2" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Download Folder" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Download Folder" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a default download folder to use in the download dialog. You need write permissions on this folder.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Filename Template" VerticalAlignment="Center" />
                 <TextBox Grid.Row="4" Grid.Column="2"
-                         Text="{Binding CurrentPreferences.DownloadFileName, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding CurrentPreferences.DownloadFileName}"
                          VerticalAlignment="Center" />
-                <fa6:ImageAwesome Grid.Row="4" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="4" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="415">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Filename Template" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Filename Template" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a default filename template for your downloads.
                                 </TextBlock>
@@ -438,8 +441,8 @@
                                 </Grid>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Row="6" Grid.Column="0" Text="Default Quality" VerticalAlignment="Center" />
                 <ComboBox Grid.Row="6" Grid.Column="2"
@@ -451,72 +454,74 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <fa6:ImageAwesome Grid.Row="6" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="6" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="415">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Default Quality" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Default Quality" />
                                 <TextBlock TextAlignment="Justify">
                                     Specify a default quality you want to have pre-selected in the download dialog. If the desired quality is not available, the next lower quality will be selected. If there is no lower quality, the next higher quality will be selected.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <CheckBox Grid.Row="8" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadSubfoldersForFav}"
                           Content="Create subfolders for favourite channels" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="8" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="8" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                <TextBlock Classes="TlToolTipHeadlineText"
                                            Text="Create subfolders for favourite channels" />
                                 <TextBlock TextAlignment="Justify">
                                     If enabled, VODs of your favorite channels will be downloaded to their own subfolders within the download folder.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <CheckBox Grid.Row="10" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadRemoveCompleted}"
                           Content="Remove successful downloads from queue" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="10" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="10" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                <TextBlock Classes="TlToolTipHeadlineText"
                                            Text="Remove Successful Downloads" />
                                 <TextBlock TextAlignment="Justify">
                                     If enabled, successfully downloaded VODs get removed from the download queue.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <CheckBox Grid.Row="12" Grid.Column="2"
                           IsChecked="{Binding CurrentPreferences.DownloadDisableConversion}"
-                          Content="Disable conversion to mp4 (also disables cropping)" VerticalAlignment="Center"
+                          Content="Disable conversion to mp4 (also disables cropping)"
+                          VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="12" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="12" Grid.Column="4" Classes="Img_Help"
+                               Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                <TextBlock Classes="TlToolTipHeadlineText"
                                            Text="Disable conversion to mp4" />
                                 <TextBlock TextAlignment="Justify">
                                     Depending on the video containing muted parts, frame drops or the encoding settings of the streamer, the conversion to mp4 can introduce A/V desync in rare cases. If you want to download the raw .ts video file from Twitch, enable this option. Cropping is not available in this mode.
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
             </Grid>
 
             <Border Grid.Row="6" Margin="0, 20, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
@@ -540,19 +545,19 @@
                 <CheckBox Grid.Row="0" Grid.Column="2" Content="Use external video player"
                           IsChecked="{Binding CurrentPreferences.MiscUseExternalPlayer}" VerticalAlignment="Center"
                           HorizontalAlignment="Left" />
-                <fa6:ImageAwesome Grid.Row="0" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="0" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}"
+                                <TextBlock Classes="TlToolTipHeadlineText"
                                            Text="Use external video player" />
                                 <TextBlock TextAlignment="Justify">
                                     Use an external video player (e.g. VLC) to watch the videos instead of opening them in the browser
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Video Player" VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
@@ -566,27 +571,28 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Row="0" Grid.Column="0"
-                             Text="{Binding CurrentPreferences.MiscExternalPlayer, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding CurrentPreferences.MiscExternalPlayer, Mode=OneWay}"
                              IsReadOnly="True" />
-                    <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TlMiniButton}"
-                            Command="{Binding ChooseExternalPlayerCommand}" Content="..." Height="Auto" />
-                    <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TlMiniButton}"
-                            Command="{Binding ClearExternalPlayerCommand}" Height="Auto" ToolTip="Clear">
-                        <fa6:ImageAwesome Icon="Solid_Eraser" Width="16" Height="16" RenderTransformOrigin="0.5,0.5" />
+                    <Button Grid.Row="0" Grid.Column="2" Classes="TlMiniButton"
+                            Command="{Binding ChooseExternalPlayerCommand}" Content="..." />
+                    <Button Grid.Row="0" Grid.Column="4" Classes="TlMiniButton"
+                            Command="{Binding ClearExternalPlayerCommand}" ToolTip.Tip="Clear">
+                        <avalonia:Icon Value="fa-solid fa-eraser" Width="16" Height="16"
+                                       RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </Grid>
-                <fa6:ImageAwesome Grid.Row="2" Grid.Column="4" Style="{StaticResource Img_Help}">
-                    <fa6:ImageAwesome.ToolTip>
+                <avalonia:Icon Grid.Row="2" Grid.Column="4" Classes="Img_Help" Value="fa-solid fa-circle-question">
+                    <ToolTip.Tip>
                         <ToolTip Width="350">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource TlToolTipHeadlineText}" Text="Video Player" />
+                                <TextBlock Classes="TlToolTipHeadlineText" Text="Video Player" />
                                 <TextBlock TextAlignment="Justify">
                                     The external video player to use (preferably VLC because it works great with Twitch streams)
                                 </TextBlock>
                             </StackPanel>
                         </ToolTip>
-                    </fa6:ImageAwesome.ToolTip>
-                </fa6:ImageAwesome>
+                    </ToolTip.Tip>
+                </avalonia:Icon>
             </Grid>
         </Grid>
     </ScrollViewer>

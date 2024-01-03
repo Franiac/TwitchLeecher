@@ -18,21 +18,22 @@ namespace TwitchLeecher.Gui.Converters
             }
 
             DownloadState valueEnum = (DownloadState)value;
+            var converter = new ColorConverter();
 
             switch (valueEnum)
             {
                 case DownloadState.Queued:
                 case DownloadState.CompletedWithWarning:
-                    return (Color)ColorConverter.ConvertFromString("#FFFFD400");
+                    return (Color)converter.ConvertFromString("#FFFFD400");
 
                 case DownloadState.Error:
-                    return (Color)ColorConverter.ConvertFromString("#FFFF1900");
+                    return (Color)converter.ConvertFromString("#FFFF1900");
 
                 case DownloadState.Canceled:
-                    return (Color)ColorConverter.ConvertFromString("#FFFF1900");
+                    return (Color)converter.ConvertFromString("#FFFF1900");
 
                 default:
-                    return (Color)ColorConverter.ConvertFromString("#FF03C600");
+                    return (Color)converter.ConvertFromString("#FF03C600");
             }
         }
 

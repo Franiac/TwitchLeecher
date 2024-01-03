@@ -2,7 +2,6 @@
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <OutputType>Library</OutputType>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>BrainySoftware.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
@@ -26,6 +25,9 @@
     <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop">
+      <Version>11.0.6</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>

@@ -1,15 +1,36 @@
-﻿<Window x:Class="TwitchLeecher.Old.Gui.Old.Views.UpdateInfoView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="TwitchLeecher.Gui.Views.UpdateInfoView"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls"
-        Style="{DynamicResource TlWindow}"
-        WindowStyle="SingleBorderWindow"
+        xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+        Classes="TlWindow"
         WindowStartupLocation="CenterOwner"
         Width="580"
         Height="480"
         MinWidth="450"
-        MinHeight="300">
-
+        MinHeight="300"
+        x:DataType="viewModels:UpdateInfoViewVM">
+    <Window.Styles>
+        <Style Selector="Button.hyperlink">
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter Content="{TemplateBinding Content}">
+                        <ContentPresenter.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+                                <Setter Property="FontSize" Value="{TemplateBinding FontSize}" />
+                                <Setter Property="TextDecorations" Value="Underline" />
+                            </Style>
+                        </ContentPresenter.Styles>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </Window.Styles>
     <Border Padding="20">
         <Grid>
             <Grid.RowDefinitions>
@@ -23,7 +44,7 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-                <TextBlock  Text="Update Available" FontSize="21" FontWeight="Bold" />
+                <TextBlock Text="Update Available" FontSize="21" FontWeight="Bold" />
             </Border>
 
             <TextBlock Grid.Row="2">
@@ -34,13 +55,15 @@
             </TextBlock>
 
             <TextBlock Grid.Row="4">
-                <Hyperlink Command="{Binding DownloadCommand}" NavigateUri="{Binding UpdateInfo.DownloadUrl, Mode=OneWay}">
-                    <TextBlock Text="{Binding UpdateInfo.DownloadUrl, Mode=OneWay, FallbackValue='https://github.com/Franiac/TwitchLeecher.Old/releases/tag/vX.Y.Z'}" />
-                </Hyperlink>
+                <Button Classes="hyperlink" Command="{Binding DownloadCommand}"
+                        CommandParameter="{Binding UpdateInfo.DownloadUrl, Mode=OneWay}">
+                    <TextBlock
+                        Text="{Binding UpdateInfo.DownloadUrl, Mode=OneWay, FallbackValue='https://github.com/Franiac/TwitchLeecher.Old/releases/tag/vX.Y.Z'}" />
+                </Button>
             </TextBlock>
 
             <Border Grid.Row="6" BorderThickness="1">
-                <ctrl:TlScrollingTextBox Style="{StaticResource TlScrollingTextBox}" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
+                <TextBox Classes="TlScrollingTextBox" Text="{Binding UpdateInfo.ReleaseNotes, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

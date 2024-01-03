@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using TwitchLeecher.Core.Models;
+using TwitchLeecher.Gui.Types;
 
 namespace TwitchLeecher.Gui.Interfaces
 {

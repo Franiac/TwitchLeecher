@@ -4,8 +4,6 @@
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>BrainySoftware.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\</OutputPath>
@@ -20,11 +18,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\..\..\..\.nuget\packages\reactiveui\18.3.1\lib\net6.0\ReactiveUI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

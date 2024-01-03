@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
+﻿using Avalonia.Controls;
 
 namespace TwitchLeecher.Gui.Views
 {
@@ -10,20 +7,6 @@ namespace TwitchLeecher.Gui.Views
         public LogView()
         {
             InitializeComponent();
-
-            IsVisibleChanged += SearchView_IsVisibleChanged;
-        }
-
-        private void SearchView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-            {
-                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
-                {
-                    txtLog.CaretIndex = txtLog.Text.Length;
-                    txtLog.ScrollToEnd();
-                }));
-            }
         }
     }
 }

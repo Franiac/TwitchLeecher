@@ -1,7 +1,8 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.LogView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ctrl="clr-namespace:TwitchLeecher.Old.Gui.Old.Controls">
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.LogView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
+             x:DataType="viewModels:LogViewVM">
 
     <Border Padding="20">
         <Grid>
@@ -11,11 +12,11 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
-                <TextBlock  Text="Download Log" FontSize="21.333" FontWeight="Bold" />
+                <TextBlock Text="Download Log" FontSize="21.333" FontWeight="Bold" />
             </Border>
 
             <Border Grid.Row="1" BorderThickness="1">
-                <ctrl:TlScrollingTextBox x:Name="txtLog" Style="{StaticResource TlScrollingTextBox}" Text="{Binding Download.Log, Mode=OneWay}" />
+                <TextBox Classes="TlScrollingTextBox" Text="{Binding Download.Log, Mode=OneWay}" />
             </Border>
         </Grid>
     </Border>

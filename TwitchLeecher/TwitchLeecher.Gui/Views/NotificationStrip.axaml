@@ -1,18 +1,7 @@
-﻿<UserControl x:Class="TwitchLeecher.Old.Gui.Old.Views.NotificationStrip"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <Storyboard x:Key="NotificationStoryboard">
-                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.5" />
-                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="1" To="0" Duration="0:0:0.5" BeginTime="0:0:3" />
-                    </Storyboard>
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+﻿<UserControl x:Class="TwitchLeecher.Gui.Views.NotificationStrip"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             >
     <UserControl.RenderTransform>
         <ScaleTransform ScaleY="0" />
     </UserControl.RenderTransform>

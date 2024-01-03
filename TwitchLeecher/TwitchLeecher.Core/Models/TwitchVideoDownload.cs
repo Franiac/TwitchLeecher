@@ -125,6 +125,9 @@ namespace TwitchLeecher.Core.Models
             }
         }
 
+        public string Icon => DownloadState == DownloadState.Downloading ? "fa-solid fa-ban" : "fa-solid fa-xmark";
+        public bool IsDone => DownloadState == DownloadState.Done;
+
         #endregion Properties
 
         #region Methods

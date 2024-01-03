@@ -5,7 +5,6 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\</OutputPath>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>BrainySoftware.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
@@ -17,6 +16,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117.0" />
