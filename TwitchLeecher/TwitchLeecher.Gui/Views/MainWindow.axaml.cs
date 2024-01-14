@@ -160,5 +160,6 @@ namespace TwitchLeecher.Gui.Views
         }
 
         #endregion Methods
+
     }
 }

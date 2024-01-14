@@ -17,7 +17,7 @@
                             <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24"
                                        FontWeight="Bold" />
                             <avalonia:Icon Value="fa-solid fa-download" Margin="0,20,0,20" Width="150" Height="150"
-                                           Opacity="0.5" Foreground="{DynamicResource Global.Theme.Color}" />
+                                           Opacity="0.5" Foreground="{DynamicResource GlobalThemeColor}" />
                         </StackPanel>
                     </DataTemplate>
 
@@ -33,8 +33,8 @@
                     <Border Margin="20, 20, 20, 0" Padding="10" BorderThickness="1" CornerRadius="5">
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Top.Color}" Offset="0" />
-                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Bottom.Color}"
+                                <GradientStop Color="{DynamicResource WindowBackgroundGradientTopColor}" Offset="0" />
+                                <GradientStop Color="{DynamicResource WindowBackgroundGradientBottomColor}"
                                               Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>

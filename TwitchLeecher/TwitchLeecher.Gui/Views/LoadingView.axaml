@@ -10,7 +10,7 @@
         <avalonia:Icon Value="fa-solid fa-spinner" Opacity="0.5" Width="150" />
         <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5">
             <TextBlock.Foreground>
-                <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+                <SolidColorBrush Color="{DynamicResource GlobalThemeColor}" />
             </TextBlock.Foreground>
         </TextBlock>
     </Grid>

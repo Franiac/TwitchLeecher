@@ -2,6 +2,7 @@
 using System;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
+using TwitchLeecher;
 
 namespace AvaloniaApplication2;
 

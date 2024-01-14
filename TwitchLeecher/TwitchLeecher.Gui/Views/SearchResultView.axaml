@@ -21,7 +21,7 @@
                             <avalonia:Icon Value="fa-solid fa-video" Margin="0,20,0,20" Width="150" Height="150"
                                            Opacity="0.5">
                                 <avalonia:Icon.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+                                    <SolidColorBrush Color="{DynamicResource GlobalThemeColor}" />
                                 </avalonia:Icon.Foreground>
                             </avalonia:Icon>
                         </StackPanel>
@@ -38,8 +38,8 @@
                     <Border Padding="10" BorderThickness="1" CornerRadius="5">
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Top.Color}" Offset="0" />
-                                <GradientStop Color="{DynamicResource Window.Background.Gradient.Bottom.Color}"
+                                <GradientStop Color="{DynamicResource WindowBackgroundGradientTopColor}" Offset="0" />
+                                <GradientStop Color="{DynamicResource WindowBackgroundGradientBottomColor}"
                                               Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
@@ -81,7 +81,7 @@
                                         <avalonia:Icon Value="fa-solid fa-play" Width="10" Height="10"
                                                        VerticalAlignment="Center">
                                             <avalonia:Icon.Foreground>
-                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource TextForegroundLightColor}" />
                                             </avalonia:Icon.Foreground>
                                         </avalonia:Icon>
                                         <TextBlock Text="LIVE" FontSize="12" Margin="4,0,0,0"
@@ -95,7 +95,7 @@
                                         <avalonia:Icon Value="fa-solid fa-microphone-slash" Width="10" Height="10"
                                                        VerticalAlignment="Center">
                                             <avalonia:Icon.Foreground>
-                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource TextForegroundLightColor}" />
                                             </avalonia:Icon.Foreground>
                                         </avalonia:Icon>
                                         <TextBlock Text="Muted Parts" FontSize="12" Margin="4,0,0,0"
@@ -108,7 +108,7 @@
                                         <avalonia:Icon Value="fa-solid fa-eye" Width="10" Height="10"
                                                        VerticalAlignment="Center">
                                             <avalonia:Icon.Foreground>
-                                                <SolidColorBrush Color="{DynamicResource Text.Foreground.Light.Color}" />
+                                                <SolidColorBrush Color="{DynamicResource TextForegroundLightColor}" />
                                             </avalonia:Icon.Foreground>
                                         </avalonia:Icon>
                                         <TextBlock Text="{Binding Views}" FontSize="12" Margin="4,0,0,0"

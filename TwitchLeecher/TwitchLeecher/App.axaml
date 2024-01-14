@@ -2,62 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             x:Class="AvaloniaApplication2.App"
+             x:Class="TwitchLeecher.App"
              RequestedThemeVariant="Default">
     <Application.Resources>
-        <!-- Sizes -->
-        <system:Double x:Key="Global.Font.Size">14</system:Double>
-        <system:Double x:Key="Global.Font.Emphasize.Size">18</system:Double>
-        <!-- /sizes -->
-
+        <system:Double x:Key="GlobalFontSize">14</system:Double>
+        <system:Double x:Key="GlobalFontEmphasizeSize">18</system:Double>
         <!-- Colors -->
-        <Color x:Key="Global.Theme.Color">#ad4fff</Color>
-        <Color x:Key="Global.Theme.Border.Color">#FF787878</Color>
-
-        <Color x:Key="Window.Background.Color">#FF4B4B4B</Color>
-        <Color x:Key="Window.Background.Gradient.Top.Color">#FF2E2E2E</Color>
-        <Color x:Key="Window.Background.Gradient.Bottom.Color">#FF5B5B5B</Color>
-
-        <Color x:Key="Text.Foreground.Light.Color">#FFFFFFFF</Color>
-        <Color x:Key="Text.Foreground.Light.Disabled.Color">#FF757575</Color>
-        <Color x:Key="Text.Foreground.Dark.Color">#FF000000</Color>
-        <Color x:Key="Text.Foreground.Dark.Disabled.Color">#FF757575</Color>
-        <Color x:Key="Text.Foreground.Watermark.Color">#FFCCCCCC</Color>
-        <Color x:Key="Text.Foreground.Error.Color">#FFD20000</Color>
-
-        <Color x:Key="Hyperlink.Foreground.Color">#FF2994FF</Color>
-
-        <Color x:Key="TextControl.Background.Color">#FFFFFFFF</Color>
-        <Color x:Key="TextControl.Background.Disabled.Color">#FFE6E6E6</Color>
-        <Color x:Key="TextControl.Background.MouseOver.Color">#FFF3F9FF</Color>
-        <Color x:Key="TextControl.Background.Pressed.Color">#FFD9ECFF</Color>
-        <Color x:Key="TextControl.Background.Focus.Color">#FFFFF8ED</Color>
-        <Color x:Key="TextControl.Background.Error.Color">#FFFF8080</Color>
-        <Color x:Key="TextControl.Border.Color">#FFABADB3</Color>
-        <Color x:Key="TextControl.Border.Disabled.Color">#FFBCBCBC</Color>
-        <Color x:Key="TextControl.Border.MouseOver.Color">#a23dff</Color>
-        <Color x:Key="TextControl.Border.Pressed.Color">#9146FF</Color>
-        <Color x:Key="TextControl.Border.Focus.Color">#811dde</Color>
-
-        <Color x:Key="Button.Background.Disabled.Color">#FFE6E6E6</Color>
-        <Color x:Key="Button.Background.MouseOver.Color">#b276e8</Color>
-        <Color x:Key="Button.Background.Pressed.Color">#5112e3</Color>
-        <Color x:Key="Button.FocusVisual.Border.Color">#FF000000</Color>
-
-        <Color x:Key="TextBox.Background.Inactive.Selected.Color">#FFF0F0F0</Color>
-
-        <Color x:Key="Scrollbar.Background.MouseOver.Color">#dfbdff</Color>
-        <Color x:Key="Scrollbar.Background.Pressed.Color">#bf98e3</Color>
-
-        <Color x:Key="ToolTip.Border.Color">#FF000000</Color>
-
-        <Color x:Key="ProgressBar.Progress.Color">#FF06B025</Color>
-        <Color x:Key="ProgressBar.Background.Color">#FFE6E6E6</Color>
-        <SolidColorBrush x:Key="TlTabItemText.Foreground" Color="Black" />
-        <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border"
-                         Color="{DynamicResource TextControl.Border.MouseOver.Color}" />
-        <SolidColorBrush x:Key="MultilineTextBox.Focus.Border"
-                         Color="{DynamicResource TextControl.Border.Focus.Color}" />
+        <SolidColorBrush x:Key="TlTabItemTextForeground" Color="Black" />
+        <SolidColorBrush x:Key="MultilineTextBoxMouseOverBorder"
+                         Color="{DynamicResource TextControlBorderMouseOverColor}" />
+        <SolidColorBrush x:Key="MultilineTextBoxFocusBorder"
+                         Color="{DynamicResource TextControlBorderFocusColor}" />
         <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                 <Grid.ColumnDefinitions>
@@ -83,16 +38,145 @@
                            Orientation="Horizontal" Grid.Row="1" />
             </Grid>
         </ControlTemplate>
-        <SolidColorBrush x:Key="TlScrollingTextBox.Foreground"
-                         Color="{DynamicResource Text.Foreground.Light.Color}" />
-        <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
-        <SolidColorBrush x:Key="TlFadeContentControl.Border" Color="{DynamicResource Global.Theme.Color}" />
-        <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
-        <SolidColorBrush x:Key="MainWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
-        <SolidColorBrush x:Key="MainWindow.Background" Color="{DynamicResource Window.Background.Color}" />
-        <SolidColorBrush x:Key="MainWindow.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
+        <SolidColorBrush x:Key="TlScrollingTextBoxForeground"
+                         Color="{DynamicResource TextForegroundLightColor}" />
+        <SolidColorBrush x:Key="TlScrollingTextBoxBorder" Color="{DynamicResource GlobalThemeBorderColor}" />
+        <SolidColorBrush x:Key="TlFadeContentControlBorder" Color="{DynamicResource GlobalThemeColor}" />
+        <SolidColorBrush x:Key="PopupWindowForeground" Color="{DynamicResource TextForegroundLightColor}" />
+        <SolidColorBrush x:Key="MainWindowForeground" Color="{DynamicResource TextForegroundLightColor}" />
+        <SolidColorBrush x:Key="MainWindowBackground" Color="{DynamicResource WindowBackgroundColor}" />
+        <SolidColorBrush x:Key="MainWindowBorder" Color="{DynamicResource GlobalThemeBorderColor}" />
+        <ResourceDictionary x:Key="New">
+            <Color x:Key="GlobalThemeColor">#ad4fff</Color>
+            <Color x:Key="GlobalThemeBorderColor">#FF787878</Color>
 
+            <Color x:Key="WindowBackgroundColor">#FF4B4B4B</Color>
+            <Color x:Key="WindowBackgroundGradientTopColor">#FF2E2E2E</Color>
+            <Color x:Key="WindowBackgroundGradientBottomColor">#FF5B5B5B</Color>
 
+            <Color x:Key="TextForegroundLightColor">#FFFFFFFF</Color>
+            <Color x:Key="TextForegroundLightDisabledColor">#FF757575</Color>
+            <Color x:Key="TextForegroundDarkColor">#FF000000</Color>
+            <Color x:Key="TextForegroundDarkDisabledColor">#FF757575</Color>
+            <Color x:Key="TextForegroundWatermarkColor">#FFCCCCCC</Color>
+            <Color x:Key="TextForegroundErrorColor">#FFD20000</Color>
+
+            <Color x:Key="HyperlinkForegroundColor">#FF2994FF</Color>
+
+            <Color x:Key="TextControlBackgroundColor">#FFFFFFFF</Color>
+            <Color x:Key="TextControlBackgroundDisabledColor">#FFE6E6E6</Color>
+            <Color x:Key="TextControlBackgroundMouseOverColor">#FFF3F9FF</Color>
+            <Color x:Key="TextControlBackgroundPressedColor">#FFD9ECFF</Color>
+            <Color x:Key="TextControlBackgroundFocusColor">#FFFFF8ED</Color>
+            <Color x:Key="TextControlBackgroundErrorColor">#FFFF8080</Color>
+            <Color x:Key="TextControlBorderColor">#FFABADB3</Color>
+            <Color x:Key="TextControlBorderDisabledColor">#FFBCBCBC</Color>
+            <Color x:Key="TextControlBorderMouseOverColor">#a23dff</Color>
+            <Color x:Key="TextControlBorderPressedColor">#9146FF</Color>
+            <Color x:Key="TextControlBorderFocusColor">#811dde</Color>
+
+            <Color x:Key="ButtonBackgroundDisabledColor">#FFE6E6E6</Color>
+            <Color x:Key="ButtonBackgroundMouseOverColor">#b276e8</Color>
+            <Color x:Key="ButtonBackgroundPressedColor">#5112e3</Color>
+            <Color x:Key="ButtonFocusVisualBorderColor">#FF000000</Color>
+
+            <Color x:Key="TextBoxBackgroundInactiveSelectedColor">#FFF0F0F0</Color>
+
+            <Color x:Key="ScrollbarBackgroundMouseOverColor">#dfbdff</Color>
+            <Color x:Key="ScrollbarBackgroundPressedColor">#bf98e3</Color>
+
+            <Color x:Key="ToolTipBorderColor">#FF000000</Color>
+
+            <Color x:Key="ProgressBarProgressColor">#FF06B025</Color>
+            <Color x:Key="ProgressBarBackgroundColor">#FFE6E6E6</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Original">
+            <Color x:Key="GlobalThemeColor">#FFFFC864</Color>
+            <Color x:Key="GlobalThemeBorderColor">#FF787878</Color>
+
+            <Color x:Key="WindowBackgroundColor">#FF4B4B4B</Color>
+            <Color x:Key="WindowBackgroundGradientTopColor">#FF2E2E2E</Color>
+            <Color x:Key="WindowBackgroundGradientBottomColor">#FF5B5B5B</Color>
+
+            <Color x:Key="TextForegroundLightColor">#FFFFFFFF</Color>
+            <Color x:Key="TextForegroundLightDisabledColor">#FF757575</Color>
+            <Color x:Key="TextForegroundDarkColor">#FF000000</Color>
+            <Color x:Key="TextForegroundDarkDisabledColor">#FF757575</Color>
+            <Color x:Key="TextForegroundWatermarkColor">#FFCCCCCC</Color>
+            <Color x:Key="TextForegroundErrorColor">#FFD20000</Color>
+
+            <Color x:Key="HyperlinkForegroundColor">#FF2994FF</Color>
+
+            <Color x:Key="TextControlBackgroundColor">#FFFFFFFF</Color>
+            <Color x:Key="TextControlBackgroundDisabledColor">#FFE6E6E6</Color>
+            <Color x:Key="TextControlBackgroundMouseOverColor">#FFF3F9FF</Color>
+            <Color x:Key="TextControlBackgroundPressedColor">#FFD9ECFF</Color>
+            <Color x:Key="TextControlBackgroundFocusColor">#FFFFF8ED</Color>
+            <Color x:Key="TextControlBackgroundErrorColor">#FFFF8080</Color>
+            <Color x:Key="TextControlBorderColor">#FFABADB3</Color>
+            <Color x:Key="TextControlBorderDisabledColor">#FFBCBCBC</Color>
+            <Color x:Key="TextControlBorderMouseOverColor">#FFFFDB9A</Color>
+            <Color x:Key="TextControlBorderPressedColor">#FFBF4C</Color>
+            <Color x:Key="TextControlBorderFocusColor">#FFFFC864</Color>
+
+            <Color x:Key="ButtonBackgroundDisabledColor">#FFE6E6E6</Color>
+            <Color x:Key="ButtonBackgroundMouseOverColor">#FFFFE1AA</Color>
+            <Color x:Key="ButtonBackgroundPressedColor">#FFFFFFFF</Color>
+            <Color x:Key="ButtonFocusVisualBorderColor">#FF000000</Color>
+
+            <Color x:Key="TextBoxBackgroundInactiveSelectedColor">#FFF0F0F0</Color>
+
+            <Color x:Key="ScrollbarBackgroundMouseOverColor">#FFFFE1AA</Color>
+            <Color x:Key="ScrollbarBackgroundPressedColor">#FFFFE1AA</Color>
+
+            <Color x:Key="ToolTipBorderColor">#FF000000</Color>
+
+            <Color x:Key="ProgressBarProgressColor">#FF06B025</Color>
+            <Color x:Key="ProgressBarBackgroundColor">#FFE6E6E6</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Shared">
+            <system:Double x:Key="GlobalFontSize">14</system:Double>
+            <system:Double x:Key="GlobalFontEmphasizeSize">18</system:Double>
+            <!-- Colors -->
+            <SolidColorBrush x:Key="TlTabItemTextForeground" Color="Black" />
+            <SolidColorBrush x:Key="MultilineTextBoxMouseOverBorder"
+                             Color="{DynamicResource TextControlBorderMouseOverColor}" />
+            <SolidColorBrush x:Key="MultilineTextBoxFocusBorder"
+                             Color="{DynamicResource TextControlBorderFocusColor}" />
+            <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
+                <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Rectangle x:Name="Corner" Grid.Column="1" Fill="Transparent" Grid.Row="1" />
+                    <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                            CanHorizontallyScroll="False"
+                                            CanVerticallyScroll="False"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Content="{TemplateBinding Content}" Grid.Column="0"
+                                            Margin="{TemplateBinding Padding}" Grid.Row="0" />
+                    <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar"
+                               Cursor="Arrow" Grid.Column="1" Minimum="0"
+                               Grid.Row="0" />
+                    <ScrollBar x:Name="PART_HorizontalScrollBar"
+                               Cursor="Arrow" Grid.Column="0" Minimum="0"
+                               Orientation="Horizontal" Grid.Row="1" />
+                </Grid>
+            </ControlTemplate>
+            <SolidColorBrush x:Key="TlScrollingTextBoxForeground"
+                             Color="{DynamicResource TextForegroundLightColor}" />
+            <SolidColorBrush x:Key="TlScrollingTextBoxBorder" Color="{DynamicResource GlobalThemeBorderColor}" />
+            <SolidColorBrush x:Key="TlFadeContentControlBorder" Color="{DynamicResource GlobalThemeColor}" />
+            <SolidColorBrush x:Key="PopupWindowForeground" Color="{DynamicResource TextForegroundLightColor}" />
+            <SolidColorBrush x:Key="MainWindowForeground" Color="{DynamicResource TextForegroundLightColor}" />
+            <SolidColorBrush x:Key="MainWindowBackground" Color="{DynamicResource WindowBackgroundColor}" />
+            <SolidColorBrush x:Key="MainWindowBorder" Color="{DynamicResource GlobalThemeBorderColor}" />
+        </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
@@ -100,7 +184,7 @@
             <Style Selector="Border">
                 <Setter Property="BorderBrush">
                     <Setter.Value>
-                        <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+                        <SolidColorBrush Color="{DynamicResource GlobalThemeColor}" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -121,7 +205,7 @@
 
 
             <Style Selector="TextBlock.TlTabItemText">
-                <Setter Property="Foreground" Value="{StaticResource TlTabItemText.Foreground}" />
+                <Setter Property="Foreground" Value="{StaticResource TlTabItemTextForeground}" />
             </Style>
             <!-- /TextBlock -->
 
@@ -160,8 +244,8 @@
                 <Setter Property="VerticalContentAlignment" Value="Top" />
                 <Setter Property="TextWrapping" Value="Wrap" />
                 <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Foreground" Value="{StaticResource TlScrollingTextBox.Foreground}" />
-                <Setter Property="BorderBrush" Value="{StaticResource TlScrollingTextBox.Border}" />
+                <Setter Property="Foreground" Value="{StaticResource TlScrollingTextBoxForeground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource TlScrollingTextBoxBorder}" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="CaretBrush" Value="Transparent" />
             </Style>
@@ -183,8 +267,8 @@
 
             <!-- Popup -->
             <Style Selector="Window.TlPopupWindow">
-                <Setter Property="Foreground" Value="{StaticResource PopupWindow.Foreground}" />
-                <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
+                <Setter Property="Foreground" Value="{StaticResource PopupWindowForeground}" />
+                <Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
                 <Setter Property="SizeToContent" Value="WidthAndHeight" />
                 <Setter Property="Background" Value="Transparent" />
             </Style>
@@ -192,10 +276,10 @@
 
             <Style Selector="Window.TlWindow">
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Foreground" Value="{StaticResource MainWindow.Foreground}" />
-                <Setter Property="Background" Value="{StaticResource MainWindow.Background}" />
-                <Setter Property="BorderBrush" Value="{StaticResource MainWindow.Border}" />
-                <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
+                <Setter Property="Foreground" Value="{StaticResource MainWindowForeground}" />
+                <Setter Property="Background" Value="{StaticResource MainWindowBackground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource MainWindowBorder}" />
+                <Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
             </Style>
         </SimpleTheme>
     </Application.Styles>

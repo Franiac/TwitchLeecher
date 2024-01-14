@@ -2,11 +2,10 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <RootNamespace>AvaloniaApplication2</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,5 +22,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TwitchLeecher.Gui\TwitchLeecher.Gui.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Theme\New\Constants.axaml" />
     </ItemGroup>
 </Project>

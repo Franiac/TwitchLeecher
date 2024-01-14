@@ -134,8 +134,8 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <AutoCompleteBox Grid.Column="0" Text="{Binding CurrentPreferences.SearchChannelName}"
-                                     ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}"
+                    <AutoCompleteBox Grid.Column="0" Text="{Binding CurrentPreferences.SearchChannelName, Mode=TwoWay}"
+                                     ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels, Mode=OneWay}"
                                      IsTextCompletionEnabled="True"
                                      MinimumPrefixLength="0"
                                      GotFocus="InputElement_OnGotFocus"

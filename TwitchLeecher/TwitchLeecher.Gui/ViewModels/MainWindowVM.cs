@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
 using TwitchLeecher.Core.Models;
@@ -40,7 +41,6 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly IDownloadService _downloadService;
         private readonly IDialogService _dialogService;
         private readonly IDonationService _donationService;
-        private readonly IFolderService _folderService;
         private readonly INavigationService _navigationService;
         private readonly IRuntimeDataService _runtimeDataService;
         private readonly ISearchService _searchService;
@@ -60,6 +60,8 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _requestCloseCommand;
 
         private readonly object _commandLockObject;
+        private bool _showNotification;
+        private string _notification;
 
         #endregion Fields
 
@@ -71,7 +73,6 @@ namespace TwitchLeecher.Gui.ViewModels
             IDownloadService downloadService,
             IDialogService dialogService,
             IDonationService donationService,
-            IFolderService folderService,
             INavigationService navigationService,
             IRuntimeDataService runtimeDataService,
             ISearchService searchService,
@@ -87,7 +88,6 @@ namespace TwitchLeecher.Gui.ViewModels
             _downloadService = downloadService;
             _dialogService = dialogService;
             _donationService = donationService;
-            _folderService = folderService;
             _navigationService = navigationService;
             _runtimeDataService = runtimeDataService;
             _searchService = searchService;
@@ -233,56 +233,16 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand DoMinimizeCommand
+        public bool ShowNotification
         {
-            get
-            {
-                if (_doMinimizeCommand == null)
-                {
-                    _doMinimizeCommand = new DelegateCommand<Window>(DoMinimize);
-                }
-
-                return _doMinimizeCommand;
-            }
+            get => _showNotification;
+            set => SetProperty(ref _showNotification, value);
         }
 
-        public ICommand DoMaximizeRestoreCommand
+        public string Notification
         {
-            get
-            {
-                if (_doMmaximizeRestoreCommand == null)
-                {
-                    _doMmaximizeRestoreCommand = new DelegateCommand<Window>(DoMaximizeRestore);
-                }
-
-                return _doMmaximizeRestoreCommand;
-            }
-        }
-
-        public ICommand DoCloseCommand
-        {
-            get
-            {
-                if (_doCloseCommand == null)
-                {
-                    _doCloseCommand = new DelegateCommand<Window>(DoClose);
-                }
-
-                return _doCloseCommand;
-            }
-        }
-
-        public ICommand RequestCloseCommand
-        {
-            get
-            {
-                if (_requestCloseCommand == null)
-                {
-                    _requestCloseCommand = new DelegateCommand(() => { }, CloseApplication);
-                }
-
-                return _requestCloseCommand;
-            }
+            get => _notification;
+            set => SetProperty(ref _notification, value);
         }
 
         #endregion Properties
@@ -417,67 +377,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void DoMinimize(Window window)
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (window == null)
-                    {
-                        throw new ArgumentNullException(nameof(window));
-                    }
-
-                    window.WindowState = WindowState.Minimized;
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
-
-        private void DoMaximizeRestore(Window window)
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (window == null)
-                    {
-                        throw new ArgumentNullException(nameof(window));
-                    }
-
-                    window.WindowState = window.WindowState == WindowState.Normal
-                        ? WindowState.Maximized
-                        : WindowState.Normal;
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
-
-        private void DoClose(Window window)
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (window == null)
-                    {
-                        throw new ArgumentNullException(nameof(window));
-                    }
-
-                    window.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
 
         private void ShowView(ViewModelBase contentVM)
         {
@@ -682,5 +581,16 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         #endregion Methods
+
+        public void SetNotification(string text)
+        {
+            Notification = text;
+            ShowNotification = true;
+            Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await Task.Delay(5000);
+                ShowNotification = false;
+            });
+        }
     }
 }
