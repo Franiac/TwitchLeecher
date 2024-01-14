@@ -2,7 +2,6 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
@@ -57,10 +56,18 @@
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center"
                                HorizontalAlignment="Right" />
-                    <ComboBox Grid.Column="2" Grid.Row="0" Name="cmbChannel"
-                              SelectedItem="{Binding SearchParams.Channel, Mode=TwoWay}"
-                              ItemsSource="{Binding FavChannels, Mode=OneWay}" VerticalContentAlignment="Center">
-                    </ComboBox>
+                    <Grid Grid.Column="2" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0" Grid.Row="0"
+                                  SelectedItem="{Binding SearchParams.Channel, Mode=TwoWay}"
+                                  ItemsSource="{Binding FavChannels, Mode=OneWay}"
+                                  VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" Text="{Binding SearchParams.Channel, Mode=TwoWay}" />
+                    </Grid>
 
                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center"
                                Margin="20,0,0,0" HorizontalAlignment="Right" />

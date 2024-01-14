@@ -152,14 +152,15 @@ namespace TwitchLeecher.Gui.Services
 
                 var window = _kernel.Get<MainWindow>();
                 window.Cursor = busy ? new Cursor(StandardCursorType.Wait) : Cursor.Default;
+                if (_busy)
+                {
+                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle,
+                        DispatcherTimer_Tick);
+                }
             }
         }
 
-        #endregion Methods
-
-        #region EventHandlers
-
-        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
             if (sender is DispatcherTimer dispatcherTimer)
             {
@@ -168,6 +169,6 @@ namespace TwitchLeecher.Gui.Services
             }
         }
 
-        #endregion EventHandlers
+        #endregion Methods
     }
 }

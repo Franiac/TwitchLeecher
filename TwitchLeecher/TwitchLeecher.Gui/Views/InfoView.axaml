@@ -71,7 +71,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <Image Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Width="27" Margin="0,1,5,0"
+                <Image Source="/Assets/TL_Icon.png" Width="27" Margin="0,1,5,0"
                        VerticalAlignment="Center" />
                 <TextBlock Text="{Binding ProductName, Mode=OneTime, FallbackValue='Twitch Leecher X.Y'}"
                            FontWeight="Bold" FontSize="20" VerticalAlignment="Top" />
@@ -84,16 +84,16 @@
             <TextBlock Grid.Row="4" Text="Support &amp; Issues" FontWeight="Bold" Margin="0,15,0,0" />
             <TextBlock Grid.Row="5" Margin="15,5,0,0">
                 <Button Classes="hyperlink" Command="{Binding OpenLinkCommand}"
-                        CommandParameter="https://github.com/schneidermanuel/TwitchLeecher.Old-Dx/issues">
-                    https://github.com/schneidermanuel/TwitchLeecher.Old-Dx/issues
+                        CommandParameter="https://github.com/schneidermanuel/TwitchLeecher-Dx/issues">
+                    https://github.com/schneidermanuel/TwitchLeecher-Dx/issues
                 </Button>
             </TextBlock>
 
             <TextBlock Grid.Row="6" Text="Source Code &amp; Documentation" FontWeight="Bold" Margin="0,15,0,0" />
             <TextBlock Grid.Row="7" Margin="15,5,0,0">
                 <Button Classes="hyperlink" Command="{Binding OpenLinkCommand}"
-                        CommandParameter="http://github.com/schneidermanuel/TwitchLeecher.Old-Dx">
-                    http://github.com/Franiac/TwitchLeecher.Old
+                        CommandParameter="http://github.com/schneidermanuel/TwitchLeecher-Dx">
+                    http://github.com/schneidermanuel/TwitchLeecher-Dx
                 </Button>
             </TextBlock>
 

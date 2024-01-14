@@ -1,9 +1,202 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="TwitchLeecher.App"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             x:Class="AvaloniaApplication2.App"
              RequestedThemeVariant="Default">
-  
+    <Application.Resources>
+        <!-- Sizes -->
+        <system:Double x:Key="Global.Font.Size">14</system:Double>
+        <system:Double x:Key="Global.Font.Emphasize.Size">18</system:Double>
+        <!-- /sizes -->
+
+        <!-- Colors -->
+        <Color x:Key="Global.Theme.Color">#ad4fff</Color>
+        <Color x:Key="Global.Theme.Border.Color">#FF787878</Color>
+
+        <Color x:Key="Window.Background.Color">#FF4B4B4B</Color>
+        <Color x:Key="Window.Background.Gradient.Top.Color">#FF2E2E2E</Color>
+        <Color x:Key="Window.Background.Gradient.Bottom.Color">#FF5B5B5B</Color>
+
+        <Color x:Key="Text.Foreground.Light.Color">#FFFFFFFF</Color>
+        <Color x:Key="Text.Foreground.Light.Disabled.Color">#FF757575</Color>
+        <Color x:Key="Text.Foreground.Dark.Color">#FF000000</Color>
+        <Color x:Key="Text.Foreground.Dark.Disabled.Color">#FF757575</Color>
+        <Color x:Key="Text.Foreground.Watermark.Color">#FFCCCCCC</Color>
+        <Color x:Key="Text.Foreground.Error.Color">#FFD20000</Color>
+
+        <Color x:Key="Hyperlink.Foreground.Color">#FF2994FF</Color>
+
+        <Color x:Key="TextControl.Background.Color">#FFFFFFFF</Color>
+        <Color x:Key="TextControl.Background.Disabled.Color">#FFE6E6E6</Color>
+        <Color x:Key="TextControl.Background.MouseOver.Color">#FFF3F9FF</Color>
+        <Color x:Key="TextControl.Background.Pressed.Color">#FFD9ECFF</Color>
+        <Color x:Key="TextControl.Background.Focus.Color">#FFFFF8ED</Color>
+        <Color x:Key="TextControl.Background.Error.Color">#FFFF8080</Color>
+        <Color x:Key="TextControl.Border.Color">#FFABADB3</Color>
+        <Color x:Key="TextControl.Border.Disabled.Color">#FFBCBCBC</Color>
+        <Color x:Key="TextControl.Border.MouseOver.Color">#a23dff</Color>
+        <Color x:Key="TextControl.Border.Pressed.Color">#9146FF</Color>
+        <Color x:Key="TextControl.Border.Focus.Color">#811dde</Color>
+
+        <Color x:Key="Button.Background.Disabled.Color">#FFE6E6E6</Color>
+        <Color x:Key="Button.Background.MouseOver.Color">#b276e8</Color>
+        <Color x:Key="Button.Background.Pressed.Color">#5112e3</Color>
+        <Color x:Key="Button.FocusVisual.Border.Color">#FF000000</Color>
+
+        <Color x:Key="TextBox.Background.Inactive.Selected.Color">#FFF0F0F0</Color>
+
+        <Color x:Key="Scrollbar.Background.MouseOver.Color">#dfbdff</Color>
+        <Color x:Key="Scrollbar.Background.Pressed.Color">#bf98e3</Color>
+
+        <Color x:Key="ToolTip.Border.Color">#FF000000</Color>
+
+        <Color x:Key="ProgressBar.Progress.Color">#FF06B025</Color>
+        <Color x:Key="ProgressBar.Background.Color">#FFE6E6E6</Color>
+        <SolidColorBrush x:Key="TlTabItemText.Foreground" Color="Black" />
+        <SolidColorBrush x:Key="MultilineTextBox.MouseOver.Border"
+                         Color="{DynamicResource TextControl.Border.MouseOver.Color}" />
+        <SolidColorBrush x:Key="MultilineTextBox.Focus.Border"
+                         Color="{DynamicResource TextControl.Border.Focus.Color}" />
+        <ControlTemplate x:Key="TlScrollViewerTpl" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" Grid.Column="1" Fill="Transparent" Grid.Row="1" />
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                        CanHorizontallyScroll="False"
+                                        CanVerticallyScroll="False"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        Content="{TemplateBinding Content}" Grid.Column="0"
+                                        Margin="{TemplateBinding Padding}" Grid.Row="0" />
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar"
+                           Cursor="Arrow" Grid.Column="1" Minimum="0"
+                           Grid.Row="0" />
+                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                           Cursor="Arrow" Grid.Column="0" Minimum="0"
+                           Orientation="Horizontal" Grid.Row="1" />
+            </Grid>
+        </ControlTemplate>
+        <SolidColorBrush x:Key="TlScrollingTextBox.Foreground"
+                         Color="{DynamicResource Text.Foreground.Light.Color}" />
+        <SolidColorBrush x:Key="TlScrollingTextBox.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
+        <SolidColorBrush x:Key="TlFadeContentControl.Border" Color="{DynamicResource Global.Theme.Color}" />
+        <SolidColorBrush x:Key="PopupWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
+        <SolidColorBrush x:Key="MainWindow.Foreground" Color="{DynamicResource Text.Foreground.Light.Color}" />
+        <SolidColorBrush x:Key="MainWindow.Background" Color="{DynamicResource Window.Background.Color}" />
+        <SolidColorBrush x:Key="MainWindow.Border" Color="{DynamicResource Global.Theme.Border.Color}" />
+
+
+    </Application.Resources>
+
     <Application.Styles>
-        <FluentTheme />
+        <SimpleTheme>
+            <Style Selector="Border">
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style Selector="TextBlock.lTitleText">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+
+            <Style Selector="TextBlock.SubTitleText">
+                <Setter Property="FontStyle" Value="Italic" />
+            </Style>
+
+            <Style Selector="TextBlock.TlToolTipHeadlineText">
+                <Setter Property="Margin" Value="0,0,0,5" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+
+
+            <Style Selector="TextBlock.TlTabItemText">
+                <Setter Property="Foreground" Value="{StaticResource TlTabItemText.Foreground}" />
+            </Style>
+            <!-- /TextBlock -->
+
+            <!-- Button -->
+            <Style Selector="Button.TlMiniButton">
+                <Setter Property="Width" Value="30" />
+            </Style>
+
+            <Style Selector="Button.SubOnlyButton">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}"
+                                    ToolTip.Tip="Enable sub-only video download support">
+                                <avalonia:Icon x:Name="icon" Value="fa-solid fa-star" Width="16" Height="16"
+                                               RenderTransformOrigin="0.5,0.5" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!-- /Button -->
+
+
+            <Style Selector="TextBox.TlMultilineTextBox">
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+                <Setter Property="AcceptsReturn" Value="True" />
+            </Style>
+            <Style Selector="TextBox.TlScrollingTextBox">
+                <Setter Property="FontFamily" Value="Calibri" />
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{StaticResource TlScrollingTextBox.Foreground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource TlScrollingTextBox.Border}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="CaretBrush" Value="Transparent" />
+            </Style>
+
+            <!-- TlIntegerUpDown -->
+            <Style Selector="NumericUpDown.TlTimeUpDown">
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="59" />
+                <Setter Property="Width" Value="50" />
+            </Style>
+            <!-- /TlIntegerUpDown -->
+
+            <!-- TlDateTimePicker -->
+
+            <!-- TlFadeContentControl -->
+
+            <!-- Popup -->
+            <Style Selector="Window.TlPopupWindow">
+                <Setter Property="Foreground" Value="{StaticResource PopupWindow.Foreground}" />
+                <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
+                <Setter Property="SizeToContent" Value="WidthAndHeight" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <!-- /Popup -->
+
+            <Style Selector="Window.TlWindow">
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Foreground" Value="{StaticResource MainWindow.Foreground}" />
+                <Setter Property="Background" Value="{StaticResource MainWindow.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource MainWindow.Border}" />
+                <Setter Property="FontSize" Value="{DynamicResource Global.Font.Size}" />
+            </Style>
+        </SimpleTheme>
     </Application.Styles>
 </Application>

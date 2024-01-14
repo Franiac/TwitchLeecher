@@ -7,17 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Resource Include="..\Resources\Images\Donate.png">
-            <Link>Resources\Donate.png</Link>
-        </Resource>
-        <Resource Include="..\Resources\Images\TL_Icon.ico">
-            <Link>Resources\TL_Icon.ico</Link>
-        </Resource>
-        <Resource Include="..\Resources\Images\TL_Icon.png">
-            <Link>Resources\TL_Icon.png</Link>
-        </Resource>
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
-
     <ItemGroup>
         <Compile Update="Views\AuthView.axaml.cs">
             <DependentUpon>AuthView.axaml</DependentUpon>
@@ -49,10 +40,6 @@
         </Compile>
         <Compile Update="Views\MessageBoxWindow.axaml.cs">
             <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\NotificationStrip.axaml.cs">
-            <DependentUpon>NotificationStrip.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\PreferencesView.axaml.cs">
@@ -150,7 +137,6 @@
         <AdditionalFiles Include="Views\LogView.axaml"/>
         <AdditionalFiles Include="Views\MainWindow.axaml"/>
         <AdditionalFiles Include="Views\MessageBoxWindow.axaml"/>
-        <AdditionalFiles Include="Views\NotificationStrip.axaml"/>
         <AdditionalFiles Include="Views\PreferencesView.axaml"/>
         <AdditionalFiles Include="Views\SearchResultView.axaml"/>
         <AdditionalFiles Include="Views\SearchView.axaml"/>
@@ -160,31 +146,43 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Ninject">
-        <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
-      </Reference>
-      <Reference Include="Projektanker.Icons.Avalonia">
-        <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
-      </Reference>
-      <Reference Include="Projektanker.Icons.Avalonia">
-        <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
-      </Reference>
+        <Reference Include="Ninject">
+            <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
+        </Reference>
+        <Reference Include="Projektanker.Icons.Avalonia">
+            <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
+        </Reference>
+        <Reference Include="Projektanker.Icons.Avalonia">
+            <HintPath>..\..\..\..\.nuget\packages\projektanker.icons.avalonia\9.0.1\lib\netstandard2.0\Projektanker.Icons.Avalonia.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Ninject">
-        <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
-      </Reference>
+        <Reference Include="Ninject">
+            <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TwitchLeecher.Core\TwitchLeecher.Core.csproj" />
-      <ProjectReference Include="..\TwitchLeecher.Services\TwitchLeecher.Services.csproj" />
-      <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj" />
+        <ProjectReference Include="..\TwitchLeecher.Core\TwitchLeecher.Core.csproj"/>
+        <ProjectReference Include="..\TwitchLeecher.Services\TwitchLeecher.Services.csproj"/>
+        <ProjectReference Include="..\TwitchLeecher.Shared\TwitchLeecher.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1" />
+        <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1"/>
     </ItemGroup>
-
+    <ItemGroup>
+        <Resource Include="..\Resources\Images\TL_Icon.png">
+            <Link>Resources\TL_Icon.png</Link>
+        </Resource>
+    </ItemGroup>
+    <ItemGroup>
+        <Resource Include="..\Resources\Images\TL_Icon.ico">
+            <Link>Resources\TL_Icon.ico</Link>
+        </Resource>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Assets\" />
+    </ItemGroup>
 </Project>

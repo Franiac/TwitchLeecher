@@ -64,18 +64,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 return _searchParams;
             }
-            set
-            {
-                SetProperty(ref _searchParams, value, nameof(SearchParams));
-            }
+            set { SetProperty(ref _searchParams, value, nameof(SearchParams)); }
         }
 
         public RangeObservableCollection<string> FavChannels
         {
-            get
-            {
-                return _preferencesService.CurrentPreferences.SearchFavouriteChannels;
-            }
+            get { return _preferencesService.CurrentPreferences.SearchFavouriteChannels; }
         }
 
         public ICommand ClearUrlsCommand
@@ -214,7 +208,8 @@ namespace TwitchLeecher.Gui.ViewModels
                     !string.IsNullOrWhiteSpace(SearchParams.Channel) &&
                     !_apiService.ChannelExists(SearchParams.Channel))
                 {
-                    SearchParams.AddError(nameof(SearchParams.Channel), "The specified channel does not exist on Twitch!");
+                    SearchParams.AddError(nameof(SearchParams.Channel),
+                        "The specified channel does not exist on Twitch!");
                 }
 
                 if (SearchParams.HasErrors)
@@ -233,8 +228,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(SearchCommand, "Search", "Solid_MagnifyingGlass"));
-            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "Solid_XMark"));
+            menuCommands.Add(new MenuCommand(SearchCommand, "Search", "fa-solid fa-magnifying-glass"));
+            menuCommands.Add(new MenuCommand(CancelCommand, "Cancel", "fa-solid fa-xmark"));
 
             return menuCommands;
         }

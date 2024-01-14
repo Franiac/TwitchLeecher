@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Services.Interfaces;
@@ -15,23 +16,14 @@ namespace TwitchLeecher.Services.Services
     {
         #region Constants
 
-        private const string FFMPEG_EXE = "ffmpeg.exe";
+        public string FFMPEGExe =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                ? "ffmpeg"
+                : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ffmpeg.exe");
 
         #endregion Constants
 
-        #region Constructors
-
-        public ProcessingService()
-        {
-            string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            FFMPEGExe = Path.Combine(appDir, FFMPEG_EXE);
-        }
-
-        #endregion Constructors
-
         #region Properties
-
-        public string FFMPEGExe { get; }
 
         #endregion Properties
 

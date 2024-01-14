@@ -4,6 +4,7 @@
         xmlns:vm="clr-namespace:TwitchLeecher.Gui.ViewModels"
         xmlns:view="clr-namespace:TwitchLeecher.Gui.Views"
         xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+        xmlns:models="clr-namespace:TwitchLeecher.Core.Models;assembly=TwitchLeecher.Core"
         Classes="TlWindow"
         Width="880"
         Height="920"
@@ -66,11 +67,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- <Image Grid.Column="0" Source="/TwitchLeecher.Gui;component/Resources/TL_Icon.png" Height="40" -->
-                <!--        Margin="10" /> -->
+                <Image Grid.Column="0" Source="/Assets/TL_Icon.png" Height="40"
+                       Margin="10" />
 
                 <StackPanel Grid.Column="1" Margin="0,6,0,0">
                     <TextBlock Classes="TlTitleText"
@@ -110,7 +110,9 @@
                             IsVisible="{Binding IsAuthenticated}"
                             Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Classes="SubOnlyButton" Command="{Binding ShowSubOnlyCommand}"
-                            Margin="0,0,5,0" />
+                            Margin="0,0,5,0">
+                        <avalonia:Icon Value="fa-solid fa-star" />
+                    </Button>
                     <Button Classes="TlMiniButton" Command="{Binding ShowPreferencesCommand}"
                             Margin="0,0,5,0">
                         <avalonia:Icon Value="fa-solid fa-gears" Margin="0,1,0,0" Width="16" Height="16"
@@ -123,7 +125,7 @@
                                        RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Classes="TlMiniButton" Command="{Binding ShowInfoCommand}" Margin="0,0,5,0">
-                        <avalonia:Icon Value="fa-solid fa-cicrle-question" Margin="0,1,0,0" Width="16" Height="16"
+                        <avalonia:Icon Value="fa-solid fa-circle-question" Margin="0,1,0,0" Width="16" Height="16"
                                        RenderTransformOrigin="0.5,0.5" />
                     </Button>
                     <Button Classes="TlMiniButton" Command="{Binding RevokeCommand}">
@@ -131,36 +133,35 @@
                                        RenderTransformOrigin="0.5,0.5" />
                     </Button>
                 </StackPanel>
-
-                <StackPanel Grid.Column="5" Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Classes="TlMiniButton" Command="{Binding DoMinimizeCommand}"
-                            CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0" Width="30">
-                        <avalonia:Icon Value="fa-solid fa-window-minimize" Margin="0,8,0,0" Width="12" Height="12"
-                                       RenderTransformOrigin="0.5,0.5" />
-                    </Button>
-                    <Button Classes="TlMiniButton" Command="{Binding DoMaximizeRestoreCommand}"
-                            CommandParameter="{Binding ElementName=thisWindow}" Margin="0,0,5,0"
-                            Width="30">
-                        <avalonia:Icon Value="fa-solid fa-window-maximize" Margin="0,1,0,0" Width="12"
-                                       Height="12" RenderTransformOrigin="0.5,0.5" />
-                    </Button>
-                    <Button Classes="TlMiniButton" Command="{Binding DoCloseCommand}"
-                            CommandParameter="{Binding ElementName=thisWindow}"
-                            Width="30">
-                        <avalonia:Icon Value="fa-solid fa-xmark" Margin="0,1,0,0" Width="12" Height="12"
-                                       RenderTransformOrigin="0.5,0.5" />
-                    </Button>
-                </StackPanel>
             </Grid>
         </Border>
 
-        <view:NotificationStrip Grid.Row="1" VerticalAlignment="Top">
-            <view:NotificationStrip.Background>
-                <SolidColorBrush Color="{DynamicResource Global.Theme.Color}" />
-            </view:NotificationStrip.Background>
-        </view:NotificationStrip>
-
-        <ContentControl Grid.Row="1" Content="{Binding MainView}"
-                        Classes="TlFadeContentControl" />
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ContentControl Content="{Binding MainView}" />
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding MainView.MenuCommands}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="models:MenuCommand">
+                            
+                            <Button Command="{Binding Command}" Width="{Binding Width}" Margin="0 0 10 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:Icon Value="{Binding Icon}" Margin="0 0 10 0"/>
+                                    <TextBlock Text="{Binding Label}" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
