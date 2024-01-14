@@ -56,19 +56,14 @@
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Channel Name:" VerticalAlignment="Center"
                                HorizontalAlignment="Right" />
-                    <Grid Grid.Column="2" Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" Grid.Row="0"
-                                  SelectedItem="{Binding SearchParams.Channel, Mode=TwoWay}"
-                                  ItemsSource="{Binding FavChannels, Mode=OneWay}"
-                                  VerticalContentAlignment="Center" />
-                        <TextBox Grid.Column="1" Text="{Binding SearchParams.Channel, Mode=TwoWay}" />
-                    </Grid>
-
+                    <AutoCompleteBox Grid.Column="2" Grid.Row="0"
+                                     ItemsSource="{Binding FavChannels, Mode=OneWay}"
+                                     MinimumPrefixLength="0"
+                                     GotFocus="InputElement_OnGotFocus"
+                                     IsDropDownOpen="{Binding OpenSearchDropDown, Mode=TwoWay}"
+                                     Text="{Binding SearchParams.Channel}"
+                                     IsTextCompletionEnabled="True" />
                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Video Type:" VerticalAlignment="Center"
                                Margin="20,0,0,0" HorizontalAlignment="Right" />
                     <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">

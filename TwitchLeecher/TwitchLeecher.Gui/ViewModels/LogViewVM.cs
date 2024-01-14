@@ -118,8 +118,8 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(CopyCommand, "Copy", "Solid_Copy"));
-            menuCommands.Add(new MenuCommand(CloseCommand, "Back", "Solid_ArrowLeft"));
+            menuCommands.Add(new MenuCommand(CopyCommand, "Copy", "fa-solid fa-copy"));
+            menuCommands.Add(new MenuCommand(CloseCommand, "Back", "fa-solid fa-arrow-left"));
 
             return menuCommands;
         }

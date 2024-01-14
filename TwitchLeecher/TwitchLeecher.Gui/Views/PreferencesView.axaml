@@ -134,9 +134,13 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" SelectedItem="{Binding CurrentPreferences.SearchChannelName}"
-                              ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}"
-                              VerticalAlignment="Center" />
+                    <AutoCompleteBox Grid.Column="0" Text="{Binding CurrentPreferences.SearchChannelName}"
+                                     ItemsSource="{Binding CurrentPreferences.SearchFavouriteChannels}"
+                                     IsTextCompletionEnabled="True"
+                                     MinimumPrefixLength="0"
+                                     GotFocus="InputElement_OnGotFocus"
+                                     IsDropDownOpen="{Binding IsChannelDropDownOpen, Mode=TwoWay}"
+                                     VerticalAlignment="Center" />
                     <Button Grid.Column="2" Classes="TlMiniButton"
                             Command="{Binding AddFavouriteChannelCommand}">
                         <avalonia:Icon Value="fa-solid fa-plus" Width="11" Height="11" RenderTransformOrigin="0.5,0.5" />

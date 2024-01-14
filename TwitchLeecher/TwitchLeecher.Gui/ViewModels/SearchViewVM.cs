@@ -28,6 +28,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly IPreferencesService _preferencesService;
 
         private readonly object _commandLockObject;
+        private bool _openSearchDropDown;
 
         #endregion Fields
 
@@ -122,6 +123,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 return _cancelCommand;
             }
+        }
+
+        public bool OpenSearchDropDown
+        {
+            get => _openSearchDropDown;
+            set => SetProperty(ref _openSearchDropDown, value);
         }
 
         #endregion Properties

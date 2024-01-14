@@ -146,6 +146,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="Avalonia.Controls.DataGrid">
+          <HintPath>..\..\..\..\.nuget\packages\avalonia.controls.datagrid\11.0.2\lib\net6.0\Avalonia.Controls.DataGrid.dll</HintPath>
+        </Reference>
         <Reference Include="Ninject">
             <HintPath>..\..\..\..\.nuget\packages\ninject\3.3.6\lib\netstandard2.0\Ninject.dll</HintPath>
         </Reference>

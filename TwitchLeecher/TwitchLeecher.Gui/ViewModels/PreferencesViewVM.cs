@@ -34,6 +34,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private ICommand _defaultsCommand;
 
         private readonly object _commandLockObject;
+        private bool _isChannelDropDownOpen;
 
         #endregion Fields
 
@@ -462,6 +463,12 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
+        public bool IsChannelDropDownOpen
+        {
+            get => _isChannelDropDownOpen;
+            set => SetProperty(ref _isChannelDropDownOpen, value);
+        }
+
         protected override List<MenuCommand> BuildMenu()
         {
             List<MenuCommand> menuCommands = base.BuildMenu();
@@ -471,9 +478,9 @@ namespace TwitchLeecher.Gui.ViewModels
                 menuCommands = new List<MenuCommand>();
             }
 
-            menuCommands.Add(new MenuCommand(SaveCommand, "Save", "Solid_FloppyDisk"));
-            menuCommands.Add(new MenuCommand(UndoCommand, "Undo", "Solid_RotateLeft"));
-            menuCommands.Add(new MenuCommand(DefaultsCommand, "Default", "Solid_Wrench"));
+            menuCommands.Add(new MenuCommand(SaveCommand, "Save", "fa-solid fa-floppy-disk"));
+            menuCommands.Add(new MenuCommand(UndoCommand, "Undo", "fa-solid fa-rotate-left"));
+            menuCommands.Add(new MenuCommand(DefaultsCommand, "Default", "fa-solid fa-wrench"));
 
             return menuCommands;
         }
