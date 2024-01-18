@@ -6,9 +6,9 @@
         xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
         xmlns:models="clr-namespace:TwitchLeecher.Core.Models;assembly=TwitchLeecher.Core"
         Classes="TlWindow"
-        Width="880"
+        Width="780"
         Height="920"
-        MinWidth="880"
+        MinWidth="780"
         MinHeight="600"
         x:DataType="vm:MainWindowVM"
         Title="{Binding Title}">

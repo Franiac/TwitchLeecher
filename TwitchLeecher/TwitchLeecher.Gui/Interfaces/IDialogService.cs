@@ -7,12 +7,6 @@ namespace TwitchLeecher.Gui.Interfaces
 {
     public interface IDialogService
     {
-        MessageBoxResult ShowMessageBox(string message);
-
-        MessageBoxResult ShowMessageBox(string message, string caption);
-
-        MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons);
-
         MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon);
 
         void ShowAndLogException(Exception ex);

@@ -2,7 +2,10 @@
 using System.Drawing;
 using System.Globalization;
 using Avalonia.Data.Converters;
+using Avalonia.Media;
 using TwitchLeecher.Core.Enums;
+using Brush = Avalonia.Media.Brush;
+using Color = System.Drawing.Color;
 
 namespace TwitchLeecher.Gui.Converters
 {
@@ -18,22 +21,22 @@ namespace TwitchLeecher.Gui.Converters
             }
 
             DownloadState valueEnum = (DownloadState)value;
-            var converter = new ColorConverter();
+            var converter = new BrushConverter();
 
             switch (valueEnum)
             {
                 case DownloadState.Queued:
                 case DownloadState.CompletedWithWarning:
-                    return (Color)converter.ConvertFromString("#FFFFD400");
+                    return Brush.Parse("#FFFFD400");
 
                 case DownloadState.Error:
-                    return (Color)converter.ConvertFromString("#FFFF1900");
+                    return Brush.Parse("#FFFF1900");
 
                 case DownloadState.Canceled:
-                    return (Color)converter.ConvertFromString("#FFFF1900");
+                    return Brush.Parse("#FFFF1900");
 
                 default:
-                    return (Color)converter.ConvertFromString("#FF03C600");
+                    return Brush.Parse("#FF03C600");
             }
         }
 

@@ -4,8 +4,10 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using ReactiveUI;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.Types;
@@ -38,24 +40,6 @@ namespace TwitchLeecher.Gui.Services
 
         #region Methods
 
-        public MessageBoxResult ShowMessageBox(string message)
-        {
-            MessageBoxWindow msg = new MessageBoxWindow(message);
-            return SetOwnerAndShow(msg);
-        }
-
-        public MessageBoxResult ShowMessageBox(string message, string caption)
-        {
-            MessageBoxWindow msg = new MessageBoxWindow(message, caption);
-            return SetOwnerAndShow(msg);
-        }
-
-        public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons)
-        {
-            MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons);
-            return SetOwnerAndShow(msg);
-        }
-
         public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons,
             MessageBoxImage icon)
         {
@@ -65,9 +49,9 @@ namespace TwitchLeecher.Gui.Services
 
         private MessageBoxResult SetOwnerAndShow(MessageBoxWindow msg)
         {
-            msg.ShowDialog(_kernel.Get<MainWindow>());
+            msg.ShowDialog(_kernel.Get<MainWindow>()).GetAwaiter().GetResult();
 
-            return msg.Result;
+            return MessageBoxResult.Yes;
         }
 
         public void ShowAndLogException(Exception ex)

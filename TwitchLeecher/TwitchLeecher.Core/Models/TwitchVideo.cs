@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Core.Models
@@ -36,9 +38,8 @@ namespace TwitchLeecher.Core.Models
             Views = views;
             Length = length;
             RecordedDate = recordedDate;
-            Thumbnail = thumbnail ?? throw new ArgumentNullException(nameof(thumbnail));
-            Url = url ?? throw new ArgumentNullException(nameof(url));
-            Viewable = viewable;
+            Thumbnail = ImageHelper.LoadFromWeb(thumbnail);
+            Url = url;
             Muted = muted;
             Live = live;
         }
@@ -67,7 +68,7 @@ namespace TwitchLeecher.Core.Models
 
         public DateTime RecordedDate { get; }
 
-        public Uri Thumbnail { get; }
+        public Task<Bitmap> Thumbnail { get; }
 
         public Uri Url { get; }
 

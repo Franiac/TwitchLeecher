@@ -6,7 +6,7 @@ namespace TwitchLeecher.Gui.ViewModels;
 
 public class MessageBoxViewModel : ViewModelBase
 {
-    private readonly Action<MessageBoxResult> _close;
+    private readonly Action _close;
     private string _message;
     private string _okButtonText;
     private string _cancelButtonText;
@@ -23,14 +23,21 @@ public class MessageBoxViewModel : ViewModelBase
     public ICommand NoCommand { get; set; }
     public ICommand OkCommand { get; set; }
     public ICommand CancelCommand { get; set; }
+    public MessageBoxResult Result { get; set; }
 
-    public MessageBoxViewModel(Action<MessageBoxResult> close)
+    public MessageBoxViewModel(Action close)
     {
         _close = close;
-        YesCommand = new DelegateCommand(() => { close(MessageBoxResult.Yes); });
-        NoCommand = new DelegateCommand(() => { close(MessageBoxResult.No); });
-        OkCommand = new DelegateCommand(() => { close(MessageBoxResult.Ok); });
-        CancelCommand = new DelegateCommand(() => { close(MessageBoxResult.Cancel); });
+        YesCommand = new DelegateCommand(() => { Close(MessageBoxResult.Yes); });
+        NoCommand = new DelegateCommand(() => { Close(MessageBoxResult.No); });
+        OkCommand = new DelegateCommand(() => { Close(MessageBoxResult.Ok); });
+        CancelCommand = new DelegateCommand(() => { Close(MessageBoxResult.Cancel); });
+    }
+
+    private void Close(MessageBoxResult result)
+    {
+        Result = result;
+        _close();
     }
 
     public string Message

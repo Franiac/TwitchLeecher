@@ -1,9 +1,7 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.PreferencesView"
              xmlns="https://github.com/avaloniaui"
-             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
@@ -19,7 +17,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center" Grid.IsSharedSizeScope="True"
               Width="550">
             <Grid.RowDefinitions>

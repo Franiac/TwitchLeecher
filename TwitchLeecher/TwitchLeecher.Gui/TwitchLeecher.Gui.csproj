@@ -38,10 +38,6 @@
             <DependentUpon>MainWindow.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Compile Update="Views\MessageBoxWindow.axaml.cs">
-            <DependentUpon>MessageBoxWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
         <Compile Update="Views\PreferencesView.axaml.cs">
             <DependentUpon>PreferencesView.axaml</DependentUpon>
             <SubType>Code</SubType>
@@ -136,7 +132,6 @@
         <AdditionalFiles Include="Views\LoadingView.axaml"/>
         <AdditionalFiles Include="Views\LogView.axaml"/>
         <AdditionalFiles Include="Views\MainWindow.axaml"/>
-        <AdditionalFiles Include="Views\MessageBoxWindow.axaml"/>
         <AdditionalFiles Include="Views\PreferencesView.axaml"/>
         <AdditionalFiles Include="Views\SearchResultView.axaml"/>
         <AdditionalFiles Include="Views\SearchView.axaml"/>

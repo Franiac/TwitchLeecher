@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Services.Interfaces;
@@ -54,10 +55,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public ObservableCollection<TwitchVideoDownload> Downloads
         {
-            get
-            {
-                return _downloadService.Downloads;
-            }
+            get { return _downloadService.Downloads; }
         }
 
         public ICommand RetryDownloadCommand
@@ -86,18 +84,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        public ICommand RemoveDownloadCommand
-        {
-            get
-            {
-                if (_removeDownloadCommand == null)
-                {
-                    _removeDownloadCommand = new DelegateCommand<string>(RemoveDownload);
-                }
-
-                return _removeDownloadCommand;
-            }
-        }
 
         public ICommand ShowLogCommand
         {
@@ -155,24 +141,12 @@ namespace TwitchLeecher.Gui.ViewModels
                 {
                     if (!string.IsNullOrWhiteSpace(id))
                     {
-                        _downloadService.Cancel(id);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-        }
+                        if (Downloads.Single(d => d.Id == id).DownloadState == DownloadState.Downloading)
+                        {
+                            _downloadService.Cancel(id);
+                            return;
+                        }
 
-        private void RemoveDownload(string id)
-        {
-            try
-            {
-                lock (_commandLockObject)
-                {
-                    if (!string.IsNullOrWhiteSpace(id))
-                    {
                         _downloadService.Remove(id);
                     }
                 }

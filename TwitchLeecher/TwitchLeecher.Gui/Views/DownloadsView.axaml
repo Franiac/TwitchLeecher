@@ -1,32 +1,14 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.DownloadsView"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
-             xmlns:converters1="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              x:DataType="viewModels:DownloadsViewVM">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <converters1:DownloadStateToColorConverter x:Key="DownloadStateToColorConverter" />
-
-                    <DataTemplate x:Key="emptyView">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="No active downloads!" HorizontalAlignment="Center" FontSize="24"
-                                       FontWeight="Bold" />
-                            <avalonia:Icon Value="fa-solid fa-download" Margin="0,20,0,20" Width="150" Height="150"
-                                           Opacity="0.5" Foreground="{DynamicResource GlobalThemeColor}" />
-                        </StackPanel>
-                    </DataTemplate>
-
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <converters:DownloadStateToColorConverter x:Key="DownloadStateToColorConverter" />
     </UserControl.Resources>
-
-    <ScrollViewer x:Name="scroller" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding Downloads}" Margin="0,0,0,20">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -68,23 +50,8 @@
                                                 Margin="5,0,0,0"
                                                 Padding="5"
                                                 VerticalAlignment="Center"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewVM)DataContext).CancelDownloadCommand}"
                                                 HorizontalAlignment="Stretch">
-                                            <!-- <Button.Style> -->
-                                            <!--     <Style BasedOn="{StaticResource TlMiniButton}" -->
-                                            <!--            TargetType="{x:Type Button}"> -->
-                                            <!--         <Setter Property="Command" -->
-                                            <!--                 Value="{Binding Path=DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" /> -->
-                                            <!--         <Setter Property="ToolTip" Value="Remove" /> -->
-                                            <!--         <Style.Triggers> -->
-                                            <!--             <DataTrigger Binding="{Binding DownloadState}" -->
-                                            <!--                          Value="{x:Static enums:DownloadState.Downloading}"> -->
-                                            <!--                 <Setter Property="Command" -->
-                                            <!--                         Value="{Binding Path=DataContext.CancelDownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" /> -->
-                                            <!--                 <Setter Property="ToolTip" Value="Cancel" /> -->
-                                            <!--             </DataTrigger> -->
-                                            <!--         </Style.Triggers> -->
-                                            <!--     </Style> -->
-                                            <!-- </Button.Style> -->
                                             <avalonia:Icon Width="16" Height="16" Value="{Binding Icon}" />
                                         </Button>
                                         <Button Classes="TlMiniButton"
@@ -115,7 +82,7 @@
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding DownloadParams.Video.Thumbnail}"
+                                <Image Grid.Column="0" Source="{Binding DownloadParams.Video.Thumbnail^}"
                                        VerticalAlignment="Center" MaxWidth="195" MaxHeight="110" Width="195"
                                        Height="110" Stretch="Uniform" />
                                 <Grid Grid.Column="2" Grid.IsSharedSizeScope="True" VerticalAlignment="Center">
@@ -136,12 +103,9 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Status:" FontWeight="Bold" />
-                                    <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Status}" FontWeight="Bold">
-                                        <TextBlock.Foreground>
-                                            <SolidColorBrush
-                                                Color="{Binding DownloadState, Converter={StaticResource DownloadStateToColorConverter}}" />
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
+                                    <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Status, Mode=TwoWay}"
+                                               FontWeight="Bold"
+                                               Foreground="{Binding DownloadState, Converter={StaticResource DownloadStateToColorConverter}}" />
 
                                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Length:" FontWeight="Bold" />
                                     <TextBlock Grid.Column="2" Grid.Row="2"
