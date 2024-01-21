@@ -144,7 +144,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <ContentControl Content="{Binding MainView}" />
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding MainView.MenuCommands}">
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding MainView.MenuCommands}" Margin="10">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />

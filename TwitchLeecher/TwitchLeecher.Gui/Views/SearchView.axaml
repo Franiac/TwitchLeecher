@@ -20,15 +20,15 @@
 
     <Grid Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="450">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Margin="0, 0, 0, 10" Padding="0,0,0,5" BorderThickness="0,0,0,1">
             <TextBlock Text="Search" FontSize="21.333" FontWeight="Bold" />
         </Border>
 
-        <TabControl Grid.Row="1" Height="310">
+        <TabControl Grid.Row="1">
             <TabItem
                 IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Channel}}"
                 Width="85">
@@ -96,16 +96,16 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <DatePicker Grid.Column="0" Classes="TlDatePicker"
-                                        IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
-                                        SelectedDate="{Binding SearchParams.LoadFrom}"
-                                        Margin="6,0,0,0" VerticalAlignment="Center" />
+                            <CalendarDatePicker Grid.Column="0" Classes="TlDatePicker"
+                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                                SelectedDate="{Binding SearchParams.LoadFrom}"
+                                                Margin="6,0,0,0" VerticalAlignment="Center" />
                             <TextBlock Grid.Column="1" Text="to" VerticalAlignment="Center" HorizontalAlignment="Left"
                                        Margin="6,0,0,0" />
-                            <DatePicker Grid.Column="2" Classes="TlDatePicker"
-                                        IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
-                                        SelectedDate="{Binding SearchParams.LoadTo}"
-                                        VerticalAlignment="Center" />
+                            <CalendarDatePicker Grid.Column="2" Classes="TlDatePicker"
+                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                                SelectedDate="{Binding SearchParams.LoadTo}"
+                                                VerticalAlignment="Center" />
                         </Grid>
                     </Grid>
 

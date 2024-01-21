@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
