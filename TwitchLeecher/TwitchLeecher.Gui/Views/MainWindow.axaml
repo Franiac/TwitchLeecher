@@ -110,7 +110,8 @@
                 <StackPanel Grid.Column="3"
                             IsVisible="{Binding IsAuthenticated}"
                             Margin="0,0,10,0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Classes="SubOnlyButton" Command="{Binding ShowSubOnlyCommand}"
+                    <Button Classes="TlMiniButton" Command="{Binding ShowSubOnlyCommand}"
+                            Background="{Binding SubOnlyButtonColor}"
                             Margin="0,0,5,0">
                         <avalonia:Icon Value="fa-solid fa-star" />
                     </Button>

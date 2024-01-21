@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Events;
@@ -62,6 +63,7 @@ namespace TwitchLeecher.Gui.ViewModels
         private readonly object _commandLockObject;
         private bool _showNotification;
         private string _notification;
+        private IBrush _subOnlyButtonColor;
 
         #endregion Fields
 
@@ -143,7 +145,17 @@ namespace TwitchLeecher.Gui.ViewModels
         {
             get { return _isAuthenticatedSubOnly; }
 
-            private set { SetProperty(ref _isAuthenticatedSubOnly, value, nameof(IsAuthenticatedSubOnly)); }
+            private set
+            {
+                SubOnlyButtonColor = value ? Brushes.GreenYellow : Brushes.DarkGray;
+                SetProperty(ref _isAuthenticatedSubOnly, value, nameof(IsAuthenticatedSubOnly));
+            }
+        }
+
+        public IBrush SubOnlyButtonColor
+        {
+            get => _subOnlyButtonColor;
+            set => SetProperty(ref _subOnlyButtonColor, value);
         }
 
         public ViewModelBase MainView
@@ -166,7 +178,7 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
         public ICommand ShowSubOnlyCommand =>
-            _showSubOnlyCommand ?? (_showSubOnlyCommand = new DelegateCommand(ShowSubOnly));
+            _showSubOnlyCommand ??= new DelegateCommand(ShowSubOnly);
 
         public ICommand ShowDownloadsCommand
         {
@@ -217,19 +229,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 }
 
                 return _showInfoCommand;
-            }
-        }
-
-        public ICommand RevokeCommand
-        {
-            get
-            {
-                if (_revokeCommand == null)
-                {
-                    _revokeCommand = new DelegateCommand(RevokeAuthentication);
-                }
-
-                return _revokeCommand;
             }
         }
 
@@ -334,7 +333,10 @@ namespace TwitchLeecher.Gui.ViewModels
 
         private void ShowSubOnly()
         {
-            _navigationService.ShowAuthSubOnly();
+            lock (_commandLockObject)
+            {
+                _navigationService.ShowAuthSubOnly();
+            }
         }
 
 
