@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using ReactiveUI;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.Types;
@@ -62,10 +63,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public DownloadParameters DownloadParams
         {
-            get
-            {
-                return _downloadParams;
-            }
+            get { return _downloadParams; }
             set
             {
                 if (_downloadParams != null)
@@ -81,10 +79,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public bool UseCustomFilename
         {
-            get
-            {
-                return _useCustomFilename;
-            }
+            get { return _useCustomFilename; }
             set
             {
                 SetProperty(ref _useCustomFilename, value, nameof(UseCustomFilename));
@@ -98,18 +93,12 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public bool ShowMutedPartsWarning
         {
-            get
-            {
-                return _downloadParams.Video.Muted && !_downloadParams.DisableConversion;
-            }
+            get { return _downloadParams.Video.Muted && !_downloadParams.DisableConversion; }
         }
 
         public int CropStartHours
         {
-            get
-            {
-                return _downloadParams.CropStartTime.GetDaysInHours();
-            }
+            get { return _downloadParams.CropStartTime.GetDaysInHours(); }
             set
             {
                 TimeSpan current = _downloadParams.CropStartTime;
@@ -123,10 +112,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int CropStartMinutes
         {
-            get
-            {
-                return _downloadParams.CropStartTime.Minutes;
-            }
+            get { return _downloadParams.CropStartTime.Minutes; }
             set
             {
                 TimeSpan current = _downloadParams.CropStartTime;
@@ -140,10 +126,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int CropStartSeconds
         {
-            get
-            {
-                return _downloadParams.CropStartTime.Seconds;
-            }
+            get { return _downloadParams.CropStartTime.Seconds; }
             set
             {
                 TimeSpan current = _downloadParams.CropStartTime;
@@ -157,10 +140,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int CropEndHours
         {
-            get
-            {
-                return _downloadParams.CropEndTime.GetDaysInHours();
-            }
+            get { return _downloadParams.CropEndTime.GetDaysInHours(); }
             set
             {
                 TimeSpan current = _downloadParams.CropEndTime;
@@ -174,10 +154,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int CropEndMinutes
         {
-            get
-            {
-                return _downloadParams.CropEndTime.Minutes;
-            }
+            get { return _downloadParams.CropEndTime.Minutes; }
             set
             {
                 TimeSpan current = _downloadParams.CropEndTime;
@@ -191,10 +168,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         public int CropEndSeconds
         {
-            get
-            {
-                return _downloadParams.CropEndTime.Seconds;
-            }
+            get { return _downloadParams.CropEndTime.Seconds; }
             set
             {
                 TimeSpan current = _downloadParams.CropEndTime;
@@ -225,7 +199,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_downloadCommand == null)
                 {
-                    _downloadCommand = new DelegateCommand(Download);
+                    _downloadCommand = ReactiveCommand.CreateFromTask(async () => Download());
                 }
 
                 return _downloadCommand;
@@ -285,38 +259,39 @@ namespace TwitchLeecher.Gui.ViewModels
             Preferences currentPrefs = _preferencesService.CurrentPreferences.Clone();
 
             TimeSpan? cropStartTime = _downloadParams.CropStart ? _downloadParams.CropStartTime : TimeSpan.Zero;
-            TimeSpan? cropEndTime = _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
+            TimeSpan? cropEndTime =
+                _downloadParams.CropEnd ? _downloadParams.CropEndTime : _downloadParams.Video.Length;
 
-            string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video, _downloadParams.SelectedQuality, cropStartTime, cropEndTime);
+            string fileName = _filenameService.SubstituteWildcards(currentPrefs.DownloadFileName, _downloadParams.Video,
+                _downloadParams.SelectedQuality, cropStartTime, cropEndTime);
             fileName = _filenameService.EnsureExtension(fileName, currentPrefs.DownloadDisableConversion);
 
             _downloadParams.Filename = fileName;
         }
 
-        private void Download()
+        private async Task Download()
         {
             try
             {
-                lock (_commandLockObject)
+                Validate();
+
+                if (!HasErrors)
                 {
-                    Validate();
-
-                    if (!HasErrors)
+                    if (File.Exists(_downloadParams.FullPath))
                     {
-                        if (File.Exists(_downloadParams.FullPath))
+                        MessageBoxResult result = await _dialogService.ShowMessageBox(
+                            "The file already exists. Do you want to overwrite it?", "Download",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (result != MessageBoxResult.Yes)
                         {
-                            MessageBoxResult result = _dialogService.ShowMessageBox("The file already exists. Do you want to overwrite it?", "Download", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                            if (result != MessageBoxResult.Yes)
-                            {
-                                return;
-                            }
+                            return;
                         }
-
-                        _downloadService.Enqueue(_downloadParams);
-                        _navigationService.NavigateBack();
-                        _notificationService.ShowNotification("Download added");
                     }
+
+                    _downloadService.Enqueue(_downloadParams);
+                    _navigationService.NavigateBack();
+                    _notificationService.ShowNotification("Download added");
                 }
             }
             catch (Exception ex)
@@ -352,19 +327,22 @@ namespace TwitchLeecher.Gui.ViewModels
 
                 if (_downloadParams.FullPath.Length > 250)
                 {
-                    DownloadParams.AddError(nameof(DownloadParams.Filename), "The full filename (directory + filename) must be shorter than 250 characters!");
+                    DownloadParams.AddError(nameof(DownloadParams.Filename),
+                        "The full filename (directory + filename) must be shorter than 250 characters!");
                 }
 
                 if (_downloadService.IsFileNameUsed(_downloadParams.FullPath))
                 {
-                    DownloadParams.AddError(nameof(DownloadParams.Filename), "Another video is already being downloaded to this file!");
+                    DownloadParams.AddError(nameof(DownloadParams.Filename),
+                        "Another video is already being downloaded to this file!");
                 }
 
                 if (DownloadParams.HasErrors)
                 {
                     AddError(currentProperty, "Invalid Download Parameters!");
 
-                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropStartTime)) is List<string> cropStartErrors && cropStartErrors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropStartTime)) is List<string>
+                            cropStartErrors && cropStartErrors.Count > 0)
                     {
                         string firstError = cropStartErrors.First();
                         AddError(nameof(CropStartHours), firstError);
@@ -372,7 +350,8 @@ namespace TwitchLeecher.Gui.ViewModels
                         AddError(nameof(CropStartSeconds), firstError);
                     }
 
-                    if (DownloadParams.GetErrors(nameof(DownloadParameters.CropEndTime)) is List<string> cropEndErrors && cropEndErrors.Count > 0)
+                    if (DownloadParams.GetErrors(nameof(DownloadParameters
+                            .CropEndTime)) is List<string> cropEndErrors && cropEndErrors.Count > 0)
                     {
                         string firstError = cropEndErrors.First();
                         AddError(nameof(CropEndHours), firstError);

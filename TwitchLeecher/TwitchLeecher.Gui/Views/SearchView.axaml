@@ -10,9 +10,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
-                    <converters:SearchTypeToBooleanConverter x:Key="searchTypeToBooleanConverter" />
-                    <converters:VideoTypeToBooleanConverter x:Key="videoTypeToBooleanConverter" />
-                    <converters:LoadLimitToBooleanConverter x:Key="loadLimitToBooleanConverter" />
+                    <converters:SearchTypeToBooleanConverter x:Key="SearchTypeToBooleanConverter" />
+                    <converters:VideoTypeToBooleanConverter x:Key="VideoTypeToBooleanConverter" />
+                    <converters:LoadLimitToBooleanConverter x:Key="LoadLimitToBooleanConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -30,7 +30,7 @@
 
         <TabControl Grid.Row="1">
             <TabItem
-                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Channel}}"
+                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource SearchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Channel}}"
                 Width="85">
                 <TabItem.Header>
                     <TextBlock Classes="TlTabItemText" FontWeight="Bold" Text="Channel" />
@@ -68,13 +68,13 @@
                                Margin="20,0,0,0" HorizontalAlignment="Right" />
                     <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal">
                         <RadioButton GroupName="VideoType" Content="Broadcast"
-                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}"
+                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource VideoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Broadcast}}"
                                      VerticalAlignment="Center" HorizontalAlignment="Left" />
                         <RadioButton GroupName="VideoType" Content="Highlight"
-                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}"
+                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource VideoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Highlight}}"
                                      VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                         <RadioButton GroupName="VideoType" Content="Upload"
-                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource videoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}"
+                                     IsChecked="{Binding SearchParams.VideoType, Converter={StaticResource VideoTypeToBooleanConverter}, ConverterParameter={x:Static enums:VideoType.Upload}}"
                                      VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Load Limit:" VerticalAlignment="Center"
@@ -87,7 +87,7 @@
                         </Grid.ColumnDefinitions>
 
                         <RadioButton Grid.Column="0" GroupName="LoadLimit" Content="From"
-                                     IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                     IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
                                      HorizontalAlignment="Left" VerticalAlignment="Center" />
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
@@ -97,13 +97,13 @@
                             </Grid.ColumnDefinitions>
 
                             <CalendarDatePicker Grid.Column="0" Classes="TlDatePicker"
-                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
                                                 SelectedDate="{Binding SearchParams.LoadFrom}"
                                                 Margin="6,0,0,0" VerticalAlignment="Center" />
                             <TextBlock Grid.Column="1" Text="to" VerticalAlignment="Center" HorizontalAlignment="Left"
                                        Margin="6,0,0,0" />
                             <CalendarDatePicker Grid.Column="2" Classes="TlDatePicker"
-                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
+                                                IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.Timespan}}"
                                                 SelectedDate="{Binding SearchParams.LoadTo}"
                                                 VerticalAlignment="Center" />
                         </Grid>
@@ -116,12 +116,12 @@
                         </Grid.ColumnDefinitions>
 
                         <RadioButton Grid.Column="0" GroupName="LoadLimit" Content="Last"
-                                     IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
+                                     IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
                                      HorizontalAlignment="Left" />
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
                                     Margin="6,0,0,0">
                             <NumericUpDown Minimum="1" Maximum="999" Width="60"
-                                           IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
+                                           IsEnabled="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.LastVods}}"
                                            Value="{Binding SearchParams.LoadLastVods}"
                                            HorizontalContentAlignment="Center" HorizontalAlignment="Left"
                                            VerticalAlignment="Center" />
@@ -131,12 +131,12 @@
                     </Grid>
 
                     <RadioButton Grid.Column="2" Grid.Row="8" GroupName="LoadLimit" Content="Only today"
-                                 IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource loadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}"
+                                 IsChecked="{Binding SearchParams.LoadLimitType, Converter={StaticResource LoadLimitToBooleanConverter}, ConverterParameter={x:Static enums:LoadLimitType.OnlyToday}}"
                                  VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </Grid>
             </TabItem>
             <TabItem
-                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Urls}}"
+                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource SearchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Urls}}"
                 Width="85">
                 <TabItem.Header>
                     <TextBlock Classes="TlTabItemText" FontWeight="Bold" Text="Urls" />
@@ -170,7 +170,7 @@
                 </Grid>
             </TabItem>
             <TabItem
-                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource searchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Ids}}"
+                IsSelected="{Binding SearchParams.SearchType, Converter={StaticResource SearchTypeToBooleanConverter}, ConverterParameter={x:Static enums:SearchType.Ids}}"
                 Width="85">
                 <TabItem.Header>
                     <TextBlock Classes="TlTabItemText" FontWeight="Bold" Text="IDs" />

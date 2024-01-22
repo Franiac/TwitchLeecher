@@ -340,37 +340,35 @@ namespace TwitchLeecher.Gui.ViewModels
         }
 
 
-        private void RevokeAuthentication()
+        private async void RevokeAuthentication()
         {
             try
             {
-                lock (_commandLockObject)
+                _downloadService.Pause();
+
+                MessageBoxResult? result = null;
+
+                if (_downloadService.CanShutdown())
                 {
-                    _downloadService.Pause();
+                    result = await _dialogService.ShowMessageBox("Do you really want to logout?", "Logout",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                }
+                else
+                {
+                    result = await _dialogService.ShowMessageBox(
+                        "Do you want to abort all running downloads and logout?",
+                        "Logout", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                }
 
-                    MessageBoxResult? result = null;
-
-                    if (_downloadService.CanShutdown())
-                    {
-                        result = _dialogService.ShowMessageBox("Do you really want to logout?", "Logout",
-                            MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    }
-                    else
-                    {
-                        result = _dialogService.ShowMessageBox("Do you want to abort all running downloads and logout?",
-                            "Logout", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    }
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        _downloadService.Shutdown();
-                        _authService.RevokeAuthentication();
-                        _navigationService.ShowAuth();
-                    }
-                    else
-                    {
-                        _downloadService.Resume();
-                    }
+                if (result == MessageBoxResult.Yes)
+                {
+                    _downloadService.Shutdown();
+                    _authService.RevokeAuthentication();
+                    _navigationService.ShowAuth();
+                }
+                else
+                {
+                    _downloadService.Resume();
                 }
             }
             catch (Exception ex)
@@ -553,34 +551,6 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private bool CloseApplication()
-        {
-            try
-            {
-                _downloadService.Pause();
-
-                if (!_downloadService.CanShutdown())
-                {
-                    MessageBoxResult result = _dialogService.ShowMessageBox(
-                        "Do you want to abort all running downloads and exit the application?", "Exit Application",
-                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                    if (result == MessageBoxResult.No)
-                    {
-                        _downloadService.Resume();
-                        return false;
-                    }
-                }
-
-                _downloadService.Shutdown();
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowAndLogException(ex);
-            }
-
-            return true;
-        }
 
         #endregion Methods
 

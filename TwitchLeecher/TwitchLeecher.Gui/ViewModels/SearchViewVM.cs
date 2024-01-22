@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using ReactiveUI;
 using TwitchLeecher.Core.Enums;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
@@ -103,7 +104,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_searchCommand == null)
                 {
-                    _searchCommand = new DelegateCommand(Search);
+                    _searchCommand = ReactiveCommand.CreateFromTask(async () => Search());
                 }
 
                 return _searchCommand;

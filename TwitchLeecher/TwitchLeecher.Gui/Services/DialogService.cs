@@ -40,18 +40,23 @@ namespace TwitchLeecher.Gui.Services
 
         #region Methods
 
-        public MessageBoxResult ShowMessageBox(string message, string caption, MessageBoxButton buttons,
+        public async Task<MessageBoxResult> ShowMessageBox(string message, string caption, MessageBoxButton buttons,
             MessageBoxImage icon)
         {
-            MessageBoxWindow msg = new MessageBoxWindow(message, caption, buttons, icon);
-            return SetOwnerAndShow(msg);
-        }
+            MessageBoxWindow msg = new MessageBoxWindow();
+            var vm = new MessageBoxViewModel(res => msg.Close(res))
+            {
+                Caption = caption,
+                Message = message
+            };
+            vm.SetIcon(icon);
+            vm.SetButtons(buttons);
+            msg.DataContext = vm;
+            var result =
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                    msg.ShowDialog<MessageBoxResult>(_kernel.Get<MainWindow>()));
 
-        private MessageBoxResult SetOwnerAndShow(MessageBoxWindow msg)
-        {
-            msg.ShowDialog(_kernel.Get<MainWindow>()).GetAwaiter().GetResult();
-
-            return MessageBoxResult.Yes;
+            return result;
         }
 
         public void ShowAndLogException(Exception ex)
@@ -62,14 +67,6 @@ namespace TwitchLeecher.Gui.Services
             }
 
             string logFile = _logService.LogException(ex);
-
-            MessageBoxWindow msg = new MessageBoxWindow("An unexpected error occured:"
-                                                        + Environment.NewLine + Environment.NewLine + ex.Message
-                                                        + Environment.NewLine + Environment.NewLine +
-                                                        "All details were written to log file"
-                                                        + Environment.NewLine + Environment.NewLine + logFile,
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            msg.ShowDialog(_kernel.Get<MainWindow>());
         }
 
         public void ShowFolderBrowserDialog(string folder, Action<bool, string> dialogCompleteCallback)

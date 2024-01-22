@@ -5,7 +5,7 @@ namespace TwitchLeecher.Gui.Views;
 
 public partial class MessageBoxWindow : Window
 {
-    public MessageBoxWindow(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon)
+    public MessageBoxWindow()
     {
         InitializeComponent();
     }

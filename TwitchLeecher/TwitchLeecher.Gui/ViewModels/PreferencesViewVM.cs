@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using ReactiveUI;
 using TwitchLeecher.Core.Models;
 using TwitchLeecher.Gui.Interfaces;
 using TwitchLeecher.Gui.Types;
@@ -172,7 +173,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_undoCommand == null)
                 {
-                    _undoCommand = new DelegateCommand(Undo);
+                    _undoCommand = ReactiveCommand.CreateFromTask(async () => Undo());
                 }
 
                 return _undoCommand;
@@ -185,7 +186,7 @@ namespace TwitchLeecher.Gui.ViewModels
             {
                 if (_defaultsCommand == null)
                 {
-                    _defaultsCommand = new DelegateCommand(Defaults);
+                    _defaultsCommand = ReactiveCommand.CreateFromTask(async () => Defaults());
                 }
 
                 return _defaultsCommand;
@@ -387,21 +388,18 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Undo()
+        private async Task Undo()
         {
             try
             {
-                lock (_commandLockObject)
-                {
-                    MessageBoxResult result = _dialogService.ShowMessageBox(
-                        "Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
+                MessageBoxResult result = await _dialogService.ShowMessageBox(
+                    "Undo current changes and reload last saved preferences?", "Undo", MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
 
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        _dialogService.SetBusy();
-                        CurrentPreferences = null;
-                    }
+                if (result == MessageBoxResult.Yes)
+                {
+                    _dialogService.SetBusy();
+                    CurrentPreferences = null;
                 }
             }
             catch (Exception ex)
@@ -410,22 +408,19 @@ namespace TwitchLeecher.Gui.ViewModels
             }
         }
 
-        private void Defaults()
+        private async Task Defaults()
         {
             try
             {
-                lock (_commandLockObject)
-                {
-                    MessageBoxResult result = _dialogService.ShowMessageBox("Load default preferences?", "Defaults",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = await _dialogService.ShowMessageBox("Load default preferences?", "Defaults",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        _dialogService.SetBusy();
-                        _preferencesService.Save(_preferencesService.CreateDefault());
-                       _themeService.SetTheme(_preferencesService.CurrentPreferences.Theme); 
-                        CurrentPreferences = null;
-                    }
+                if (result == MessageBoxResult.Yes)
+                {
+                    _dialogService.SetBusy();
+                    _preferencesService.Save(_preferencesService.CreateDefault());
+                    _themeService.SetTheme(_preferencesService.CurrentPreferences.Theme);
+                    CurrentPreferences = null;
                 }
             }
             catch (Exception ex)
