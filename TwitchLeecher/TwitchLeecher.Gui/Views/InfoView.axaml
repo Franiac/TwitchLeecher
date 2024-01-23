@@ -2,7 +2,10 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
-             x:DataType="viewModels:InfoViewVM">
+             x:DataType="viewModels:InfoViewModel">
+    <Design.DataContext>
+        <viewModels:InfoViewModel />
+    </Design.DataContext>
     <UserControl.Styles>
         <Style Selector="Button.hyperlink">
             <Setter Property="Foreground" Value="Blue" />

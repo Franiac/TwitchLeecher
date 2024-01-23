@@ -13,6 +13,9 @@
         CanResize="False"
         Width="450"
         Height="180">
+    <Design.DataContext>
+        <viewModels:MessageBoxViewModel />
+    </Design.DataContext>
     <Border Padding="20" BorderThickness="1">
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -27,18 +30,15 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-
             <Border Grid.Row="0" Padding="0,0,0,10" Margin="0,0,0,10" BorderThickness="0,0,0,1">
                 <TextBlock Text="{Binding Caption}" FontWeight="Bold" />
             </Border>
-
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-
                 <avalonia:Icon Value="{Binding MainIcon}" Grid.Column="0" HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                Height="32" Width="32" />
@@ -47,7 +47,6 @@
                                TextAlignment="Left" VerticalAlignment="Center" />
                 </ScrollViewer>
             </Grid>
-
             <Border Grid.Row="3" Padding="0,10,0,0" Margin="0,10,0,0" BorderThickness="0,1,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Margin="0,0,3,0" Command="{Binding YesCommand}" Width="80"
@@ -62,7 +61,7 @@
                             IsVisible="{Binding OkButtonVisible}">
                         <TextBlock Text="Ok" />
                     </Button>
-                    <Button Margin="3,0,0,0" Command="{Binding CnacelCommand}" Width="80"
+                    <Button Margin="3,0,0,0" Command="{Binding CancelCommand}" Width="80"
                             IsVisible="{Binding CancelButtonVisible}">
                         <TextBlock Text="Cancel" />
                     </Button>

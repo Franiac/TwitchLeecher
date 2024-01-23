@@ -8,7 +8,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class UpdateInfoViewVM : ViewModelBase
+    public class UpdateInfoViewModel : ViewModelBase
     {
         #region Fields
 
@@ -22,7 +22,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructor
 
-        public UpdateInfoViewVM(IDialogService dialogService)
+        public UpdateInfoViewModel(IDialogService dialogService)
         {
             _dialogService = dialogService;
             _commandLockObject = new object();

@@ -8,7 +8,7 @@ using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class InfoViewVM : ViewModelBase
+    public class InfoViewModel : ViewModelBase
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public InfoViewVM(IDialogService dialogService, IDonationService donationService)
+        public InfoViewModel(IDialogService dialogService, IDonationService donationService)
         {
             AssemblyUtil au = AssemblyUtil.Get;
 

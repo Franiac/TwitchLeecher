@@ -8,7 +8,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class LogViewVM : ViewModelBase
+    public class LogViewModel : ViewModelBase
     {
         #region Fields
 
@@ -27,7 +27,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public LogViewVM(
+        public LogViewModel(
             IDialogService dialogService,
             INavigationService navigationService,
             MainWindow window)

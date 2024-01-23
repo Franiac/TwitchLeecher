@@ -4,7 +4,10 @@
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
-             x:DataType="viewModels:DownloadsViewVM">
+             x:DataType="viewModels:DownloadsViewModel">
+    <Design.DataContext>
+        <viewModels:DownloadsViewModel />
+    </Design.DataContext>
     <UserControl.Resources>
         <converters:DownloadStateToColorConverter x:Key="DownloadStateToColorConverter" />
     </UserControl.Resources>
@@ -38,7 +41,7 @@
                                                VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Button Classes="TlMiniButton"
-                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewVM)DataContext).RetryDownloadCommand}"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewModel)DataContext).RetryDownloadCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Padding="5"
                                                 VerticalAlignment="Center"
@@ -50,12 +53,12 @@
                                                 Margin="5,0,0,0"
                                                 Padding="5"
                                                 VerticalAlignment="Center"
-                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewVM)DataContext).CancelDownloadCommand}"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewModel)DataContext).CancelDownloadCommand}"
                                                 HorizontalAlignment="Stretch">
                                             <avalonia:Icon Width="16" Height="16" Value="{Binding Icon}" />
                                         </Button>
                                         <Button Classes="TlMiniButton"
-                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewVM)DataContext).ShowLogCommand}"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewModel)DataContext).ShowLogCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="5,0,0,0"
                                                 Padding="5"
@@ -64,7 +67,7 @@
                                             <avalonia:Icon Value="fa-solid fa-file-lines" Width="16" Height="16" />
                                         </Button>
                                         <Button Classes="TlMiniButton"
-                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewVM)DataContext).OpenDownloadFolderCommand}"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:DownloadsViewModel)DataContext).OpenDownloadFolderCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="5,0,0,0"
                                                 Padding="5"

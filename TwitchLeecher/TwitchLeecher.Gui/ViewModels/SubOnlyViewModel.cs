@@ -5,13 +5,13 @@ using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class SubOnlyViewVM : ViewModelBase
+    public class SubOnlyViewModel : ViewModelBase
     {
         private readonly IAuthListener _authListener;
         private readonly IEventAggregator _eventAggregator;
         private readonly INavigationService _navigationService;
 
-        public SubOnlyViewVM(IAuthListener authListener, IEventAggregator eventAggregator,
+        public SubOnlyViewModel(IAuthListener authListener, IEventAggregator eventAggregator,
             INavigationService navigationService)
         {
             _authListener = authListener;

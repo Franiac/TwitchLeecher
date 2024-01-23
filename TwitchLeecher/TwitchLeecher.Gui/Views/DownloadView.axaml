@@ -3,7 +3,10 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
-             x:DataType="viewModels:DownloadViewVM">
+             x:DataType="viewModels:DownloadViewModel">
+    <Design.DataContext>
+        <viewModels:DownloadViewModel />
+    </Design.DataContext>
     <Grid Margin="20" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -13,7 +13,7 @@ namespace TwitchLeecher.Gui.Views
 
         private void InputElement_OnGotFocus(object? sender, GotFocusEventArgs e)
         {
-            var viewModel = (PreferencesViewVM)DataContext;
+            var viewModel = (PreferencesViewModel)DataContext;
             viewModel.IsChannelDropDownOpen = true;
         }
     }

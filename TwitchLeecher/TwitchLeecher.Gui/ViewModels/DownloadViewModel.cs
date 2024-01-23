@@ -15,7 +15,7 @@ using TwitchLeecher.Shared.Extensions;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class DownloadViewVM : ViewModelBase
+    public class DownloadViewModel : ViewModelBase
     {
         #region Fields
 
@@ -39,7 +39,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadViewVM(
+        public DownloadViewModel(
             IDialogService dialogService,
             IDownloadService downloadService,
             IFilenameService filenameService,

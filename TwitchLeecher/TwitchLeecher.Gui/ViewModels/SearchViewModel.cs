@@ -9,7 +9,7 @@ using TwitchLeecher.Shared.Helpers;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class SearchViewVM : ViewModelBase
+    public class SearchViewModel : ViewModelBase
     {
         #region Fields
 
@@ -33,7 +33,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public SearchViewVM(
+        public SearchViewModel(
             IApiService apiService,
             ISearchService searchService,
             IDialogService dialogService,

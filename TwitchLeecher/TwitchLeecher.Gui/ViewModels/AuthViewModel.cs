@@ -8,7 +8,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class AuthViewVM : ViewModelBase
+    public class AuthViewModel : ViewModelBase
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructor
 
-        public AuthViewVM(
+        public AuthViewModel(
             IDialogService dialogService,
             INavigationService navigationService,
             IAuthListener authListener)

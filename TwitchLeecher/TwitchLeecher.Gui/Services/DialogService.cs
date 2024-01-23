@@ -108,13 +108,13 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowUpdateInfoDialog(UpdateInfo updateInfo)
         {
-            UpdateInfoViewVM vm = _kernel.Get<UpdateInfoViewVM>();
+            UpdateInfoViewModel model = _kernel.Get<UpdateInfoViewModel>();
             var mainWindow = _kernel.Get<MainWindow>();
-            vm.UpdateInfo = updateInfo;
+            model.UpdateInfo = updateInfo;
 
             UpdateInfoView view = new UpdateInfoView
             {
-                DataContext = vm
+                DataContext = model
             };
 
             view.ShowDialog(mainWindow);

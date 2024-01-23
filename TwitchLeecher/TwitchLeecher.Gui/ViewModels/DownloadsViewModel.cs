@@ -13,7 +13,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class DownloadsViewVM : ViewModelBase, INavigationState
+    public class DownloadsViewModel : ViewModelBase, INavigationState
     {
         #region Fields
 
@@ -33,7 +33,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public DownloadsViewVM(
+        public DownloadsViewModel(
             IDialogService dialogService,
             IDownloadService downloadService,
             INavigationService navigationService)

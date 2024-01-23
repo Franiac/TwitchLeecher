@@ -1,10 +1,10 @@
 ﻿namespace TwitchLeecher.Gui.ViewModels
 {
-    public class LoadingViewVM : ViewModelBase
+    public class LoadingViewModel : ViewModelBase
     {
         #region Constructors
 
-        public LoadingViewVM()
+        public LoadingViewModel()
         {
             // Marker for DataTemplate
         }

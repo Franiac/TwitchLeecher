@@ -13,7 +13,7 @@ using TwitchLeecher.Shared.Commands;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class PreferencesViewVM : ViewModelBase
+    public class PreferencesViewModel : ViewModelBase
     {
         #region Fields
 
@@ -41,7 +41,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public PreferencesViewVM(
+        public PreferencesViewModel(
             IDialogService dialogService,
             INotificationService notificationService,
             IPreferencesService preferencesService,

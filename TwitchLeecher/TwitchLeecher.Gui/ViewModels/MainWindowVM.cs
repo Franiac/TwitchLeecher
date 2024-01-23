@@ -164,73 +164,20 @@ namespace TwitchLeecher.Gui.ViewModels
             set { SetProperty(ref _mainView, value, nameof(MainView)); }
         }
 
-        public ICommand ShowSearchCommand
-        {
-            get
-            {
-                if (_showSearchCommand == null)
-                {
-                    _showSearchCommand = new DelegateCommand(ShowSearch);
-                }
+        public ICommand ShowSearchCommand => _showSearchCommand ??= new DelegateCommand(ShowSearch);
 
-                return _showSearchCommand;
-            }
-        }
+        public ICommand RevokeCommand => _revokeCommand ??= new DelegateCommand(RevokeAuthentication);
 
         public ICommand ShowSubOnlyCommand =>
             _showSubOnlyCommand ??= new DelegateCommand(ShowSubOnly);
 
-        public ICommand ShowDownloadsCommand
-        {
-            get
-            {
-                if (_showDownloadsCommand == null)
-                {
-                    _showDownloadsCommand = new DelegateCommand(ShowDownloads);
-                }
+        public ICommand ShowDownloadsCommand => _showDownloadsCommand ??= new DelegateCommand(ShowDownloads);
 
-                return _showDownloadsCommand;
-            }
-        }
+        public ICommand ShowPreferencesCommand => _showPreferencesCommand ??= new DelegateCommand(ShowPreferences);
 
-        public ICommand ShowPreferencesCommand
-        {
-            get
-            {
-                if (_showPreferencesCommand == null)
-                {
-                    _showPreferencesCommand = new DelegateCommand(ShowPreferences);
-                }
+        public ICommand DonateCommand => _donateCommand ??= new DelegateCommand(Donate);
 
-                return _showPreferencesCommand;
-            }
-        }
-
-        public ICommand DonateCommand
-        {
-            get
-            {
-                if (_donateCommand == null)
-                {
-                    _donateCommand = new DelegateCommand(Donate);
-                }
-
-                return _donateCommand;
-            }
-        }
-
-        public ICommand ShowInfoCommand
-        {
-            get
-            {
-                if (_showInfoCommand == null)
-                {
-                    _showInfoCommand = new DelegateCommand(ShowInfo);
-                }
-
-                return _showInfoCommand;
-            }
-        }
+        public ICommand ShowInfoCommand => _showInfoCommand ??= new DelegateCommand(ShowInfo);
 
         public bool ShowNotification
         {
@@ -550,7 +497,6 @@ namespace TwitchLeecher.Gui.ViewModels
                 }, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
-
 
         #endregion Methods
 

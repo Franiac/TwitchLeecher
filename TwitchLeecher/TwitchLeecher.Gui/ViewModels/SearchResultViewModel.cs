@@ -17,7 +17,7 @@ using TwitchLeecher.Shared.Events;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class SearchResultViewVM : ViewModelBase, INavigationState
+    public class SearchResultViewModel : ViewModelBase, INavigationState
     {
         #region Fields
 
@@ -41,7 +41,7 @@ namespace TwitchLeecher.Gui.ViewModels
 
         #region Constructors
 
-        public SearchResultViewVM(
+        public SearchResultViewModel(
             IEventAggregator eventAggregator,
             IApiService apiService,
             IAuthService authService,

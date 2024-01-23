@@ -8,7 +8,10 @@
         Height="480"
         MinWidth="450"
         MinHeight="300"
-        x:DataType="viewModels:UpdateInfoViewVM">
+        x:DataType="viewModels:UpdateInfoViewModel">
+    <Design.DataContext>
+        <viewModels:UpdateInfoViewModel />
+    </Design.DataContext>
     <Window.Styles>
         <Style Selector="Button.hyperlink">
             <Setter Property="Foreground" Value="Blue" />

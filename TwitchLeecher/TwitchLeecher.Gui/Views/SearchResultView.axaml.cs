@@ -18,7 +18,7 @@ namespace TwitchLeecher.Gui.Views
 
         private void InputElement_OnPointerPressed(object sender, PointerPressedEventArgs e)
         {
-            var viewModel = (SearchResultViewVM)DataContext;
+            var viewModel = (SearchResultViewModel)DataContext;
             viewModel!.ViewCommand.Execute(null);
         }
     }

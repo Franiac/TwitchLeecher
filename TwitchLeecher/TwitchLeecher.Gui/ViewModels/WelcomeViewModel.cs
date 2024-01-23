@@ -3,11 +3,11 @@ using TwitchLeecher.Shared.Reflection;
 
 namespace TwitchLeecher.Gui.ViewModels
 {
-    public class WelcomeViewVM : ViewModelBase
+    public class WelcomeViewModel : ViewModelBase
     {
         #region Constructors
 
-        public WelcomeViewVM()
+        public WelcomeViewModel()
         {
             AssemblyUtil au = AssemblyUtil.Get;
 

@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
-             x:DataType="viewModels:LoadingViewVM">
+             x:DataType="viewModels:LoadingViewModel">
+    <Design.DataContext>
+        <viewModels:LoadingViewModel />
+    </Design.DataContext>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <avaloniaProgressRing:ProgressRing Width="80"
                                            Height="80"

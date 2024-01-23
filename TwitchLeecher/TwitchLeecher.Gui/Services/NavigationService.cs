@@ -39,31 +39,31 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowAuth()
         {
-            Navigate(_kernel.Get<AuthViewVM>());
+            Navigate(_kernel.Get<AuthViewModel>());
         }
 
 
         public void ShowWelcome()
         {
-            Navigate(_kernel.Get<WelcomeViewVM>());
+            Navigate(_kernel.Get<WelcomeViewModel>());
         }
 
         public void ShowLoading()
         {
-            Navigate(_kernel.Get<LoadingViewVM>());
+            Navigate(_kernel.Get<LoadingViewModel>());
         }
 
         public void ShowSearch()
         {
-            Navigate(_kernel.Get<SearchViewVM>());
+            Navigate(_kernel.Get<SearchViewModel>());
         }
 
         public void ShowSearchResults()
         {
-            if (!_persistentViews.TryGetValue(typeof(SearchResultViewVM), out ViewModelBase vm))
+            if (!_persistentViews.TryGetValue(typeof(SearchResultViewModel), out ViewModelBase vm))
             {
-                vm = _kernel.Get<SearchResultViewVM>();
-                _persistentViews.Add(typeof(SearchResultViewVM), vm);
+                vm = _kernel.Get<SearchResultViewModel>();
+                _persistentViews.Add(typeof(SearchResultViewModel), vm);
             }
 
             Navigate(vm);
@@ -71,18 +71,18 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowDownload(DownloadParameters downloadParams)
         {
-            DownloadViewVM vm = _kernel.Get<DownloadViewVM>();
-            vm.DownloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
+            DownloadViewModel model = _kernel.Get<DownloadViewModel>();
+            model.DownloadParams = downloadParams ?? throw new ArgumentNullException(nameof(downloadParams));
 
-            Navigate(vm);
+            Navigate(model);
         }
 
         public void ShowDownloads()
         {
-            if (!_persistentViews.TryGetValue(typeof(DownloadsViewVM), out ViewModelBase vm))
+            if (!_persistentViews.TryGetValue(typeof(DownloadsViewModel), out ViewModelBase vm))
             {
-                vm = _kernel.Get<DownloadsViewVM>();
-                _persistentViews.Add(typeof(DownloadsViewVM), vm);
+                vm = _kernel.Get<DownloadsViewModel>();
+                _persistentViews.Add(typeof(DownloadsViewModel), vm);
             }
 
             Navigate(vm);
@@ -90,20 +90,20 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowPreferences()
         {
-            Navigate(_kernel.Get<PreferencesViewVM>());
+            Navigate(_kernel.Get<PreferencesViewModel>());
         }
 
         public void ShowInfo()
         {
-            Navigate(_kernel.Get<InfoViewVM>());
+            Navigate(_kernel.Get<InfoViewModel>());
         }
 
         public void ShowLog(TwitchVideoDownload download)
         {
-            LogViewVM vm = _kernel.Get<LogViewVM>();
-            vm.Download = download ?? throw new ArgumentNullException(nameof(download));
+            LogViewModel model = _kernel.Get<LogViewModel>();
+            model.Download = download ?? throw new ArgumentNullException(nameof(download));
 
-            Navigate(vm);
+            Navigate(model);
         }
 
         public void NavigateBack()
@@ -116,7 +116,7 @@ namespace TwitchLeecher.Gui.Services
 
         public void ShowAuthSubOnly()
         {
-            Navigate(_kernel.Get<SubOnlyViewVM>());
+            Navigate(_kernel.Get<SubOnlyViewModel>());
         }
 
         private void Navigate(ViewModelBase nextView)

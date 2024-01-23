@@ -12,38 +12,41 @@
         MinHeight="600"
         x:DataType="vm:MainWindowVM"
         Title="{Binding Title}">
+    <Design.DataContext>
+        <vm:MainWindowVM />
+    </Design.DataContext>
     <Window.DataTemplates>
-        <DataTemplate DataType="{x:Type vm:AuthViewVM}">
+        <DataTemplate DataType="{x:Type vm:AuthViewModel}">
             <view:AuthView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:WelcomeViewVM}">
+        <DataTemplate DataType="{x:Type vm:WelcomeViewModel}">
             <view:WelcomeView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:LoadingViewVM}">
+        <DataTemplate DataType="{x:Type vm:LoadingViewModel}">
             <view:LoadingView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SearchResultViewVM}">
+        <DataTemplate DataType="{x:Type vm:SearchResultViewModel}">
             <view:SearchResultView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SearchViewVM}">
+        <DataTemplate DataType="{x:Type vm:SearchViewModel}">
             <view:SearchView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DownloadViewVM}">
+        <DataTemplate DataType="{x:Type vm:DownloadViewModel}">
             <view:DownloadView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DownloadsViewVM}">
+        <DataTemplate DataType="{x:Type vm:DownloadsViewModel}">
             <view:DownloadsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:PreferencesViewVM}">
+        <DataTemplate DataType="{x:Type vm:PreferencesViewModel}">
             <view:PreferencesView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:InfoViewVM}">
+        <DataTemplate DataType="{x:Type vm:InfoViewModel}">
             <view:InfoView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:LogViewVM}">
+        <DataTemplate DataType="{x:Type vm:LogViewModel}">
             <view:LogView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SubOnlyViewVM}">
+        <DataTemplate DataType="{x:Type vm:SubOnlyViewModel}">
             <view:SubOnlyView />
         </DataTemplate>
     </Window.DataTemplates>

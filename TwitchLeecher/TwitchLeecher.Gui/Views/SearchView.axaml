@@ -5,7 +5,10 @@
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:enums="clr-namespace:TwitchLeecher.Core.Enums;assembly=TwitchLeecher.Core"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
-             x:DataType="viewModels:SearchViewVM">
+             x:DataType="viewModels:SearchViewModel">
+    <Design.DataContext>
+        <viewModels:SearchViewModel />
+    </Design.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

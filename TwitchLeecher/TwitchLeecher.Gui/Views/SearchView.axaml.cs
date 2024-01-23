@@ -13,7 +13,7 @@ namespace TwitchLeecher.Gui.Views
 
         private void InputElement_OnGotFocus(object? sender, GotFocusEventArgs e)
         {
-            var viewModel = (SearchViewVM)DataContext;
+            var viewModel = (SearchViewModel)DataContext;
             viewModel.OpenSearchDropDown = true;
         }
     }

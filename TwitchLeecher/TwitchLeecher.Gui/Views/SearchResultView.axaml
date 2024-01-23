@@ -4,27 +4,16 @@
              xmlns:converters="clr-namespace:TwitchLeecher.Gui.Converters"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
              xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
-             x:DataType="viewModels:SearchResultViewVM"
+             x:DataType="viewModels:SearchResultViewModel"
              Classes="searchView">
+    <Design.DataContext>
+        <viewModels:SearchResultViewModel />
+    </Design.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converters:InverseBooleanConverter x:Key="InverseBoolConverter" />
-
-                    <DataTemplate x:Key="EmptyView">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="No videos found!" HorizontalAlignment="Center" FontSize="24"
-                                       FontWeight="Bold" />
-                            <avalonia:Icon Value="fa-solid fa-video" Margin="0,20,0,20" Width="150" Height="150"
-                                           Opacity="0.5">
-                                <avalonia:Icon.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource GlobalThemeColor}" />
-                                </avalonia:Icon.Foreground>
-                            </avalonia:Icon>
-                        </StackPanel>
-                    </DataTemplate>
-
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -62,7 +51,7 @@
                                 <Button Grid.Column="1"
                                         IsEnabled="{Binding Live, Converter={StaticResource InverseBoolConverter}}"
                                         Padding="8" Width="40"
-                                        Command="{Binding $parent[UserControl].((viewModels:SearchResultViewVM)DataContext).DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                        Command="{Binding $parent[UserControl].((viewModels:SearchResultViewModel)DataContext).DownloadCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                                         CommandParameter="{Binding Id}">
                                     <avalonia:Icon Value="fa-solid fa-download" RenderTransformOrigin="0.5,0.5" />
                                 </Button>
