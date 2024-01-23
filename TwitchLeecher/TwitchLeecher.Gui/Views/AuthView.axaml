@@ -22,6 +22,7 @@
         </Border>
 
         <TextBlock Grid.Row="2"
+                   TextWrapping="Wrap"
                    Text="In order to use the Twitch Leecher and search for videos, you need to connect it with your Twitch Account. This step generates a necessary authentication token. No user data or personal information gets collected or shared." />
 
         <Button Grid.Row="4" Command="{Binding ConnectCommand}" HorizontalAlignment="Left">

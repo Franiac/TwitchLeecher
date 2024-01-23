@@ -40,8 +40,8 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <avalonia:Icon Value="{Binding MainIcon}" Grid.Column="0" HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               Height="32" Width="32" />
+                               VerticalAlignment="Center"
+                               FontSize="32" />
                 <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
                     <TextBlock Text="{Binding Message}" TextWrapping="Wrap" TextTrimming="WordEllipsis"
                                TextAlignment="Left" VerticalAlignment="Center" />
