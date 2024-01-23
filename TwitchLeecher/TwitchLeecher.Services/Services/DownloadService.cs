@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TwitchLeecher.Core.Enums;
@@ -223,7 +224,7 @@ namespace TwitchLeecher.Services.Services
 
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            var downloadWarnings = DownloadParts(log, setStatus, setProgress, vodPlaylist, quality,
+                            var downloadWarnings = DownloadParts(log, setStatus, setProgress, vodPlaylist,
                                 cancellationToken);
 
                             cancellationToken.ThrowIfCancellationRequested();
@@ -279,7 +280,8 @@ namespace TwitchLeecher.Services.Services
                                 {
                                     var warningsString = string.Join("\n", warnings.Distinct());
                                     setDownloadState(DownloadState.CompletedWithWarning);
-                                    log(Environment.NewLine + Environment.NewLine + $"Download completed with warnings:\n{warningsString}");
+                                    log(Environment.NewLine + Environment.NewLine +
+                                        $"Download completed with warnings:\n{warningsString}");
                                 }
                                 else
                                 {
@@ -492,7 +494,8 @@ namespace TwitchLeecher.Services.Services
 
         private IEnumerable<string> DownloadParts(Action<string> log, Action<string> setStatus,
             Action<double> setProgress,
-            TwitchPlaylist vodPlaylist, TwitchVideoQuality twitchVideoQuality, CancellationToken cancellationToken)
+            TwitchPlaylist vodPlaylist,
+            CancellationToken cancellationToken)
         {
             var warnings = new List<string>();
             int partsCount = vodPlaylist.Count;
@@ -508,7 +511,8 @@ namespace TwitchLeecher.Services.Services
 
             long completedPartDownloads = 0;
 
-            Parallel.ForEach(vodPlaylist, new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 },
+            Parallel.ForEach(vodPlaylist,
+                new ParallelOptions() { MaxDegreeOfParallelism = maxConnectionCount - 1 },
                 (part, loopState) =>
                 {
                     int retryCounter = 0;
@@ -519,9 +523,10 @@ namespace TwitchLeecher.Services.Services
                     {
                         try
                         {
-                            using (WebClient downloadClient = new WebClient())
+                            using (var downloadClient = new HttpClient())
                             {
-                                byte[] bytes = downloadClient.DownloadData(part.RemoteFile);
+                                byte[] bytes = downloadClient.GetByteArrayAsync(part.RemoteFile, CancellationToken.None)
+                                    .GetAwaiter().GetResult();
 
                                 Interlocked.Increment(ref completedPartDownloads);
 
@@ -557,7 +562,7 @@ namespace TwitchLeecher.Services.Services
                                 retryCounter++;
                                 log(Environment.NewLine + Environment.NewLine + "Downloading file '" + part.RemoteFile +
                                     "' failed! Trying again in " + DOWNLOAD_RETRY_TIME + "s");
-                                log(Environment.NewLine + ex.ToString());
+                                log(Environment.NewLine + ex);
                                 Thread.Sleep(DOWNLOAD_RETRY_TIME * 1000);
                             }
                         }
