@@ -180,6 +180,7 @@
     </Application.Resources>
 
     <Application.Styles>
+        <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml" />
         <SimpleTheme>
             <Style Selector="Border">
                 <Setter Property="BorderBrush">

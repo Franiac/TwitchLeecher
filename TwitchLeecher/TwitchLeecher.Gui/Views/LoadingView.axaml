@@ -1,17 +1,20 @@
 ﻿<UserControl x:Class="TwitchLeecher.Gui.Views.LoadingView"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:fa6="http://schemas.fontawesome.com/icons/svg"
              xmlns:viewModels="clr-namespace:TwitchLeecher.Gui.ViewModels"
-             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              x:DataType="viewModels:LoadingViewVM">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <avalonia:Icon Value="fa-solid fa-spinner" Opacity="0.5" Width="150" />
-        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <avaloniaProgressRing:ProgressRing Width="80"
+                                           Height="80"
+                                           IsActive="True"
+                                           Foreground="{DynamicResource GlobalThemeColor}"
+                                           VerticalAlignment="Top" />
+        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"
+                   Margin="0 20">
             <TextBlock.Foreground>
                 <SolidColorBrush Color="{DynamicResource GlobalThemeColor}" />
             </TextBlock.Foreground>
         </TextBlock>
-    </Grid>
+    </StackPanel>
 </UserControl>

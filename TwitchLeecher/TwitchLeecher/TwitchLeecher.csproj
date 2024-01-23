@@ -15,6 +15,7 @@
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.2"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2"/>
+        <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.4" />
         <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1" />
         <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.0.1" />
     </ItemGroup>
